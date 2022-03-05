@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+  <redeem_adminhtml_redeem_index>
+	<reference name="content">
+	  <block type="redeem/adminhtml_redeem" name="redeem" />
+	</reference>
+  </redeem_adminhtml_redeem_index>
+</layout>

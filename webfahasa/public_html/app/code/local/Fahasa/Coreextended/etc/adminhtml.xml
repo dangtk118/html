@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<config>    
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <coreextended translate="title" module="coreextended">
+                                        <title>Constraint out of stock</title>
+                                    </coreextended>
+                                </children>
+                            </config>
+                        </children>
+                    </system>                    
+                </children>
+            </admin>
+        </resources>
+    </acl>  
+</config>

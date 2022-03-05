@@ -1,0 +1,707 @@
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     default_default
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+
+.order-view-content-info,.order-view-history-contact,.order-view-content-details{
+    padding: 10px 20px;
+}
+.order-view-status{
+    width: fit-content;
+    border-radius: 20px;
+    border: 1px solid;
+    padding: 2px 10px 1px 10px;
+    font-size: 12px;
+    font-weight: bold;
+    margin-top : 10px;
+}
+.order-view-status,.order-view-id,.order-view-date,.order-view-total,.order-view-vat{
+    margin-bottom: 10px;
+}
+.order-view-vat,.order-view-note{
+    display: flex;
+}
+.order-view-status span:nth-child(2),.order-view-id span:nth-child(2),
+.order-view-date span:nth-child(2),.order-view-total span:nth-child(2),
+.order-view-vat span:nth-child(2),.order-view-vat span:nth-child(2),.order-view-note span:nth-child(2),.order-view-id-mobile span:nth-child(2){
+    margin-left: 5px;
+    font-size: 1.1em;
+    font-weight: bold;
+}
+/*    .order-view-status{
+        background: #B6F1B6;
+        color: #2ED62E;
+        border-color: #B6F1B6;
+    }*/
+.dont-have-info{
+    font-weight:normal!important;
+    font-size:13px!important;
+}
+.order-info-border-block{
+    height:10px;
+    width:100%;
+    background:#F0F0F0;
+}
+.border-block-mobile-desktop{
+    background: #F0F0F0;
+    height:10px;
+    width:100%;
+}
+.order-view-id-mobile,.border-block-mobile{
+    display: none;
+}
+.order-view-buttons-color{
+    position: absolute;
+    top: 20%;
+    display: flex;
+    right: 80px;
+    flex-direction: column;
+    width: 22%;
+    min-width: 203px;
+}
+.order-view-buy-again-btn{
+    font-size: 1.1em;
+    font-weight: bold;
+    border-radius: 8px;
+    background: #C92127;
+    padding: 7px 20px;
+    color: white!important;
+
+}
+.order-view-review-btn{
+    font-size: 1.1em;
+    font-weight: bold;
+    border-radius: 8px;
+    color: #F7941E;
+    border: 2px solid #C92127;
+    padding: 5px 20px;
+    margin-top: 10px;
+}
+.order-view-content-info{
+    position: relative;
+}
+.order-view-buttons-color-child{
+    display: flex;
+    flex-direction: column;                             
+}
+/*-------------------------start order_view_contract css-----------------*/
+.order-view-item-contact{
+    margin-top: 10px;
+}
+.order-view-item-contact p{
+    font-size: 1.1em;
+    margin-bottom: 0px;
+}
+.border-item-contact{
+    border-top: 2px;
+    height: 2px;
+    border-top-color: #F0F0F0;
+    border-top-style: solid;
+    width: 100%;
+    margin-bottom: 10px;
+}
+.order-view-title{
+    font-size: 1.1em;
+    text-transform: uppercase;
+    color: black;
+    font-weight: bold;
+}
+.order-view-btn{
+    font-size: 1.2em;
+    font-weight: bold;
+    border-radius: 20px;
+    color: #F7941E;
+    border: 2px solid #F7941E;
+    width: 20%;
+    display: none;
+}
+.order-item-contact-hightlight{
+    background:#FCDAB0;
+    margin: 0px 0px 0px 0px;
+    padding: 0px 10px 5px
+}
+/*-------------------------end order_view_contract-----------------*/
+/*--------start Thong tin 3 box content css ----------------*/
+.order-view-content-box1{
+    display : flex;
+}
+.order-view-box{
+    flex: 1;
+    border: 1px solid #E0E0E0;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+}
+.order-view-box:nth-child(2){
+    margin : 0px 10px;
+}
+.order-box-title{
+    border-bottom: 1px solid #E0E0E0;
+    margin-bottom: 10px;
+    padding-bottom: 10px;   
+}
+address{
+    margin-bottom: 0px;
+}
+.order-box-info,address{
+    line-height: 20px;
+}
+.order-box-info table, .order-box-info table tbody th, table tbody td{
+    border: unset;
+}
+.order-box-info{
+    flex: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.order-box-info-historypayment{
+    flex: 100%;
+}
+/*----------- end Thong tin 3 box content css ----------------*/
+/*----------- start Progress Step Order Info css ----------------*/
+.order-view-status-new-order,.order-view-status-processing,.order-view-status-canceled{
+    text-align :  center;
+    position:relative;
+}
+.order-view-icon-img{
+    border: 3px solid;
+    border-radius: 50%;
+    background-size: 25px;
+    height:100%;
+}
+.order-view-status-new-order,.order-view-status-processing,.order-view-status-canceled{
+    flex : 1;
+}
+.order-view-icon-container{
+    display: flex;
+    flex-direction: column;
+}
+.order-view-progress-bar{
+    position: absolute;
+    background: #29a72a;
+    top: calc(50% - 25px);
+    height: 3px;
+    width: calc(100% - 60px);
+    left: calc(50% + 30px);
+}
+.order-view-icon-content p{
+    margin: 0;
+}
+.order-view-icon-content p:nth-child(1){
+    font-weight: bold;
+}
+.order-view-icon-content{
+    margin-top: 10px;
+}
+.order-view-status-container{
+    display: flex;
+    margin-top: 10px;
+    border: 1px solid #E0E0E0;
+    padding: 10px 0px;
+}
+/*----------- end Progress Step Order Info css ----------------*/
+/*----------- start SubOrder css ----------------*/
+.order-subOrder-container{
+        padding : 10px 20px;
+    }
+    .order-subOrder-info-status{
+        display: flex;
+    }
+    .order-subOrder-info div{
+        margin-top: 10px;
+    }
+    .order-subOrder-info span:nth-child(2){
+        margin-left: 5px;
+        font-size: 1.1em;
+        font-weight: bold;
+    }
+    .order-subOrder-info{
+       /*flex-basis: 70%;*/
+       flex: 1;
+    }
+    .order-subOrder-status{
+        /*flex-basis: 30%;*/
+    }
+    .order-subOrder-products,order-subOrder-total{
+        padding : 10px 0;
+    }
+    .subOder-progress-bar{
+        border: 1px solid;
+        width: fit-content;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: bold;
+        text-align: center;
+        padding: 2px 10px;
+    }
+    .order-subOrder-status-icon{
+        display: flex;
+        flex-direction: row;
+    }
+    .order-subOrder-status-icon:nth-child(2){
+        margin-top: 10px;
+    }
+    .order-subOrder-status-icon-text{
+        display: flex;
+        /*align-items: center;*/
+    }
+    
+    .order-subOrder-status-node{
+        height: 10px;
+        width: 10px;
+        border: 1px solid orange;
+        background: orange;
+        border-radius: 50%;
+    }
+    .order-subOrder-status-node-silver{
+        height: 10px;
+        width: 10px;
+        border: 1px solid silver;
+        background: silver;
+        border-radius: 50%;
+    }
+    .order-subOrder-status-text{
+        margin-left: 5px;
+        margin-top: -3px;
+        margin-bottom: -5px;
+        display: flex;
+        flex-direction: column-reverse;
+    }
+    .order-subOrder-status-text span:nth-child(2){
+       margin-left: 5px;
+       font-weight: bold;
+        
+    }
+    .order-subOrder-status-step{
+        height: 20px;
+        width: 2px;
+        background: #FCDAB0;
+        margin: auto;
+    }
+    .order-subOrder-status-step-silver{
+        height: 20px;
+        width: 2px;
+        background: silver;
+        margin: auto;
+    }
+    .order-subOrder-title {
+        font-size: 1.3em;
+        padding : 10px 20px;
+    }
+    /*--- subOrder-table-----*/
+    .table-subOrder-container {
+        /*color: #616161;*/
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+    }
+    .table-subOrder-container .table-subOrder-row {
+        display: flex;
+        border-bottom: 1px solid #E0E0E0;
+    }
+    .table-subOrder-container .table-subOrder-row.table-subOrder-header {
+        font-weight: 700;
+        background: white;
+        font-size: 16px;
+    }
+    .table-subOrder-container .table-subOrder-cell {
+        padding: 10px 5px;
+        font-size: 14px;
+    }
+    .table-subOrder-cell:nth-child(2){
+        flex-basis: 40%;
+    }
+    .table-subOrder-cell:nth-child(3){
+        flex-basis: 20%;
+    }
+    .table-subOrder-cell:nth-child(4),.table-subOrder-cell:nth-child(6) {
+        flex-basis: 15%;
+    }
+    .table-subOrder-cell:nth-child(5){
+        flex-basis: 10%;
+    }
+    .table-subOrder-img-web{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100px;
+    }
+    .table-subOrder-img-web img{
+        width: 80px; 
+        height: 80px; 
+    }
+    .order-subOrder-total{
+        padding-bottom: 10px;
+    }
+    .order-subOrder-total-desktop{
+        display: flex;
+        justify-content: flex-end;
+    }
+    .order-subOrder-total-desktop div{
+        text-align: right;
+
+    }
+    .order-subOrder-total-desktop div span{
+        font-family: sans-serif!important;
+        font-size: 14px;
+    }
+    .order-subOrder-total-desktop div:nth-child(2){
+        font-weight: bold;
+        margin-left: 10px;
+    }
+    .table-subOrder-img-mobile,.table-subOrder-title-product,.table-subOrder-hidden-desktop,
+    .order-subOrder-total-mobile,.order-subOrder-arrow{
+        display: none;
+    }
+    .table-subOrder-name-product p{
+        font-size: 0.9em;
+        margin: 10px 0px 0px 15px;
+    }
+    .table-subOrder-name-product a{
+        color : #333333;
+    }
+    .table-subOrder-cell .price{
+        color: #333333;
+    }            
+    /**/
+    .srcoll-table-subOrder{
+        overflow: auto;
+        max-height: 300px;
+        position: relative;
+    }
+    .srcoll-table-subOrder .table-subOrder-header-and-img{
+        position: sticky;
+        top : 0;
+    }
+    .srcoll-table-subOrder::-webkit-scrollbar {
+        -webkit-appearance: none;
+    }
+
+    .srcoll-table-subOrder::-webkit-scrollbar:vertical {
+        width: 11px;
+    }
+
+    .srcoll-table-subOrder::-webkit-scrollbar:horizontal {
+        height: 11px;
+    }
+
+    .srcoll-table-subOrder::-webkit-scrollbar-thumb {
+        border-radius: 8px;
+        border: 2px solid white; /* should match background, can't be transparent */
+        background-color: rgba(0, 0, 0, .5);
+    }
+    .orderHs-price-old span.price,.orderHs-price-old{
+        color: #bfbfbf;
+        text-decoration: line-through;
+        font-size: 0.95em;
+    }
+    .order-subOrder-expectedDate{
+	color: red;
+    }
+/*----------- end SubOrder css ----------------*/
+@media(min-width:768px){
+    .center-text-bundle{
+        margin : auto;
+    }
+}
+@media( max-width:992px){
+    .order-view-vat, .order-view-note{
+        display: block;
+    }
+}
+
+@media(max-width:768px){
+    /* start css for main template*/
+    .container{
+        padding : 0px;
+    }
+    /* end css for main template*/
+    .order-view-content-info, .order-view-history-contact, .order-view-content-details{
+        padding: 10px 20px 0px 20px;        
+    }
+    .order-info-border-block,.display-none-mobile{
+        display: none;
+    }
+    .order-view-title{
+        padding: 15px 10px 5px 20px;
+        background: #f5f5f5;
+        margin: 0px -20px 0px -20px;
+        font-weight: bold;
+        font-size: 1.1em!important;
+    }
+    .border-block-mobile-desktop{
+        height: 5px;
+        margin-left: -20px;
+        margin-right: -20px;
+        width: auto;
+    }
+    .order-view-content-info .order-view-title{
+        display: none;
+    }
+    .order-view-id{
+        display: none;
+    }
+    .order-view-id-mobile{
+        display: block;
+    }
+    .order-view-buttons-color{
+        flex-direction: row-reverse;
+        position: fixed;
+        right: 0;
+        width: 100%;
+        z-index: 10;
+        padding-bottom: env(safe-area-inset-bottom); 
+        background: white; 
+        bottom: 0;
+        left: 0;
+        top: unset;
+    }
+    .order-view-buttons-color-child{
+        display: flex;
+        width: 100%;
+        height: 60px;
+        position: initial;
+        flex-direction: row-reverse;
+    }
+    .order-view-review-btn{
+        flex: 1;
+        border-radius: 0px;
+        background: white;
+        margin: 0px;
+        padding: 0px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.3em;
+        box-shadow: 0 -5px 5px -5px hsl(0, 0%, 90%);
+    }
+    .order-view-buy-again-btn{
+        flex: 1;
+        border-radius: 0px;
+        padding: 0px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.3em;
+        box-shadow: 0 -5px 5px -5px hsl(0, 0%, 90%);
+    }
+    /*---- start order_view_contract mobile--------*/
+    .order-view-btn{
+        font-size: 1.2em;
+        font-weight: bold;
+        border-radius: 20px;
+        color: #F7941E;
+        border: 2px solid #F7941E;
+        width: 50%; 
+        margin: 10px 0px 0px 0px;
+    }
+    .order-item-contact-hightlight:nth-child(1){
+        margin-top: 10px;
+    }
+    .order-item-contact-hightlight{
+        background:#FCDAB0;
+        margin: 0px -10px 0px -10px;
+        padding: 0px 10px 5px
+    }
+    /*---- start Thong tin 3 box content mobile--------*/
+    .order-view-content-box1{
+        flex-direction: column;
+    }
+    .order-view-box{
+        border-width: 0px;
+        padding: 0px;
+    }
+    .order-view-box:nth-child(2){
+        margin : 0px;
+    }
+    .order-box-title{
+        border-bottom : 0px;
+        margin-bottom: 0px;
+        padding-bottom: 0px;
+    }
+    .order-box-info, address{
+        margin: 10px 0px 10px 0px;
+    }
+    .border-block-mobile{
+
+    }
+    /*---- start Progress Step Order Info mobile--------*/
+    .order-view-status-container{
+        flex-direction: column;
+        border-width: 0px;
+        margin-top: 0px;
+    }
+    .order-view-icon-container{
+        flex-direction: row;
+    }
+    .order-view-progress-bar{
+        position: relative;
+        /*background: #29a72a;*/
+        height: 30px;
+        width: 3px;
+        left: 28px;
+    }
+    .order-view-icon-content{
+        text-align: left;
+        margin-left: 10px;
+    }
+    .border-block-mobile{
+        display: block;
+        height: 5px;
+        background: #F0F0F0;
+        margin-left: -20px;
+        margin-right: -20px;
+    }
+    /*---- end Progress Step Order Info mobile--------*/
+    /*----------- star SubOrder mobile ----------------*/
+    .order-subOrder-info-status{
+        flex-direction: column;
+    }
+    .order-subOrder-status{
+        padding-bottom: 10px;
+    }
+    .order-subOrder-info{
+        position: relative;
+    }
+    .order-subOrder-info div:first-child{
+        margin-top : 0px;
+    }
+    .order-subOrder-title{
+        background: #F0F0F0;
+        font-size: 1.1em!important;
+    }
+    .order-subOrder-status-icon:nth-child(2){
+        margin-top: 15px;
+    }
+    .table-subOrder-container .table-subOrder-row{
+        flex-direction: column;
+        border-bottom : 0px;
+        margin-top: 5px;
+        flex-basis: 200%;
+    }
+    .table-subOrder-container .table-subOrder-cell{
+        padding: 2px 0px;
+        font-size: 1em;
+    }
+    .table-subOrder-row.table-subOrder-header,.table-subOrder-sku{
+        display: none;
+    }
+    .table-subOrder-parent-img-and-cell{
+        display: flex;
+        border-bottom: 1px solid #ededed;
+        padding-bottom: 5px;
+        margin-bottom: 5px;
+        margin-top: 5px;
+    }
+    .table-subOrder-img-mobile{
+        display: flex;
+        align-items: center;
+        padding: 0px 10px 0px 0px;
+    }
+    .table-subOrder-title-product{
+        display: block;
+        text-transform: uppercase;
+    }
+    .table-subOrder-name-product{
+        font-size: 14px;
+        font-weight: bold;
+    }
+    .table-subOrder-name-product .price{
+        font-size: 0.9em;
+    }
+    .center-text-bundle .cart-price,.order-subOrder-info .price{
+        font-size: 13px;
+    }
+    .order-subOrder-info span:nth-child(2){
+        font-size: 13px;
+    }
+    .table-subOrder-cell .cart-price,.table-subOrder-quantity,.table-subOrder-cell .price{
+        font-size: 13px;
+       
+    }
+    .order-view-total .price{
+        font-size: 1.1em;
+    }
+    .table-subOrder-cell strong{
+        font-size: 13px;
+        font-family: sans-serif!important;
+    }
+    .order-totals-price,.order-totals-price .price{
+        font-size: 13px;
+    }
+    .table-subOrder-hidden-desktop{
+        display: inline;
+        float: left; /* css for price*/
+    }
+    .order-subOrder-total-desktop,.table-subOrder-img-web{
+        display: none; 
+    }
+    .order-subOrder-total-mobile,.order-subOrder-arrow{
+        display : block;
+    }
+    .order-subOrder-total-mobile span:nth-child(2){
+        margin-left: 2px;
+        font-weight: bold;
+    }
+    .order-subOrder-total-mobile div{
+        margin-bottom: 5px;
+    }
+    .order-subOrder-status,.order-subOrder-products,.order-subOrder-total{
+        display: none;
+    }
+    .order-subOrder-arrow{
+        position: absolute;
+        right: 0;
+        top: 40%;
+    }
+    .table-subOrder-name-product p{
+        font-weight: 100;
+    }
+    .order-subOrder-quantity{
+        margin-bottom: 10px;
+    }
+    .order-subOrder-expectedDate{
+        margin-bottom: 10px;
+    }
+    .order-subOrder-container{
+      padding: 10px 20px 0px 20px;  
+    }
+    .order-subOrder-products, order-subOrder-total{
+        padding : 0px 0px 10px 0px;
+    }
+    .orderHs-price-old{
+        margin-left: 5px;
+    }
+    .cart-orderHs-price{
+        display: flex;
+    }
+    /*----------- star SubOrder mobile ----------------*/
+}
+@media (max-width: 1279px) and (min-width: 992px){
+    .price{
+        font-size: 1.1em;
+    }
+    .order-view-vat, .order-view-note{
+        display: block;
+    }
+}

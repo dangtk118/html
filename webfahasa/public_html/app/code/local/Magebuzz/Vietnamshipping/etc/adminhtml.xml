@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<config>
+	<menu>
+		<vietnamshipping module="vietnamshipping">
+			<title>Vietnam Shipping</title>
+			<sort_order>71</sort_order>
+      <depends><config>vietnamshipping/general/enable_module</config></depends>               
+			<children>
+				<location module="vietnamshipping">
+					<title>Location</title>
+          <children>
+            <province>
+              <title>Manage Province</title>
+              <action>vietnamshipping/adminhtml_province</action>
+            </province>
+            <district>
+              <title>Manage District</title>
+              <action>vietnamshipping/adminhtml_district</action>
+            </district>
+            <area>
+              <title>Manage Area</title>
+              <action>vietnamshipping/adminhtml_area</action>
+            </area>
+          </children>
+          <sort_order>10</sort_order>
+				</location>
+        <shipping_rule module="vietnamshipping">
+					<title>Shipping Rules</title>
+					<sort_order>20</sort_order>
+					<action>vietnamshipping/adminhtml_rule</action>
+				</shipping_rule>
+        <shipping_weight module="vietnamshipping">
+					<title>Manage Shipping Weight</title>
+					<sort_order>30</sort_order>
+					<action>vietnamshipping/adminhtml_shippingweight</action>
+				</shipping_weight>
+        <setting module="vietnamshipping">
+					<title>Setting</title>
+					<sort_order>40</sort_order>
+					<action>adminhtml/system_config/edit/section/vietnamshipping</action>
+				</setting>
+			</children>
+		</vietnamshipping>
+	</menu>	
+	<acl>
+		<resources>
+			<all>
+				<title>Allow Everything</title>
+			</all>
+			<admin>
+				<children>
+					<system>
+						<children>
+							<config>
+								<children>
+									<vietnamshipping translate="title">
+										<title>Vietnamshipping Permission Setting</title>
+										<sort_order>50</sort_order>
+									</vietnamshipping>								
+								</children>
+							</config>
+						</children>
+					</system>
+          <vietnamshipping>
+            <title>Vietnamshipping Method</title>
+		        <sort_order>50</sort_order>
+              <children>
+        				<location module="vietnamshipping">
+        					<title>Location</title>
+                  <sort_order>10</sort_order>
+                  <children>
+                    <province>
+                      <title>Manage Province</title>
+                      <action>vietnamshipping/adminhtml_vietnamshipping</action>
+                    </province>
+                    <district>
+                      <title>Manage District</title>
+                      <action>vietnamshipping/adminhtml_district</action>
+                    </district>
+                    <area>
+                      <title>Manage Area</title>
+                      <action>vietnamshipping/adminhtml_area</action>
+                    </area>
+                  </children>
+        				</location>
+                <shipping_rule module="vietnamshipping">
+        					<title>Shipping Rules</title>
+        					<sort_order>20</sort_order>
+        					<action>vietnamshipping/adminhtml_rule</action>
+        				</shipping_rule>
+                <shipping_weight module="vietnamshipping">
+        					<title>Manage Shipping Weight</title>
+        					<sort_order>30</sort_order>
+        					<action>vietnamshipping/adminhtml_shippingweight</action>
+        				</shipping_weight>
+                <setting module="vietnamshipping">
+        					<title>Setting</title>
+        					<sort_order>40</sort_order>
+        					<action>adminhtml/system_config/edit/section/vietnamshipping</action>
+        				</setting>
+        			</children>
+          </vietnamshipping>
+				</children>
+			</admin>
+		</resources>
+	</acl>	
+</config>

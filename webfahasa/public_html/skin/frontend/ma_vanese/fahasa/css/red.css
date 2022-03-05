@@ -1,0 +1,186 @@
+.pt_vmegamenu .parentMenu{
+    border-bottom: 1px solid #C76480 !important;
+    border-left: 1px solid #C76480 !important;
+    border-right: 1px solid #C76480 !important;
+}
+.cd-label{    
+    color: #c00;
+    clear: both;
+}
+.block .block-title{    
+}
+.youama-forgot-password a, .youama-ac a, .review-nologged a, .e-msg,
+a#review-form, .no-rating a, .p-info, .xem-chi-tiet{
+    color: #2489F4;
+}
+.product-tags a, .back-link a, .own-review, .rating-links a{
+    color: #2489F4 !important;
+}
+.pt_vmegamenu div.pt_menu .parentMenu a, .pt_vmegamenu div.pt_menu .parentMenu span.block-title,
+.tab-title ul li{
+    background-color: white;
+    color: #484848;
+}
+.sorter .sort-by label, .pager .limiter label{
+    color: #484848;
+}
+.header .form-search input.input-text {
+    border: 1px solid #c00 !important;
+}
+.header-container .top-link, .sorter .sort-by select, .pager .limiter select{
+    background: transparent;
+}
+.header-container .container, .toolbar {
+    background-color: transparent;
+}
+.toolbar, .fieldset{
+    background: white !important;
+}
+.opc-wrapper-opc .opc-col-left, .opc-wrapper-opc .opc-col-center, .opc-wrapper-opc .opc-col-right{
+    border: 1px solid #c00;    
+}
+.block-layered-nav .block-content{
+    padding-top: 20px;
+}
+.category-vmega-menu, .pt_custommenu_content,
+.top-cart-title .fa, .header .form-search button.button span, 
+.header-container .top-link .infor .fa, 
+/*.item-inner .price-box .regular-price,*/
+/*.item-inner .price-box .special-price,*/
+#sequence-theme .controls a:hover,.nivo-directionNav a:hover,
+.product-view button.btn-cart:hover span,
+.email-friend a:hover, .actions-inner .add-to-links li a:hover,
+.product-view .product-img-box .price-box .special-price,
+.product-tabs li.active a:hover,
+.product-tabs a:hover,
+.cart .totals .checkout-types, .product-view .product-img-box .price-box .regular-price,
+.pt_custommenu div.pt_menu.act, ul.link-follow li a span, .fhs-bundle-price{
+    background-color: #F7931E !important;
+}
+.product-tabs li.active a{
+    background-color: #FAA52D !important;
+}
+.actions-inner button.button:hover span{
+    background: #c00;
+}
+.pt_custommenu div.pt_menu .parentMenu a:hover, .pt_custommenu div.pt_menu .parentMenu span.block-title:hover, 
+.pt_custommenu #pt_menu_link ul li a.act, .pt_custommenu #pt_menu_link ul li a:hover, 
+.pt_custommenu div.pt_menu.act, .tc-content{
+    background-color: #ED3237 !important;
+    color: white !important;
+}
+.header-container .top-link .infor, .header-container .top-link .infor span{
+    color: #2D2D2D !important;
+}
+.tab-title ul li{
+    color: #444;
+}
+.tab-title ul {
+    background-color: white !important;
+}
+.header-link a{
+    color: #2D2D2D;
+}
+.price-box-bundle .price-from, .price-box-bundle .price-to{
+    color: white;
+}
+.ma-timer-title h2, .brand-title h2, .catlist-title h2 {
+    background-color: #c00;
+    border: none;
+    color: white !important;
+}
+.account-login .content, .account-login .buttons-set{
+    border-color: #c3bfbf !important;
+    padding: 20px;
+}
+.tab-title ul li:hover, .tab-title ul li.active,
+.pt_vmegamenu #pt_menu_link ul li a.act,
+.pt_vmegamenu #pt_menu_link ul li a:hover,
+.pt_vmegamenu div.pt_menu.act .parentMenu a,
+.pt_vmegamenu div.pt_menu.active .parentMenu a{
+    background-color: white;
+    color: #F7931E;    
+}
+.tab-title ul li.active{
+    font-weight: bold;
+}
+.related-product-title, .upsellslider-title{
+    background: none;    
+    padding-top: 10px;
+}
+.related-product-title h2, .upsellslider-title h2{
+    color: #c00;
+    padding: 10px 0px;
+    margin: 0px 0px 3px;
+    padding-bottom: 0px;
+}
+.product-view .product-shop .availability span, .header-link a:hover,
+.product-name a:hover, .page-title h1, .page-title h2, .f-left, .left,
+#shopping-cart-table .cart-price .price, .block-account .block-content li.current{
+    color: #565555 !important;
+}
+.mobilemenu li.active a, .mobilemenu li.active a, .mobilemenu a:hover,
+.block-account .block-content li a:hover, a:hover, .block-layered-nav li a:hover,
+.block .block-title strong span, .my-account a{
+    color: #C92127;
+}
+.cart .totals table, .cart .totals button.button:hover span{
+    background: #E92328;
+}
+.wrapper_box #continue_shopping:hover, .wrapper_box #shopping_cart:hover {
+    background: #c00 !important;
+}
+ul.link-follow li a span:after{
+    border-top: 5px solid #c00;
+}
+button.button:hover span{background:#c00;}
+.block-subscribe .actions button.button:hover span{
+    color: white;
+    background: #c00;
+}
+.home-block-bottom .box-col:hover, .navbar,
+.pager .pages .current, .pager li > a:hover{
+    background: #FCDAB0;
+    border-radius: 5px;
+    /*width: calc(100% + 20px);*/
+}
+.pager .pages .current, .pager li:hover{
+/*    background: #FCDAB0;
+    border-radius: 5px;*/
+}
+
+.ma-relatedslider-container .flex-direction-nav a:hover,.ma-relatedslider-container .bx-wrapper .bx-controls a:hover,
+.ma-upsellslider-container .flex-direction-nav a:hover,.ma-upsellslider-container .bx-wrapper .bx-controls a:hover,
+.menu-recent .flex-direction-nav a:hover,.menu-recent .bx-wrapper .bx-controls a:hover,
+.block-testimonial-sidebar .flex-direction-nav a:hover,.block-testimonial-sidebar .bx-wrapper .bx-controls a:hover,
+.categorytab-slider .flex-direction-nav a:hover,.categorytab-slider .bx-wrapper .bx-controls a:hover{background-color:#c00; border-color: #c00; }
+.success-msg{
+    border-color: #F7941E;
+    background-color: #F7941E;
+    color: white;
+}
+button.button > span{
+    color: white;
+    background: #C92127;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    transition: all 0.3s;
+}
+/*button.button > span:hover{
+    background: rgb(255,152,0);
+    background: -moz-linear-gradient(90deg, rgba(255,152,0,1) 0%, rgba(247,105,93,1) 100%);
+    background: -webkit-linear-gradient(90deg, rgba(255,152,0,1) 0%, rgba(247,105,93,1) 100%);
+    background: linear-gradient(90deg, rgba(255,152,0,1) 0%, rgba(247,105,93,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ff9800",endColorstr="#f7695d",GradientType=1);
+    box-shadow: 0px 6px 8px hsl(0, 0%, 90%);
+    -moz-box-shadow: 0px 6px 8px hsl(0, 0%, 90%);
+    -webkit-box-shadow: 0px 6px 8px hsl(0, 0%, 90%);
+    transform: scale(1.03);
+}*/
+button.button > span:active{
+    transform: scale(0.98);
+}
+.wrapper_box #shopping_cart, .wrapper_box #continue_shopping{
+    background-color: #F7941E;
+}

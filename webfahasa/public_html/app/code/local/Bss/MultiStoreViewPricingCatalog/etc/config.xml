@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Bss_MultiStoreViewPricingCatalog>
+      <version>1.0.0</version>
+    </Bss_MultiStoreViewPricingCatalog>
+  </modules>
+  <global>
+    <helpers>
+      <multistoreviewpricingcatalog>
+        <class>Bss_MultiStoreViewPricingCatalog_Helper</class>
+      </multistoreviewpricingcatalog>
+    </helpers>
+
+    <models>
+      <multistoreviewpricingcatalog>
+        <class>Bss_MultiStoreViewPricingCatalog_Model</class>
+        <resourceModel>multistoreviewpricingcatalog_resource</resourceModel>
+      </multistoreviewpricingcatalog>
+      <multistoreviewpricingcatalog_resource>
+        <class>Mage_Catalog_Model_Resource</class>
+        <deprecatedNode>catalog_resource_eav_mysql4</deprecatedNode>
+        <entities>
+          <product_super_attribute_pricing>
+            <table>catalog_product_super_attribute_pricing_store</table>
+          </product_super_attribute_pricing>
+        </entities>
+      </multistoreviewpricingcatalog_resource>
+      <catalog_resource>
+        <rewrite>
+          <product_type_configurable_attribute>Bss_MultiStoreViewPricingCatalog_Model_Catalog_Resource_Product_Type_Configurable_Attribute</product_type_configurable_attribute>
+          <product_type_configurable_attribute_collection>Bss_MultiStoreViewPricingCatalog_Model_Catalog_Resource_Product_Type_Configurable_Attribute_Collection</product_type_configurable_attribute_collection>
+        </rewrite>
+      </catalog_resource>
+    </models>
+
+    <resources>
+      <bss_multistoreviewpricingcatalog_setup>
+        <setup>
+          <module>Bss_MultiStoreViewPricingCatalog</module>
+          <class>Mage_Catalog_Model_Resource_Setup</class>
+        </setup>
+      </bss_multistoreviewpricingcatalog_setup>
+    </resources>
+  </global>
+</config> 

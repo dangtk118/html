@@ -1,0 +1,427 @@
+<?php
+    $product_helper = Mage::helper('fahasa_catalog/product');
+    $catalog_param = Mage::registry('catalog_param');
+    
+    $cat_id = $catalog_param['cat_id'];
+    $filters_param = $catalog_param['filters_param'];
+    $currentPage = $catalog_param['currentPage'];
+    $limit = $catalog_param['limit'];
+    $order = $catalog_param['order'];
+    
+    if(!is_numeric($limit)){$limit = 24;}else if($limit > 48){$limit = 48;}else if($limit < 12){$limit = 12;}
+    if(!is_numeric($currentPage)){$currentPage = 1;}
+    
+    if(!empty($order)){
+	if(!empty($is_series_type)){
+	    if($is_series_type){
+		$order = $product_helper->checkOrderBy('series', $order);
+	    }else{
+		$order = $product_helper->checkOrderBy('product', $order);
+	    }
+	}else{
+	    $order = $product_helper->checkOrderBy('product', $order);
+	}
+	
+    }
+    
+    $is_series_type = $catalog_param['is_series_type'];
+    
+    $mobile = Mage::helper('fhsmobiledetect')->isMobile();
+    
+    try {
+	if(!Mage::registry('catalog_data')){
+	    $data = $product_helper->loadProducts($cat_id, $filters_param, $limit, $currentPage, $order, $is_series_type);
+	}else{
+	    $data = Mage::registry('catalog_data');
+	}
+    } catch (Exception $ex) {
+	Mage::log("products loading msg:".$ex->getMessage(), null, "buffet.log");
+    }
+    
+    $limit_list = ["12","24","48"];
+    if($is_series_type){
+	$order_by_list = $product_helper->getOrderList('series');
+    }else{
+	$order_by_list = $product_helper->getOrderList('product');
+    }
+    
+    $skin_url = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true);
+    $queryfier = Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix');
+    $loading_icon_url = $skin_url.'frontend/ma_vanese/fahasa/images/ring_loader.svg';
+?>
+<style>
+    .discount-l-fs , .m-discount-l-fs{
+	font-weight: bold;
+    }
+    
+    /*-----filter----*/
+    ol#dislay_fillter_current li{
+        float: left;
+        padding-right: 10px;
+        border-radius: 5px;
+        margin-right: 10px;
+        margin-top: 10px;
+        background-color: rgba(247, 148, 30, 0.1);
+    }
+    ol#dislay_fillter_current li a{
+        float: right;
+        margin-top: 14px;
+        margin-right: 5px;
+    }
+    .filter-ajax{
+       padding-left: 15px;
+       display:flex;
+       flex-direction:row;
+    }
+    .filter-text-header{
+        margin-top: 20px;
+        font-size: 14px;
+        color: black;
+        margin-right: 10px;
+    }
+    ol#dislay_fillter_current li span.label{
+        font-weight: normal;
+        vertical-align: top;
+        text-align: left;
+        height: 40px;
+        width: calc(100% + 15px);
+        font-family: sans-serif;
+        color: #F7941E;
+        font-size: 14px!important;
+        padding: 10px 16px 0px 16px;
+    }
+    .button-open-category-mobile{
+        height: 40px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        padding-left: 0px;
+        padding-right: 0px;
+       
+    }
+    .icon-filter-mobile{
+        background: url(<?php echo $skin_url; ?>frontend/ma_vanese/fahasa/images/filter.png) no-repeat center;
+        flex: 1;
+        margin-top: 10px;
+    }
+    .text-filter-mobile{
+        flex: 1.4;
+        text-align: right;
+        margin-top: 10px;
+    }
+    .content-filter-mobile{
+         display: flex;
+    }
+    /* -----modal filter----- */
+    .modal-dialog,.modal-content {
+        /* 80% of window height */
+        height: 80%;
+    }
+    .modal-body {
+        /* 100% = dialog height, 120px = header + footer */
+        max-height: calc(100% - 50px);
+        overflow-y: scroll;
+        padding: 0px;
+    }
+    .modal.fade .modal-dialog {
+        transform: translate3d(100vh, 500vh, 0);
+    }
+    .modal.in .modal-dialog {
+        top : 50px;
+        display: unset;
+    }
+    #modal-filter-mobile{
+        overflow-y: hidden;
+    }
+    .modal-header-text{
+        font-size: 15px;
+        font-weight : bold;
+    }
+    .modal-content{
+        min-height: 70%;
+    }
+    .icon-button-close{
+        background:url(<?php echo $skin_url; ?>frontend/ma_vanese/fahasa/images/ico_close.png) no-repeat center;
+        width:30px;
+    }
+</style>
+<!--BEGIN FILTERS-->
+    <?php if(!$mobile) : ?>
+    
+            <div class="filter-ajax">
+                                    <div class="filter-text-header" style="display:none;"><?php echo $this->__('Filter By') ?> :</div>
+
+                                    <ol id="dislay_fillter_current" style="flex:2;">
+                </ol>
+            </div>
+    <?php endif;?>
+<!--END FILTERS-->
+<p class="note-msg" <?php echo (!sizeof($data['product_list']))?'':'style="display: none;"';?> ><?php echo $this->__('There are no products matching the selection.') ?></p>
+<div class="category-products row" <?php echo (!sizeof($data['product_list']))?'style="display: none;"':'';?>>    
+    <?php if(!$mobile) : ?>
+    <div class="toolbar-top">
+	<div class="toolbar  col-sm-12 col-xs-12 col-md-12 ">
+	    <div class="sorter col-sm-4 col-xs-6 col-md-4 ">
+		<p class="view-mode">
+		</p>
+                <div class="abc-xyz">
+                    <div class="dropdownfhs-text hidden-xs"><p><?php echo $this->__('Sort By') ?> :</p></div>
+                    <div class="sort-by dropdownfhs dropdownfhs-select">
+                        <div class='selectBox selectBox-order'>
+                            <span class='selected selected-order'></span>
+                            <span class='selectArrow selectArrow-order'></span>
+                            <div class="selectOptions selectOptions-order" >
+                                <?php foreach ($order_by_list as $order_key => $order_by): ?>
+                                    <span  class="selectOption selectOption-order" value="<?php echo $order_by; ?>" <?php echo ($order_by == $order) ? 'selected=\"selected\"' : ''; ?>><?php echo $this->__($order_key); ?></span>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+	    </div>
+	    <div class="pager col-sm-8 col-xs-5 col-md-8 hidden-xs">
+	<!--<p class="amount"><strong></strong></p>-->
+		<div class="hidden-sm hidden-xs">
+		    <div class="limiter hidden1-xs">
+			<div class="select-sort-by dropdownfhs">
+                            <div class='selectBox selectBox-limit'>
+                            <span class='selected selected-limit'></span>
+                            <span class='selectArrow selectArrow-limit'></span>
+                            <div class="selectOptions selectOptions-limit">
+                                <?php foreach ($limit_list as $_limit):?>
+				    <span class="selectOption selectOption-limit" value="<?php echo $_limit;?>" <?php echo ($_limit == $limit)?'selected=\"selected\"':'';?>><?php echo $_limit." ".$this->__('product');?></span>
+				<?php endforeach; ?>
+                            </div>
+                        </div>
+			</div>
+		    </div>
+		</div>
+                <?php if(1==2): // hidden?>
+		<div class="col-sm-3 col-xs-12 col-md-3"></div>
+		<div class="col-sm-9 hidden-xs col-md-7" style="margin-top: -3px;">
+		    <div class="pages">
+			<ol>
+			    <?php echo $product_helper->calPages($currentPage, $limit, $data['total_products']);?>
+			</ol>
+		    </div>
+		</div>
+                <?php endif;?>
+	    </div>
+            <?php if($mobile) : ?>
+            <div class="button-open-category-mobile hidden-sm col-xs-3 col-xs-offset-3">
+                <div class="content-filter-mobile" onclick="catalog_ajax.displayModalFilter()"><div class ="text-filter-mobile"><?php echo $this->__('Filter');?></div><div class='icon-filter-mobile'>&nbsp;</div></div>
+            </div>
+            <?php endif; ?>
+	</div>
+    </div>
+<?php endif; ?>
+<?php if(!$mobile) :?>    
+    <ul id="products_grid" class="products-grid fhs-top">
+	<?php foreach ($data['product_list'] as $_product): ?>
+		<li>
+		    <div class="item-inner">
+                        <?php echo !empty($_product['discount_label_html'])?$_product['discount_label_html']:''; ?>
+			<div class="ma-box-content">
+			    <div class="products clearfix">
+				<div class="product images-container">
+				    <a href="<?php echo $_product['product_url']; ?>" title="<?php echo $_product['product_name']; ?>" class="product-image">
+					<span class="product-image">
+					    <img class="lazyload" src='<?php echo $loading_icon_url;?>' data-src="<?php echo $_product['image_src']; ?>" width="200" height="200" alt="<?php echo $_product['product_name']; ?>" />
+					</span>							   
+				    </a>
+				</div>
+                              
+			    </div>
+				<?php if($_product['type_id'] != 'series'):?>
+			    <h2 class='product-name-no-ellipsis p-name-list'><a href='<?php echo $_product['product_url'] ?>' title='<?php echo $_product['product_name'] ?>'><?php echo $_product['product_name']; ?></a></h2>
+				<?php else: ?> 
+				    <h2 class='product-name-no-ellipsis p-name-list fhs-series'><a href='<?php echo $_product['product_url'] ?>' title='<?php echo $_product['product_name'] ?>'><span class="fhs-series-label"><i></i></span><?php echo $_product['product_name']; ?></a></h2>
+				<?php endif; ?>
+				    
+				<?php if($_product['type_id'] != 'series'):?>
+				    <div class="price-label">
+					<span id='product-price-<?php echo $_product['product_id'] ?>' class=''>
+					    <span class='price'>
+					    <p class='special-price'>
+						<span class='price'><?php echo $_product['product_finalprice'] ?>&nbsp;đ</span>
+					    </p>
+					    <?php if ($_product['product_price'] != $_product['product_finalprice']): ?>
+					    <p class='old-price bg-white'><span class='price'><?php echo $_product['product_price'] ?>&nbsp;đ</span></p>
+					    <?php endif; ?>
+					    </span>                          
+					</span>  
+					<?php if(!empty($_product['episode'])):?>
+					    <div class='episode-label'><?php echo $_product['episode'];?> </div>
+					<?php endif;?>
+				    </div>
+				    <div class='rating-container'>
+					<?php echo $_product['rating_html'] ?>
+					<?php if($_product['soon_release'] == 1):?>
+					<div>
+					    <div class="hethang product-hh">
+						<span><span><?php echo $this->__('comingsoon');?></span></span>
+					    </div>
+					</div>
+					<?php endif;?>
+				    </div>
+				<?php else:?>
+				    <?php if(!empty($_product['episode'])):?>
+					<div class="fhs-series-episode-label"><?php echo $_product['episode'];?></div>
+				    <?php endif;?>
+					
+				    <div class="fhs-series-subscribes"><?php echo (!empty($_product['subscribes']))?$_product['subscribes']:'0';?> lượt theo dõi</div>
+				<?php endif;?>
+			</div>
+		    </div>
+		</li>
+	<?php endforeach ?>
+    </ul>
+<?php elseif($mobile):  // else => handle mobile ?>
+    <style>
+        ul#products_grid{
+                display:grid;
+                grid-template-columns: 50% 50%;
+                grid-gap: 0px;
+                margin-left:0px;
+            }
+            /* tag li chan */
+            ul#products_grid li:nth-child(even){
+                border-bottom: 1px solid #ecebeb;
+                border-right: none;
+                border-left: none;
+            }
+            /* tag li le */
+            ul#products_grid li:nth-child(odd){
+                border-bottom: 1px solid #ecebeb;
+                border-right: 1px solid #ecebeb;
+                border-left: none;
+               
+            }
+            ul#products_grid li:first-child,ul#products_grid li:first-child + li{
+                border-top: 1px solid #ecebeb;
+            }
+            .ma-box-content .products{
+                margin: 0 0 4px 0 !important;
+            }
+    </style>
+    <?php $styleGridProduct = "style=\"padding-left: 0px!important;padding-right: 0px!important;\"";?>
+    <div style="clear:both;"></div>
+    <ul id="products_grid" class="products-grid fhs-top" <?php echo $styleGridProduct; ?>>
+	<?php foreach ($data['product_list'] as $_product): ?>
+		<li>
+		    <div class="item-inner">
+                        <?php echo !empty($_product['discount_label_html'])?$_product['discount_label_html']:''; ?>
+			<div class="ma-box-content">
+			    <div class="products clearfix">
+				<div class="product images-container">
+				    <a href="<?php echo $_product['product_url']; ?>" title="<?php echo $_product['product_name']; ?>" class="product-image">
+					<span class="product-image">
+					    <img class="lazyload" src='<?php echo $loading_icon_url;?>' data-src="<?php echo $_product['image_src']; ?>" width="200" height="200" alt="<?php echo $_product['product_name']; ?>" />
+					</span>							   
+				    </a>
+				</div>
+			    </div>
+			    
+			    <?php if($_product['type_id'] != 'series'):?>
+			    <h2 class='product-name-no-ellipsis p-name-list'><a href='<?php echo $_product['product_url'] ?>' title='<?php echo $_product['product_name'] ?>'><?php echo $_product['product_name']; ?></a></h2>
+			    <?php else: ?> 
+				<h2 class='product-name-no-ellipsis p-name-list fhs-series'><a href='<?php echo $_product['product_url'] ?>' title='<?php echo $_product['product_name'] ?>'><span class="fhs-series-label"><i></i></span><?php echo $_product['product_name']; ?></a></h2>
+			    <?php endif; ?>
+				    
+			    <?php if($_product['type_id'] != 'series'):?>
+				<div class='price-label'>
+				    <?php if ($_product['product_price'] != $_product['product_finalprice']): ?>
+					<div class='special-price'><span class='price'><?php echo $_product['product_finalprice'] ?>&nbsp;đ</span></div>
+					<div class='old-price'><span class='price'><?php echo $_product['product_price'] ?>&nbsp;đ</span></div>
+				    <?php else: ?>
+					<div class='special-price'><span class='price'><?php echo $_product['product_finalprice'] ?>&nbsp;đ</span></div>
+				    <?php endif; ?>
+				    <?php if(!empty($_product['episode'])):?>
+					<div class='episode-label'><?php echo $_product['episode'];?> </div>
+				    <?php endif;?>
+				</div>
+                                <?php if ($_product['rating_html']) : ?>
+                                        <div class='rating-container' style='margin-top:3px;'><?php echo $_product['rating_html'] ?></div>
+                                <?php endif; ?>
+                                <?php if ($_product['soon_release'] == 1): ?>
+                                        <div class='hethang product-hh'><span><span><?php echo $this->__('comingsoon'); ?></span></span></div>
+                                <?php endif; ?>
+			    <?php else:?>
+				<?php if(!empty($_product['episode'])):?>
+				    <div class="fhs-series-episode-label"><?php echo $_product['episode'];?></div>
+				<?php endif;?>
+
+				<div class="fhs-series-subscribes"><?php echo (!empty($_product['subscribes']))?$_product['subscribes']:'0';?> lượt theo dõi</div>
+			    <?php endif;?>
+			</div>
+		    </div>
+		</li>
+	<?php endforeach ?>
+    </ul>
+<?php endif; ?>
+    <div class="toolbar-bottom">
+	<div class="toolbar  col-sm-12 col-xs-12 col-md-12 ">
+	    <?php  if(1 == 2) : // hidden?>
+		<div class="sorter col-sm-3 col-xs-7 col-md-2 ">
+		    <p class="view-mode">
+		    </p>
+		    <div class="sort-by dropdownfhs">
+			<select onchange="catalog_ajax.sort_change(this.value)">
+			    <?php foreach ($order_by_list as $order_key=>$order_by):?>
+				<option value="<?php //echo $order_by;?>" <?php echo ($order_by == $order)?'selected=\"selected\"':'';?>><?php echo $this->__($order_key);?></option>
+			    <?php endforeach; ?>
+			</select>
+		    </div>
+		</div>
+            <?php endif; ?>
+	    <div class="pager col-sm-12 col-xs-12 col-md-12">
+                <?php  if(1 == 2) : // hidden?>
+	<p class="amount"><strong></strong></p>
+		<div class="hidden-sm hidden-xs">
+		    <div class="limiter hidden1-xs">
+			<div class="select-sort-by dropdownfhs" style="width: 100px;">
+			    <select onchange="catalog_ajax.pagesize_change(this.value)">
+				<?php foreach ($limit_list as $_limit):?>
+				    <option value="<?php echo $_limit;?>" <?php echo ($_limit == $limit)?'selected=\"selected\"':'';?>><?php echo $_limit." ".$this->__('product');?></option>
+				<?php endforeach; ?>
+			    </select>
+			</div>
+		    </div>
+		</div>
+		<div class="col-sm-3 col-xs-12 col-md-3"></div>
+                <?php endif; ?>
+		<div class="col-sm-12 col-xs-12 col-md-12">
+		    <div class="pages" id="pagination">
+			<ol>
+			    <?php echo $product_helper->calPages($currentPage, $limit, $data['total_products']);?>
+			</ol>
+		    </div>
+		</div>
+	    </div>
+	</div>
+    </div>
+</div>
+<!-- Modal -->
+<?php if($mobile) : ?>
+<div id="m-wait" style="display: none;">
+    <p class="loader" id="loading_mask_loader"><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true); ?>/frontend/base/default/images/mana_core/m-wait.gif" alt="Loading..."><br>Please wait...</p>
+</div>
+<div class="m-overlay"></div>
+<div class="modal fade hidden-sm" id="modal-filter-mobile" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-bottom" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><div class="icon-button-close">&nbsp;</div></button>
+          <div class="modal-header-text"><?php echo $this->__('Filter');?></div>
+      </div>
+        <div class="modal-body">
+        </div>
+    </div>
+  </div>
+</div>
+<?php endif; ?>
+<script type="text/javascript">
+$jq(document).ready(function() {
+    catalog_ajax.enableSelectBoxes('order');
+    catalog_ajax.enableSelectBoxes('limit');
+});
+</script>

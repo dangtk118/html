@@ -1,0 +1,153 @@
+<?php
+    $_helper = $this->helper('catalog/output');
+    $product_helper = Mage::helper('fahasa_catalog/product');
+    $product = Mage::registry('current_product_redis');
+    
+    $store_id = Mage::app()->getStore()->getStoreId();
+
+    $is_mobile = Mage::helper('fhsmobiledetect')->isMobile();
+    $more_link = "/daily-suggestion" . "?fhs_campaign=PERSONALIZE_XEM_THEM";
+    $MEDIA_URL = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA, true);
+    $SKIN_URL = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN);
+    $queryfier = Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix');
+    $PAGE_SCRIPT = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS)."lib/personalization.js?q=".$queryfier;
+    
+    
+    $languages = [];
+    $languages['ViewMore'] = $this->__("View More").'<span class="icon_seemore_blue mobile_only down" style="margin-left:4px;"></span>';
+    $languages['ViewLess'] = $this->__("View Less").'<span class="icon_seemore_blue mobile_only up" style="margin-left:4px;"></span>';
+    
+    // get Count_review_FHS
+    
+    
+    $attribute_front = Mage::getStoreConfig('catalog/catalog_cache/attribute_front');
+    $attributes_link_filter = explode(",", $attribute_front);
+    $campaign_attr = 'fhs_campaign=ATTRIBUTE_PRODUCT';
+    
+    if(!empty($product['description'])){
+	$product_description = $product['description'];
+    }
+    
+    if(!empty($product['links'])){
+	$productLinkings = $product['links'];
+    }
+	
+    $product_attributes = $product['attributes'];
+?>
+<div id="product_view_info" class="content product_view_content">
+    <div class="product_view_content-title"><?php echo $this->__('Product Information') ?></div>
+    <div class="product_view_tab_content_ad">
+	<div class="product_view_tab_content_additional">
+	    <table class="data-table table-additional">
+		<col width="25%" />
+		<col />
+		<tbody>
+		    <?php foreach ($product_attributes as $key=>$item):?>
+			<?php 
+			    $value = $product_helper->getAttributeItemValueHtml($store_id, $key, $item, $attributes_link_filter, $campaign_attr);
+			?>
+			<?php if(!empty($value)):?>
+			    <tr>
+				<th class="table-label">
+				    <?php echo $this->escapeHtml($product_helper->getAttributeTranslate($store_id, $key)); ?>
+				</th>
+				<td class="data_<?php echo $key;?>">
+				    <?php echo $value;?>
+				</td>
+			    </tr>
+			<?php endif;?>
+		    <?php endforeach; ?>
+		    
+		    <?php if(!empty($productLinkings)): ?>
+			<tr>
+			    <th style="vertical-align: middle;" class="table-label"><?php echo $this->escapeHtml($this->__('Product appear in')) ?></th>
+			    <td>
+				<ul class="fhs_product_link">
+				<?php foreach ($productLinkings as $links): ?>
+				    <li>
+					<?php 
+					    $tracking_link = "?fhs_campaign=INTERNAL_LINKING";
+					    if($links['key'] == 'series_book'){
+						$helperSeriesBook = Mage::helper("seriesbook");
+						$fhsCampaign = "?fhs_campaign=".$helperSeriesBook->getFhsCampaignSeriPage();
+						$tracking_link = $fhsCampaign;
+					    }
+					?>
+					<a style="font-size: 14px; color: #2489F4" href="<?php echo $links['url'].$tracking_link ?>">
+					    <?php echo $links['value'] ?></a>
+				    </li>
+				<?php endforeach; ?>
+				</ul>
+			    </td>
+			</tr>
+		    <?php endif; ?>
+			    
+		    <?php if(!empty(Mage::registry('product_category'))): ?>
+			<tr>
+			    <th class="table-label"><?php echo $this->escapeHtml($this->__('Top best selling products')) ?></th>
+			    <td>
+				<?php
+				$category = Mage::registry('product_category');
+				$linkPath = Mage::getBaseUrl().$category->getData('url_path');
+				
+				$linkPath = str_replace('//default-category','/all-category.html', $linkPath);
+				$linkTop = str_replace(".html", ".html"."?order=num_orders_month", $linkPath);
+				
+				?>
+				<a style="font-size: 14px; color: #2489F4;" href="<?php echo $linkTop; ?>" ><?php echo $this->__('Top 100 sản phẩm '.$category->getData('name').' bán chạy của tháng') ?></a>
+			    </td>
+			</tr>
+		    <?php endif; ?>
+		</tbody>
+	    </table>
+	</div>
+
+	<div class="clear"></div>
+	<?php //Description--------------------------- ?>
+	<?php if($product_description): ?>
+	    <div id="product_tabs_description_contents">
+		<div id="desc_content" class="std">
+		    <?php echo $product_description;?>
+		    <div class="clear"></div>
+		</div>
+	    </div>
+	<?php endif;?>
+    </div>
+    <div class="clear"></div>
+    <div style="overflow-y: hidden;"><div class="product_view_tab_content_ad_more"></div></div>
+    
+    
+    <div class="clear"></div>
+    <div id="desc_viewmore" class="desc_viewmore">
+	<div class="fhs_center_center" style="padding: 15px 0 8px 0;">
+	    <a id="btn_showmore" class="fhs_btn_default mobile_link"><?php echo $languages['ViewMore']; ?></a>
+	    <script>
+		$jq('.product_view_tab_content_ad_more').html($jq('.product_view_tab_content_ad').html());
+		$jq(document).ready(function(){
+		    let h = $jq('.product_view_tab_content_ad_more').height();
+		    if(h+25 > 600){
+			$jq('#desc_viewmore').fadeIn(0);
+		    }
+		});
+		$jq('#btn_showmore').click(function(){
+		    let $btn_showmore = $jq(this);
+		    if($jq('.product_view_tab_content_ad_more').is(':visible')){
+			$btn_showmore.html('<?php echo $languages['ViewMore'];?>');
+		    }else{
+			$btn_showmore.html('<?php echo $languages['ViewLess'];?>');
+		    }
+		    $jq('.product_view_tab_content_ad_more').slideToggle();
+		});
+	    </script>
+	</div>
+    </div>
+</div>
+
+<?php //Review Block--------------------------- ?>
+<div id="product_view_review" class="content product_view_content">
+    <div class="product_view_content-title"><?php echo $this->__('Product Reviews') ?></div>
+    <div id="product_view_tab_content_review" class="product_view_tab_content_review">
+	<?php echo $this->getChildHtml('product_review_info') ?>
+    </div>
+    <div class="clear"></div>
+</div>

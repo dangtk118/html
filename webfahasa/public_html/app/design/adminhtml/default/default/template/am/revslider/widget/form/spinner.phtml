@@ -1,0 +1,82 @@
+<?php
+/**
+ * @category    AM
+ * @package     AM_RevSlider
+ * @copyright   Copyright (C) 2008-2013 ArexMage.com. All Rights Reserved.
+ * @license     GNU General Public License version 2 or later
+ * @author      ArexMage.com
+ * @email       support@arexmage.com
+ */
+?>
+<tr>
+    <td class="label">
+        <?php echo $this->getElement()->getLabel()?>
+    </td>
+    <td class="value">
+        <div id="spinner_preview">
+            <div class="tp-loader tp-demo">
+                <div class="dot1 dot"></div>
+                <div class="dot2 dot"></div>
+                <div class="bounce1 bounce"></div>
+                <div class="bounce2 bounce"></div>
+                <div class="bounce3 bounce"></div>
+            </div>
+        </div>
+    </td>
+</tr>
+<script type="text/javascript">
+    'use strict';
+
+    var spinner_current_class;
+
+    function onChangeSpinner(){
+        var container = $('spinner_preview').down('.tp-loader'),
+            spinner = $('use_spinner'),
+            spinner_color = $('spinner_color');
+
+        if (!container || !spinner || !spinner_color) return;
+        container.removeClassName(spinner_current_class);
+        spinner_current_class = 'spinner' + spinner.value;
+        container.addClassName(spinner_current_class);
+        var color = '#' + spinner_color.value;
+
+        switch (spinner.value){
+            case '1':
+            case '2':
+                container.setStyle({backgroundColor: color});
+                break;
+            case '3':
+                container.setStyle({backgroundColor: 'transparent'});
+                container.select('.bounce').each(function(bounce){
+                    bounce.setStyle({backgroundColor: color});
+                });
+                break;
+            case '4':
+                container.setStyle({backgroundColor: 'transparent'});
+                container.select('.dot').each(function(dot){
+                    dot.setStyle({backgroundColor: color});
+                });
+                break;
+            default:
+                container.setStyle({backgroundColor: '#FFFFFF'});
+                break;
+        }
+    }
+
+    document.observe('dom:loaded', function(){
+        onChangeSpinner();
+    });
+</script>
+<style type="text/css">
+#spinner_preview{
+    width:100%;
+    height:100px;
+    position:relative;
+    background:#F1C40F;
+}
+.tp-loader.tp-demo{
+    left:50% !important;
+    position:absolute;
+    top:50% !important;
+}
+</style>

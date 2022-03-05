@@ -1,0 +1,100 @@
+<?php
+/******************************************************
+ * @package Ves Megamenu module for Magento 1.4.x.x and Magento 1.7.x.x
+ * @version 1.0.0.1
+ * @author http://landofcoder.com
+ * @copyright	Copyright (C) December 2010 LandOfCoder.com <@emai:landofcoder@gmail.com>.All rights reserved.
+ * @license		GNU General Public License version 2
+*******************************************************/
+$title = $this->getConfig("title");
+$enable_offcanvas = Mage::getStoreConfig("ves_verticalmenu/ves_verticalmenu/enable_offcanvas");
+$navigation_tab = Mage::getStoreConfig("ves_verticalmenu/ves_verticalmenu/navigation_tab");
+$navigation_tab = $navigation_tab?$navigation_tab:'<i class="fa fa-bars"></i> '.$this->__("Categories");
+?>
+<div id="ves-verticalmenu" class="block block-success ves-verticalmenu highlighted offcanvas-actived"> <?php // remove hidden-xs?>
+	<?php if($title) { ?>
+	<div class="block-title <?php if($enable_offcanvas): ?>hidden-xs hidden-sm<?php endif; ?>">
+		<span><?php echo $title; ?></span>	
+		<em class="shapes right"></em>	
+		<em class="line"></em>
+	</div>
+	<?php } ?>
+	<div class="block-content">
+		<div class="navbar navbar-inverse">
+			<div id="verticalmenu" class="verticalmenu offset-canvas-menu-play" role="navigation" data-offcanvas="<?php echo $enable_offcanvas?'true':'false'; ?>">
+				<div class="navbar">
+					<a href="javascript:;" data-target=".navbar-collapse" data-toggle="collapse" class="navbar-toggle hide">
+				        <span class="icon-bar"></span>
+				        <span class="icon-bar"></span>
+				        <span class="icon-bar"></span>
+                                        </a>
+					<div class="collapse navbar-collapse navbar-ex1-collapse">
+                                                <div class="close-mobile-nav close-block hidden-lg hidden-md">
+                                                    <div class="menu-navigation">
+                                                        <div class="lang">
+                                                            <?php echo $this->getLayout()->createBlock("page/switch")->setTemplate("page/switch/languages.phtml")->toHtml();?></div><?php echo $title; ?>
+                                                        <i class="button-close-menu fa fa-times"></i>
+                                                    </div>
+                                                </div>   
+						<?php echo $menuHtml;//Main menu content ?>
+
+						<?php if($menu_footer = $this->getChildHtml("verticalmenu.menu.footer")): ?>
+						<div class="menu-footer hidden-lg hidden-md">
+							<?php echo $menu_footer;//Footer menu content ?>
+						</div>
+						<?php endif ;?>
+					 </div>
+					<!-- Off canvas tab icon just show on offcanvasmenu -->
+					<div class="navbar-offcanvas-tab hidden"><?php echo $navigation_tab; ?></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+jQuery(window).ready( function(){
+
+	/*  Fix First Click Menu */
+	jQuery(document.body).on('click', '#verticalmenu [data-toggle="dropdown"]' ,function(event){
+		event.stopImmediatePropagation();
+		jQuery(this).parent().show();
+
+		var clickable = jQuery(this).data("clickable");
+        clickable = (typeof(clickable) != "undefined")?clickable:1;
+
+        if(!mobilecheck()) {
+            clickable = 1;
+        }
+
+        if(clickable == 1) {
+			if(!jQuery(this).parent().hasClass('open') && this.href && this.href != '#'){
+				window.location.href = this.href;
+			}
+		}
+
+		return false;
+
+	});
+	jQuery(document.body).on('dblclick', '#verticalmenu [data-toggle="dropdown"]' ,function(event){
+		event.stopImmediatePropagation();
+		jQuery(this).parent().show();
+
+		var clickable = jQuery(this).data("clickable");
+        clickable = (typeof(clickable) != "undefined")?clickable:1;
+
+        if(!mobilecheck()) {
+            clickable = 1;
+        }
+
+        if(clickable == 1) {
+			if(!jQuery(this).parent().hasClass('open') && this.href && this.href != '#'){
+				window.location.href = this.href;
+			}
+		}
+
+		return false;
+
+	});
+});
+</script>

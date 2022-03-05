@@ -1,0 +1,33 @@
+<?php if(Mage::getStoreConfig('productviewed_config/config/is_active')):?>
+<?php $page_size = Mage::getStoreConfig('productviewed_config/config/page_size');?>
+
+<div class="page-empty-banner col-lg-12 col-md-12 col-sm-12">
+        <div class="col-main">
+             <div class="container">
+                <div class="container-inner">
+<div style="justify-content: center;">
+
+<!-- Begin Content -->
+<div class="clear"></div>
+<div class="fhs-product-grid">
+    <div class="fhs-product-grid-title"><?php echo $this->__('Product viewed');?></div>
+    <div id="products_viewed_grid" class="fhs-product-grid-content" style="display: none;">
+	<ul id="products_viewed_grid_item" class="fhs-product-grid-list"></ul>
+    </div>
+    <div id="productviewed_bottom" style="clear: both;"></div>
+</div>
+<!-- End Content -->
+
+</div>
+	    </div>
+	</div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    var product_viewed_page = new ProductViewed();
+    product_viewed_page.initProductViewedPage(true, <?php echo $page_size;?>);
+</script>
+    
+<?php endif;?>

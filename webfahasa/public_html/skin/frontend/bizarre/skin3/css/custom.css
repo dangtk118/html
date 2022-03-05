@@ -1,0 +1,201 @@
+/**** Header *****/
+.nav-container a.level-top {padding: 1em 20px;}
+.nav-container a.level-top:hover {padding-top: 1em; padding-bottom: 1em;}
+.nav-wide li.level-top {margin-left: 0;}
+.nav-container a.level-top:before {
+    border-left: 1px solid rgba(0, 0, 0, 0.1);
+    content: "";
+    display: block;
+    height: 16px;
+    right: 0;
+    margin-top: -8px;
+    position: absolute;
+    top: 50%;
+}
+.nav-container .last a.level-top:before {content: none;}
+.nav-container a.level-top > span {font-weight: bold; }
+
+header.header .search_mini_form {display: inline-block; clear: none; padding-top: 1em; float: left;}
+header.header .form-search input {
+	float: left;
+	font-style: italic;
+	font-size: 11px;
+	width: 366px;
+	padding: 3px 10px;
+	margin-right: -1px;
+	height: 24px;
+}
+header.header .form-search button {
+	float: right;
+	overflow: hidden;
+	text-align: center;
+}
+header.header .form-search button > span {float: left; height: 32px; width: 58px; padding: 0; display: block; border-width: 0;}
+header.header .form-search button span i {font-size: 12px; line-height: 32px;}
+header.header .form-search button span i.fa-caret-right {display: none;}
+header.header .form-search button span span {font-size: 0; background: none; padding: 0; line-height: 24px; width: auto; display: block; width: 58px;}
+header#header .welcome-msg {font-size: .91em; padding: .5em 0 0; margin-right: 70px;}
+.topline {padding: 1.5em 0;}
+header#header .quick-access {float: left; padding-top: 1em;}
+header#header .header-right {margin-top: .5em;}
+header#header h2.logo {margin-right: 20px;}
+header.header .nav-container {padding-bottom: 0;}
+header.header.floating .small-logo {margin: .5em 0;}
+header.header.floating .nav-container {margin-top: .5em;}
+.bottom-scroll-button {position: absolute; text-align: center; left: 0; right: 0; top: -5em; z-index: 999; cursor: pointer;}
+.bottom-scroll-button .label {font-size: 1.16em; color: #888; display: block; margin-bottom: .5em;}
+.bottom-scroll-button .icon {font-size: 2.33em;}
+header.header.floating .top-container {display: none;}
+header.header,
+body.boxed-layout header.header .topline .container_12 {box-shadow: 0 2px 5px rgba(0,0,0,.1);}
+header.header .menu-line {box-shadow: 0 -5px 8px rgba(0,0,0,.1);}
+
+.newsletter-line .block-subscribe h3 {font-weight: 300;}
+.newsletter-line .block-subscribe label {font-family: Arial; font-style: normal;}
+.newsletter-line .block-subscribe {padding-top: 7em;}
+header.header.floating .grid_12 #search_mini_form {top: 0;}
+.nav-wide .menu-wrapper {z-index: 99991;}
+header#sticky-header.floating .header-right {margin-top: .125em;}
+header#sticky-header.floating .nav-container,
+header#sticky-header .nav-container > ul {padding-bottom: 0;}
+
+/**** Content ****/
+.text-banner .text-banner-content {text-align: center; top: 7%; width: 75%; left: 13%;}
+.text-banner .text-banner-content h2 {font-size: 2.5em; color: #222; font-weight: 300; line-height: 1; width: 94%; margin: 0 auto .25em; letter-spacing: -1px;}
+.text-banner .text-banner-content p {font-family: Arial; font-style: normal; width: 100%;}
+.text-banner .text-banner-content a.banner-link {font-family: Arial; font-size: .91em;}
+.text-banner .text-banner-content a.banner-link i {margin-top: -2px;}
+.text-banner .text-banner-content.skin-1 {top: 36%; width: 46%; left: 27%;}
+.text-banner .text-banner-content.skin-1 h2 {line-height: .91; margin-bottom: .417em;}
+.text-banner .text-banner-content.skin-2 {top: 31%; width: 62%; left: 19%;}
+.text-banner .text-banner-content.skin-2 a {color: #fff;}
+.text-banner .text-banner-content.skin-2 p {width: 100%;}
+.address-block {text-align: center; color: #fff; padding: 2.5em 20px 0!important; background-image: url(../images/text_banner_bg.png); background-repeat: no-repeat; background-position: center;}
+.address-block a {color: #fff;}
+.address-block a:hover {text-decoration: underline;}
+.address-block .image img {padding-bottom: .5em;}
+.address-block .image .banner-title {font-size: 2.5em; font-weight: 300; letter-spacing: -1px;}
+.address-block .banner-title {display: block; margin-bottom: .25em;}
+.address-block .banner-title i {font-size: 1.16em; margin-right: 5px; margin-top: .25em;}
+.address-block .banner-title strong {font-size: 1.5em; font-weight: 700; text-transform: uppercase;}
+.address-block .text-banner {text-align: left; margin-top: 3.5em; background: black; margin: 3.5em -20px 0; padding: 3em 28px 2.5em; background-color: rgba(0,0,0,.1);}
+.address-block .text-banner p {margin-bottom: 0; font-size: .91em;}
+.slider-container .next {right: 0;}
+.slider-container .prev {left: 0;}
+.slider-container .next i,
+.slider-container .prev i {border: none; color: #222; width: 40px; height: 40px; line-height: 38px;}
+body .widget .widget-title h1,
+body .widget .widget-title h2,
+.widget-title h2,
+.page-title h1,
+.page-title h2,
+.page-title h3,
+.page-title h4,
+.page-title h5,
+.page-title h6,
+.related-wrapper-bottom .block-title strong span,
+.rating-title h2,
+.block-title h2 {font-weight: 300!important;}
+.widget-title .category-link {font-family: Arial; font-size: .91em; margin-top: 1.25em;}
+.widget-title .category-link i {margin-top: -2px;}
+.banners .banner {overflow: hidden; float: left; width: 33.3%;}
+.banners .banner a {display: block;}
+.banners .banner-content {font-size: 1.5em; font-weight: 300; color: #fff; padding: .5em 19px; letter-spacing: -.75px; position: relative;}
+.banners .banner-content p {margin: 0 0 3px; position: relative; z-index: 2;}
+.banners .banner + .banner .banner-content:after {content: ""; position: absolute; top: 0; left: 0; background-color: rgba(0,0,0,.1); height: 100%; width: 100%;}
+.banners .banner + .banner + .banner .banner-content:after {background-color: rgba(0,0,0,.2);}
+
+.widget-latest li h3 a,
+.widget .widget-title h1,
+.widget .widget-title h2,
+.widget-title h2,
+.page-title h1,
+.page-title h2,
+.page-title h3,
+.page-title h4,
+.page-title h5,
+.page-title h6,
+.nav-container a.level-top > span,
+#login-holder .link-box a,
+button.button span span,
+header.header .top-cart .block-title .title-cart,
+.header-slider-container .iosSlider .slider .item h2,
+.home-banners-2 .text-banner .banner-title strong,
+.home-text-banners span strong,
+.home-container.grid-2 .product-info-top .product-name a,
+aside.sidebar .block.block-layered-nav dl dt.filter-label,
+.newsletter-line .block-subscribe h3,
+.footer-links span,
+#footer .footer-second-line .footer-block-title h2,
+aside.sidebar .block-title strong span,
+aside.sidebar .actions a,
+.products-list .product-name a,
+.sorter .view-mode .grid,
+.sorter .view-mode .list,
+.sorter label,
+.pages li.current,
+.pages li a,
+.product-view .product-shop .product-name h1,
+.meigee-tabs a,
+.related-wrapper-bottom .block-title strong span,
+.rating-title h2,
+.related-wrapper .block-related .block-title span,
+.related-products-button a,
+.related-wrapper .block-related.large-image .product-name a,
+.product-collateral h2,
+.nav-wide ul.level0 li.level1 span.subtitle,
+.nav-wide .top-content a,
+.nav-wide .bottom-content span strong,
+header.header .top-cart .block-content .subtotal .label,
+header.header .top-cart .block-content .subtotal .price,
+header.header .top-cart .block-content .actions a,
+.data-table .product-name a,
+.cart header h2,
+#cart-accordion h3.accordion-title span,
+.fieldset .legend,
+.product-options dt label, 
+.dashboard .welcome-msg .hello, 
+.dashboard .box-title h2,
+.dashboard .box-title h3,
+.dashboard .box-head h3,
+.dashboard .box-head h2, 
+.opc h3, 
+.opc-wrapper-opc .opc-block-title h3, 
+.opc .step-title h2,
+.menu-button,
+.widget-wrapper .category-button a, 
+.add-to-cart-success a, 
+.home-banners-2 .banner .banner-content h2, 
+a.aw-blog-read-more, 
+.block-subscribe strong span, 
+.block-title h2, 
+.text-banner .text-banner-content h2, 
+.banner .banner-title, 
+body .address-block .banner-title, 
+header#header .language-currency-dropdown label, 
+.banner .banner-content {-webkit-text-stroke-width: 0;}
+
+.newsletter-line .grid_12 {background-image: url(../images/sk3_subscribe_bg.jpg); min-height: 279px;}
+.cms-skin3-home .content-wrapper .main-container {padding-top: 0; padding-bottom: 0;}
+.products-grid .product-name a {font-family: Arial;}
+.price-box .price {font-family: Arial; font-size: 1.5em; font-weight: bold;}
+
+.page-no-route header.header,
+body.boxed-layout .page-no-route  header.header .topline .container_12,
+.page-no-route header.header .menu-line,
+.page-no-route #footer {box-shadow: none;}
+.page-no-route header.header .search_mini_form {float: none;}
+.page-no-route .no-route {padding-bottom: .75em;}
+
+/**** Footer ****/
+#footer  {box-shadow: 0 -5px 10px rgba(0,0,0,.1); position: relative;}
+#footer .footer-second-line .footer-block-title h2 {font-weight: 300;}
+#footer .links-block {margin-bottom: -1px;}
+#footer .links-block .links li a {font-size: .817em; text-transform: uppercase; line-height: 1.583em;}
+#footer .footer-second-line .links li a {padding-top: .5em; padding-bottom: .5em;}
+#footer .footer-second-line .links li a:before {top: .6em;}
+#footer .footer-second-line .footer-logo-wrapper {margin-bottom: 1.5em;}
+.footer-topline,
+body.boxed-layout  .footer-topline .container_12 {border-top: solid 0px;}
+#footer .price-box .price {font-size: 1.16em;}
+#footer .price-box .old-price .price {font-size: .91em;}

@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Fahasa_HeaderColor>
+            <version>0.1.0</version>
+        </Fahasa_HeaderColor>
+    </modules>
+    <global>
+        <models>
+            <fahasa_headercolor>
+                <class>Fahasa_HeaderColor_Model</class>
+            </fahasa_headercolor>
+        </models>
+    </global>
+    <default>
+        <tab1>
+            <general>
+                <text_field>Default value</text_field>
+                <textarea></textarea>
+                <dropdown>key2</dropdown>
+                <multiple_dropdown>key1,key2</multiple_dropdown>
+                <time>11,30,45</time>
+                <active>0</active>
+                <boolean>1</boolean>
+                <dependant_text_field>Default value</dependant_text_field>
+            </general>
+        </tab1>
+    </default>
+</config>

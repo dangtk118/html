@@ -1,0 +1,54 @@
+<div class="fhs-font col-main col-lg-9 col-md-9 col-sm-12 col-xs-12 col-fhs-main-body" style="margin-top: 15px; padding-bottom: 15px;">
+<?php
+    $customer_id = Mage::getSingleton('customer/session')->getCustomer()->getEntityId();
+    $tryoutItems = Mage::helper("fahasa_customer/fpoint")->getTransationLog($customer_id, 1, 20);
+    $index_item = 0;
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo $CSS_FILE; ?>" media="all" />
+<script type="text/javascript" src="<?php echo $FS_SCRIPT; ?>"></script>
+<table id="history_fpoint" class="data-table tryout-history table-striped account-order-history">
+    <colgroup>
+	<col width="1">
+	<col width="1">
+	<col width="1">
+	<col width="1">
+	<col width="1">
+	<col width="1">
+	<col width="1">
+    </colgroup>
+    <thead>
+	<tr class="first last">
+	    <th>#</th>
+	    <th><?php echo $this->__("Action"); ?></th>
+	    <th><?php echo $this->__("Action Time"); ?></th>
+	    <th><?php echo $this->__("Order Id"); ?></th>
+	    <th><?php echo $this->__("Amount Before"); ?></th>
+	    <th><?php echo $this->__("Amount"); ?></th>
+	    <th><?php echo $this->__("Left Over"); ?></th>
+	</tr>
+    </thead>
+    <tbody>
+	<?php foreach ($tryoutItems as $item):?>
+	    <?php $index_item++; ?>
+	    <tr>
+		<td><?php echo $index_item; ?></td>
+		<td><?php echo (!empty($item['action']))?$this->__($item['action']):""; ?></td>
+		<td><?php echo date('d-m-Y H:i:s', strtotime($item['createdAt'])); ?></td>
+		<td>
+		    <?php if(!empty($item['orderId'])):?>
+			<a href="/sales/order/view/order_id/<?php echo $item['orderId']?>">
+			    <?php echo (!empty($item['suborderId']))?$item['suborderId']."_".$item['orderId']:$item['orderId'];?>
+			</a>
+		    <?php endif;?>
+		</td>
+		<td><?php echo number_format($item['amountBefore'], 0, ",", "."); ?></td>
+		<td>
+		    <?php echo ($item['amount'] > 0)?"+":"";?>
+		    <?php echo number_format($item['amount'], 0, ",", ".");?>
+		</td>
+		<td><?php echo number_format($item['amountAfter'], 0, ",", "."); ?></td>
+	    </tr>
+	<?php endforeach;?>
+    </tbody>
+</table>
+

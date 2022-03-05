@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <tabs>
+        <fahasa_fpointstore translate="label" module="fpointstore">
+            <label>Fpoint Store</label>
+            <sort>1</sort>
+        </fahasa_fpointstore>
+    </tabs>
+    <sections>
+        <fpointstore_config translate="label" module="fpointstore">
+            <label>Fpoint Store</label>
+            <tab>fahasa_fpointstore</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>201</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <config translate="label">
+                    <label>Config</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <expanded>1</expanded>
+                    <fields>
+                        <is_active>
+                            <label>Is Active</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <comment></comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </is_active>
+                        <active_fpointstore_id>
+                            <label>Active FpointStore Id</label>
+                            <frontend_type>text</frontend_type>
+                            <comment></comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </active_fpointstore_id>
+                        <slider_limit>
+                            <label>Max gifts in slider</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Max gifts loaded for fpointstore slider</comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </slider_limit>
+                        <gifts_per_page>
+                            <label>Products per page</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Number of gifts loaded per request</comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </gifts_per_page>
+                        <redis_port>
+                            <label>Redis Port</label>
+                            <frontend_type>text</frontend_type>
+                            <comment></comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </redis_port>
+                        <redis_host>
+                            <label>Redis Host</label>
+                            <frontend_type>text</frontend_type>
+                            <comment></comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </redis_host>
+                    </fields>
+                </config>
+            </groups>
+        </fpointstore_config>
+    </sections>
+</config>

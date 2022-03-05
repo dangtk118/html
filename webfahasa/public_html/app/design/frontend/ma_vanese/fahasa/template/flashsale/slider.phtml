@@ -1,0 +1,105 @@
+<?php 
+    $is_mobile = Mage::helper('fhsmobiledetect')->isMobile(); 
+    
+    $CSS_FILE = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true)
+            ."frontend/ma_vanese/fahasa/css/flashsale.css?q="
+            .Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix');
+    
+//    $MOMENT_SCRIPT = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS, true)
+//            ."lib/moment.min.js?q="
+//            .Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix');
+    
+    $FS_SCRIPT = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS, true)
+            ."lib/flashsale.js?q="
+            .Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix');
+    $loading_icon_url = $this->getSkinUrl('images/ring_loader.gif'); 
+    $dataBlock = $this->getData('data');
+?>
+
+<link rel="stylesheet" type="text/css" href="<?php echo $CSS_FILE; ?>" media="all" />
+<script type="text/javascript" src="<?php echo $FS_SCRIPT; ?>"></script>
+
+<div id="flashsale-slider" class="row" style="margin: 10px 0px;padding: 0px; margin-top: 20px; margin-bottom: 0px;">
+    <?php if ($is_mobile): ?>
+        <div  class='flashsale-header'>
+            <a href="/flashsale">
+                <img src="https://cdn0.fahasa.com/media/wysiwyg/icon-menu/ico_flashsale@3x.png" style="width: 25px; height: 25px;margin-left: 10px;"/>
+                <span class='flashsale-header-title'>FLASH SALE</span>
+            </a>
+             <span>
+                <div class='split'></div>
+            </span>
+            <span style="" class='flashsale-page-countdown-label'></span>
+            <div class="flashsale-page-countdown">
+                <div class="flashsale-countdown">
+                    <span class="flashsale-countdown-number">00</span>
+                    <span>:</span>
+                    <span class="flashsale-countdown-number">00</span>
+                    <span>:</span>
+                    <span class="flashsale-countdown-number">00</span>
+                </div>
+            </div>
+        </div>
+        <div style="overflow: hidden;" class="swiper-container-flashsale">
+            <div class="bxslider swiper-wrapper flashsale-list">
+            </div>
+        </div>
+        <div class="tabs-xem-them xem-them-item-aaa">
+            <a href="flashsale" ><?php echo $this->__('Xem Them'); ?></a>
+        </div>
+    <?php else: ?>
+    <div  class='flashsale-header'>
+            <a href="/flashsale">
+                <img src="https://cdn0.fahasa.com/media/wysiwyg/icon-menu/ico_flashsale@3x.png" style="width: 25px; height: 25px;margin-left: 10px;"/>
+                <span class='flashsale-header-title'>FLASH SALE</span>
+            </a>
+            <span>
+                <div class='split'></div>
+            </span>
+            <span style="" class='flashsale-page-countdown-label'></span>
+            <div class="flashsale-page-countdown">
+                <div class="flashsale-countdown">
+                    <span class="flashsale-countdown-number">00</span>
+                    <span>:</span>
+                    <span class="flashsale-countdown-number">00</span>
+                    <span>:</span>
+                    <span class="flashsale-countdown-number">00</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 fhs-full-p">
+            <div class="flashsale-body">
+                <ul class="flashsale-list">            
+                </ul>
+                <div class="tabs-xem-them xem-them-item-aaa">
+                    <a href="flashsale" ><?php echo $this->__('Xem Them'); ?></a>
+                </div>
+            </div>
+        </div>
+    <?php endif; ?>
+</div>
+
+<script type="text/javascript">
+    const FS_URL = "/node_api/flashsale/slider";
+    const FS_BASE_SKIN_URL = "<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true); ?>";
+    const FS_DATA = <?php echo json_encode($dataBlock); ?>;
+    const FS_TEXT_LABELS = {
+        'da_ban': "<?php echo $this->__("Da ban"); ?>",
+        'dang_ban': "<?php echo $this->__("Dang ban"); ?>",
+        'sap_ban': "<?php echo $this->__("Sap ban"); ?>",
+        'ngay_mai': "<?php echo $this->__("Ngay mai"); ?>",
+        'ket_thuc': "<?php echo $this->__("Ket thuc trong"); ?>",
+        'bat_dau': "<?php echo $this->__("Bat dau trong"); ?>",
+        'sap_mo': "<?php echo $this->__("Sap mo ban"); ?>",
+    }
+    
+    var flashsale = new FlashSale();
+    
+    if(IS_MOBILE){
+        flashsale.initMobileSlider(FS_URL, FS_TEXT_LABELS, FS_BASE_SKIN_URL,FS_DATA);
+    }else{
+        flashsale.initSlider(FS_URL, FS_TEXT_LABELS, FS_BASE_SKIN_URL,FS_DATA);
+    }
+    
+</script>
+

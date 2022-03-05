@@ -1,0 +1,300 @@
+<?php
+    $BASE_MEDIA_URL = $this->getData('base-media-url');
+    $img_tag_game_1 = $BASE_MEDIA_URL . $this->getData('img-tag-game-1');
+    $img_tag_game_2 = $BASE_MEDIA_URL . $this->getData('img-tag-game-2');
+    
+    $img_mission_tab_1 = $BASE_MEDIA_URL . $this->getData('img-mission-tab-1');
+    $img_mission_tab_2 = $BASE_MEDIA_URL . $this->getData('img-mission-tab-2');
+    $img_mission_tab_3 = $BASE_MEDIA_URL . $this->getData('img-mission-tab-3');
+    $img_mission_tab_4 = $BASE_MEDIA_URL . $this->getData('img-mission-tab-4');
+    $img_mission_tab_5 = $BASE_MEDIA_URL . $this->getData('img-mission-tab-5');
+    
+    $img_canh_cut = $BASE_MEDIA_URL . $this->getData('img-canh-cut');
+    
+    $more_link = $this->getData('more-link');
+    $game_link = $this->getData('game-link');
+    $registration_link = $this->getData('registration-link');
+    $refer_link = $this->getData('refer-link');
+    $review_link = $this->getData('review-link');
+    
+    $is_mobile = Mage::helper('fhsmobiledetect')->isMobile();    
+?>
+
+<link rel="stylesheet" type="text/css" href="/skin/frontend/ma_vanese/fahasa/css/jigsaw_puzzle.css?q=<?php echo Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix'); ?>" media="all" />
+
+<div id="jigsaw-game">
+    <div id="jsp-mobile" <?php if(!$is_mobile): ?>style="display:none"<?php endif; ?>>
+        <div class="jsp-styled-panel jsp-styled-text" style="padding:20px">Game không được hỗ trợ trên điện thoại.</div>
+    </div>
+    
+    <div id="jigsaw-background"></div>
+    
+    <div id="jigsaw-puzzle" class="container" <?php if($is_mobile): ?>style="display:none"<?php endif; ?>>
+        <div id="jsp-title"><h1>MẢNH GHÉP VÀNG</h1></div>
+        <div id="jsp-login" class="jsp-styled-text jsp-styled-panel" style="background-color: #35f6bd !important">
+            <div style="padding-bottom: 20px;">Xin vui lòng đăng nhập để chơi</div>
+            <div style="margin-top: 15px;"><a class="jsp-button" href="/customer/account/login">Đăng nhập</a></div>
+        </div>
+        
+        <div id="jsp-no-game" class="jsp-styled-panel jsp-styled-text">
+            <p>Game không có diễn ra.</p>
+        </div>
+        
+        <div id="jsp-loading" class="jsp-styled-panel jsp-styled-text">
+            <div>Đang Tải...</div>
+        </div>
+        
+        <div>
+            <div id="jsp-message-box"></div>
+        </div>
+        
+        <div id="jsp-loaded">
+            <div id="jsp-player-info" class="jsp-styled-text jsp-styled-panel"><span id="jsp-player-lastname"></span> <span id="jsp-player-firstname"></span></div>
+            <div id="jsp-input-code-box">
+                <input type="text" id="jsp-input-code-piece" placeholder="Nhập Mã ..."/>
+                <button id="jsp-input-code-button" class="jsp-button" onclick="inputPieceCode(this)">Lấy Mảnh Ghép</button>
+            </div>
+            <div style="text-align:center">
+                <div id="jsp-picture"></div>
+                <div id="jsp-picture-preload" style="display:none"></div>
+            </div>
+            
+            <div style="padding: 10px;text-align: center;">
+                <button id="jsp-button-open-trade-fpoint" class="jsp-button" onclick="openTradeFpointPanel()">Đổi F-Point Lấy Mảnh Ghép</button>
+                <button id="jsp-button-open-history" class="jsp-button" onclick="openHistoryPanel()">Mã Mảnh Ghép Của Bạn</button>
+            </div>
+            
+            <div style="margin: 20px 0px;text-align: center;">
+                <img src="<?php echo $img_tag_game_1;  ?>">
+            </div>
+            
+            <div id="jsp-mission-checking" class="jsp-mission-border">
+                <div class="jsp-styled-panel jsp-styled-text" style="text-align: center;padding: 20px;">Đang kiểm tra kết quả nhiệm vụ...</div>
+            </div>
+            
+            <div id="jsp-mission-panels">
+                <div class="swiper-container">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide" data-panel="jsp-mission-panel-login" onclick="changeMissionPanel(this)">
+                            <img src="<?php echo $img_mission_tab_1; ?>" alt="" />
+                        </div>
+                        <div class="swiper-slide" data-panel="jsp-mission-panel-share-game" onclick="changeMissionPanel(this)">
+                            <img src="<?php echo $img_mission_tab_2; ?>" alt="" />
+                        </div>
+                        <div class="swiper-slide" data-panel="jsp-mission-panel-share-registration" onclick="changeMissionPanel(this)">
+                            <img src="<?php echo $img_mission_tab_3; ?>" alt="" />
+                        </div>
+                        <div class="swiper-slide" data-panel="jsp-mission-panel-friend-invite" onclick="changeMissionPanel(this)">
+                            <img src="<?php echo $img_mission_tab_4; ?>" alt="" />
+                        </div>
+                        <div class="swiper-slide" data-panel="jsp-mission-panel-review" onclick="changeMissionPanel(this)">
+                            <img src="<?php echo $img_mission_tab_5; ?>" alt="" />
+                        </div>
+                    </div>
+                    <!-- If we need navigation buttons -->
+                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-button-next"></div>
+                </div>
+                
+                <div>
+                    <div id="jsp-mission-panel-login" class="jsp-mission-panel jsp-mission-border">
+                        <div class="jsp-mission-panel-title">
+                            <h4>Đăng Nhập Mỗi Ngày</h4>
+                        </div> 
+                        <div class="row jsp-mission-panel-body">
+                            <div class="col-xs-6 col-md-6">
+                                <img src="<?php echo $img_canh_cut; ?>"/>
+                            </div>
+                            <div class="col-xs-6 col-md-6">
+                                <div class="jsp-mission-panel-header">Phần Thưởng:</div>
+                                <p class="jsp-mission-panel-desc">Nhận 01 mảnh ghép cho 01 lượt đăng nhập.</p>
+                                <div class="jsp-mission-panel-header">Cách Thức:</div>
+                                <p class="jsp-mission-panel-desc">Đăng nhập mỗi ngày vào Fahasa.com (trên website hoặc app) để hoàn thành nhiệm vụ.</p>
+                                <a href="<?php echo $more_link; ?>" class="jsp-button">Xem Thêm</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="jsp-mission-panel-share-game" class="jsp-mission-panel jsp-mission-border">
+                        <div class="jsp-mission-panel-title">
+                            <h4>Share Game</h4>
+                        </div>
+                        <div class="row jsp-mission-panel-body">
+                            <div class="col-xs-6 col-md-6">
+                                <img src="<?php echo $img_canh_cut; ?>"/>
+                            </div>
+                            <div class="col-xs-6 col-md-6">
+                                <div class="jsp-mission-panel-header">Phần Thưởng:</div>
+                                <p class="jsp-mission-panel-desc">Nhận 01 mảnh ghép cho 01 lượt share.</p>
+                                <div class="jsp-mission-panel-header">Cách Thức:</div>
+                                <p class="jsp-mission-panel-desc">
+                                    Nhấn nút 'Chia Sẻ Game' về Facebook cá nhân ở chế độ Công Khai để hoàn thành nhiệm vụ. Mỗi khách hàng có tối đa 2 lượt share một ngày.
+                                </p>
+                                <button id="share-game-button-2" class="jsp-button">Chia Sẻ Game</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="jsp-mission-panel-share-registration" class="jsp-mission-panel jsp-mission-border">
+                        <div class="jsp-mission-panel-title"><h4>Share Đăng Ký</h4></div>
+                        <div class="row jsp-mission-panel-body">
+                            <div class="col-xs-6 col-md-6">
+                                <img src="<?php echo $img_canh_cut; ?>"/>
+                            </div>
+                            <div class="col-xs-6 col-md-6">
+                                <div class="jsp-mission-panel-header">Phần Thưởng:</div>
+                                <p class="jsp-mission-panel-desc">Nhận 01 mảnh ghép cho 01 lượt share.</p>
+                                <div class="jsp-mission-panel-header">Cách Thức:</div>
+                                <p class="jsp-mission-panel-desc">
+                                    Chia sẻ Link đăng ký thành viên Fahasa.com trên Facebook cá nhân ở chế độ công khai để hoàn thành nhiệm vụ.
+                                </p>
+                                <button id="share-registration-button" class="jsp-button">Chia Sẻ Link Đăng Ký</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="jsp-mission-panel-friend-invite" class="jsp-mission-panel jsp-mission-border">
+                        <div class="jsp-mission-panel-title"><h4>Mời Bạn Bè</h4></div>
+                        <div class="row jsp-mission-panel-body">
+                            <div class="col-xs-6 col-md-6">
+                                <img src="<?php echo $img_canh_cut; ?>"/>
+                            </div>
+                            <div class="col-xs-6 col-md-6">
+                                <div class="jsp-mission-panel-header">Phần Thưởng:</div>
+                                <p class="jsp-mission-panel-desc">Nhận 05 mảnh ghép.</p>
+                                <div class="jsp-mission-panel-header">Cách Thức:</div>
+                                <p class="jsp-mission-panel-desc">Với mỗi đơn hàng hoàn tất đươc sử dụng mã giới thiệu của bạn. Fahasa.com tặng bạn thêm 05 mảnh ghép bất kỳ.</p>
+                                <a href="<?php echo $refer_link; ?>" class="jsp-button" target="_blank">Xem Thêm</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="jsp-mission-panel-review" class="jsp-mission-panel jsp-mission-border">
+                        <div class="jsp-mission-panel-title"><h4>Review</h4></div>
+                        <div class="row jsp-mission-panel-body">
+                            <div class="col-xs-6 col-md-6">
+                                <img src="<?php echo $img_canh_cut; ?>"/>
+                            </div>
+                            <div class="col-xs-6 col-md-6">
+                                <div class="jsp-mission-panel-header">Phần Thưởng:</div>
+                                <p class="jsp-mission-panel-desc">Nhận 02 mảnh ghép cho 01 review.</p>
+                                <div class="jsp-mission-panel-header">Cách Thức:</div>
+                                <p class="jsp-mission-panel-desc">Chọn một cuốn sách bất kỳ mà bạn đã từng mua trên website Fahasa.com. Sau đó đăng nhập và viết cảm nhận của bạn về cuốn sách đó để hoàn thành thử thách.</p>
+                                <a href="<?php echo $review_link; ?>" class="jsp-button">Xem Thêm</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin: 20px 0px;text-align: center;">
+                    <img src="<?php echo $img_tag_game_2;  ?>">
+                </div>
+                
+                <div class="jsp-mission-border">
+                    <div class="row" style="background: #a518ff;margin: 0px;border-radius: 14px;">
+                        <div class="col-xs-6 col-md-6">
+                            <p style="color: #fff;font-size: 22px;padding: 30px;line-height: 2.1em;text-align: center">Với mỗi đơn hàng hoàn tất đươc sử dụng mã giới thiệu của bạn. Fahasa.com tặng bạn thêm 05 mảnh ghép bất kỳ.</p>
+                        </div>
+                        <div class="col-xs-6 col-md-6" style="text-align: center">
+                            <h1 style="color: #fff;font-weight: bold;text-align: center;padding: 10px;font-size: 24px;">MÃ GIỚI THIỆU CỦA BẠN LÀ</h1>
+                            <input id="jsp-input-refer-code" type="text" readonly/>
+                            <div style="padding: 14px;">
+                                <button class="jsp-button" onclick="copyReferCode(this)">Sao Chép</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center">
+                    <div style="padding: 20px;">
+                        <h1 style="font-size: 32px;font-style: normal;" class="jsp-styled-text">ĐÃ CHƠI LÀ PHẢI CÓ BẠN CÓ BÈ,</h1>
+                        <h1 style="font-size: 32px;font-style: normal;" class="jsp-styled-text">VÌ CHƠI CÀNG ĐÔNG, SHARE QUÀ CÀNG ĐÃ!!!</h1>
+                    </div>
+                    <div>
+                        <button id="share-game-button-1" class="jsp-button" style="padding: 0px 40px;">Chia Sẻ</button>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        
+        <div id="jsp-panel-container">
+            <div id="jsp-trade-piece-panel" class="jsp-panel" style="display: none">
+                <h4 style="text-align: center;">Đổi Mảnh Ghép</h4>
+                <div>
+                    <div id="jsp-trade-piece-count" style="padding: 5px 0px;text-align: center;"></div>
+                    <div style="text-align: center;padding: 5px;">
+                        <img style="border: 3px solid #a518ff;border-radius: 10px;" src="">
+                    </div>
+                    <div style="padding: 5px 0px;text-align: center;">Số mảnh ghép bạn muốn đổi là (Max 5 mỗi lần): </div>
+                    <div style="text-align: center;padding: 5px;width: 100px;margin: 0 auto;">
+                        <input id="jsp-trade-piece-input" type="number" value="1"/>
+                    </div>
+                    <div style="padding: 5px 0px;text-align: center;">Số F-point bạn sẽ nhận lại:</div>
+                    <div id="jsp-trade-piece-result" style="padding: 5px 0px;text-align: center;"></div>
+                    <div style="text-align: center;margin-top: 10px;">
+                        <button class="jsp-button" onclick="tradePiecesToFpoints()">Nhận F-Point</button>
+                        <button class="jsp-button" onclick="openTradePiecePanel(true)">Đóng</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="jsp-trade-fpoint-panel" class="jsp-panel" style="display: none">
+                <h4 style="text-align: center;">Đổi F-point lấy mảnh ghép</h4>
+                <div>
+                    <div id="jsp-trade-fpoint-info" style="padding: 5px 0px;text-align: center;"></div>
+                    <div style="padding: 5px 0px;text-align: center;">Số mảnh ghép bạn muốn nhận là (Max 5 mỗi lần):</div>
+                    <div style="text-align: center;padding: 5px;width: 100px;margin: 0 auto;">
+                        <input id="jsp-trade-fpoint-input" type="number" value="1" min="1"/>
+                    </div>
+                    <div style="padding: 5px 0px;text-align: center;">Số F-point bạn sẽ trả:</div>
+                    <div id="jsp-trade-fpoint-result" style="padding: 5px 0px;text-align: center;"></div>
+                    <div style="text-align: center;margin-top: 10px;">
+                        <button class="jsp-button" onclick="tradeFpointsForPieces()">Lấy Mảnh Ghép</button>
+                        <button class="jsp-button" onclick="openTradeFpointPanel(true)">Đóng</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="jsp-history-panel" class="jsp-panel" style="display: none">
+                <h4 style="text-align: center;">Mã Mảnh Ghép Của Bạn</h4>
+                <div>
+                    <div style="padding: 5px 0px;text-align: center;">
+                        <div id="jsp-unused-pieces" class="jsp-styled-panel jsp-styled-text" 
+                             style="padding: 5px;margin-bottom: 5px;font-size: 14px;">Mảnh ghép chưa sử dụng: 12</div>
+                        <ol id="jsp-history-logs">
+                        </ol>
+                    </div>
+                    <div style="text-align: center;">
+                        <button class="jsp-button" onclick="openHistoryPanel(true)">Đóng</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="jsp-alert-panel" class="jsp-panel" style="display: none">
+                <h4 id="jsp-alert-header" style="text-align: center;"></h4>
+                <div>
+                    <div id="jsp-alert-body"></div>
+                    <div style="text-align: center;margin-top: 10px;">
+                        <button class="jsp-button" onclick="openAlertPanel(null, null, true)">Đóng</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="jsp-waiting-panel" class="jsp-panel jsp-styled-text jsp-styled-panel" style="display: none">
+                <div style="text-align:center">
+                    <p style="padding-top: 30px;font-weight: bold;font-size: 18px;margin: 0px;">Xin Vui Lòng Chờ</p>
+                    <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+                </div>
+            </div>
+
+        </div>
+    </div>    
+</div>
+
+<script type="text/javascript">
+    const SHARE_GAME_URL = "<?php echo $game_link; ?>";
+    const SHARE_LINK_REGISTRATION = "<?php echo $registration_link; ?>";
+</script>
+
+<script type="text/javascript" src="/js/lib/event/jigsaw_puzzle.js?q=<?php echo Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix'); ?>"></script>

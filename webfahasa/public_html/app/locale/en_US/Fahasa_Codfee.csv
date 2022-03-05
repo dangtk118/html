@@ -1,0 +1,89 @@
+Location,Location
+Manage Province,Manage Province
+Manage District,Manage District
+Manage Area,Manage Area
+Shipping Rules,Shipping Rules
+Manage Shipping Weight,Manage Shipping Weight
+Setting,Setting
+Add Province,Add Province
+Add District,Add District
+Add Area,Add Area
+Edit Province,Edit Province
+Edit District,Edit District
+Edit Area,Edit Area
+Province Information,Province Information
+District Information,District Information
+Rule Information,Rule Information
+Area Information,Area Information
+District,District
+Province,Province
+Area,Area
+Name,Name
+Code,Code
+Edit,Edit
+Save,Save
+Delete,Delete
+Save And Continue Edit,Save And Continue Edit
+Reset,Reset
+Back,Back
+District Name,District Name
+District Code,District Code
+Province Name,Province Name
+Province Code,Province Code
+Status,Status
+Change status,Change status
+Area Name,Area Name
+Area Code,Area Code
+Price for Shipping Normal,Price for Shipping Normal
+Shipping Express,Shipping Express
+Price by Shipping Weights,Price by Shipping Weights
+Fixed Price for Shipping Express,Fixed Price for Shipping Express
+Manage Rules,Manage Rules
+Add Rule,Add Rule
+Rule information,Rule information
+Conditions,Conditions
+Actions,Actions
+Rule Name,Rule Name
+Discription,Discription
+From Date,From Date
+To Date,To Date
+Priority,Priority
+Apply to Shipping,Apply to Shipping
+Apply,Apply
+Discount Amount,Discount Amount
+Discount Shipping Normal,Discount Shipping Normal
+Discount Shipping Express,Discount Shipping Express
+Percent amount discount,Percent amount discount
+Fixed amount discount,Fixed amount discount
+Free Shipping,Free Shipping
+Apply the rule only if the following conditions are met (leave blank for all products),Apply the rule only if the following conditions are met (leave blank for all products)
+Update prices using the following information,Update prices using the following information
+Apply the rule only to cart items matching the following conditions (leave blank for all items),Apply the rule only to cart items matching the following conditions (leave blank for all items)
+From Weight (g),From Weight (g)
+To Weight (g),To Weight (g)
+Weight Step,Weight Step
+Price Step,Price Step
+Price,Price
+Shipping weight,Shipping weight
+Area does not exist,Area does not exist
+Area was successfully saved,Area was successfully saved
+Unable to find Area to save,Unable to find Area to save
+Area was successfully deleted,Area was successfully deleted
+Please select Area(s),Please select Area(s)
+District does not exist,District does not exist
+District was successfully saved,District was successfully saved
+Unable to find District to save,Unable to find District to save
+District was successfully deleted,District was successfully deleted
+Please select District(s),Please select District(s)
+Province does not exist,Province does not exist
+Province was successfully saved,Province was successfully saved
+Unable to find Province to save,Unable to find Province to save
+Province was successfully deleted,Province was successfully deleted
+Please select Province(s),Please select Province(s)
+Rule does not exist,Rule does not exist
+Rule was successfully saved,Rule was successfully saved
+Unable to find Rule to save,Unable to find Rule to save
+Rule was successfully deleted,Rule was successfully deleted
+Please select Rule(s),Please select Rule(s)
+Please select area,Please select area
+Please select province,Please select provinceCOD Fee,COD Fee

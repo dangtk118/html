@@ -1,0 +1,150 @@
+<?php
+$best_review = $this->getBestLikeReview(Mage::registry('current_product'));
+$best_review_id = $best_review['review_id'];
+$best_review_count = $best_review['countLike'];
+if ($best_review_count == null || $best_review_count == 0):
+    // k co review nao duoc thich
+else:
+    $_review = $best_review;
+    ?>
+    <div id="top-like-review" class="box-collateral box-reviews">
+        <div class="ma-review-col1 span5" style="display: block">
+            <h2 class="own-review"><?php echo $this->__('Best comment') ?><img width="60" src="<?php echo $this->getSkinUrl('images/best-like-3.png');?>"></h2>
+            <div>
+                <div class="f-review-container">
+                    <div class="fhs-review-title">
+                        <table>
+                            <tr>
+                                <td>
+                                    <h4><a href="<?php echo Mage::getUrl('review/product/view', array('id' => $_review->getId())) ?>"><?php echo $this->htmlEscape($_review->getTitle()) ?></a></h4>
+                                </td>
+                                <td>
+                                    <?php $_votes = $_review->getRatingVotes(); ?>
+                                    <?php if (count($_votes)): ?>
+                                        <table class="ratings-table">
+                                            <col />
+                                            <col />
+                                            <tbody>
+                                                <?php foreach ($_votes as $_vote): ?>
+                                                    <tr>                                
+                                                        <td>
+                                                            <div class="rating-box">
+                                                                <div class="rating" style="width:<?php echo $_vote->getPercent() ?>%;"></div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
+                                    <?php endif; ?>
+                                </td>
+                                <td>
+                                    <span class="fhs-review-like-abuse"> &nbsp; - &nbsp; 
+                                        <span class="fhs_review-count-like">
+                                            <?php echo $_review['countLike']; ?> <?php echo $this->__('person liked this comment.') ?>
+                                        </span>
+                                        <span>
+                                            <?php
+                                            $reviewsreport = Mage::getModel('reviewsaction/reviewsaction')
+                                                    ->getCustomerLiked(
+                                                            $_review->getId(), Mage::getSingleton('customer/session')
+                                                            ->getCustomer()
+                                                            ->getEmail()
+                                                    )
+                                                    ->getData();
+                                                // customer like or abuse this review
+                                                $message = null;
+                                                if (count($reviewsreport) > 0) {
+                                                    if (count($reviewsreport) == 1) {
+                                                        foreach ($reviewsreport as $value) {
+                                                            if ($value['type'] === 'like') {$message = 'like';}
+                                                            if ($value['type'] === 'abuse') {$message = 'abuse';}
+                                                        }
+                                                    } else {$message = 'both';}
+                                                    if ($message == 'abuse') {
+                                                        ?>
+                                                        <a id="reviewhelpful-<?php echo $_review->getId(); ?>" class="r-btn-like" onclick="reviewActionBestLike('<?php echo $_review->getId(); ?>', 'like')">
+                                                        <?php echo $this->__('like this'); ?>
+                                                        </a>
+                                                    <?php
+                                                    }
+                                                    if ($message == 'like') {?>
+                                                        <a id="reviewabuse-<?php echo $_review->getId(); ?>" class="r-btn-abuse" onclick="reviewActionBestLike('<?php echo $_review->getId(); ?>', 'abuse')">
+                                                            <?php echo $this->__('abuse'); ?>
+                                                        </a>
+                                                    <?php }
+                                                } else {
+                                                    ?>
+                                                    <a id="reviewhelpful-<?php echo $_review->getId(); ?>" class="r-btn-like" onclick="reviewActionBestLike('<?php echo $_review->getId(); ?>', 'like')">
+                                                        <?php echo $this->__('like this'); ?>
+                                                    </a> 
+                                                        <?php echo $this->__('or'); ?> 
+                                                    <a id="reviewabuse-<?php echo $_review->getId(); ?>" class="r-btn-abuse" onclick="reviewActionBestLike('<?php echo $_review->getId(); ?>', 'abuse')">
+                                                        <?php echo $this->__('abuse'); ?>
+                                                    </a>
+                                                <?php
+                                                }
+                                                ?>
+                                        </span>
+                                    </span>
+                                </td>
+                            </tr>
+                        </table>                                        
+                    </div>
+                    <div class="fhs_review-message">
+                        <?php 
+                        switch ($message) {
+                            case 'like':?>
+                                <div><span class="fhs_review-like customer_liked"><i class="fa fa-check" aria-hidden="true"></i> <?php echo $this->__('Thank you for liking this comment.') ?></span></div>
+                                <?php break;
+                            case 'abuse':?>
+                                <div><span class="fhs_review-like customer_abuse"><i class="fa fa-check" aria-hidden="true"></i> <?php echo $this->__('Thank you for your feedback.') ?></span></div>
+                                <?php break;
+                            case 'both':?>
+                                <div><span class="fhs_review-like customer_liked"><i class="fa fa-check" aria-hidden="true"></i> <?php echo $this->__('Thank you for liking this comment.') ?></span></div>
+                                <div><span class="fhs_review-like customer_abuse"><i class="fa fa-check" aria-hidden="true"></i> <?php echo $this->__('Thank you for your feedback.') ?></span></div>
+                                <?php break;
+                            default :
+                                break;
+                        } 
+                        ?>
+                    </div>
+                    <div class="fhs-review-by-block">
+                        <?php echo $this->__('Review by <span class="fhs-review-by">%s</span>', $this->htmlEscape($_review->getNickname())) ?>,
+                        <small class="date"><?php echo $this->__('Posted on %s', $this->formatDate($_review->getCreatedAt()), 'long') ?></small>
+                    </div>
+                    <dd class="fhs-review-block-content">
+                        <?php echo nl2br($this->htmlEscape($_review->getDetail())) ?>
+                    </dd>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
+<script type="text/javascript">
+    function reviewActionBestLike(review_id, type) {
+        var parameters = {
+            "review_id": review_id,
+            "type": type
+        };
+        $jq.ajax({
+            url: "<?php echo $this->getUrl('reviewsaction/index/insert') ?>",
+            type: 'post',
+            data: parameters,
+            beforeSend: function () {
+                showLoadingAnimation();
+            },
+            success: function (data) {                
+                if(type === "like"){
+                    $jq("#top-like-review .f-review-container .fhs_review-message").append('<div><span class="fhs_review-like customer_liked"><i class="fa fa-check" aria-hidden="true"></i> Cảm ơn bạn đã thích nhận xét này.</span></div>')
+                    $jq(".r-btn-like").remove();
+                }else if (type === "abuse"){
+                    $jq("#top-like-review .f-review-container .fhs_review-message").append('<div><span class="fhs_review-like customer_abuse"><i class="fa fa-check" aria-hidden="true"></i> Cảm ơn phản hồi của bạn .</span></div>')
+                    $jq(".r-btn-abuse").remove();
+                }   
+                hideLoadingAnimation();
+                return;
+            }
+        });
+    }
+</script>

@@ -1,0 +1,213 @@
+.ves-verticalmenu{
+  position: relative; 
+}
+
+
+.ves-verticalmenu .dropdown-menu > .dropdown-menu-inner {
+  padding: 10px;
+}
+.ves-verticalmenu .mega-group .caret {
+  display: none;
+}
+.ves-verticalmenu .mega-group > .dropdown-toggle {
+  display: block;
+  font-weight: bold;
+  padding: 6px 5px;
+  text-transform: uppercase;
+  border-bottom: solid 1px #E5E5E5;
+}
+.ves-verticalmenu .mega-group .dropdown-mega .mega-col-inner > ul > li a {
+  margin-left: 6px;
+}
+.ves-verticalmenu .mega-col .mega-col-inner > ul {
+  list-style: none outside none;
+  margin: 0;
+  padding: 0;
+}
+.ves-verticalmenu .mega-col .mega-col-inner > ul > li {
+  list-style: none;
+  margin-left: 0;
+}
+.ves-verticalmenu .mega-col .mega-col-inner > ul > li > a {
+  clear: both;
+  color: #555555;
+  display: block;
+  line-height: 20px;
+}
+.ves-verticalmenu .dropdown-submenu:hover .dropdown-menu {
+  display: block;
+}
+.ves-verticalmenu .dropdown-submenu > .dropdown-menu {
+  border-radius: 0 6px 6px 6px;
+  left: 100%;
+  margin-left: -6px;
+  margin-top: -6px;
+  top: 0;
+}
+
+
+
+
+.widget-product-list img{
+  width: 60px;
+  height: 60px;
+  float: left;
+  margin-right: 12px;
+}
+
+.widget-banner .w-banner{
+ margin: 6px 10px; 
+  float: left;
+} 
+
+.ves-verticalmenu .dropdown:hover > .dropdown-menu, .ves-verticalmenu .dropdown-submenu:hover > .dropdown-menu {
+  display: block;
+}
+
+
+.ves-verticalmenu .aligned-center .dropdown-menu{
+  top: 50%;
+  transform: translate(-50%);
+  -webkit-transform: translate(-50%);
+  -moz-transform: translate(-50%);
+  -ms-transform: translate(-50%);
+  -o-transform: translate(-50%);
+}
+
+
+
+.ves-verticalmenu .aligned-right .dropdown-menu{
+    left: auto;
+    top: 0;
+}
+.ves-verticalmenu .aligned-left .dropdown-menu{
+
+}
+
+.ves-verticalmenu .megamenu .aligned-fullwidth {
+  position: inherit!important;
+}
+
+.ves-verticalmenu .aligned-fullwidth .dropdown-menu{
+  height: 100%!important;
+  top: 0;
+}
+
+
+/***********************Updated new version for megamenu: Offset canvas sidebar menu***********************/
+
+span.open-child {
+  font-size: 0;
+  display: block;
+  position: absolute;
+  right: 2px;
+  top: 0;
+  margin-top: 3px;
+  z-index: 1;
+  cursor: pointer;
+  width: 50px;
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+/*color: #FFF;*/
+}
+.dropdown-submenu span.open-child {
+  right: 17px;
+}
+span.open-child:after {
+  content: "+";
+  font-size: 20px;
+  text-align: center;
+  background: transparent;
+  opacity: 1;
+}
+.over > span.open-child:after {
+  content: "\2212";
+}
+#menu-offcanvas .menu-offcanvas-content .dropdown{
+  position:relative;
+}
+#menu-offcanvas .dropdown-menu.in {
+    display: none;
+    opacity: 1;
+    filter: alpha(opacity=100);
+    visibility: visible;
+    height: auto;
+   -webkit-transition: none;
+   transition: none;
+    transform: translateX(0);
+}
+#menu-offcanvas .menu-offcanvas-content .dropdown .dropdown-menu{ 
+  background: transparent;
+}
+#menu-offcanvas .menu-offcanvas-content .dropdown .dropdown-toggle{
+  height: 47px;
+}
+
+.menu .navbar-nav > li:hover > .dropdown-menu, .verticalmenu .navbar-nav .dropdown-submenu:hover > .dropdown-menu {
+    left: 100%;
+    opacity: 1;
+    top: 0;
+    visibility: visible;
+}
+
+.offcanvas-menu-open .offcanvas-pusher::after {
+  height: 100%;
+  width: 100%;
+  opacity: 1;
+  -webkit-transition: opacity 0.5s;
+  transition: opacity 0.5s;
+}
+
+@media (max-width: 767px) {
+  .ves-verticalmenu.offcanvas-actived .navbar {
+      background: transparent!important;
+      border: 0 none!important;
+      border-radius: 0;
+      margin: 0;
+      padding: 0;
+  }
+  .ves-verticalmenu.offcanvas-actived > .block-content{
+    left: 0;
+    opacity: 1;
+    position: relative;
+    top: 0px;
+    visibility: visible;
+  }
+  .ves-verticalmenu.block {
+     float: left;
+  }
+  .menu-offcanvas-content .caret{ display:  none;}
+}
+
+@media (max-width: 992px) {
+  #ves-verticalmenu .navbar-collapse.collapse {
+    display: none !important;
+  }
+  #ves-verticalmenu .navbar-toggle {
+    display: block;
+    float: left;
+  }
+  .ves-verticalmenu.block-success{
+    border: 0px solid!important;
+  }
+  #ves-verticalmenu .block-content{
+    border: 0px solid!important;
+    position: relative!important;
+  }
+
+  #ves-verticalmenu .navbar{
+    margin-bottom: 0px !important;
+  }
+
+  #ves-verticalmenu, #ves-verticalmenu .navbar-inverse{
+    background:transparent!important;
+  }
+
+}
+/***********************End Update At Here***********************/
+
+#menu-offcanvas .button-close-menu{ background: transparent!important;}
+#menu-offcanvas .dropdown .dropdown-menu{ display: none; }
+#menu-offcanvas .dropdown .dropdown-menu .dropdown-menu-inner ul li a{ color: #fff;}
+#menu-offcanvas .ves-widget{ color: #fff;}

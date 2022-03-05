@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--
+/**
+* @category    AM
+* @package     AM_Extensions
+* @copyright   Copyright (C) 2008-2013 ArexMage.com. All Rights Reserved.
+* @license     GNU General Public License version 2 or later
+* @author      ArexMage.com
+* @email       support@arexmage.com
+*/
+-->
+<layout>
+    <amadmin_adminhtml_diagnostic_checkrewrites>
+        <reference name="content">
+            <block type="amext/adminhtml_diagnostic_checkRewrites" name="amext.diagnostic.checkrewrites" />
+        </reference>
+    </amadmin_adminhtml_diagnostic_checkrewrites>
+</layout>

@@ -1,0 +1,80 @@
+<script type="text/javascript">countryRegions = <?php echo $this->helper('directory')->getRegionJson() ?></script>
+<div class="opc-wrapper-opc">
+	<h2><?php echo $this->__('Checkout')?></h2>
+	<p><?php echo $this->__('Fill in the Fields below to complete your purchase!')?></p>
+	
+	<?php if (!Mage::getSingleton('customer/session')->isLoggedIn()):?>
+		<?php echo $this->getChildHtml('login');?>	
+	<?php endif;?>
+	<div class="fhs-co-banner">
+            <?php echo $this->getLayout()->createBlock("cms/block")->setBlockId("checkout-block-banner")->toHtml();?>
+    	</div>
+	<div class="clear"></div>
+
+    <div class="opc-col-left">
+		<form id="opc-address-form-billing" method="post">
+        	<?php echo $this->getChildHtml('billing')?>
+        </form>
+        	
+        <form id="opc-address-form-shipping" class="hidden" method="post">
+        <?php echo $this->getChildHtml('shipping')?>
+        </form>
+		
+    </div>
+
+    <div class="opc-col-center">
+    	<?php if (!$this->getOnepage()->getQuote()->isVirtual()):?>
+    	<div class="shipping-block">
+        	<h3>
+                    <?php echo $this->__('Shipping Method')?>
+                    <span class="fhs-opc-center-loader" style="display: none;"><img src="<?php echo $this->getSkinUrl('images/loader1.gif') ?>"/></span>
+                </h3>                
+        	<div id="shipping-block-methods">
+				<?php echo $this->getChildHtml('shipping_method');//$this->_getShippingMethodsHtml();?>
+			</div>
+		</div>
+		<?php endif;?>
+		<div class="payment-block <?php if ($this->getOnepage()->getQuote()->isVirtual()):?>clear-margin<?php endif;?>">
+			<h3>
+                            <?php echo $this->__('Payment Method')?>
+                            <span class="fhs-opc-center-loader" style="display: none;"><img src="<?php echo $this->getSkinUrl('images/loader1.gif') ?>"/></span>
+                        </h3>
+			<?php echo $this->getChildHtml('payment')//$this->_getPaymentMethodsHtml();?>
+		</div>
+		
+		<div class="discount-block">
+			<h3><?php echo $this->__('Discount Codes')?></h3>
+			<?php echo $this->getChildhtml('coupon');?>
+		</div>
+
+		<?php if(Mage::helper('opc')->isShowComment()):?>
+			<?php echo $this->getChildhtml('customer.comment');?>
+		<?php endif;?>
+
+    </div>
+
+    <div class="opc-col-right">
+        <h3><?php echo $this->__('Review Your Order')?></h3>
+        <div id="opc-review-block">
+		<?php echo $this->_getReviewHtml()?>
+		</div>
+    </div>
+</div>
+<script>
+	IWD.OPC.Checkout.config = '<?php echo $this->getJsonConfig()?>';
+	<?php if ($this->getOnepage()->getQuote()->isVirtual()):?>
+	IWD.OPC.Checkout.isVirtual = true;
+	<?php endif;?>	 
+</script>
+
+<div class="opc-ajax-loader">
+    <img src="<?php echo Mage::getBaseUrl('media') ?>theme/default/loader.gif" class="abc-loader"/>
+</div>
+<div class="opc-message-wrapper">
+	
+	<div class="opc-messages">
+		<a class="close-message-wrapper"></a>
+		<div class="opc-message-container"></div>
+		<div class="opc-messages-action"><button class="button"><span><span><?php echo $this->__('Close')?></span></span></button></div>
+	</div>
+</div>

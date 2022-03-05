@@ -1,0 +1,280 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2014 X.commerce, Inc. (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+
+$summary = $this->getData('summary');
+$symbol = Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol();
+$is_mobile = Mage::helper('fhsmobiledetect')->isMobile();
+$SKIN_URL_SUCCESS = $this->getSkinUrl('images/order_status/ico_successV2.svg', array('_secure' => true));
+?>
+
+<style type="text/css">
+.order-review-item-image{
+    border-bottom: 1px solid #ededed;border-right: 1px solid #ededed;text-align: center;padding: 5px;
+}
+.order-review-item-name{
+    border-bottom: 1px solid #ededed;border-right: 1px solid #ededed;
+}
+.order-review-item-sku{
+    border-bottom: 1px solid #ededed;border-right: 1px solid #ededed;
+}
+.order-review-item-price{
+    border-bottom: 1px solid #ededed;border-right: 1px solid #ededed;text-align: center;
+}
+.order-review-item-quantity{
+    border-bottom: 1px solid #ededed;border-right: 1px solid #ededed;
+}
+.order-review-item-subtotal{
+    border-bottom: 1px solid #ededed;
+    text-align:right;
+}
+</style>
+<div class="<?php if(!$is_mobile): ?> status-order-template <?php else : ?> status-order-template-mobile <?php endif ?>">
+    <div class="content-status-order-success"> 
+        <div class="image-status-order">
+            <img src="<?php echo $SKIN_URL_SUCCESS; ?>"  class="center">
+        </div>
+        <div class="title-status-order"><h1 class="success-order">THANH TOÁN THÀNH CÔNG</h1></div>
+        <div class="text-status-order">
+            <p><?php echo $this->__('Thank you for your purchase at Fahasa.com!')?></p>
+            <?php if ($this->getOrderId()): ?>
+        <?php if ($this->getCanViewOrder()) : ?>
+            <p><?php echo $this->__('Your order is : # %s.', sprintf('<a href="%s"><span class="color-fhs-orange">%s</span></a>', $this->escapeHtml($this->getViewOrderUrl()), $this->escapeHtml($this->getOrderId()))) ?></p>
+        <?php else : ?>
+            <p><?php echo $this->__('Your order is : # %s.', sprintf('<span class="color-fhs-orange">%s</span>', $this->escapeHtml($this->getOrderId()))) ?></p>
+        <?php endif; ?>
+        <p><?php echo $this->__('You will receive an order confirmation email with details of your order and a link to track its progress.') ?></p>
+    <?php endif; ?>
+        </div>
+        <div class="button-status-order" style=""><a href="<?php echo Mage::getBaseUrl(); ?>"><?php echo $this->__('Continue to buy')?></a></div>
+    </div>
+</div>
+
+<div>
+    <?php if ($summary && !$is_mobile): ?>
+        <table class="data-table" style="background-color: #fff;">
+            <colgroup>
+                <col>
+                <col width="1">
+                <col width="1">
+                <col width="1">
+                <col width="1">
+            </colgroup>
+            <tbody>
+                <tr class="first odd">
+                    <th style="width:10%;border-bottom: 1px solid #d9dde3;font-weight: bold;" rowspan="1" class="a-center"></th>
+                    <th style="width:50%;border-bottom: 1px solid #d9dde3;font-weight: bold;" rowspan="1" class="a-left"><?php echo $this->__('Product Name') ?></th>
+                    <th style="width:10%;border-bottom: 1px solid #d9dde3;font-weight: bold;" rowspan="1" class="a-center"><?php echo $this->__('Sku') ?></th>
+                    <th style="width:10%;border-bottom: 1px solid #d9dde3;font-weight: bold;" rowspan="1" class="a-center"><?php echo $this->__('Price') ?></th>
+                    <th style="width:10%;border-bottom: 1px solid #d9dde3;font-weight: bold;" rowspan="1" class="a-center"><?php echo $this->__('Qty') ?></th>
+                    <th style="width:10%;border-bottom: 1px solid #d9dde3;font-weight: bold;" colspan="1" class="a-right"><?php echo $this->__('Subtotal') ?></th>
+                </tr> 
+            </tbody>
+            <tfoot>
+                <tr class="first"><td colspan="5">&nbsp;</td><td class="last">&nbsp;</td></tr>
+                <tr>
+                    <td class="a-right" colspan="5" style="padding: 5px;">
+                        <?php echo $this->__('Subtotal') ?>    </td>
+                    <td class="a-right last">
+                        <span class="price"><?php echo $this->formatPrice($summary['sub_total_inc'], $symbol) ?></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="border-right: 0px;"></td>
+                    <td class="a-right" colspan="3" style="padding: 5px;">
+                        <?php echo $this->__("Shipping & Handling"); ?>
+                        <div style="background-color: #f1f1f1;padding: 8px;text-align: left;margin-top: 5px;">
+                            <?php echo $summary['shipping_desc']; ?>
+                        </div>
+                    </td>
+                    <td class="a-right last">
+                        <span class="price"><?php echo $this->formatPrice($summary['shipping_tax_incl'], $symbol); ?></span>
+                    </td>
+                </tr>
+                <?php if ($summary['is_free_ship']): ?>
+                    <tr>
+                        <td class="a-right" colspan="5" style="padding: 5px;">
+                            <?php echo $this->__("Use Freeship"); ?>
+                        </td>
+                        <td class="a-right last">
+                            <span><?php echo $this->__("Yes"); ?></span>
+                        </td>
+                    </tr>
+                <?php endif; ?>
+                <?php if ($summary['codfee_amount']): ?>
+                    <tr>
+                        <td class="a-right" colspan="5" style="padding: 5px;">
+                            <?php echo $this->__("Vietnam COD"); ?>
+                        </td>
+                        <td class="a-right last">
+                            <span class="price"><?php echo $this->formatPrice($summary['codfee_amount'], $symbol); ?></span>
+                        </td>
+                    </tr>
+                <?php endif; ?>
+                <?php if ($summary['tryout_discount']): ?>
+                    <tr>
+                        <td class="a-right" colspan="5" style="padding: 5px;">
+                            <?php echo $this->__("F-point Discount"); ?>
+                        </td>
+                        <td class="a-right last">
+                            <span class="price"><?php echo $this->formatPrice($summary['tryout_discount'], $symbol); ?></span>
+                        </td>
+                    </tr>
+                <?php endif; ?>
+                <?php if ((int) $summary['discount_amount'] != 0): ?>
+                    <tr>
+                        <td class="a-right" colspan="5" style="padding: 5px;">
+                            <?php echo sprintf($this->__("Discount (%s)", $summary['discount_desc'])); ?>
+                        </td>
+                        <td class="a-right last">
+                            <span class="price"><?php echo $this->formatPrice($summary['discount_amount'], $symbol); ?></span>
+                        </td>
+                    </tr>
+                <?php endif; ?>
+                <?php if ($summary['giftwrap_amount']): ?>
+                    <tr>
+                        <td class="a-right" colspan="5" style="padding: 5px;">
+                            <?php echo $this->__("Gift wrap"); ?>
+                        </td>
+                        <td class="a-right last">
+                            <span class="price"><?php echo $this->formatPrice($summary['giftwrap_amount'], $symbol); ?></span>
+                        </td>
+                    </tr>
+                <?php endif; ?>
+                <tr>
+                    <td class="a-right" colspan="5" style="padding: 5px;">
+                        <strong><?php echo $this->__('Grand Total:'); ?></strong>
+                    </td>
+                    <td class="a-right last" style="padding: 5px;color: #d80000;font-size: 16px;">
+                        <strong><span class="price"><?php echo $this->formatPrice($summary['grand_total'], $symbol); ?></span></strong>
+                    </td>
+                </tr>
+                <tr class="last"><td colspan="2">&nbsp;</td><td class="last">&nbsp;</td></tr>
+            </tfoot>
+            <tbody>
+                <?php
+                    $buffet_combo = Mage::helper("event/buffetcombo");
+                    $is_buffetcombo_active = $buffet_combo->isBuffetActive();
+                    if($is_buffetcombo_active){
+                        $buffet_helper = Mage::helper("event/buffetcombo");
+                        $checkout_session = Mage::getSingleton('checkout/session');
+                        $buffet_combo = $checkout_session->getBuffetcombo();
+                        $all_items = $buffet_helper->orderSeperateNormalAndBuffetItems($summary['items']);
+                        $items = $all_items['normal_items'];
+                    }else{
+                        $items = $summary['items'];
+                    }
+                ?>
+                <?php foreach ($items as $item): ?>
+                    <tr>
+                        <td class="order-review-item-image">
+                            <a href="<?php echo $item['product_url']; ?>">
+                                <img src="<?php echo $item['image_url'];?>" alt="<?php echo $item['name']; ?>" style="max-width: 60%;"/>
+                            </a>
+                        </td>
+                        <td classs="order-review-item-name">
+                            <a href="<?php echo $item['product_url']; ?>">
+                                <h2 style="width: inherit;" class="product-name">
+                                    <?php 
+				    echo $item['name'];
+				    ?>
+                                </h2>
+                            </a>
+			    <?php 
+			    if($item['soon_release'] == 1 && ((int)$item['price'] !== 0 || $item['type_id'] == 'bundle')){
+				$message = Mage::helper('fahasa_catalog/product')->getProductExpectedMsg(null, $item['soon_release'], $item['expected_date'], $item['book_release_date'])[0];
+				echo "<p class='item-msg notice'>".$message."</p>";
+				}
+			    ?>
+                        </td>
+                        <td class="order-review-item-sku">
+                            <?php echo $item['sku']; ?>
+                        </td>
+                        <td class="order-review-item-price">
+                            <?php echo $this->formatPrice($item['price_tax'], $symbol); ?>
+                        </td>
+                        <td class="a-center qty-box order-review-item-quantity">
+                            <?php echo $item['qty_ordered']; ?>
+                        </td>
+                        <td class="last order-review-item-subtotal">
+                            <?php
+                            $item_price = (int) $item['price_tax'];
+                            $quantity = (int) $item['qty_ordered'];
+                            echo $this->formatPrice($item_price * $quantity, $symbol);
+                            ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+                
+                <?php if($is_buffetcombo_active): ?>
+                    <?php foreach ($all_items['buffet_items'] as $key => $item): ?>
+                    <tr  style="background-color: #f8ffdb !important;">
+                        <td class="order-review-item-image">
+                            <a href="<?php echo $item['product_url']; ?>">
+                                <img src="<?php echo $item['image_url'];?>" alt="<?php echo $item['name']; ?>" style="max-width: 60%;"/>
+                            </a>
+                        </td>
+                        <td class="order-review-item-name">
+                            <a href="<?php echo $item['product_url']; ?>">
+                                <h2 style="width: inherit;" class="product-name">
+                                    <?php echo $item['name']; ?>
+                                </h2>
+                            </a>
+                        </td>
+                        <td class="order-review-item-sku">
+                            <?php echo $item['sku']; ?>
+                        </td>
+                        <td class="order-review-item-price">
+                            <?php echo $this->formatPrice($item['price_tax'], $symbol); ?>
+                        </td>
+                        <td class="a-center qty-box order-review-item-quantity">1</td>
+                        <?php if($key==0): ?>
+                        <td rowspan="<?php echo $buffet_combo['count']; ?>" class="last order-review-item-subtotal" style="vertical-align: middle;">
+                            <div style="text-align:center">
+                                <div><img src="<?php echo Mage::helper("event/buffetcombo")->getBuffetIcon(); ?>" width="100"/></div>
+                                <?php echo Mage::helper('checkout')->formatPrice($buffet_combo['price']); ?>
+                            </div>
+                        </td>
+                        <?php endif; ?>
+                    </tr>    
+                    <?php endforeach; ?>
+                    <?php 
+                        /*
+                         *  Clear Buffet Session
+                         */
+                        if($checkout_session){
+                            $checkout_session->unsetData('buffetcombo');
+                            $checkout_session->unsetData('buffetcombo_gift_id');
+                        }
+                    ?>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    <?php endif; ?>
+</div>
+
+<div class="buttons-set">
+    <button type="button" class="button" title="<?php echo $this->__('Continue Shopping') ?>" onclick="window.location = '<?php echo $this->getUrl() ?>'"><span><span><?php echo $this->__('Continue Shopping') ?></span></span></button>
+</div>

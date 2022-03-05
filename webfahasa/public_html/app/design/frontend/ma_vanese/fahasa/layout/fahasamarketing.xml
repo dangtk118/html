@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layout version="0.1.0">
+    <default>
+        <!-- Fahasa Marketing -->
+        <reference name="head" before="-">
+            <block type="page/html" name="remarketing_pixel" template="fahasa/marketing/remkt_pixel.phtml" />            
+            <block type="page/html" name="bye_iq" template="fahasa/marketing/bye_IQ.phtml" />
+            <block type="page/html" name="netcore_register" template="fahasa/marketing/netcore_smartech.phtml" />
+            <block type="page/html" name="suggestion" template="fahasa/marketing/suggestion.phtml" />
+            <block type="page/html" name="gg_general_remarketing_code" template="fahasa/marketing/gg_remkt_code.phtml" />
+            <block type="page/html" name="gg_tag_manager" template="fahasa/marketing/gg_tag_manager.phtml"/>
+        </reference>
+        <reference name="before_body_end">
+            <block type="page/html" name="ggremkt_code_other" template="fahasa/marketing/ggremkt_code_other.phtml" />
+            <block type="page/html" name="access_trade_code" template="fahasa/marketing/access_trade_track_cookies.phtml" />
+            <block type="page/html" name="chin_media_code" template="fahasa/marketing/chin_media_track_cookies.phtml" />
+            <block type="page/html" name="ulu_code" template="fahasa/marketing/ulu_track_cookies.phtml" />
+            <block type="page/html" name="asidebar" template="fahasa/marketing/asidebar.phtml" />
+            <block type="page/html" name="internal_tracking" template="fahasa/marketing/internal_track_cookies.phtml" />
+        </reference>
+        <reference name="root">
+            <block type="page/html" name="gg_tag_manager_noscript" template="fahasa/marketing/gg_tag_manager_noscript.phtml"/>
+        </reference>   
+    </default>
+    <catalogsearch_result_index>
+        <remove name="ggremkt_code_home" />
+        <remove name="ggremkt_code_other" />
+        <reference name="before_body_end">
+            <block type="page/html" name="ggremkt_code_search" template="fahasa/marketing/ggremkt_code_search.phtml" />
+            <block type="page/html" name="netcore_product_search" template="fahasa/marketing/netcore_product_search.phtml" />
+        </reference>
+    </catalogsearch_result_index>
+    <cms_index_index><!-- layout handle for the homepage -->
+        <remove name="ggremkt_code_other" />
+        <reference name="head" before="-">
+            <!--<block type="page/html" name="criteo_code_home" template="fahasa/marketing/criteo_home.phtml" /> -->
+            <block type="fhsmarketing/sitelinksearchbox" name="gg_searchbox_home" template="fahasa/marketing/sitelink_searchbox.phtml"  />
+        </reference>
+        <reference name="before_body_end">
+            <block type="page/html" name="ggremkt_code_home" template="fahasa/marketing/ggremkt_code_home.phtml" />
+        </reference>
+    </cms_index_index>
+    <checkout_onepage_success>
+        <remove name="remarketing_pixel" />
+        <remove name="ggremkt_code_other" />
+        <remove name="access_trade_code" />    
+        <remove name="chin_media_code" />       
+        <remove name="ulu_code" />              
+        <reference name="head" before="-">
+            <block type="fhsmarketing/successpurchase" name="fb_successpurchase" template="fahasa/marketing/fb_success_purchase.phtml" />
+            <!--<block type="fhsmarketing/successpurchase" name="criteo_successpurchase" template="fahasa/marketing/criteo_success.phtml" /> -->
+        </reference>
+        <reference name="before_body_end">
+            <block type="page/html" name="gg_conversion_code" template="fahasa/marketing/gg_conversion_code.phtml" />
+            <block type="fhsmarketing/successpurchase" name="retry_iq_successpurchase" template="fahasa/marketing/retry_IQ_success_purchase.phtml" />
+            <block type="fhsmarketing/successpurchase" name="netcore_successpurchase" template="fahasa/marketing/netcore_success_purchase.phtml" />
+            <block type="fhsmarketing/successpurchase" name="gg_successpurchase" template="fahasa/marketing/ggremkt_success_purchase.phtml" />
+<!--            <block type="fhsmarketing/successpurchase" name="access_trade_successpurchase" template="fahasa/marketing/access_trade_success_purchase.phtml" />-->
+            <block type="fhsmarketing/successpurchase" name="chin_media_success_purchase" template="fahasa/marketing/chin_media_success_purchase.phtml" />
+            <block type="fhsmarketing/successpurchase" name="ulu_success_purchase" template="fahasa/marketing/ulu_success_purchase.phtml" />
+        </reference>
+    </checkout_onepage_success>
+    <catalog_product_view>
+        <remove name="remarketing_pixel" />
+        <remove name="ggremkt_code_other" />
+        <remove name="personalization_grid"/>
+        <reference name="head" before="-">
+            <block type="fhsmarketing/viewcontent" name="fb_view_content" template="fahasa/marketing/fb_view_content.phtml" />
+            <!-- <block type="fhsmarketing/viewcontent" name="criteo_view_content" template="fahasa/marketing/criteo_product.phtml" /> -->
+            <block type="fhsmarketing/richsnippets" name="gg_rating" template="fahasa/marketing/rich-snippets.phtml"  />
+        </reference>        
+        <reference name="before_body_end">
+            <block type="fhsmarketing/viewcontent" name="gg_view_content" template="fahasa/marketing/ggremkt_view_content.phtml" />
+            <block type="fhsmarketing/viewcontent" name="retry_iq_view_product" template="fahasa/marketing/retry_IQ_view_product.phtml" />
+            <block type="fhsmarketing/viewcontent" name="netcore_product_view" template="fahasa/marketing/netcore_product_view.phtml" />
+            <block type="fhsmarketing/viewcontent" name="suggestion_product_view" template="fahasa/marketing/suggestion_product_view.phtml" />
+            <block type="fhsmarketing/viewcontent" name="journeyrule_view" template="fahasa/marketing/journeyrule_view.phtml" />
+        </reference>
+    </catalog_product_view>
+    <checkout_cart_index>
+        <remove name="remarketing_pixel" />
+        <remove name="ggremkt_code_other" />
+	<remove name="personalization_grid"/>
+        <reference name="head" before="-">            
+            <!-- <block type="fhsmarketing/addtocart" name="criteo_cart" template="fahasa/marketing/criteo_cart.phtml" /> -->
+            <block type="fhsmarketing/addtocart" name="fb_addcart" template="fahasa/marketing/fb_add_to_cart.phtml" />
+        </reference>
+        <reference name="before_body_end">
+<!--            <block type="fhsmarketing/addtocart" name="netcore_view_cart" template="fahasa/marketing/netcore_view_cart.phtml" />-->
+            <!--<block type="fhsmarketing/addtocart" name="gg_addcart" template="fahasa/marketing/ggremkt_add_to_cart.phtml" />-->            
+            <block type="fhsmarketing/addtocart" name="gg_cart" template="fahasa/marketing/gg_cart.phtml" />
+            <block type="fhsmarketing/addtocart" name="retry_iq_cart" template="fahasa/marketing/retry_IQ_cart.phtml" />
+            <block type="fhsmarketing/addtocart" name="journeyrule_cart" template="fahasa/marketing/journeyrule_view.phtml" />
+        </reference>
+    </checkout_cart_index>
+    <onestepcheckout_index_index>
+        <remove name="remarketing_pixel" />
+        <remove name="ggremkt_code_other" /> 
+	<remove name="personalization_grid"/>
+	<remove name="block.link.follow"/>
+	<remove name="footer"/>
+        <reference name="head" before="-">
+            <block type="fhsmarketing/addtocart" name="fb_cart_checkout" template="fahasa/marketing/fb_add_to_cart.phtml" />
+            <!-- <block type="fhsmarketing/addtocart" name="criteo_cart" template="fahasa/marketing/criteo_cart.phtml" /> -->
+        </reference>
+        <reference name="before_body_end">
+            <block type="fhsmarketing/addtocart" name="gg_initial_checkout_out" template="fahasa/marketing/gg_initial_checkout_cart.phtml" />
+            <block type="fhsmarketing/addtocart" name="gg_cart_checkout" template="fahasa/marketing/ggremkt_add_to_cart.phtml" />
+            <block type="fhsmarketing/addtocart" name="retry_iq_checkout" template="fahasa/marketing/retry_IQ_checkout.phtml" />
+            <block type="fhsmarketing/addtocart" name="netcore_checkout_cart" template="fahasa/marketing/netcore_checkout_cart.phtml" />
+        </reference>        
+    </onestepcheckout_index_index>
+    <repayment_index_payment>
+        <remove name="remarketing_pixel" />
+        <remove name="ggremkt_code_other" /> 
+	<remove name="personalization_grid"/>
+	<remove name="block.link.follow"/>
+	<remove name="footer"/>
+    </repayment_index_payment>
+</layout>

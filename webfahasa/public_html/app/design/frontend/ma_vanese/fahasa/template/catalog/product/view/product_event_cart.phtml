@@ -1,0 +1,247 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+/**
+ * Product info event cart data template
+ *
+ * @see Mage_Catalog_Block_Product_View
+ */
+?>
+<?php
+$skin_url = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true);
+$queryfier = Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix');
+$icon_event_title = $skin_url.'frontend/ma_vanese/fahasa/images/event_cart_2/ico_coupon_red.svg?q='.$queryfier;
+$icon_coupon_type = $skin_url.'frontend/ma_vanese/fahasa/images/event_cart_2/{{NAME}}.svg?q='.$queryfier;
+$icon_down_orange = $skin_url.'frontend/ma_vanese/fahasa/images/ico_down_orange.svg?q='.$queryfier;
+$icon_alert_warning = $skin_url ."frontend/ma_vanese/fahasa/images/promotion/ico-alert-grey.svg?q=".$queryfier;
+
+$eventcart2_CSS = $skin_url."frontend/ma_vanese/fahasa/css/eventCartProView.css?q=".$queryfier;
+//$eventcart2_CSS = $skin_url."frontend/ma_vanese/fahasa/css/eventCartProView.css";
+$eventcart2_JS = $skin_url."frontend/ma_vanese/fahasa/js/eventCartProView.js?q=".$queryfier;
+//$eventcart2_JS = $skin_url."frontend/ma_vanese/fahasa/js/eventCartProView.js";
+
+$product = Mage::registry('current_product_redis');
+if(!empty($product['promotion'])){
+    $event_carts = $product['promotion'];
+}
+
+
+//$event_carts = Mage::helper('eventcart')->getProductPromotion($_product->getEntityId());
+$helper_cart = Mage::helper('eventcart');
+$dataColorAndIcon = $helper_cart->getColorAndIcon();
+$languages = [];
+$languages['view_more'] = $this->__('View More');
+$languages['view_less'] = $this->__('View Less');
+$languages['related_promotions'] = $this->__('Related Promotions');
+$languages['view_more_code'] = $this->__('View More Code');
+$languages['terms'] = $this->__('Terms & Conditions');
+$languages['applyOne'] = "Áp dụng 1 lần";
+$languages['applyMoreText'] = "Có thể áp dụng nhiều mã";
+$languages['details'] = $this->__('Details');
+
+if(!$event_carts && count($event_carts) <= 0){
+    return null;
+}
+
+$tabNameActive = 'affect_all'; // default;
+$arrayKeys = array_keys($event_carts);
+$pArrayKeys = array_keys($event_carts);
+array_splice($pArrayKeys, 0, 1);
+$contentRules = array();
+
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo $eventcart2_CSS; ?>" media="all" />
+<script type="text/javascript" src="<?php echo $eventcart2_JS; ?>"></script>
+<div class="event_cart_2_content">
+    <div class="event_cart_2_header">
+        <div class="event_cart_2_title_icon"><img src= "<?php echo $icon_event_title; ?>"/></div>
+        <div class="event_cart_2_title"><?php echo $languages['related_promotions']; ?></div>
+    </div>
+    <div class="event_cart_2_tabs_swiper_container">
+        <ul class="event_cart_2_tabs fhs-tabs swiper-wrapper">
+            <?php foreach ($arrayKeys as $value) : $nameClassActive = ""; if(!$event_carts[$value]){continue;}?>
+                <?php if($tabNameActive == $value) : $nameClassActive = "event_cart_2_tabs_active active"; endif;?>
+	    <li class="event_cart_2_tabs_item <?php echo $nameClassActive; ?> swiper-slide" ref="<?php echo $value; ?>"><a><?php echo $helper_cart->getNameOfPromotion($value); ?></a><hr></li>
+            <?php endforeach;?>
+        </ul>
+    </div>
+    <div class="evt_cart_2_slide_container">
+        <div class="evt_cart_2_slide_coupon">
+            <?php foreach ($event_carts as $keyC => $valueC) : $nameClassVisble = ""; $nameClassVisbleMobile = ""; if(!$event_carts[$keyC] ){continue;}?>
+            <?php if($keyC == $tabNameActive) : $nameClassVisble = "visible_tab_conent"; $nameClassVisbleMobile ="visible_btn_mobile"; endif;?>
+            <?php $dem = 0; ?>
+            <?php $maxItem = 3; ?>
+                <div class="evt_cart_2_slide_content evt_cart_2_slide_swpier_container <?php echo $nameClassVisble; ?>" id="tab_conent_<?php echo $keyC ?>">
+                    <div class="evt_cart_2_slide_swiper-wrapper swiper-wrapper">
+                    <?php foreach ($valueC as $val): $dem++;?>
+                    <?php if($dem <= $maxItem) : ?>
+                        <div class="evt_cart_2_slide_ite swiper-slide">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="350" height="104" viewBox="0 0 524 145.001" class="svg-bg">
+                                <path id="Frame_voucher_Web" d="M110,144H12A12,12,0,0,1,0,132V12A12,12,0,0,1,12,0h98a12.02,12.02,0,0,0,12,11.971A12.02,12.02,0,0,0,134,0H511a12,12,0,0,1,12,12V132a12,12,0,0,1-12,12H134v-.03a12,12,0,0,0-24,0V144Z" transform="translate(0.5 0.5)" fill="#fff" stroke="rgba(0,0,0,0)" stroke-miterlimit="10" stroke-width="1"/>
+                            </svg>
+                            <div class="evt_cart_2_sli_ite_content">
+                                <div class="evt_cart_2_sli_ite_left">
+                                    <?php 
+                                        $itemColorAndIcon = $dataColorAndIcon[$val['event_type']];   
+                                        $parseItemColorAndIcon = json_decode($itemColorAndIcon);
+                                        $colorItem = $parseItemColorAndIcon->number1 ??'#FFB323' ;
+                                        $iconItem = $parseItemColorAndIcon->icon ?? 'ico_promotion' ;
+                                    ?>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="104.554" height="125.395" viewBox="0 0 104.554 125.395" class="cart2-svg-icon">
+                                        <path id="Frame_icon_web" d="M95.424,124.4H47.593l-33.592,0a12,12,0,0,1-12-12V12A12,12,0,0,1,14,0H80.785l.255,0H95.424a10.364,10.364,0,0,0,10.129,10.165l-.005,4.374a2.907,2.907,0,1,0,0,5.813v2.324a2.907,2.907,0,1,0,0,5.814v2.324a2.907,2.907,0,0,0-2.06.852,2.874,2.874,0,0,0-.855,2.05,2.917,2.917,0,0,0,2.915,2.912v2.324a2.907,2.907,0,0,0-2.06.852,2.874,2.874,0,0,0-.855,2.05,2.917,2.917,0,0,0,2.915,2.911v2.324a2.906,2.906,0,0,0-2.06.852,2.876,2.876,0,0,0-.855,2.051,2.912,2.912,0,0,0,2.915,2.9V55.22a2.907,2.907,0,1,0,0,5.813v2.324a2.907,2.907,0,1,0,0,5.813V71.5a2.907,2.907,0,0,0-2.06.852,2.874,2.874,0,0,0-.855,2.05,2.917,2.917,0,0,0,2.915,2.912v2.324a2.906,2.906,0,0,0-2.06.852,2.876,2.876,0,0,0-.855,2.051,2.912,2.912,0,0,0,2.915,2.9v2.324a2.907,2.907,0,1,0,0,5.814V95.9a2.907,2.907,0,1,0,0,5.814v2.324a2.906,2.906,0,0,0-2.06.852,2.876,2.876,0,0,0-.855,2.051,2.916,2.916,0,0,0,2.915,2.911l0,3.987A10.328,10.328,0,0,0,95.423,124.2c0,.065,0,.131,0,.2h0Z" transform="translate(-1.501 0.499)" fill="<?php echo $colorItem; ?>" stroke="rgba(0,0,0,0)" stroke-miterlimit="10" stroke-width="1"/>
+                                    </svg>
+                                    <img class="evt_cart_2_icon_type" src="<?php echo  str_replace("{{NAME}}",$iconItem, $icon_coupon_type ); ?>"></img>
+                                </div>
+                                <div class="evt_cart_2_sli_ite_right">
+                                    <div class="sli_ite_right_header">
+                                        <div class="ite_txt_right"><?php echo $val['title']; ?></div>
+                                        <div class="ite_more_right" onclick="eventCart2.onClickShowDetail('<?php echo $val['id'];?>','true')"><?php echo $languages['details']; ?></div>
+                                    </div>
+                                    <div class="sli_ite_right_content">
+                                       <?php echo $val['title_2']; ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <?php if(count($valueC) == $dem) : ?>
+			<div class="evt_cart_2_slide_ite_last swiper-slide" onclick="eventCart2.onShowEvtCart2()"><span class='evt_cart_2_view_more'></span><span><?php echo $languages['view_more_code']; ?></span></div>    
+                        <?php endif;?>
+                    <?php else : ?> 
+                        <div class="evt_cart_2_slide_ite_last swiper-slide" onclick="eventCart2.onShowEvtCart2()"><span class='evt_cart_2_view_more'></span><?php echo $languages['view_more_code']; ?></div> 
+                    <?php break;?>
+                    <?php endif;?>
+                    <?php endforeach; ?>
+                    </div>
+                </div>
+                
+            <?php endforeach; ?>
+        </div>
+        
+    </div>
+    <div class="evt_cart_2_text_more">
+        <?php echo $languages['applyMoreText'];?>
+        <div class="fhs_tooltip" style="margin-left: 0.25em;"><img src="<?php echo $icon_alert_warning;  ?>">
+            <span>Áp dụng tối đa 1 mã giảm giá <br>và 1 mã freeship</span>
+        </div>
+    </div>    
+</div>
+
+<div id="popup-loading-event-cart-2">
+    <div class="popup-loading-event-cart-2-info">
+        <div class="popup-loading-event-cart-2-title">
+            <div class="fhs-event-promo-title-evt-2">
+                <div class="fhs-event-promo-title-left-evt-2">
+                    <img src="<?php echo $icon_event_title; ?>">
+                    <span><?php echo $languages['related_promotions']; ?></span>
+                </div>
+                <div class="fhs-event-promo-title-right-evt-2">
+                    <div class="btn-close-evt-2 lg-close" onclick="eventCart2.onHideEvtCart2()"><img src="<?php echo $skin_url . 'frontend/ma_vanese/fahasa/images/ico_delete_gray.svg?q=' . $queryfier; ?>"></div>
+                </div>
+            </div>
+        </div>
+        <div class="popup-loading-event-cart-2-content">
+            <?php $pCountKeys = count($pArrayKeys); $pIndex = null; foreach ($pArrayKeys as $key => $value) : $pIndex = $key; if(!$event_carts[$value] ){continue;}?>
+            <div class="evt_cart_2_pop_container">
+                <div class="evt_cart_2_pop_title_sm" ><div class="pop_title_sm_r"><?php echo $helper_cart->getNameOfPromotion($value);?></div><div class="pop_title_sm_l"><?php echo $languages['applyOne']; ?></div></div>
+                <div class="evt_cart_2_pop_content">
+                    <?php $dem = 0; $countCoupon = count($event_carts[$value]); foreach ($event_carts[$value] as $valueC) : 
+                        $dem++;
+                        // push contentsRules to $contentRules
+                        $contentRules[$valueC['id']] = $valueC['rule_content'];
+                    ?>
+                    <?php if($dem >= 3) :?><div class="evt_cart_2_pop_content_more evt_cart_2_pop_content_more_name_<?php echo $value;?>"><?php endif; ?>
+                    <div class="evt_cart_2_pop_ite">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="350" height="104" viewBox="0 0 524 145.001" class="svg-bg-pop-up-cart2">
+                            <path id="Frame_voucher_Web" d="M110,144H12A12,12,0,0,1,0,132V12A12,12,0,0,1,12,0h98a12.02,12.02,0,0,0,12,11.971A12.02,12.02,0,0,0,134,0H511a12,12,0,0,1,12,12V132a12,12,0,0,1-12,12H134v-.03a12,12,0,0,0-24,0V144Z" transform="translate(0.5 0.5)" fill="#fff" stroke="rgba(0,0,0,0)" stroke-miterlimit="10" stroke-width="1"></path>
+                        </svg>
+                        <div class="evt_cart_2_pop_ite_content">
+                            <div class="evt_cart_2_pop_ite_left">
+                                <?php 
+                                    $itemColorAndIcon = $dataColorAndIcon[$valueC['event_type']];   
+                                    $parseItemColorAndIcon = json_decode($itemColorAndIcon);
+                                    $colorItem = $parseItemColorAndIcon->number1 ??'#FFB323' ;
+                                    $iconItem = $parseItemColorAndIcon->icon ?? 'ico_promotion' ;
+                                ?>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="104.554" height="125.395" viewBox="0 0 104.554 125.395" class="svg-icon-pop-up-cart2">
+                                    <path id="Frame_icon_web" d="M95.424,124.4H47.593l-33.592,0a12,12,0,0,1-12-12V12A12,12,0,0,1,14,0H80.785l.255,0H95.424a10.364,10.364,0,0,0,10.129,10.165l-.005,4.374a2.907,2.907,0,1,0,0,5.813v2.324a2.907,2.907,0,1,0,0,5.814v2.324a2.907,2.907,0,0,0-2.06.852,2.874,2.874,0,0,0-.855,2.05,2.917,2.917,0,0,0,2.915,2.912v2.324a2.907,2.907,0,0,0-2.06.852,2.874,2.874,0,0,0-.855,2.05,2.917,2.917,0,0,0,2.915,2.911v2.324a2.906,2.906,0,0,0-2.06.852,2.876,2.876,0,0,0-.855,2.051,2.912,2.912,0,0,0,2.915,2.9V55.22a2.907,2.907,0,1,0,0,5.813v2.324a2.907,2.907,0,1,0,0,5.813V71.5a2.907,2.907,0,0,0-2.06.852,2.874,2.874,0,0,0-.855,2.05,2.917,2.917,0,0,0,2.915,2.912v2.324a2.906,2.906,0,0,0-2.06.852,2.876,2.876,0,0,0-.855,2.051,2.912,2.912,0,0,0,2.915,2.9v2.324a2.907,2.907,0,1,0,0,5.814V95.9a2.907,2.907,0,1,0,0,5.814v2.324a2.906,2.906,0,0,0-2.06.852,2.876,2.876,0,0,0-.855,2.051,2.916,2.916,0,0,0,2.915,2.911l0,3.987A10.328,10.328,0,0,0,95.423,124.2c0,.065,0,.131,0,.2h0Z" transform="translate(-1.501 0.499)" fill="<?php echo $colorItem; ?>" stroke="rgba(0,0,0,0)" stroke-miterlimit="10" stroke-width="1"></path>
+                                </svg>
+                                <img class="evt_cart_pop_icon_type" src="<?php echo  str_replace("{{NAME}}",$iconItem, $icon_coupon_type ); ?>">
+                            </div>
+                            <div class="evt_cart_2_pop_ite_right">
+                                <div class="pop_ite_right_header">
+                                    <div class="pop_ite_txt_right"><?php echo $valueC['title']; ?></div>
+                                    <div class="pop_ite_more_right" onclick="eventCart2.onClickShowDetail('<?php echo $valueC['id'];?>')"><?php echo $languages['details']; ?></div>
+                                </div>
+                                <div class="pop_ite_right_content">
+                                    <?php echo $valueC['title_2']; ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <?php if($dem >= 3) :?></div><?php endif; ?>
+                    <?php endforeach;?>
+                    <?php if($countCoupon >= 3):?>
+                    <div class="evt_cart_2_pop_viewmore" ref="name_<?php echo $value; ?>">
+                        <a class="evt_cart_2_collapsed" href="#">
+                            <span class="pop_text_viewmore"><?php echo $languages['view_more']; ?></span>
+                            <img class="pop_icon_more_down"src="<?php echo $icon_down_orange; ?>">
+                        </a>
+                    </div>
+                    <?php endif; ?>
+                </div>
+                <?php if(($pCountKeys - 1) != $pIndex && $pCountKeys > 0) :?>
+                <div style="margin: 8px 0;border-top: 1px solid #ededed;"></div>
+                <?php endif; ?>
+            </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+    <!--content rules-->
+    <div class="popup-loading-event-cart-2-rule">
+        <div class="popup-loading-event-cart-2-title">
+            <div class="fhs-event-promo-title-evt-2">
+                <div class="fhs-event-promo-title-left-evt-2">
+                   <div class="btn_back_evt_2 lg-close" onclick="eventCart2.onBackDetailEvent()"><img src="<?php echo $skin_url . 'frontend/ma_vanese/fahasa/images/ico_back_blue.svg?q=' . $queryfier; ?>"></div>
+                </div>
+                <div class="fhs-event-promo-title-center-evt-2">
+                   <span><?php echo $languages['terms']; ?></span>
+                </div>
+                <div class="fhs-event-promo-title-right-evt-2">
+                   <div class="btn-close-evt-2" onclick="eventCart2.onHideEvtCart2()"><img src="<?php echo $skin_url . 'frontend/ma_vanese/fahasa/images/ico_delete_gray.svg?q=' . $queryfier; ?>"></div>
+                </div>
+            </div>
+        </div>
+        <div id="popup-loading-event-cart-2-content-rules"></div>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    let dataContent = <?php echo json_encode($contentRules,JSON_UNESCAPED_UNICODE) ?>;
+    let languages = <?php echo json_encode($languages,JSON_UNESCAPED_UNICODE) ?>;
+    var eventCart2 = new EventCartProView();
+    eventCart2.init(languages,dataContent);
+    
+</script>

@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Fahasa_Sortprice>
+            <version>0.0.1</version>
+        </Fahasa_Sortprice>
+    </modules>
+    <frontend>
+        <events>
+            <catalog_product_collection_load_before>
+                <observers>
+                    <sortprice_collection_load_before>
+                        <type>singleton</type>               
+                        <class>Fahasa_Sortprice_Model_Observer</class>
+                        <method>catalog_product_collection_load_before</method>
+                    </sortprice_collection_load_before>
+                </observers>
+            </catalog_product_collection_load_before>            
+        </events>
+    </frontend>
+    <global>
+        <models>
+            <sortprice>
+                <class>Fahasa_Sortprice_Model</class>
+            </sortprice>
+        </models>            
+    </global>
+</config>

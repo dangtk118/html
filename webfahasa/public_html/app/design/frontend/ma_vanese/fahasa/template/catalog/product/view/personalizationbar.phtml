@@ -1,0 +1,302 @@
+<?php
+    $_helper = $this->helper('catalog/output');
+    $product_helper = Mage::helper('fahasa_catalog/product');
+    $_product = $this->getProduct();
+    
+    $store_id = Mage::app()->getStore()->getStoreId();
+    // run native query show language book type 
+    $language = $_product->getCategoryMain();
+    if($language == "Foreign books" || $language == "Sách tiếng Việt"){
+        $otherLanguages = 1;
+    }
+    $is_mobile = Mage::helper('fhsmobiledetect')->isMobile();
+    $more_link = "/daily-suggestion" . "?fhs_campaign=PERSONALIZE_XEM_THEM";
+    $MEDIA_URL = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA, true);
+    $SKIN_URL = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN);
+    $queryfier = Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix');
+    $PAGE_SCRIPT = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS)."lib/personalization.js?q=".$queryfier;
+    
+    
+    $languages = [];
+    $languages['ViewMore'] = $this->__("View More");
+    $languages['ViewLess'] = $this->__("View Less");
+    
+    // get Count_review_FHS
+    
+    
+    $attribute_front = Mage::getStoreConfig('catalog/catalog_cache/attribute_front');
+    $attributes_link_filter = explode(",", $attribute_front);
+    $campaign_attr = 'fhs_campaign=ATTRIBUTE_PRODUCT';
+    
+    $product_attributes = $product_helper->getProductStore($_product->getEntityId(), '', true);
+    if(empty($product_attributes)){
+	
+	if($_description = $this->getProduct()->getDescription()){
+	    $product_description = $this->helper('catalog/output')->productAttribute($this->getProduct(), $_description, 'description');
+	}
+	$summaryData = $product_helper->getFHSRatingAverages($_product->getEntityId());
+	$reviewCount = $summaryData['reviews_count_fhs'];
+	
+	$readConnection = Mage::getSingleton('core/resource')->getConnection('core_read');
+	$query = "SELECT`type` as 'key', label as 'value', link_url as 'url' FROM fhs_internal_product_linking where product_id = " . $_product->getEntityId();
+	$productLinkings = $readConnection->fetchAll($query);
+    }else{
+	$product_description = $product_helper->getProductStore($_product->getEntityId(), 'description');
+	
+	if(empty($reviewCount)){
+	    $reviewCount = 0;
+	}
+	$productLinkings = $product_helper->getProductStore($_product->getEntityId(), 'links');
+	
+    }
+    
+//    $reviewCount = $_product->getRatingSummary()->getReviewsCount();
+?>
+<div id="product_view_info" class="content product_view_content">
+    <div class="product_view_content-title"><?php echo $this->__('Product Information') ?></div>
+    <div class="product_view_tab_content_ad">
+	<div class="product_view_tab_content_additional">
+	    <table class="data-table table-additional">
+		<col width="25%" />
+		<col />
+		<tbody>
+		    <?php if(empty($product_attributes)):?>
+<?php //START render attribute from mysql ?>
+			<?php //Additional--------------------------- ?>
+			<?php if ($_additional = $this->getAdditionalData(array(), true)): ?>
+			    <?php 
+				if(!empty($_additional['supplier'])){
+				    $rs = Mage::helper("fahasa_catalog")->getDataSupplier($_additional['supplier']['value']);
+				    if(!empty($rs['name'])){
+					$_additional['supplier']['name'] = $rs['name'];
+				    }
+				    if(!empty($rs['pageUrl'])){
+					$_additional['supplier']['url'] = $rs['pageUrl'];
+					if(!empty($_additional['supplier_list'])){
+					    unset($_additional['supplier_list']);
+					}
+				    }else{
+					if(!empty($_additional['supplier_list'])){
+					    unset($_additional['supplier']);
+					}
+				    }
+				}
+			    ?>
+			    <?php $i = 0;
+				foreach ($_additional as $_data): $i++ ?>
+				    <?php if ($_data['value'] == 'No' || $_data['value'] == 'N/A' || $_data['value'] == '.'): ?>
+					<?php continue; ?>
+				    <?php endif; ?>
+
+				    <?php if(in_array($_data['code'], $attributes_link_filter)): ?>
+					<tr>
+					    <th class="table-label"><?php echo $this->escapeHtml($this->__($_data['label'])) ?></th>
+					    <td class="data_<?php echo $_data['code'];?>">
+						<?php $is_first = true;?>
+						<?php if($_data['is_multiple']):?>
+						    <?php foreach($_data['options'] as $key=>$item):?>
+							<?php if($is_first){$is_first = false;}else{echo ',&nbsp;';}?>
+							<a class="xem-chi-tiet" href="<?php echo '/all-category.html?'.$_data['code'].'='.$item['value'].'&'.$campaign_attr; ?>">
+							    <?php echo $this->escapeHtml($item['label']); ?>
+							</a>
+						    <?php endforeach;?>
+						<?php else:?>
+						    <?php $item = $_data['options'];?>
+						    <a class="xem-chi-tiet" href="<?php echo '/all-category.html?'.$_data['code'].'='.$item['value'].'&'.$campaign_attr; ?>">
+							<?php echo $this->escapeHtml($item['label']); ?>
+						    </a>
+						<?php endif;?>
+					    </td>
+					</tr>
+				    <?php else:?>
+					<?php if ($_data['code'] == "supplier"): ?>
+					    <?php if (!empty($_data['name'])): ?>
+						<tr>
+						    <th class="table-label"><?php echo $this->escapeHtml($this->__($_data['label'])) ?></th>
+						    <td class="data_<?php echo $_data['code'];?>">
+							<?php if ($_data['url'] != null): ?>
+							    <a class="xem-chi-tiet" href="<?php echo $_data['url'] ?>">
+								<?php echo $_helper->productAttribute($_product, $_data['name'], $_data['code']) ?>
+							    </a>
+							<?php else: ?>
+							    <?php echo $_helper->productAttribute($_product, $_data['name'], $_data['code']) ?>
+							<?php endif; ?>
+						    </td>
+						</tr>
+					    <?php endif; ?>
+					<?php elseif ($_data['code'] == "author"): ?>
+					    <tr>
+						<th class="table-label"><?php echo $this->escapeHtml($this->__($_data['label'])) ?></th>
+						<td class="data_<?php echo $_data['code'];?>">
+						    <?php 
+						    if(Mage::helper("fahasa_catalog")->hasAuthor($productLinkings)): ?>
+							<?php $first = true;?>
+							<?php foreach ($productLinkings as $links): ?>
+							    <?php 
+								if($links['type'] == 'author'): 
+								    if($first)
+									$first = false;
+								    else
+									echo ",";
+							    ?>
+								<a style="font-size: 14px; color: #2489F4" href="<?php echo $links['link_url'] ."?fhs_campaign=INTERNAL_LINKING" ?>">
+								    <?php echo $links['label'] ?></a>
+							    <?php endif; ?>
+							<?php endforeach; ?>
+						    <?php else: ?>
+							<?php echo $_helper->productAttribute($_product, str_replace(".0000", "", $_data['value']), $_data['code']) ?>
+						    <?php endif; ?>
+						</td>
+					    </tr>
+					<?php elseif ($_data['code'] == "expected_date"): ?>
+						<?php $today = date("Y-m-d H:i:s");?>
+						<?php $today = date("Y-m-d", strtotime($today.'+7 hours'));?>
+						<?php $product_date = date("Y-m-d", strtotime($_data["value"]));?>
+						<?php if($product_date < $today): ?>
+						    <?php continue; ?>
+						<?php else: ?>
+						    <tr>
+							<th class="table-label"><?php echo $this->escapeHtml($this->__($_data['label'])) ?></th>
+							<td class="data_<?php echo $_data['code'];?>">
+							    <?php echo $_helper->productAttribute($_product, str_replace(".0000", "", $_data['value']), $_data['code']) ?>
+							</td>
+						    </tr>
+						<?php endif; ?>
+					<?php else: ?>
+					    <tr>
+						<th class="table-label"><?php echo $this->escapeHtml($this->__($_data['label'])) ?></th>
+						<td class="data_<?php echo $_data['code'];?>">
+						    <?php echo $_helper->productAttribute($_product, str_replace(".0000", "", $_data['value']), $_data['code']) ?>
+						</td>
+					    </tr>
+					<?php endif; ?>
+				    <?php endif;?>
+				<?php endforeach; ?>
+			<?php endif;?>
+<?php //END render attribute from mysql ?>
+		    <?php else:?> 
+<?php //START render attribute from redis ?>
+			<?php foreach ($product_attributes as $key=>$item):?>
+			    <tr>
+				<th class="table-label">
+				    <?php echo $this->escapeHtml($product_helper->getAttributeTranslate($store_id, $key)); ?>
+				</th>
+				<td class="data_<?php echo $key;?>">
+				    <?php echo $product_helper->getAttributeItemValueHtml($store_id, $key, $item, $attributes_link_filter, $campaign_attr);?>
+				</td>
+			    </tr>
+			<?php endforeach; ?>
+		    <?php endif;?>
+<?php //END render attribute from redis ?>
+
+		    <?php if(!empty($productLinkings) && !$is_mobile): ?>
+			<tr>
+			    <th style="vertical-align: middle;" class="table-label"><?php echo $this->escapeHtml($this->__('Product appear in')) ?></th>
+			    <td>
+				<ul class="fhs_product_link">
+				<?php foreach ($productLinkings as $links): ?>
+				    <li>
+					<?php 
+					    $tracking_link = "?fhs_campaign=INTERNAL_LINKING";
+					    if($links['key'] == 'series_book'){
+						$helperSeriesBook = Mage::helper("seriesbook");
+						$fhsCampaign = "?fhs_campaign=".$helperSeriesBook->getFhsCampaignSeriPage();
+						$tracking_link = $fhsCampaign;
+					    }
+					?>
+					<a style="font-size: 14px; color: #2489F4" href="<?php echo $links['url'].$tracking_link ?>">
+					    <?php echo $links['value'] ?></a>
+				    </li>
+				<?php endforeach; ?>
+				</ul>
+			    </td>
+			</tr>
+		    <?php endif; ?>
+
+		    <?php if(!(($_product->getData('category_main') == null || $_product->getData('category_main') == "N/A" ) 
+			    && ($_product->getData('category_mid') == null || $_product->getData('category_mid') == "N/A") 
+			    && ($_product->getData('category_1') == null || $_product->getData('category_1') == "N/A"))): ?>
+			<tr>
+			    <th style="vertical-align: middle;" class="table-label"><?php echo $this->escapeHtml($this->__('Top best selling products')) ?></th>
+			    <td>
+				<?php
+				$category = $_product->getData('category');
+				if ($category != null) {
+				    $linkPath = Mage::getBaseUrl().$category->getData('url_path');
+				} else {
+				    $linkPath = Mage::helper('fahasa_catalog')->getCategoryPath($_product);
+				}
+				$cat1 = $_product->getData('category_1');
+				if($cat1 == "N/A" || $cat1 == null) {
+				    $cat1 = $_product->getData('category_mid');
+				    if($cat1 == "N/A" || $cat1 == null) {
+					$cat1 = $_product->getData('category_main');
+				    }
+				}
+				$linkPath = str_replace('//default-category','/all-category.html', $linkPath);
+				$linkTop = str_replace(".html", ".html"."?order=num_orders_month", $linkPath);
+				?>
+				<a style="font-size: 14px; color: #2489F4;" href="<?php echo $linkTop; ?>" ><?php echo $this->__('Top 100 sản phẩm '.$cat1.' bán chạy của tháng') ?></a>
+
+			    </td>
+			</tr>
+		    <?php endif; ?>
+			
+		    <?php if(!empty($rating_other_html)):?>
+			<tr>
+			    <th style="vertical-align: middle;" class="table-label"><?php echo $this->__('Top best selling products') ?></th>
+			    <td>
+				<?php echo $rating_other_html;?>
+			    </td>
+			</tr>
+		    <?php endif;?>
+		</tbody>
+	    </table>
+	</div>
+
+	<div class="clear"></div>
+	<?php //Description--------------------------- ?>
+	<?php if($product_description): ?>
+	    <div id="product_tabs_description_contents">
+		<div id="desc_content" class="std">
+		    <?php echo $product_description;?>
+		    <div class="clear"></div>
+		</div>
+	    </div>
+	<?php endif;?>
+    </div>
+    <div class="clear"></div>
+    <div id="desc_viewmore" class="desc_viewmore">
+	<div class="showmore-content">
+	    <a id="btn_showmore"><?php echo $languages['ViewMore']; ?></a>
+	    <script>
+		$jq(document).ready(function(){
+		    let h = $jq('.product_view_tab_content_ad').height();
+		    if(h > 600){
+			$jq('.product_view_tab_content_ad').css('height',600+'px');
+			$jq('#desc_viewmore').fadeIn(0);
+		    }
+		});
+		$jq('#btn_showmore').click(function(){
+		    let $btn_showmore = $jq(this);
+		    if($btn_showmore.text() == '<?php echo $languages['ViewLess'];?>'){
+			$jq('.product_view_tab_content_ad').css('height',600+'px');
+			$btn_showmore.text('<?php echo $languages['ViewMore'];?>');
+		    }else{
+			$jq('.product_view_tab_content_ad').css('height','auto');
+			$btn_showmore.text('<?php echo $languages['ViewLess'];?>');
+		    }
+		});
+	    </script>
+	</div>
+    </div>
+</div>
+
+<?php //Review Block--------------------------- ?>
+<div id="product_view_review" class="content product_view_content">
+    <div class="product_view_content-title"><?php echo $this->__('Product Information') ?></div>
+    <div id="product_view_tab_content_review" class="product_view_tab_content_review">
+	<?php echo $this->getBlockHtml('product.review.info') ?>
+    </div>
+    <div class="clear"></div>
+</div>

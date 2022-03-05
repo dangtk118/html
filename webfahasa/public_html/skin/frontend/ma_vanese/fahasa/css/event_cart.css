@@ -1,0 +1,454 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Dec 16, 2019, 4:15:40 PM
+    Author     : lamhung
+*/
+#event_cart{
+    margin-top: 25px;
+    background-color: white;
+}
+.event_cart_header{
+    background-color: #0B332E;
+    display: flex;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    flex-direction:row;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-justify-content: left;
+    justify-content: left;
+}
+.event_cart_header_title{
+    padding: 15px 8px 15px 22px;
+    font-weight: 700;
+    font-size: 1.1em;
+    color: #fff;
+    text-transform: uppercase;
+}
+.event_cart_header img{
+    padding: 8px;
+}
+.event_cart_content{
+    font-size: 1em;
+    padding: 7.5px 15px 7.5px 22px;
+}
+.event_cart_content_title{
+    font-size: 1.1em;
+    font-weight: 650;
+    padding: 7.5px 15px 7.5px 0;
+}
+.event_cart_content_option{
+    display: block;
+    padding: 7.5px 15px 7.5px 0;
+}
+.event_cart_content_option_item{
+    height: 0 !important;
+}
+.event_cart_resutl{
+    font-size: 1em;
+    padding: 7.5px 15px 7.5px 22px;
+}
+.event_cart_resutl_title{
+    font-size: 1.1em;
+    font-weight: 650;
+    padding: 7.5px 15px 10px 0;
+}
+.event_cart_resutl_content{
+    padding: 2px 15px 7.5px 15px;
+}
+
+.event_cart_footer{
+    font-size: 1em;
+    padding: 5px 15px 7.5px 22px;
+}
+.event_cart_footer-list {
+    position: relative;
+    list-style: none;
+    margin-left: 0;
+    padding-left: 1.2em;
+}
+.event_cart_footer-list li:before{
+    content: "-";
+    position: absolute;
+    left: 0;
+}
+.event_cart_footer-list li{
+    padding: 2px 0;
+}
+.event_cart_footer-list li:last-child{
+    padding: 2px 0 7.5px 0;
+}
+.event_cart_loading{
+    opacity: 0.3;
+}
+.event_cart_notificate{
+    font-size: 1em;
+    padding: 15px 15px 0 22px;
+    color: #c00;
+}
+.event_cart_notificate a{
+    cursor: pointer;
+    user-select: none;
+    color: #2F80ED;
+    text-decoration: underline;
+    font-weight: 650;
+}
+#fahasa_dialog_wrapper-cover {
+    display: none;
+    background: #261E1E none repeat scroll 0% 0%;
+    opacity: 0.5;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    float: left;
+    position: fixed;
+    z-index: 99998;
+}
+.fahasa_dialog_wrapper {
+    display: none;
+
+    align-items: center;
+    -webkit-align-items: center;
+    -ms-align-items: center;
+    -moz-align-items: center;
+
+    justify-content: center;
+    -webkit-justify-content: center;
+    -ms-justify-content: center;
+    -moz-justify-content: center;
+
+    flex-direction: column;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    -moz-flex-direction: column;
+
+    position: fixed;
+    
+    opacity: 1;
+    z-index: 99999;
+    background-color: white;
+    top: 20%;
+    left: 50%;
+    width: 550px;
+    max-width: calc(100% - 10px);
+    min-height: 245px;
+    max-height: 55%;
+    webkit-transform: translateX(-50%);
+    -moz-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    transform: translateX(-50%);
+    border: none;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+}
+@media only screen and (max-width: 1000px) and (orientation: landscape) {
+  .fahasa_dialog_wrapper {
+	top: 5%;
+	bottom: 5%;
+	min-height: 255px;
+	max-height: 100%;
+  }
+}
+.fahasa_dialog_wrapper_over{
+    bottom: 0;
+}
+.fahasa_dialog_wrapper_close{
+    position:absolute;
+    z-index:1000001;
+    top: 5px;
+    right: 5px;
+}
+.fahasa_dialog_wrapper_close_btn{
+    cursor: pointer;
+    user-select: none;
+    font-size: 1.8em;
+    background-color: white;
+    color: #ccc;
+    width: 1.2em;
+    height: 1.2em;
+    display: flex;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    flex-direction:row;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    justify-content: center;
+}
+.fahasa_dialog_wrapper_close_btn:hover{
+    color: #c00;
+}
+.fahasa_dialog {
+    display: flex;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+
+    flex-direction: column;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    -moz-flex-direction: column;
+   
+    border: none;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    
+    background-color: #fff;
+    padding: 0;
+    box-sizing: border-box;
+    position: relative;
+    flex: 0 1 auto;
+    -webkit-flex: 0 1 auto;
+    -ms-flex: 0 1 auto;
+    -moz-flex: 0 1 auto;
+    /* overflow-y: auto; /* Solution 1: Add this line */
+    max-height: calc(100% - 1px); /* Solution 2: Replace with calc(100% - 1px) */
+}
+.fahasa_dialog_header {
+    white-space: nowrap;
+    
+    display: flex;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+
+    flex-direction: row;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    -moz-flex-direction: row;
+    
+    flex: 0 0 auto;
+    -webkit-flex: 0 0 auto; 
+    -ms-flex: 0 0 auto;
+    -moz-flex: 0 0 auto;
+    
+    align-items: center;
+    -webkit-align-items: center;
+    -ms-align-items: center;
+    -moz-align-items: center;
+    
+    justify-content: center;
+    -webkit-justify-content: center;
+    -ms-justify-content: center;
+    -moz-justify-content: center;
+    
+    padding: 20px 15px 10px 15px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.1em;
+    text-transform: uppercase;
+    max-width: 100%;
+}
+.fahasa_dialog_content {
+    color: #212529;
+    padding: 0 20px;
+    outline: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: relative;
+    
+    flex: 1 1 auto;
+    -webkit-flex: 1 1 auto;
+    -ms-flex: 1 1 auto;
+    -moz-flex: 1 1 auto;
+
+    border-color: inherit;
+    background: 0 0;
+    display: flex;
+    font-size: 1em;
+    min-height: 140px;
+}
+.fahasa_dialog_footer {
+    position: relative;
+    border-width: 1px 0 0;
+    border-style: solid;
+    
+    display: flex;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+
+    flex-direction:row;
+    
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    
+    padding: 15px 3px 15px 3px;
+    
+    justify-content: center;
+    -webkit-justify-content: center;
+    -ms-justify-content: center;
+    -moz-justify-content: center;
+    
+    border-color: #e9ecef;
+    max-width: 100%;
+}
+.fahasa_dialog_footer_btn{
+    cursor: pointer;
+    user-select: none;
+    width: 200px;
+    max-width: calc(50% - 12px);
+    height: 36px;
+    font-size: 1em;
+    font-weight: 650;
+    color: #F39801;
+    border: 1px solid #F39801;
+    transition: all 0.3s;
+    box-shadow: 0px 4px 6px hsl(0, 0%, 90%);
+    -moz-box-shadow: 0px 4px 6px hsl(0, 0%, 90%);
+    -webkit-box-shadow: 0px 4px 6px hsl(0, 0%, 90%);
+    border-radius: 18px;
+    -moz-border-radius: 18px;
+    -webkit-border-radius: 18px;
+    padding: 5px 5px;
+}
+
+.fahasa_dialog_footer_btn.confirm{
+    margin-left: 10px;
+    color: white;
+    background-color: #F39801;
+}
+/*.fahasa_dialog_footer_btn button:hover{
+    box-shadow: 0px 6px 8px hsl(0, 0%, 90%);
+    -moz-box-shadow: 0px 6px 8px hsl(0, 0%, 90%);
+    -webkit-box-shadow: 0px 6px 8px hsl(0, 0%, 90%);
+    transform: scale(1.03);
+}*/
+.fahasa_dialog_footer_btn button:active{
+    box-shadow: 0px 2px 4px hsl(0, 0%, 90%);
+    -moz-box-shadow: 0px 2px 4px hsl(0, 0%, 90%);
+    webkit-box-shadow: 0px 2px 4px hsl(0, 0%, 90%);
+    transform: scale(0.98);
+}
+/* width */
+.fahasa_dialog_content::-webkit-scrollbar {
+  width: 17px;
+}
+
+/* Track */
+.fahasa_dialog_content::-webkit-scrollbar-track {
+    background-color:#fff;
+}
+ 
+/* Handle */
+.fahasa_dialog_content::-webkit-scrollbar-thumb {
+  background: #fed89a; 
+  border-radius: 10px;
+  border:4px solid #fff;
+}
+
+/* Handle on hover */
+.fahasa_dialog_content::-webkit-scrollbar-thumb:hover {
+  background: #ffe2b3; 
+}
+.fahasa_dialog_content_list{
+    width: 100%;
+}
+.fahasa_dialog_content_list > li{
+    list-style-type: disc;
+    margin-left: 20px;
+    color: #c00;
+    padding: 7.5px 0;
+}
+.fahasa_dialog_content_list_product{
+    padding: 10px;
+}
+.fahasa_dialog_content_list_product_info{
+    display: block;
+    color: #333;
+}
+.fahasa_dialog_content_list_product_info_img{
+    padding: 5px;
+    width: calc(20% - 10px);
+    float: left;
+}
+.fahasa_dialog_content_list_product_info_detail{
+    padding: 10px 0 0 15px;
+    width: calc(80% - 15px);
+    float: left;
+}
+.fahasa_dialog_content_list_product_info_detail-name{
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    padding-top: 5px;
+    width: 100%;
+}
+
+.fahasa_dialog_content_list_product_info_detail-price{
+    color: #F39801;
+    padding-top: 5px;
+}
+.fahasa_dialog_content_list_product_info_detail-qt{
+    padding-top: 5px;
+}
+.event_cart_cancel{
+    display: none;
+    flex-direction:row;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-align-items: center;
+    -webkit-justify-content: flex-start;
+    justify-content: flex-start;
+    border-top: 1px solid #eae8e8;
+    padding: 15px 15px 7.5px 22px;
+}
+.event_cart_cancel_btn{
+    display: flex;
+    justify-content: center;
+    color: #F39801;
+    border: 2px solid #F39801;
+    width: 180px;
+    font-size: 1.1em;
+    font-weight: 700;
+    transition: all 0.3s;
+    box-shadow: 0px 4px 6px hsl(0, 0%, 90%);
+    -moz-box-shadow: 0px 4px 6px hsl(0, 0%, 90%);
+    -webkit-box-shadow: 0px 4px 6px hsl(0, 0%, 90%);
+    border-radius: 20px;
+    -moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+}
+
+.event_cart_cancel_btn:disabled{
+    background-color: #E0E0E0;
+    border: 1px solid #E0E0E0;
+    color: #b3b3b3;
+}
+.event_cart_cancel_btn:enabled:hover{
+    box-shadow: 0px 6px 8px hsl(0, 0%, 90%);
+    -moz-box-shadow: 0px 6px 8px hsl(0, 0%, 90%);
+    -webkit-box-shadow: 0px 6px 8px hsl(0, 0%, 90%);
+    transform: scale(1.03);
+}
+.event_cart_cancel_btn:enabled:active{
+    box-shadow: 0px 2px 4px hsl(0, 0%, 90%);
+    -moz-box-shadow: 0px 2px 4px hsl(0, 0%, 90%);
+    webkit-box-shadow: 0px 2px 4px hsl(0, 0%, 90%);
+    transform: scale(0.98);
+}

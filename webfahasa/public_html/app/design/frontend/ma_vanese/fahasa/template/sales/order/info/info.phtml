@@ -1,0 +1,303 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2014 X.commerce, Inc. (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php /** @var $this Mage_Sales_Block_Order_Info */ ?>
+<?php 
+    $_order = $this->getOrder();
+    $_orderId = $this->getOrder()->getIncrementId();
+    $sym_currency = Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol();
+    $skin_url = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true);
+    $dataStatusColor = array('pending'=>'{"color":"orange","number1":"#FCDAB0","number2":"#F7941E"}'
+        ,'pre_pending'=>'{"color":"orange","number1":"#FCDAB0","number2":"#F7941E"}'
+        ,'processing'=>'{"color":"blue","number1" : "#E0ECFD","number2":"#2F80ED"}'
+        ,'complete'=>'{"color" : "green","number1" :"#B6F1B6","number2" : "#2ED62E"}'
+        ,'canceled'=>'{"color":"red","number1" :"#F3B4AF","number2" :"#A90000"}'
+        ,'pending_payment'=>'{"color":"orange","number1":"#FCDAB0","number2":"#F7941E"}'
+        ,'customer_confirmed' =>'{"color":"orange","number1":"#FCDAB0","number2":"#F7941E"}'
+        ,'paid' =>'{"color":"orange","number1":"#FCDAB0","number2":"#F7941E"}'
+        );
+   $dataProgressStepStatusPayment = $this->getProgressStepStatusPaymentHtml($_orderId);
+   $htmlStatusPayment = $dataProgressStepStatusPayment['html'];
+   $StatusPaymentCount = $dataProgressStepStatusPayment['count'];
+   $payment_status_text = $dataProgressStepStatusPayment['payment_status_text'];
+   
+    $orders_rule = Mage::helper('sales')->getOrdersOptionRule($_orderId);
+    $hide_total = false;
+    $hide_shipping_fee = false;
+    if(!empty($orders_rule[$_orderId])){
+	$hide_total = $orders_rule[$_orderId]['hide_total'];
+	$hide_shipping_fee = $orders_rule[$_orderId]['hide_shipping_fee'];
+    }
+?>
+<?php echo $this->getMessagesBlock()->toHtml() ?>
+<!--<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">-->
+<style>
+    /* start css for main template*/
+    .my-account{
+        padding : 0px 0px;
+    }
+    .main{
+        margin-top: 10px;
+    }
+    .col-fhs-main-body{
+        padding : 0;
+    }
+    .price{
+        font-family: sans-serif!important;
+    }
+    /* end css for main template*/
+</style>
+<div class="order-view-content-info">
+    <div class='order-view-title'><?php echo $this->__('Order details') ?></div><div class="order-view-id-mobile"><span><?php echo $this->__('Order') ?>: </span><span><?php echo $_order->getRealOrderId(); ?></span></div>
+    <div>
+        <?php 
+            // get status => change color border :  
+            $colorJson = $dataStatusColor[$_order->getStatus()];
+            $color = json_decode($colorJson);
+        ?>
+        <div class="order-view-status" <?php if($color) :?>style="background:<?php echo $color->number1; ?>;color:<?php echo $color->number2; ?>;border-color:<?php echo $color->number1; ?>;"<?php endif; ?>>
+                        <?php echo  $this->__('Orders')." ".$this->__($_order->getStatus()); ?>
+        </div>
+        <div class="order-view-id"><span><?php echo $this->__('Order') ?>: </span><span><?php echo $_order->getRealOrderId(); ?></span></div>
+        <div class="order-view-date"><span><?php echo $this->__('Date of purchase') ?>: </span><span><?php echo date("d/m/Y",strtotime($_order->getCreatedAtStoreDate()))?></span></div>
+        <?php if(!$hide_total):?>
+	    <div class="order-view-total"><span><?php echo $this->__('Order Money Total')?>: </span><span><?php echo $this->getOrder()->formatPrice($_order->getGrandTotal())?><span class="sym-totals"><?php echo $sym_currency; ?></span></span></div>
+	<?php endif;?>
+        <div class="order-view-vat"><span style="flex:1"><?php echo $this->__('Information Outputting Invoice')?>: </span>
+            <?php if($this->getVATOrderInfo($_order)) : ?>
+                 <span style="flex:5"><?php echo $this->getVATOrderInfo($_order); ?></span>
+            <?php else: ?>
+               <span class="dont-have-info" style="flex:5;">(<?php echo $this->__("Don't have infomation")?>)</span>
+            <?php endif; ?>
+        </div>
+        <div class="order-view-note"><span style="flex:1"><?php echo $this->__('Note') ?>: </span>
+            <?php if($this->getNoteOrderInfo($_order)) : ?>
+                <span style="flex:16"><?php echo $this->getNoteOrderInfo($_order)?></span>
+            <?php else: ?>
+                <span class="dont-have-info" style="flex:16">(<?php echo $this->__("Don't have infomation")?>)</span>
+            <?php endif; ?>
+        </div>
+    </div>
+    <?php echo $this->getChildHtml('buttons') ?>
+</div>
+<?php /// --------- lich su lien lac -------------- /// ?>
+<?php
+    $listContact = Mage::helper('coreextended')->getFhsContactOrder($_order->getRealOrderId());
+?>
+<?php if(count($listContact) > 0) :?>
+<div class="order-info-border-block"></div>
+<div class="order-view-history-contact">
+    <div class='order-view-title'><?php echo $this->__("History contact");?></div>
+    <div style="clear:both;"></div>
+<?php
+    $listSeen = array();
+    $first = 0;
+    foreach ($listContact as $contact):
+        $listSeen[] = $contact["id"];
+	
+	$block_id_str = '';
+	$view_more_log = '';
+	if($contact['type'] == "clickable" && !empty($contact['block_id'])){
+	    $block_id_str = "onclick='fhs_account.getBlockId(".json_encode($contact['block_id']).", ". json_encode($this->__("History contact detail")).");'";
+	    $view_more_log = '<span class="fhs_mouse_point" style="color:#1478FC;">'.$this->__('View more').'</span>';
+	}
+        ?>
+        <?php if($contact['content']) : $first++;?>
+    
+    <div <?php if($contact['seen'] == 0) :?> class="order-item-contact-hightlight" <?php endif; ?>>
+        <div class='order-view-item-contact
+	    <?php if($contact['seen'] == 0) :?> order-view-item-contact-unseen<?php endif; ?>
+	    <?php echo !empty($block_id_str)?'fhs_mouse_point':'';?>
+	    ' <?php echo !empty($block_id_str)?$block_id_str:'';?>
+ id="order-contract-<?php echo $contact["id"]; ?>">
+            <div class='border-item-contact <?php if($first == 1): ?>display-none-mobile<?php endif;?>'></div>
+            <?php if ($contact['suborder_id']) : ?><p><?php echo $contact['suborder_id']; ?></p><?php endif; ?>
+	    <p><?php echo $contact['content'] ?></p>
+            <div class="fhs_center_space" style="color:#b5b5b5;"><div class="fhs_center_left"><?php echo $contact['created_at'] ?></div><div class="fhs_center_left"><?php echo $view_more_log; ?></div></div>
+        </div>
+        <?php endif; ?>
+    </div>
+<?php endforeach;?>
+<div style="text-align:center;margin-top: 10px;"><input type="button" id="btn_showmore" class="order-view-btn" value="Xem Thêm"></div>
+</div>
+<?php endif; /// end check contact has data ?>
+
+<?php /// ---------End lich su lien lac --------------------------------?>
+
+<?php /// --------- Thong tin 3 box content ----------------/// : ?>
+<div class="order-info-border-block"></div>
+<div class='order-view-content-details'>
+    <div class="order-view-content-box1">
+        <div class="order-view-box">
+            <div class="order-box-title">
+                <div class="order-view-title"><?php echo $this->__('Shipping information') ?></div>
+            </div>
+            <div class="order-box-info">
+                <address>
+                   <?php echo $_order->getShippingAddress()->format('html') ?>
+                </address>
+            </div>
+        </div>
+        <div class="order-view-box">
+            <?php if (!$_order->getIsVirtual()): ?>
+                <div class="order-info-shipping-description">
+                    <div class="order-box-title">
+                        <div class="order-view-title"><?php echo $this->__('Shipping Method') ?></div>
+                    </div>
+                    <div class="order-box-info">
+                        <?php if ($_order->getShippingDescription()): ?>
+                            <?php echo $this->escapeHtml($_order->getShippingDescription()) ?>
+                        <?php else: ?>
+                            <p><?php echo $this->helper('sales')->__('No shipping information available'); ?></p>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            <?php endif; ?>
+        </div>
+        <div class="order-view-box">
+            <div class="order-box-title">
+                <div class="order-view-title"><?php echo $this->__('Payment Method') ?></div>
+            </div>
+            
+            <div class="order-box-info">
+                <?php /// --------- START status icon progess order ----------------///?>
+                <div class="order-box-info-historypayment">
+                    <div><?php echo $this->getPaymentInfoHtml() ?></div>
+                    <?php if ($payment_status_text['show']): ?>
+                        <div style="color : <?php echo $payment_status_text['color']; ?>"><?php echo $payment_status_text['text']; ?></div>
+                    <?php endif; ?>
+                </div>
+                <?php if ($htmlStatusPayment && $StatusPaymentCount > 1) : ?>
+                    <a class="order-box-info-button-showpopup"><?php echo $this->__('Payment history') ?></a>
+                    <div class="order-box-info-showpopup"></div>
+                <?php endif; ?>
+             <?php /// --------- END status icon progess orde ----------------///?>
+            </div>
+        </div>
+    </div>
+<?php /// --------- END Thong tin 3 box content ----------------///?>
+    <div class="border-block-mobile"></div>
+    <div class="order-view-status-container">
+         <?php echo $this->getProgressStepOrderInfo($_order); ?>
+    </div>
+
+</div>
+<script>
+$jq(document).ready(function() {
+    var order_tracking = <?php echo $this->getOrderLog($_order); ?>;
+    tracking_info = "<div class='tracking-item'><div class='text desc info tracking-item-time light-gray'>"+ order_tracking[0].date+"</div><div class='tracking-item-content'><span class='text desc'>"+order_tracking[0].status+"</span></div></div>";
+    $jq(".tracking-list-info-table").html(tracking_info);
+
+    jQuery('.tracking-view-btn').click(function () {
+        var tracking_info = "";
+        var tracking_btn_text = $jq(".tracking-view-btn").html();
+        if(tracking_btn_text == "XEM THÊM"){
+            order_tracking.forEach(function(value) {
+                var temp = "<div class='tracking-item'><div class='text desc info tracking-item-time light-gray'>"+ value.date+"</div><div class='tracking-item-content'><span class='text desc'>"+value.status+"</span></div></div>";
+                tracking_info += temp;
+              });
+            $jq(".tracking-list-info-table").html(tracking_info);
+            $jq(".tracking-view-btn").html("RÚT GỌN");
+        }else{
+            var value = order_tracking[0];
+            tracking_info = "<div class='tracking-item'><div class='text desc info tracking-item-time light-gray'>"+ value.date+"</div><div class='tracking-item-content'><span class='text desc'>"+value.status+"</span></div></div>";
+            $jq(".tracking-list-info-table").html(tracking_info);
+            $jq(".tracking-view-btn").html("XEM THÊM");
+        }
+    });
+    $jq('a[hrefs^="#"]').on('click', function(event) {
+    var target = $jq(this.getAttribute('hrefs'));
+    var sub_order_data_target = $jq(this.getAttribute('data-target'));
+    if(sub_order_data_target.length){
+        if (!$jq(this).hasClass("collapsed")) {
+            return;
+        }
+    }
+    if(target.length) {
+        event.preventDefault();
+        $jq('html, body').stop().animate({
+            scrollTop: target.offset().top
+        }, 1000);
+    }
+    });
+    
+    /* show-more and show-less : */
+    if($jq(".order-view-item-contact").length > 2){
+        $jq('.order-view-item-contact:gt(1)').hide();
+        $jq('#btn_showmore').show();
+        seenContact(2);
+    }else if($jq(".order-view-item-contact").length > 0){
+        seenContact(2);
+    }
+    
+    $jq('#btn_showmore').on('click', function() {
+        $jq('.order-view-item-contact:gt(1)').toggle();
+        $jq(this).val() === 'Xem Thêm' ? $jq(this).val('Rút Gọn') : $jq(this).val('Xem Thêm');
+        seenContact(1);
+    });
+    
+    /* handle order-box-info-button-showPopup */
+    $jq(".order-box-info-button-showpopup").click(function(){
+    if(typeof fhs_account !== 'undefined'){
+      let title = "<?php echo $this->__('Payment history'); ?>";
+      let html = "<?php echo $htmlStatusPayment; ?>";
+      fhs_account.showPopup(title,html,null,null);
+    }
+    });
+        
+});
+function seenContact(num) {
+    let str = new Array();
+    if (num == 2) {
+        $jq(".order-view-item-contact").each(function(index) {
+            if (index < 2 && $jq(this).hasClass("order-view-item-contact-unseen")) {
+                let id = $jq(this).attr("id");
+                $jq(this).removeClass("order-view-item-contact-unseen");
+                str.push(id.slice(15));
+            }
+        });
+    } else if (num == 1) {
+        $jq(".order-view-item-contact").each(function(index) {
+                if ($jq(this).hasClass("order-view-item-contact-unseen")) {
+                    let id = $jq(this).attr("id");
+                    $jq(this).removeClass("order-view-item-contact-unseen");
+                    str.push(id.slice(15));
+                }
+            });
+        }
+        if (str.length > 0) {
+            jQuery.ajax({
+                type: "POST",
+                url: "/customer/account/seenContact/",
+                data: {
+                    orderId: "<?php echo $_order->getRealOrderId(); ?>",
+                    listSeen: str.join()
+                }
+            });
+        }
+
+    };
+</script>

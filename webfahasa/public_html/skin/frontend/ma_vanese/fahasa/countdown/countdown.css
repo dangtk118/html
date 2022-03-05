@@ -1,0 +1,110 @@
+@font-face {
+    font-family: 'Slippy';
+    src: url('./fonts/slippy.ttf');
+}
+
+
+.main .container{
+    background: transparent;
+}
+.main container-inner{
+    text-align: center;
+}
+.countdownContainer {
+    height: 180px;
+    text-align: center;
+    clear: both;
+}
+
+.countdownContainer #clock {
+    padding-top: 90px;
+}
+
+.countdownTimeText {
+    text-align: center;
+    color: black;
+    font-family: Arial,_sans;
+    font-size: 120px;
+    font-weight: 900;
+}
+@media (min-width: 1200px) and (max-width: 1280px) {
+    .countdownContainer {
+        height: 150px;
+    }
+
+    .countdownContainer #clock {
+        padding-top: 70px;
+        margin: auto;
+        width: 75% !important;
+    }
+
+    .countdownTimeText {
+        font-size: 100px;
+    }
+}
+@media (min-width: 1025px) and (max-width: 1199px) {
+    .countdownContainer {
+        height: 150px;
+    }
+
+    .countdownContainer #clock {
+        padding-top: 70px;
+    }
+
+    .countdownTimeText {
+        font-size: 100px;
+    }
+}
+@media (min-width: 768px) and (max-width: 1024px) {
+    .countdownContainer {
+        height: 150px;
+    }
+
+    .countdownContainer #clock {
+        padding-top: 70px;
+    }
+
+    .countdownTimeText {
+        font-size: 80px;
+    }
+}
+@media (max-width: 767px){
+    .countdownContainer {
+        height: 50px;
+    }
+    .countdownTimeText {
+        font-size: 40px;
+    }
+    .countdownContainer #clock {
+        padding-top: 30px;
+    }
+}
+@media (min-width: 361px)and  (max-width: 414px){
+    .countdownContainer {
+        height: 50px;
+    }
+    .countdownTimeText {
+        font-size: 30px;
+        float: left;
+    }
+    .countdownContainer #clock {
+        padding-top: 30px;
+    }
+}
+@media (max-width: 360px){
+    .countdownContainer {
+        height: 50px;
+    }
+    .countdownTimeText {
+        font-size: 22px;
+        float: left;
+    }
+    .countdownContainer #clock {
+        padding-top: 30px;
+    }
+}
+@media (width: 360px){
+    .countdownContainer #clock{
+        padding-left: 15px;
+    }
+}

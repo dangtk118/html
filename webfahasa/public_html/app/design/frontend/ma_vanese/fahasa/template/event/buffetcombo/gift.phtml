@@ -1,0 +1,246 @@
+<?php 
+    $gift_id = Mage::getSingleton('checkout/session')->getData('buffetcombo_gift_id');
+    $buffetcombo = Mage::getSingleton('checkout/session')->getData('buffetcombo');
+    
+    $gift_delivery_message = Mage::getStoreConfig('event_buffetcombo/config/gift_delivery_message');
+?>
+
+<style type="text/css">
+    #event-buffetcombo-gift{
+        padding-top: 15px;
+        clear: both;
+    }
+    
+    #event-buffetcombo-gift-header{
+        background: url(/skin/frontend/ma_vanese/fahasa/images/title-gift.png) center left no-repeat;
+    }
+    
+    #event-buffetcombo-gift .body{
+        clear: both;
+        padding: 10px;
+        background: white;
+        background-image: initial;
+        background-position-x: initial;
+        background-position-y: initial;
+        background-size: initial;
+        background-repeat-x: initial;
+        background-repeat-y: initial;
+        background-attachment: initial;
+        background-origin: initial;
+        background-clip: initial;
+        background-color: white;
+        border: 1px solid #EBEBEB;
+        box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.1);
+    }
+    
+    #event-buffetcombo-gift-box{
+        width: 160px;
+        margin: 0 auto;
+        padding: 5px;
+    }
+    
+    .event-buffetcombo-gift-box-hover{
+        background-color: #ccc;
+        cursor: pointer;
+    }
+    
+    .event-buffetcombo-gift-box-active{
+        background-color: #fffc80;
+    }
+    
+    #event-buffetcombo-gift-message{
+        font-size: 14px;
+        margin: 0;
+        padding-left: 20px;
+        font-family: sans-serif;
+        font-weight: 600;
+        margin-bottom: 20px;
+    }
+    
+    #event-buffetcombo-gift-delivery-message{
+        background-color: white;
+        position: fixed;
+        z-index: 99999;
+        top: 30%;
+        left: 50%;
+        max-width: 350px;
+        display:none;
+        margin-left: -175px;
+    }
+    
+    #event-buffetcombo-gift-delivery-message h3{
+        background: url(/skin/frontend/ma_vanese/ma_vanesa2/images/onestepcheckout/order_title.png) center left no-repeat;
+    }
+    
+    #event-buffetcombo-gift-delivery-message .message{
+        font-size: 16px;
+        font-weight: bold;
+    }
+    
+    #event-buffetcombo-gift-delivery-message a{
+        border-radius: 10px;
+        background-color: #f39801;
+        color: #fff;
+        padding: 15px;
+        width: 100px;
+        display: block;
+        margin: auto;
+        font-weight: bold;
+    }
+    
+    #event-buffetcombo-gift-delivery-message a:hover{
+        background-color: #fdb43a;
+    }
+    
+    #event-buffetcombo-gift-delivery-message-body{
+        clear: both;text-align: center;
+        clear: both;
+        text-align: center;
+        height: 40px;
+        margin-top: 30px;
+    }
+
+</style>
+
+<div id="event-buffetcombo-gift" style="display:none">
+    <h3 id="event-buffetcombo-gift-header">Quà Tặng Cho Buffet Combo</h3>
+    <div id="event-buffetcombo-gift" class="body">
+        <div id="event-buffetcombo-gift-message"><?php echo Mage::helper("event/buffetcombo")->getGiftTitle(); ?></div>
+        <div id="event-buffetcombo-gift-box"><img src="<?php echo Mage::helper("event/buffetcombo")->getGiftIcon(); ?>"/></div>
+    </div>
+</div>
+
+<div id="event-buffetcombo-gift-delivery-message">
+    <div class="title">
+        <h3>Thông Báo Giao Hàng</h3>
+    </div>
+    <div class="content col-sm-12 col-md-12 col-sms-12">
+        <div class="message">
+            <?php echo $gift_delivery_message; ?>
+        </div>
+        <div id="event-buffetcombo-gift-delivery-message-body">
+            <div class="col-sm-6 col-md-6 col-sms-6">
+                <a onclick="showDeliveryMessage(false)">Hủy</a>
+            </div>
+             <div class="col-sm-6 col-md-6 col-sms-6">
+                <a onclick="addGiftToCart()">Đồng ý</a>
+            </div>
+        </div>
+    </div>
+    <div class="cleaner"></div>
+</div>
+
+<script type="text/javascript">
+    const ADD_GIFT_URL = "/event/buffetcombo/addgift";
+    const CHECK_GIFT_URL = "/event/buffetcombo/checkgift";
+    
+    let use_buffetcombo_gift = <?php if($gift_id){ echo 1; } else { echo 0; } ?>;
+    let has_combo = <?php if($buffetcombo){ echo 1; } else { echo 0; } ?>;
+    let can_click_gift = true;
+    
+    showBuffetComboGift(has_combo);
+    setBuffetGift(use_buffetcombo_gift);
+        
+    $jq(document).on('after_apply_coupon', function() {
+        checkBuffetCombo();
+    });
+    
+    $jq(document).on('after_remove_coupon', function() {
+        checkBuffetCombo();
+    });
+    
+    let $gift_box = $jq("#event-buffetcombo-gift-box");
+    $gift_box.hover(function(){
+        $gift_box.addClass('event-buffetcombo-gift-box-hover');
+    }, function(){
+        $gift_box.removeClass('event-buffetcombo-gift-box-hover');
+    });
+    
+    $gift_box.click(function(){
+        if(use_buffetcombo_gift){
+            showDeliveryMessage(false);
+            addGiftToCart();
+        }else{
+            $jq.ajax({
+                url: CHECK_GIFT_URL,
+                method: 'post',
+                success: function (data) {
+                    if(data['show_delivery_message']){
+                        showDeliveryMessage(true);
+                    }else{
+                        addGiftToCart();
+                    }
+                }
+            });            
+        }
+    })
+    
+    function setBuffetGift(to_set){
+        use_buffetcombo_gift = to_set;
+        let $gift_box = $jq("#event-buffetcombo-gift-box");
+        if(to_set){
+            $gift_box.addClass('event-buffetcombo-gift-box-active');
+        }else{
+            $gift_box.removeClass('event-buffetcombo-gift-box-active');
+        }
+    }
+    
+    function showBuffetComboGift(to_show){
+        if(to_show){
+            $jq("#event-buffetcombo-gift").show();
+        }else{
+            $jq("#event-buffetcombo-gift").hide();
+        }
+    }
+    
+    function checkBuffetCombo(){
+        $jq.ajax({
+            url: CHECK_GIFT_URL,
+            method: 'post',
+            success: function (data) {
+                showBuffetComboGift(data['has_buffetcombo']);
+                setBuffetGift(data['has_gift']);
+            }
+        });
+    }
+    
+    $gift_delivery_message = $jq("#event-buffetcombo-gift-delivery-message");
+    
+    function showDeliveryMessage(to_show){
+        if(to_show){
+            jQuery(".duplicated-order-cover").fadeIn();
+            $gift_delivery_message.show();
+        }else{
+            $gift_delivery_message.hide();
+            jQuery(".duplicated-order-cover").fadeOut();
+        }
+    }
+    
+    function addGiftToCart(){
+        console.log("Add/Remove Gift To Cart");
+        showDeliveryMessage(false);
+        
+        if(!can_click_gift){
+            return;
+        }
+        
+        can_click_gift = false;
+        if($gift_box.hasClass('event-buffetcombo-gift-box-active')){
+            setBuffetGift(true);
+        }else{
+            setBuffetGift(false);
+        }
+        
+        reviewLoad();
+        $jq.ajax({
+            url: ADD_GIFT_URL,
+            method: 'post',
+            success: function (data) {
+                can_click_gift = true;
+                save_shipping_method(shipping_method_url, 0, 1);
+                setBuffetGift(data['use_gift']);
+            }
+        });
+    }
+    
+</script>

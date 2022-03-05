@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<ma_vanesa2>
+    <resources>
+        <resource>
+            <title>Home page ma_vanesa2</title>
+            <identifier>ma_vanesa2_home</identifier>
+            <root_template>one_column</root_template>
+				<content><![CDATA[
+					<div class="home-content">{{block type="cms/block" block_id="ma_block_static_3"}} {{block type="timer/timer" before="bestsellerproduct" name="ma.timer" template="magentothem/timer/timer.phtml" }} {{widget type="categorytabsliders/advanced" title="Computer" identify="com" cat_ids="3,8,9" template="magentothem/categorytabsliders/categorytabsliders.phtml" products_count="16" width_thumbnail="270" height_thumbnail="364"}}{{block type="cms/block" block_id="banner_home_content_2"}}{{widget type="categorytabsliders/advanced" title="Camera" identify="ca" cat_ids="4,5,6" template="magentothem/categorytabsliders/categorytabsliders.phtml" products_count="16" width_thumbnail="270" height_thumbnail="364"}}{{block type="catlist/catlist" name="catlist" before="-" template="magentothem/catlist/catlist.phtml" }}</div>
+				]]></content>
+				<sort_order>1</sort_order>
+            <is_active>1</is_active>
+        </resource>
+    </resources>
+</ma_vanesa2>

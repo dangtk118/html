@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<config>
+    <tabs>
+        <fahasa_createaccountconfig translate="label">
+            <label>Auto Create Account With Api</label>
+            <sort_order>10</sort_order>
+        </fahasa_createaccountconfig>
+    </tabs>
+    <sections>
+        <autocreateaccountwithapi translate="label" module="adminhtml">
+            <label>Auto Create Account With Api</label>
+            <tab>fahasa_createaccountconfig</tab>
+            <sort_order>10</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                    <general translate="label">
+                        <label>General</label>
+                        <frontend_type>text</frontend_type>
+                        <sort_order>0</sort_order>
+                        <show_in_default>1</show_in_default>
+                        <show_in_website>1</show_in_website>
+                        <show_in_store>1</show_in_store>
+                        <fields>
+			    <enable translate="label">
+                                <label>Enable Campaign</label>
+                                <frontend_type>select</frontend_type>
+                                <source_model>adminhtml/system_config_source_yesno</source_model>
+                                <sort_order>10</sort_order>
+                                <show_in_default>1</show_in_default>
+                                <show_in_website>1</show_in_website>
+                                <show_in_store>1</show_in_store>
+                            </enable>
+                            <ruleid translate="label">
+                                <label>Coupon Campaign Rule Id</label>
+                                <frontend_type>text</frontend_type>                                
+                                <sort_order>20</sort_order>
+                                <show_in_default>1</show_in_default>
+                                <show_in_website>1</show_in_website>
+                                <show_in_store>1</show_in_store>
+                            </ruleid>
+                        </fields>
+                    </general>
+                    <transactional>
+                        <label>Transactional Email</label>
+                        <frontend_type>text</frontend_type>
+                        <sort_order>0</sort_order>
+                        <show_in_default>1</show_in_default>
+                        <show_in_website>1</show_in_website>
+                        <show_in_store>1</show_in_store>
+                        <fields>
+                            <withcouponcode translate="label">
+                                <label>Transactional Email name with coupon code</label>
+                                <frontend_type>text</frontend_type>
+                                <sort_order>10</sort_order>
+                                <show_in_default>1</show_in_default>
+                                <show_in_website>1</show_in_website>
+                                <show_in_store>1</show_in_store>
+                            </withcouponcode>
+                            <nocouponcode translate="label">
+                                <label>Transactional Email name no coupon code</label>
+                                <frontend_type>text</frontend_type>                                
+                                <sort_order>20</sort_order>
+                                <show_in_default>1</show_in_default>
+                                <show_in_website>1</show_in_website>
+                                <show_in_store>1</show_in_store>
+                            </nocouponcode>
+                        </fields>
+                    </transactional>
+                </groups>
+        </autocreateaccountwithapi>
+    </sections>
+</config>

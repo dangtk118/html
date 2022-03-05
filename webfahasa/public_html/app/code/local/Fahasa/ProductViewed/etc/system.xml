@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <tabs>
+        <productviewed_config translate="label" module="productviewed">
+            <label>Customer History Store</label>
+            <sort>1</sort>
+        </productviewed_config>
+    </tabs>
+    <sections>
+        <productviewed_config translate="label" module="productviewed">
+            <label>Customer Product Viewed</label>
+            <tab>productviewed_config</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>202</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <config translate="label">
+                    <label>Config</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <expanded>1</expanded>
+                    <fields>
+                        <is_active>
+                            <label>Is Active</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <comment></comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </is_active>
+                        <slider_limit>
+                            <label>Max products in slider</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Max products loaded in slider</comment>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </slider_limit>
+                        <page_size>
+                            <label>size when load page</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Max products customer can store</comment>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </page_size>
+                        <page_limit>
+                            <label>Max store products list</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Max products customer can store when seen</comment>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </page_limit>
+                    </fields>
+                </config>
+            </groups>
+        </productviewed_config>
+        <search_history_config translate="label" module="productviewed">
+            <label>Customer Search History</label>
+            <tab>productviewed_config</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>203</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <config translate="label">
+                    <label>Search history</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <expanded>1</expanded>
+                    <fields>
+                        <is_active>
+                            <label>Is Active</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <comment></comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </is_active>
+                        <store_limit>
+                            <label>Max search history</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>default 5</comment>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </store_limit>
+                    </fields>
+                </config>
+                <keyword_hot translate="label">
+                    <label>Keyword hot</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <expanded>1</expanded>
+                    <fields>
+                        <is_active>
+                            <label>Is Active</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <comment></comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </is_active>
+                        <limit>
+                            <label>limit show</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>default: 5</comment>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </limit>
+                        <version>
+                            <label>Version</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>only number</comment>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </version>
+                    </fields>
+                </keyword_hot>
+            </groups>
+        </search_history_config>
+    </sections>
+</config>

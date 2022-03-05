@@ -1,0 +1,274 @@
+<?php
+$TABSLIDER_SCRIPT = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS, true)
+        ."lib/tabslider.js?q="
+        .Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix'); // "http://192.168.1.18/js/lib/tabslider.js?q=2052"
+$LAZYLOAD_SCRIPT_MIN =  Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS, true) ."lib/jquery.lazy.min.js";
+$LAZYLOAD_SCRIPT = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS, true) ."lib/jquery.lazy.js";
+$SKIN_URL = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true);
+//$param1 = Mage::app()->getRequest()->getParam('list_id');
+//$param2 = Mage::app()->getRequest()->getParam('name');
+//if ($param1 == 1) {
+//    $list = "92480,31906,90938,230059,230058,230055,92478,92539,90651,91502,269224,224243,188821,230262,196582,90212,90216,82607,82608,224268,224270,223877,223874,224276,259133,269222,225866";
+//}
+ $abcdasd = Mage::helper('tabslider/data')->getDataBlockByListId($param1,$param2);
+ $is_grid_slider = false;
+ $tsData = $this->getData('data');
+ $title = $this->getData('title');
+// var_dump($tsData);
+ 
+$parsedData = json_decode($tsData, true);
+// var_dump($parsedData);
+$loading_icon_url = $this->getSkinUrl('images/ring_loader.svg');
+$dataTypeAll = array(
+    "0" => array(
+        "id" => "all",
+        "name" => "Tất cả"
+    ),
+);
+// neu nhung block ko co id cua category thi` chi co tab all
+$dataTypeCategories =  $this->getData("category_data");
+$parsedDataTypeCategories = json_decode($dataTypeCategories, true);
+if(count($parsedDataTypeCategories) > 0 && $parsedDataTypeCategories){
+//    $dataTypeCategories = array(
+//        "0" => array(
+//            "id" => "4216",
+//            "name" => "Children's Books"
+//        ),
+//    );
+    $dataArray = $parsedDataTypeCategories;
+}else{
+    $dataArray = $dataTypeAll;
+}
+//array_push($dataTypeCategories, $dataTypeAll);
+ $is_mobile = Mage::helper('fhsmobiledetect')->isMobile();
+ $string_mobile = $is_mobile ? 'true' : 'false'; 
+ 
+ // mac dinh showBar : true;
+$showBar = $this->getData('showBar') == "true" ? true : false;
+
+// lay category o url (neu co):
+$paramCategory = Mage::app()->getRequest()->getParam('category') ?? "all"; 
+
+if (count($parsedData) > 0) {
+     // setting param attribute : 
+    foreach ($parsedData as $key => $value) {
+        foreach ($value as $keyChild => $ValueChild) {
+            $block_type = $ValueChild['block_type'];
+            $attribute_id = $ValueChild['attribute_code'];
+            $attribute_value = (int) $ValueChild['attribute_value'];
+            break;
+        }
+    }
+}
+if ($block_type == 'attribute' && $attribute_id && $attribute_value) {
+    /// mac dinh : num_orders 
+    $order = Mage::app()->getRequest()->getParam('sort') ?? "num_orders";
+    $order_by_list = [
+        "Weekly BestSeller" => "num_orders",
+        "Monthly BestSeller" => "num_orders_month",
+        "Yearly BestSeller" => "num_orders_year",
+        "Weekly Trending" => "product_view",
+        "Monthly Trending" => "product_view_month",
+        "Yearly Trending" => "product_view_year",
+        "Discount" => "discount_percent",
+        "Sale Price" => "min_price",
+        "Created At" => "created_at",
+    ];
+
+    // kiem tra data co trong list k : 
+    $orderBy = array_search($order, $order_by_list, true); // co data :(vd co num_order => kq : Weekly BestSeller ), ko thi false
+    if ($orderBy === false) {
+        $order = "num_orders";
+    }
+} else {
+    /// mac dinh : num_orders 
+    $order = Mage::app()->getRequest()->getParam('sort') ?? "trending";
+    $order_by_list = [
+        "Trending" => "trending",
+        "Weekly BestSeller" => "num_orders",
+        "Monthly BestSeller" => "num_orders_month",
+        "Yearly BestSeller" => "num_orders_year",
+        "Weekly Trending" => "product_view",
+        "Monthly Trending" => "product_view_month",
+        "Yearly Trending" => "product_view_year",
+        "Discount" => "discount_percent",
+        "Sale Price" => "min_price",
+        "Created At" => "created_at",
+    ];
+    
+    // kiem tra data co trong list k : 
+    $orderBy = array_search($order, $order_by_list, true); // co data :(vd co num_order => kq : Weekly BestSeller ), ko thi false
+    if ($orderBy === false) {
+        $order = "trending";
+    }
+}
+
+$header = $this->getData('header');
+$headerBackground = null;
+if ($header) {
+    $headerData = json_decode($header, true);
+    $imageIcon = $SKIN_URL . $headerData['image'];
+    $headerBackground = $headerData['background'];
+}else{
+    $imageIcon = null;
+}
+
+/// tag fhs_campaign : true or false
+/// name of fhs_campaign : '' or fahasadeals (deals-page-hot)
+$fhs_campaign_products = false;
+$fhs_campaign_text = '';
+if ($this->getData('fhs_campaign_products')) {
+    $fhs_campaign_products = true;
+    $fhs_campaign_text = $this->getData('fhs_campaign_text') ?? '';
+}
+$array_fhs_campaign = [
+    "fhs_campaign_products" => $fhs_campaign_products,
+    "fhs_campaign_text" => $fhs_campaign_text
+];
+
+/// limit products :
+$limitProducts = 40;
+if($this->getData('limitProducts') && $this->getData('limitProducts') > 0 ){
+    $limitProducts = $this->getData('limitProducts');
+}
+
+?>
+<style type="text/css">
+    #girdslider-page-body{
+        display: none;
+    }
+/*    #girdslider-page-container {
+        margin: 0px 10px;
+    }*/
+    #girdslider-page-container .row{
+        margin: 0px 0px 5px 0px;
+    }
+    /*----- style item */
+    .rating-label{
+        margin-top: 5px;
+    }
+    .tt-label-deco {
+        position: absolute;
+        width: 32px;
+        height: 30px;
+    }
+    .grid-error{
+        height: 200px;
+        justify-content: center;
+        align-items: center;
+        display: grid;
+    }
+    .swiper-container-grid-page .swiper-slide{
+        width: fit-content;
+    }
+    .sort-grid-page .abc-xyz{
+        margin: 10px 0px 10px 0px;
+    }
+    .sort-grid-page{
+        background:white;
+        margin-left: 0px!important;
+        margin-right: 0px!important;
+        display: flex;
+        justify-content: flex-end;
+        border-top: 1px solid #e6e4e4;
+    }
+    .sort-grid-page .dropdownfhs-select{
+        background : white;
+    }
+    .girdslider-header{
+        background:white;
+        margin: 0px;
+        padding-bottom: 3px;
+    }
+    .category-tabs{
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: clip;
+    }
+    ul.girdslider-header-menu-page{
+        padding-left: 0px;
+    }
+    .girdslider-header .girdslider-title-aaa {
+        padding: 0px !important;
+    }
+</style>
+    <?php if (!$is_grid_slider) { ?>
+        <div class="tabslider-loading-icon" style="position: relative;"><img src="<?php echo $loading_icon_url; ?>" class="img-responsive center-block"/></div>
+    <?php } ?>
+        <div class='girdslider-header'>
+             <div class="tabslider-title girdslider-title-aaa " <?php if ($headerBackground){echo "style='background-color: " . $headerBackground . ";margin-top: 5px;'";}?>>
+            <?php if($imageIcon) : ?>
+                   <div class="block-header" style="display:flex;">
+                    <div class="header-icon-gridslider">
+                            <img src="<?php echo $imageIcon; ?>" class="center">
+                        </div>
+                    <div class="block-header-title"><?php echo $title; ?></div>
+                </div>
+            <?php endif;?>
+            </div>
+            <div class='category-tabs'>
+                <div class="tabslider-tabs tabslider-tabs-gird">
+                    <ul class="tabs girdslider-header-menu-page swiper-container-grid-page">
+                        <div class="ts-header-grid swiper-wrapper">
+                            <?php foreach ($dataArray as $value) : ?>
+                                <li onclick="tabslider.clickCategory('<?php echo $value['id'];?>','<?php echo $string_mobile; ?>')" class="swiper-slide girdslider-menu-item-page" id='<?php echo $value['id']; ?>'>
+                                    <?php echo $value['name']; ?>
+                                </li>
+                            <?php endforeach; ?>
+                        </div>
+                    </ul>
+                </div>
+                </div>
+            </div>
+        <div class="row sort-grid-page" style="display:none;">
+            <div class="abc-xyz col-sm-3 col-xs-7 col-md-3">
+                <div class="dropdownfhs-text hidden-xs"><p><?php echo $this->__('Sort By') ?> :</p></div>
+                <div class="sort-by dropdownfhs dropdownfhs-select">
+                    <div class='selectBox selectBox-order'>
+                        <span class='selected selected-order'><?php echo $this->__('Trending'); ?></span>
+                        <span class='selectArrow selectArrow-order'></span>
+                        <div class="selectOptions selectOptions-order" >
+                            <?php foreach ($order_by_list as $order_key => $order_by): ?>
+                                <span  class="selectOption selectOption-order" value="<?php echo $order_by; ?>" <?php echo ($order_by == $order) ? 'selected=\"selected\"' : ''; ?>><?php echo $this->__($order_key); ?></span>
+                            <?php  endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+        </div>
+        <div style="clear:both;"></div>
+    <div class="tabslider-loading-icon-body" style="position: relative;display: none;"><img src="<?php echo $loading_icon_url; ?>" class="img-responsive center-block"/></div>
+    <div id="girdslider-page-body">
+        <div id="girdslider-page-container">
+            <?php if(!$is_mobile): ?>
+                <div class="row"></div>
+            <?php else : ?>
+                <ul class="products_grid_mobile"></ul>
+            <?php endif ?>
+        </div>
+        <div class="tabslider-loading-icon-bottom" style="position: relative;"><img src="<?php echo $loading_icon_url; ?>" class="img-responsive center-block"/></div>
+        <div id='girdslider-page-bottom'></div>
+    </div>
+        <div style="clear: both;"></div>
+    <script type="text/javascript" src="<?php echo $TABSLIDER_SCRIPT; ?>"></script>
+    <script type="text/javascript">
+//        $jq(window).on('beforeunload', function() {
+//            $jq(window).scrollTop(0);
+//        });
+        var TABSLIDER_GET_URL = "<?php echo $this->getUrl('tabslider/index/getdata2', array('_secure' => true)) ?>";
+        var TABSLIDER_GET_URL_MORE = "<?php echo $this->getUrl('tabslider/index/getmore2', array('_secure' => true)) ?>";
+        var block_limit = "12";
+        var current_block_data_str = <?php echo json_encode($tsData); ?>;
+        var is_grid_slider = "<?php echo $is_grid_slider; ?>"=="1";
+        var loading_icon_girds = "<?php echo $this->getSkinUrl('images/ring_loader.svg')?>";
+        var check_is_mobile = "<?php echo $is_mobile; ?>"=="1";
+        var category_id = <?php echo json_encode($paramCategory); ?>;
+        var categories = <?php  echo json_encode($dataArray); ?>;
+        var type_name_order = <?php echo json_encode($order); ?>;
+        var is_show_bar = "<?php echo $showBar; ?>"=="1";
+        var array_fhs_campaign  = <?php echo json_encode($array_fhs_campaign); ?>;
+        var tabslider = new Tabslider();
+        var limit_products = <?php echo $limitProducts; ?>;
+        var block_type = '<?php echo $block_type; ?>';
+        tabslider.loadData(TABSLIDER_GET_URL,current_block_data_str,TABSLIDER_GET_URL_MORE,loading_icon_girds,check_is_mobile,category_id,categories,type_name_order,is_show_bar,array_fhs_campaign,limit_products,block_type);
+    </script>

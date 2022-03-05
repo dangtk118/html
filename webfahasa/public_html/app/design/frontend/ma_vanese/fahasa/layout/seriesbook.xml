@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+
+<layout version="0.1.0">
+    <seriesbook_index_series>
+        <reference name="root">
+            <action method="setTemplate">
+                <template>page/page_fpointstore.phtml</template>
+            </action>
+            <remove name="left" />
+            <remove name="right" />
+        </reference>
+        <reference name="content">
+            <block type="core/template" name="seriesbook_page" template="seriesbook/series_book.phtml"></block>
+        </reference>
+    </seriesbook_index_series>
+</layout>

@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+
+<layout version="0.1.0">
+    <fpointstorev2_index_index>
+        <reference name="content">
+            <block type="core/template" name="fpointstore_page" template="fpointstorev2/page.phtml"></block>
+        </reference>
+        <reference name="root">
+            <action method="setTemplate">
+                <template>page/page_fpointstore.phtml</template>
+            </action>
+        </reference>
+        <reference name="head">
+            <action method="setTitle">
+                <title>Fpoint Store - FAHASA.COM</title>
+            </action>
+        </reference>
+    </fpointstorev2_index_index>
+    <fpointstorev2_detail_voucher>
+        <reference name="content">
+            <block type="core/template" name="fpointstore_detail_voucher" template="fpointstorev2/voucher.phtml"></block>
+        </reference>
+        <reference name="root">
+            <action method="setTemplate">
+                <template>page/page_fpointstore.phtml</template>
+            </action>
+        </reference>
+        <reference name="head">
+            <action method="setTitle">
+                <title>Fpoint Store Voucher - FAHASA.COM</title>
+            </action>
+        </reference>
+    </fpointstorev2_detail_voucher>
+    <fpointstorev2_detail_combo>
+        <reference name="content">
+            <block type="core/template" name="fpointstore_detail_combo" template="fpointstorev2/combo.phtml"></block>
+        </reference>
+        <reference name="root">
+            <action method="setTemplate">
+                <template>page/page_fpointstore.phtml</template>
+            </action>
+        </reference>
+        <reference name="head">
+            <action method="setTitle">
+                <title>Fpoint Store Combo Voucher - FAHASA.COM</title>
+            </action>
+        </reference>
+    </fpointstorev2_detail_combo>
+</layout>

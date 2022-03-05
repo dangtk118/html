@@ -1,0 +1,25 @@
+<config>
+    <modules>
+        <Fahasa_Sales>
+            <version>1.0.0</version>
+        </Fahasa_Sales>
+    </modules>
+    <global>
+        <blocks>
+            <sales>
+                <rewrite>
+                    <order_history>Fahasa_Sales_Block_Order_History</order_history>
+                    <order_info>Fahasa_Sales_Block_Order_Info</order_info>
+                    <order_items>Fahasa_Sales_Block_Order_Items</order_items>
+                </rewrite>
+            </sales>
+        </blocks>
+        <helpers>
+            <sales>
+                <rewrite>
+                      <data>Fahasa_Sales_Helper_Data</data>
+                </rewrite>
+            </sales>
+        </helpers>
+    </global>
+</config>

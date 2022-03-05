@@ -1,0 +1,278 @@
+<?php
+$the_le_link = $this->getData('the-le-link');
+$xem_them_link = $this->getData('xem-them-link');
+$item_size = $this->getData('item-size');
+$id = $this->getData('id');
+if(!$id){
+    $id = 2;
+}
+$limit = $this->getData('limit');
+if(!$limit){
+    $limit = 50;
+}
+$blockId = $this->getData("blockId");
+$is_mobile = Mage::helper('fhsmobiledetect')->isMobile();
+$helper = Mage::helper('fhsrule');
+$skin_url = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true);
+?>
+
+<style type="text/css">
+    .row.event-discountoriginal-<?php echo "v2-".$id; ?>-coupon-list{
+	display: flex;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	justify-content: center;
+    }
+    #event-discountoriginal-<?php echo "v2-".$id; ?>-coupon{
+	display: none;
+        min-height: 100px;
+        margin-top: 10px;
+	text-align: center;
+    }
+
+    #event-discountoriginal-<?php echo "v2-".$id; ?>-coupon .event-discountoriginal-<?php echo "v2-".$id; ?>-coupon-period {
+        padding: 10px 5px;
+        text-align: center;
+        cursor: pointer;
+        font-size: 1.3em;
+        font-weight: bold;
+        height: 50px;
+        border-bottom: 4px dashed #FDC148;
+    }
+
+    #event-discountoriginal-<?php echo "v2-".$id; ?>-coupon .event-discountoriginal-<?php echo "v2-".$id; ?>-coupon-period-mobile{
+        height: 32px;
+        padding: 0px !important;
+        padding-top: 3px !important;
+    }
+
+    #event-discountoriginal-<?php echo "v2-".$id; ?>-coupon .event-discountoriginal-<?php echo "v2-".$id; ?>-coupon-period span:first-child{
+        float: left;
+        padding: 2px;
+        padding-left: 8px;
+    }
+
+    #event-discountoriginal-<?php echo "v2-".$id; ?>-coupon .event-discountoriginal-<?php echo "v2-".$id; ?>-coupon-period span:nth-child(2){
+        float: right;
+        padding: 2px;
+        padding-right: 8px;
+    }
+
+    #event-discountoriginal-<?php echo "v2-".$id; ?>-coupon .event-discountoriginal-<?php echo "v2-".$id; ?>-coupon-period-active {
+        background-color: #FDC148;
+        color: #fff;
+    }
+
+    #event-discountoriginal-<?php echo "v2-".$id; ?>-coupon .event-discountoriginal-<?php echo "v2-".$id; ?>-coupon-period-deactive {
+        background-color: #d22121;
+        color: #fff;
+    }
+
+    #event-discountoriginal-<?php echo "v2-".$id; ?>-coupon .event-discountoriginal-<?php echo "v2-".$id; ?>-coupon-{
+        margin-bottom: 10px;
+        margin-top: 10px;
+
+        margin-left: 14px;
+        margin-right: 14px;
+    }
+
+    #event-discountoriginal-<?php echo "v2-".$id; ?>-coupon .event-discountoriginal-<?php echo "v2-".$id; ?>-coupon-code{
+    }
+
+    #event-discountoriginal-<?php echo "v2-".$id; ?>-coupon .event-discountoriginal-<?php echo "v2-".$id; ?>-coupon-label{
+        font-size: 12px;
+        padding: 5px 0px;
+        color: #fff;
+    }
+    
+    #event-discountoriginal-<?php echo "v2-".$id; ?>-coupon .event-discountoriginal-<?php echo "v2-".$id; ?>-coupon-remaining{
+        padding: 5px;
+    }
+
+    #event-discountoriginal-<?php echo "v2-".$id; ?>-coupon-loading-icon{
+        padding: 10px;
+        background-color: #f1f1f1;
+        width: 48px;
+        border-radius: 5px;
+        margin: 50px auto;
+    }
+
+    #event-discountoriginal-<?php echo "v2-".$id; ?>-coupon .event-discountoriginal-<?php echo "v2-".$id; ?>-coupon-run-out{
+        text-align: center;
+        position: relative;
+        margin-top: -157px;
+        min-height: 158px;
+    }
+
+    #event-discountoriginal-<?php echo "v2-".$id; ?>-coupon .event-discountoriginal-<?php echo "v2-".$id; ?>-coupon-item{
+        border: 4px solid #FDC148;
+        background-color: white;
+        border-radius: 15px;
+    }
+
+    .event-discountoriginal-<?php echo "v2-".$id; ?>-coupon-remaining{
+        padding: 5px;
+    }
+
+    .event-discountoriginal-<?php echo "v2-".$id; ?>-progressbar .progress-bar{
+        background-image: -webkit-linear-gradient(to bottom, #ffb84d 0%, #FF9800 100%);
+        background-image: linear-gradient(to bottom, #ffb84d 0%, #FF9800 100%);
+    }
+    
+    .event-discountoriginal-<?php echo "v2-".$id; ?>-the-le-link{
+        padding: 8px 0px;
+        font-size: 14px;
+        text-decoration: underline;
+        font-style: italic;
+        text-align: center;
+        padding-top: 3px;
+    }
+    
+    .event-discountoriginal-<?php echo "v2-".$id; ?>-xem-them-link a{
+        float: right;
+        margin-right: 20px;
+        padding: 5px;
+        color: #FF9800;
+    }
+</style>
+<div <?php if(!is_null($blockId)) : echo 'id="' . $blockId . '"' ; endif; ?> >
+<div id="event-discountoriginal-<?php echo "v2-".$id; ?>-coupon">
+    <div id="event-discountoriginal-<?php echo "v2-".$id; ?>-coupon-loading-icon">
+        <img src="/media/theme/default/loader.gif"/>
+    </div>
+
+    <?php if ($is_mobile): ?>
+        <div class="event-discountoriginal-<?php echo "v2-".$id; ?>-coupon-list">
+        </div>
+    <?php else: ?>
+        <div class="row event-discountoriginal-<?php echo "v2-".$id; ?>-coupon-list" style="margin-left: 12px;margin-right: 12px;"></div>
+    <?php endif; ?>
+    <?php if($xem_them_link): ?>
+        <div class="event-discountoriginal-<?php echo "v2-".$id; ?>-xem-them-link">
+            <a href="<?php echo $xem_them_link; ?>">Xem Thêm</a>
+        </div>
+    <?php endif; ?>
+</div>
+</div>
+<script type="text/javascript">
+    
+    $jq(document).ready(function () {
+        let is_mobile = "<?php echo Mage::helper('fhsmobiledetect')->isMobile(); ?>";
+
+        let text_labels = {
+            'da_co': "<?php echo $helper->__("Da co"); ?>",
+            'chua_co': "<?php echo $helper->__("Chua co"); ?>"
+        }
+
+        $jq.ajax({
+            url: "/node_api/fhsrule/event_couponsshow",
+	    data: {'id': <?php echo $id; ?>, 'limit': <?php echo $limit; ?>},
+            method: 'post',
+            success: function (data) {
+                $jq("#event-discountoriginal-<?php echo "v2-".$id; ?>-coupon-loading-icon").hide();
+                $jq(".event-discountoriginal-<?php echo "v2-".$id; ?>-coupon-list").show();
+                if (!data.result || data.periods.length <= 0) {
+                    return;
+                }
+                $list = $jq("#event-discountoriginal-<?php echo "v2-".$id; ?>-coupon .event-discountoriginal-<?php echo "v2-".$id; ?>-coupon-list");
+
+                if (is_mobile) {
+                    let $row;
+                    for (let i = 0; i < data.periods.length; i++) {
+                        if (i % 2 == 0) {
+                            $row = $jq("<div class='row' style='margin: 10px 0px !important;'></div>");
+                            $list.append($row);
+                        }
+
+                        $period = printDiscountOriginalV2<?php echo $id; ?>PeriodHtml(data.periods[i], text_labels, true);
+                        $row.append($period);
+                    }
+                } else {
+                    for (let i = 0; i < data.periods.length; i++) {
+                        $period = printDiscountOriginalV2<?php echo $id; ?>PeriodHtml(data.periods[i], text_labels, false);
+                        $list.append($period);
+                    }
+                }
+		$jq('#event-discountoriginal-<?php echo "v2-".$id; ?>-coupon').show();
+            }
+        });
+
+        function printDiscountOriginalV2<?php echo $id; ?>PeriodHtml(period, text_labels, is_mobile) {
+
+            let active = '';
+            let display_status = '';
+
+            if (period['has_passed']) {
+                active = 'event-discountoriginal-<?php echo "v2-".$id; ?>-coupon-period-active';
+                display_status = text_labels['da_co'];
+            } else {
+                display_status = text_labels['chua_co'];
+            }
+
+            let mobile_period_css = '';
+            if (is_mobile) {
+                mobile_period_css = 'event-discountoriginal-<?php echo "v2-".$id; ?>-coupon-period-mobile';
+            }
+
+            let period_html = "<div class='<?php echo $item_size?$item_size:'col-md-6 col-xs-12'; ?>' style='padding: 5px !important'><div class='event-discountoriginal-<?php echo "v2-".$id; ?>-coupon-item'>"
+                    + "<div class='event-discountoriginal-<?php echo "v2-".$id; ?>-coupon-period " + mobile_period_css + " " + active + "'>"
+                    + "<span>" + period.display_time + "</span><span>" + display_status + "</span>"
+                    + "</div><div style='clear:both'></div>"
+                    + "<div class='event-discountoriginal-<?php echo "v2-".$id; ?>-coupon-code-list'>"
+                    + "</div></div>";
+
+            $period = $jq(period_html);
+            $period_body = $period.find(".event-discountoriginal-<?php echo "v2-".$id; ?>-coupon-code-list");
+
+            $rule = printDiscountOriginalV2<?php echo $id; ?>RuleHtml(period);
+            $period_body.append($rule);
+
+            return $period;
+        }
+
+        function printDiscountOriginalV2<?php echo $id; ?>RuleHtml(rule) {
+            let desc_array = {};
+            let hide_het_hieu_luc = '';
+
+
+            if (!rule['is_effective']) {
+                hide_het_hieu_luc = "style='display:none'";
+            }
+
+            let $rule_html = $jq("<div class='event-discountoriginal-<?php echo "v2-".$id; ?>-coupon-code'>"
+                    + "<div style='text-align: center;min-height: 146px;'>"
+                    + "<div style='font-size: 1.4em;font-weight: bold;padding: 10px;color: #FF9800;'>" + rule['title'] + "</div>"
+                    + "<div style='font-size: 4.5em;font-weight: bold;color: red;border: 1px dashed #fff;margin: 5px 0px; min-height: 60px;'>" + rule['coupon_code'] + "</div>"
+                    + "<div style='font-size: 24px;'>" + rule['discount'] + "</div>"
+                    + "<div style='font-size: 16px;font-style: italic;'>" + rule['description'] + "</div>"
+                    // The Le
+                    + "<div class='event-discountoriginal-<?php echo "v2-".$id; ?>-the-le-link'><a href='" 
+                    + "<?php echo $the_le_link; ?>" + "'>(Xem Chi Tiết Thể Lệ)</a></div>"
+                    + "</div>"
+                    + "<div class='event-discountoriginal-<?php echo "v2-".$id; ?>-coupon-run-out' "
+                    + hide_het_hieu_luc
+                    + "><img src='<?php echo $skin_url;?>frontend/ma_vanese/fahasa/images/fhsrule/Het-hieu-luc-600x150.png' width='100%' height='100%' /></div>"
+                    // Progress bar
+                    + "<div class='event-discountoriginal-<?php echo "v2-".$id; ?>-coupon-remaining'>"
+                    + "<div class='event-discountoriginal-<?php echo "v2-".$id; ?>-progressbar progress' style='margin-bottom: 5px;border-radius: 0px;height: 10px;'>"
+                    + "<div class='progress-bar' role='progressbar' style='width: " + rule['progress'] + "%;' aria-valuenow='"
+                    + rule['progress'] + "' aria-valuemin='0' aria-valuemax='100'></div>"
+                    + "</div></div>"
+                    + "</div>");
+
+            if (rule['is_effective']) {
+                $rule_html.find(".event-discountoriginal-<?php echo "v2-".$id; ?>-progressbar").css('opacity', 0);
+            } else {
+                $progress_bar = $rule_html.find(".event-discountoriginal-<?php echo "v2-".$id; ?>-progressbar .progress-bar");
+                if (rule['progress'] < 33) {
+                    $progress_bar.css('background-image', 'linear-gradient(to bottom, #ca4242 0%, #a93030 100%)');
+                } else if (rule['progress'] < 66) {
+                    $progress_bar.css('background-image', 'linear-gradient(to bottom, #f3e646 0%, #ffeb00 100%)');
+                }
+            }
+
+            return $rule_html;
+        }        
+    });
+
+</script>

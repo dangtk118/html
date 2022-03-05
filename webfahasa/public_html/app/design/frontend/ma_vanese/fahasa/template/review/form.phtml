@@ -1,0 +1,159 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2014 X.commerce, Inc. (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<div class="form-add">
+    <h2 class="own-review"><?php echo $this->__('Write Your Own Review') ?></h2>
+    <?php if ($this->getAllowWriteReviewFlag()): ?>
+    <form action="<?php echo $this->getAction() ?>" method="post" id="review-form">
+        <input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>">
+        <fieldset>
+            <?php echo $this->getChildHtml('form_fields_before')?>
+            <div><?php echo $this->__("You're reviewing:"); ?> <span class="color-black font-bold"><?php echo $this->escapeHtml($this->getProductInfo()->getName()) ?></span></div>
+            <?php if( $this->getRatings() && $this->getRatings()->getSize()): ?>
+                <div><?php echo $this->__('How do you rate this product?') ?> <em class="required">*</em></div>
+                <span id="input-message-box"></span>
+                <table class="data-table" id="product-review-table">
+                    <col />
+                    <col width="1" />
+                    <col width="1" />
+                    <col width="1" />
+                    <col width="1" />
+                    <col width="1" />
+                    <thead>
+                        <tr>                            
+                            <th class="rating_label">&nbsp;</th>
+                            <th><span class="nobr"><?php echo $this->__('1 star') ?></span></th>
+                            <th><span class="nobr"><?php echo $this->__('2 stars') ?></span></th>
+                            <th><span class="nobr"><?php echo $this->__('3 stars') ?></span></th>
+                            <th><span class="nobr"><?php echo $this->__('4 stars') ?></span></th>
+                            <th><span class="nobr"><?php echo $this->__('5 stars') ?></span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php foreach ($this->getRatings() as $_rating): ?>
+                        <tr>                            
+                            <th class="rating_label"><div class="rating_label_inner"><?php echo $this->escapeHtml($_rating->getRatingCode()) ?></div></th>
+                        <?php foreach ($_rating->getOptions() as $_option): ?>
+                            <td class="value" style="vertical-align: middle">
+                                <input type="radio" name="ratings[<?php echo $_rating->getId() ?>]" id="<?php echo $this->escapeHtml($_rating->getRatingCode()) ?>_<?php echo $_option->getValue() ?>" value="<?php echo $_option->getId() ?>" class="radio" style="margin: 0 auto;" />
+                            </td>
+                        <?php endforeach; ?>
+                        </tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+                <input type="hidden" name="validate_rating" class="validate-rating" value="" />
+                <script type="text/javascript">decorateTable('product-review-table')</script>
+            <?php endif; ?>
+                <ul class="form-list">
+                    <li>
+                        <label for="nickname_field" class="required"><em>*</em><?php echo $this->__('Nickname') ?></label>
+                        <div class="input-box full-width">
+                            <input type="text" name="nickname" id="nickname_field" class="input-text required-entry full-width" value="<?php echo $this->escapeHtml($data->getNickname()) ?>" />
+                        </div>
+                    </li>
+                    <li>
+                        <label for="summary_field" class="required"><em>*</em><?php echo $this->__('Summary of Your Review') ?></label>
+                        <div class="input-box full-width">
+                            <input type="text" name="title" id="summary_field" class="input-text required-entry full-width validate-maximum-length-100" value="<?php echo $this->escapeHtml($data->getTitle()) ?>" />
+                            <h6 class="pull-right" id="count-title"></h6>
+                        </div>
+                    </li>
+                    <li>
+                        <label for="review_field" class="required"><em>*</em><?php echo $this->__('Review') ?></label>
+                        <div class="input-box full-width">
+                            <textarea name="detail" id="review_field" cols="5" rows="3" class="required-entry full-width validate-length-minimum-100"><?php echo $this->escapeHtml($data->getDetail()) ?></textarea>
+                            <h6 class="pull-right" id="count-message"></h6>
+                        </div>
+                    </li>
+                </ul>
+            </fieldset>
+            <div class="review-rule col-md-12 col-sm-12 col-sms-12"><?php echo Mage::app()->getLayout()->createBlock('cms/block')->setBlockId('review-rule')->toHtml();?></div>
+            <div class="buttons-set">
+                <button type="submit" title="<?php echo $this->__('Submit Review') ?>" class="button"><span><span><?php echo $this->__('Submit Review') ?></span></span></button>
+            </div>
+    </form>
+    <script type="text/javascript">
+    //<![CDATA[
+        var dataForm = new VarienForm('review-form');
+        Validation.addAllThese(
+        [
+               ['validate-rating', '<?php echo $this->__('Please select one of each of the ratings above') ?>', function(v) {
+                    var trs = $('product-review-table').select('tr');
+                    var inputs;
+                    var error = 1;
+
+                    for( var j=0; j < trs.length; j++ ) {
+                        var tr = trs[j];
+                        if( j > 0 ) {
+                            inputs = tr.select('input');
+
+                            for( i in inputs ) {
+                                if( inputs[i].checked == true ) {
+                                    error = 0;
+                                }
+                            }
+
+                            if( error == 1 ) {
+                                return false;
+                            } else {
+                                error = 1;
+                            }
+                        }
+                    }
+                    return true;
+                }]
+        ]
+        );
+    //]]>
+    </script>
+    <?php else: ?>
+    <p class="review-nologged" id="review-form">
+        <?php echo $this->__('Only registered users can write reviews. Please, <a href="%s">log in</a> or <a href="%s">register</a>', $this->getLoginLink(), Mage::helper('customer')->getRegisterUrl()) ?>
+    </p>
+    <?php endif ?>
+</div>
+<script type="text/javascript">
+//<![CDATA[
+    var curCount=0;
+    $jq("#count-message").html(curCount + " ký tự");
+    $jq("#review_field").keyup(function(){
+        var count = $jq("#review_field").val().replace(/ /g, "").replace(/\r\t/g, "").replace(/\n/g, "").length;
+        $jq("#count-message").html(count + " ký tự");
+    });
+//]]>
+</script>
+
+<script type="text/javascript">
+//<![CDATA[
+    var curCount=0;
+    $jq("#count-title").html(curCount + " ký tự");
+    $jq("#summary_field").keyup(function(){
+        var count = $jq("#summary_field").val().length;
+        $jq("#count-title").html(count + " ký tự");
+    });
+//]]>
+</script>

@@ -1,0 +1,18 @@
+<config>
+    <modules>
+        <Fahasa_Checkout>
+            <version>0.1.0</version>
+        </Fahasa_Checkout>
+    </modules>
+    <global>
+        <blocks>
+            <checkout>
+                <rewrite>
+                    <cart_sidebar>Fahasa_Checkout_Block_Cart_Sidebar</cart_sidebar>
+                    <cart>Fahasa_Checkout_Block_Cart</cart>
+
+                </rewrite>
+            </checkout>
+        </blocks>
+    </global>
+</config>

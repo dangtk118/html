@@ -1,0 +1,312 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+/**
+ * Shopping cart template
+ *
+ * @see Mage_Checkout_Block_Cart
+ */
+?>
+<?php 
+    $event_cart = Mage::helper('eventcart')->checkEventCart(null, false);
+//    var_dump($event_cart);
+    Mage::register('event_cart', $event_cart);
+    $skin_url = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true);
+    $queryfier = Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix');
+?>
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div id="content">
+            <div class="cart">
+                <div class="cart-banner-block fhs-no-mobile-block">
+                    <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('cart-banner-block')->toHtml(); ?>
+                </div>
+                <div class="page-title title-buttons">
+                    <h1><?php echo $this->__('Shopping Cart') ?></h1>
+                </div>
+                <?php $messagesBlock = $this->getMessagesBlock()->getGroupedHtml(); ?>
+                <?php echo $messagesBlock; ?>
+                <?php echo $this->getChildHtml('form_before') ?>
+                <form action="<?php echo $this->getUrl('checkout/cart/updatePost') ?>" method="post">
+                    <?php echo $this->getBlockHtml('formkey'); ?>
+                    <fieldset>
+                        <table id="shopping-cart-table" class="data-table cart-table" style="background-color:#fff">
+                            <col width="1" />
+                            <col width="1" />
+                            <col width="2">
+                            <col width="1" />
+                            <?php if ($this->helper('wishlist')->isAllowInCart()) : ?>
+                                <col width="1" />
+                            <?php endif ?>
+                            <?php if ($this->helper('tax')->displayCartPriceExclTax() || $this->helper('tax')->displayCartBothPrices()): ?>
+                                <col width="1" />
+                            <?php endif; ?>
+                            <?php if ($this->helper('tax')->displayCartPriceInclTax() || $this->helper('tax')->displayCartBothPrices()): ?>
+                                <col width="1" />
+                            <?php endif; ?>
+                            <col width="1" />
+                            <?php if ($this->helper('tax')->displayCartPriceExclTax() || $this->helper('tax')->displayCartBothPrices()): ?>
+                                <col width="1" />
+                            <?php endif; ?>
+                            <?php if ($this->helper('tax')->displayCartPriceInclTax() || $this->helper('tax')->displayCartBothPrices()): ?>
+                                <col width="1" />
+                            <?php endif; ?>
+                            <col width="1" />
+
+                            <?php $mergedCells = ($this->helper('tax')->displayCartBothPrices() ? 2 : 1); ?>
+                            <thead>
+                                <tr>
+                                    <th rowspan="<?php echo $mergedCells; ?>" class="a-center"><?php echo $this->__('Remove') ?></th>
+                                    <th rowspan="<?php echo $mergedCells; ?>" class="a-center"><?php echo $this->__('Images') ?></th>
+                                    <th rowspan="<?php echo $mergedCells; ?>"><span class="nobr"><?php echo $this->__('Product Name') ?></span></th>
+
+                                    <th class="a-center" colspan="<?php echo $mergedCells; ?>"><span class="nobr"><?php echo $this->__('Unit Price') ?></span></th>
+                                    <th rowspan="<?php echo $mergedCells; ?>" class="a-center"><?php echo $this->__('Qty') ?></th>
+                                    <th class="a-center" colspan="<?php echo $mergedCells; ?>"><?php echo $this->__('Subtotal') ?></th>
+
+                                </tr>
+                                <?php if ($this->helper('tax')->displayCartBothPrices()): ?>
+                                    <tr>
+                                        <th class="a-right"><?php echo $this->helper('tax')->getIncExcTaxLabel(false) ?></th>
+                                        <th><?php echo $this->helper('tax')->getIncExcTaxLabel(true) ?></th>
+                                        <th class="a-right"><?php echo $this->helper('tax')->getIncExcTaxLabel(false) ?></th>
+                                        <th><?php echo $this->helper('tax')->getIncExcTaxLabel(true) ?></th>
+                                    </tr>
+                                <?php endif; ?>
+                            </thead>
+                            <tbody>
+                                <?php $buffet_combo = Mage::helper("event/buffetcombo"); ?>
+                                <?php if($buffet_combo->isBuffetActive()): ?>
+                                    <?php echo $this->getChildHtml('event_buffetcombo_cart'); ?>
+                                <?php else: ?>
+                                    <?php foreach ($this->getItems() as $_item): ?>
+                                        <?php echo $this->getItemHtml($_item) ?>
+                                    <?php endforeach ?>
+                                <?php endif; ?>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="50" class="a-right">
+                                        <?php if ($this->getContinueShoppingUrl()): ?>
+                                            <button type="button" title="<?php echo $this->__('Continue Shopping') ?>" class="button btn-continue" onclick="setLocation('<?php echo $this->getContinueShoppingUrl() ?>')"><span><span><?php echo $this->__('Continue Shopping') ?></span></span></button>
+                                        <?php endif; ?>
+                                        <button type="submit" name="update_cart_action" value="update_qty" title="<?php echo $this->__('Update Shopping Cart'); ?>" class="button btn-update"><span><span><?php echo $this->__('Update Shopping Cart'); ?></span></span></button>
+                                        <button type="submit" name="update_cart_action" value="empty_cart" title="<?php echo $this->__('Clear Shopping Cart'); ?>" class="button btn-empty netcore-remove-all-in-cart" id="empty_cart_button"><span><span><?php echo $this->__('Clear Shopping Cart'); ?></span></span></button>
+                                        <!--[if lt IE 8]>
+                                        <input type="hidden" id="update_cart_action_container" />
+                                        <script type="text/javascript">
+                                        //<![CDATA[
+                                            Event.observe(window, 'load', function()
+                                            {
+                                                // Internet Explorer (lt 8) does not support value attribute in button elements
+                                                $emptyCartButton = $('empty_cart_button');
+                                                $cartActionContainer = $('update_cart_action_container');
+                                                if ($emptyCartButton && $cartActionContainer) {
+                                                    Event.observe($emptyCartButton, 'click', function()
+                                                    {
+                                                        $emptyCartButton.setAttribute('name', 'update_cart_action_temp');
+                                                        $cartActionContainer.setAttribute('name', 'update_cart_action');
+                                                        $cartActionContainer.setValue('empty_cart');
+                                                    });
+                                                }
+            
+                                            });
+                                        //]]>
+                                        </script>
+                                        <![endif]-->
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                        <script type="text/javascript">decorateTable('shopping-cart-table')</script>
+                    </fieldset>
+                </form>
+                <?php echo $this->getChildHtml('almostcart.gift') ?>
+                <div class="cart-collaterals row">
+                    <div class="col-2 col-xs-12 col-sm-6 cart-product-block">
+                        <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('cart-product-block')->toHtml(); ?>
+                    </div>
+		    <style>
+			#block-totals{
+			    border: none !important;
+			    box-shadow:none !important;
+			}
+			#block-totals > .block-title{
+			    padding: 15px 20px !important;
+			    border-bottom: 1px solid #ededed !important;
+			}
+			.checkout-types{
+			    border-top: 1px solid #ededed !important;
+			    margin: 15px 0 !important;
+			}
+			
+		    </style>
+                    <div class="col-xs-12 col-sm-6 fhs-cart-block-total">                        
+                        <div class="col-xs-12 col-sm-12 block" id="block-totals">
+                            <div class="block-title" style=""><?php echo $this->__('Cart Totals'); ?></div>
+                            <div class="totals">
+                                <?php echo $this->getChildHtml('totals'); ?>
+				
+				<?php if(!empty($event_cart['affect_carts'])):?>
+				<?php $is_first = true;?>
+				    <div class="fhs-event-promo">
+					<div class="fhs-event-promo-title"><span><img src="<?php echo $skin_url.'frontend/ma_vanese/fahasa/images/ico_promo_donhang.svg?q='.$queryfier;?>"></span><span><?php echo $this->__('Promotion'); ?></span></div>
+					<?php foreach($event_cart['affect_carts'] as $event_cart):?>
+					<div class="fhs-event-promo-item <?php if($is_first){$is_first = false;}else{echo 'fhs-event-promo-item-line';}?>">
+					    <div>
+						<div>
+						    <div><?php echo $event_cart['title'];?></div>
+						    <?php if(!empty($event_cart['error'])):?>
+							<?php foreach($event_cart['error'] as $error_item):?>
+						    <div class="fhs-event-promo-error">* <?php echo $error_item['message'];?></div>
+							<?php endforeach;?>
+						    <?php endif;?>
+						</div>
+						<div>
+						    <?php if($event_cart['matched'] != 0):?>
+							<img src="<?php echo $skin_url.'frontend/ma_vanese/fahasa/images/ico_check.svg?q='.$queryfier;?>">
+						    <?php else:?>
+							<a href="/<?php echo $event_cart['page_detail'];?>"><button type="button" title="<?php echo $this->__('View More'); ?><" class="fhs-btn-view-promo"><span><?php echo $this->__('View More'); ?></span></button></a>
+						    <?php endif;?>
+						</div>
+					    </div>
+					    <div class="fhs-event-promo-item-progress"><hr <?php echo ($event_cart['matched'] != 0)?'class="progress-success"':'';?> style="width: <?php echo $event_cart['reach_percent'].'%;';?>"/><div><?php echo $event_cart['sub_total'];?></div></div>
+					    <?php if(!empty($event_cart['min_total']) && !empty($event_cart['max_total'])):?>
+						<div class="fhs-event-promo-item-minmax"><span><?php echo $event_cart['min_total'];?></span><span><?php echo $event_cart['max_total'];?></span></div>
+					    <?php endif;?>
+					</div>
+					<?php endforeach;?>
+				    </div>
+				<?php endif;?>
+					
+                                <?php if (!$this->hasError()): ?>
+                                    <ul class="checkout-types">
+                                        <?php 
+					foreach ($this->getMethods('methods') as $method): ?>
+                                            <?php if ($methodHtml = $this->getMethodHtml($method)): ?>
+                                                <li><?php echo $methodHtml; ?></li>
+                                            <?php endif; ?>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                        <div id="fhs_error_message_cart">                            
+                        </div>
+                    </div>
+                </div>
+                <div class="personalize-short-block">
+                        <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('short-personalize')->toHtml(); ?>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="youama-noti-window messages-checkout-cart" style="padding-bottom: 30px; top: 25% !important;">
+    <div class="youama-window-outside">
+        <span class="close lg-close">×</span>
+        <div class="youama-window-inside">
+            <div class="youama-window-title " style="padding: 15px 15px 5px;">
+                <h3 id="fhs-message-checkout-notice" style="color: #c00;">                    
+                </h3>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <button type="button" id="btn-mess-1" class="button btn-proceed-checkout btn-checkout youama-ajaxlogin-button fl btn-process-noti" style="margin-top: 10px">
+                    <span>
+                        <span>
+                            <?php echo $this->__("Close"); ?>
+                        </span>
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+        var button = jQuery("button.button.btn-checkout");
+        //if (button.hasClass("no-checkout")) {
+        //}
+        var errorMsg = $jq("ul.messages .error-msg")[0];
+        errorMsg = $jq(errorMsg).text();
+        if(errorMsg !== ""){
+            $jq("div#fhs_error_message_cart").html(errorMsg);
+            var a = $jq("<a href=\"#shopping-cart-table\"> See Details.</a>");
+            $jq("div#fhs_error_message_cart").append(a);
+        }
+        jQuery('.youama-window-outside .close, button#btn-mess-1').click(function () {
+            jQuery('.youama-ajaxlogin-cover').fadeOut();
+            jQuery('.youama-noti-window').fadeOut();
+            jQuery('.youama-noti-window-sucess').fadeOut();
+            jQuery('div.youama-ajaxlogin-error').html("");
+        });
+        //jQuery('button#btn-mess-1').click(function () {
+            //location.href = '<?php echo Mage::getBaseUrl() . Mage::getStoreConfig('checkoutmessage/checkoutmessage_group/link1'); ?>';
+        //});
+        jQuery('button.no-checkout').click(function () {
+            var message = $jq("ul.messages .notice-msg")[0];
+            message = $jq(message).text();
+            $jq("div.messages-checkout-cart  h3#fhs-message-checkout-notice").html(message);
+            jQuery('.youama-ajaxlogin-cover').fadeIn();
+            jQuery('.youama-noti-window').fadeIn(1000);
+            return false;
+        });
+    });
+
+
+</script>
+
+<?php 
+//<!-- Netcore Action Begin --> 
+if (Mage::getStoreConfig('netcore/general/enable') == 1){
+    $netcore = Mage::getSingleton('customer/session')->getNetcore();
+    if($netcore){
+        echo "<script> window.onload = function() {".$netcore."}"."</script>";
+        Mage::getSingleton('customer/session')->unsNetcore("");
+    }
+}
+//<!-- Netcore Action End --> 
+?>
+
+<!-- Suggestion Product Begin-->
+<?php if (Mage::getStoreConfig('suggestion/general/enable') == 1):
+    $suggestion = Mage::getSingleton('customer/session')->getSuggestion();
+    if($suggestion):
+	$PAGE_SCRIPT = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS)
+            ."lib/suggestion.js?q="
+            .Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix');
+    ?>
+	<script type="text/javascript" src="<?php echo $PAGE_SCRIPT; ?>"></script>
+	<script>
+	    jQuery(document).ready(function(){
+		<?php echo $suggestion;?>
+	    });
+	</script>  
+	<?php Mage::getSingleton('customer/session')->unsSuggestion(""); ?>
+    <?php endif; ?> 
+<?php endif; ?> 
+<!-- End Suggestion Product --> 

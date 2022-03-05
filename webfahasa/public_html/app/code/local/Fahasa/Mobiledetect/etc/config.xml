@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <Fahasa_Mobiledetect>
+            <version>0.1.0</version>
+        </Fahasa_Mobiledetect>
+    </modules>
+    <global>
+        <helpers>
+            <fhsmobiledetect>
+                <class>Fahasa_Mobiledetect_Helper</class>
+            </fhsmobiledetect>
+        </helpers>
+    </global>
+    <frontend>
+        <layout>
+            <updates>
+                <fhsmobiledetect>
+                    <file>fhsmobiledetect.xml</file>
+                </fhsmobiledetect>
+            </updates>
+        </layout>
+    </frontend>
+</config>

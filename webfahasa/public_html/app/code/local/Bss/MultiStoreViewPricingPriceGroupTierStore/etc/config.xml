@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Bss_MultiStoreViewPricingPriceGroupTierStore>
+      <version>1.0.2</version>
+    </Bss_MultiStoreViewPricingPriceGroupTierStore>
+  </modules>
+  <global>
+    <helpers>
+      <multistoreviewpricingpricegrouptierstore>
+        <class>Bss_MultiStoreViewPricingPriceGroupTierStore_Helper</class>
+      </multistoreviewpricingpricegrouptierstore>
+    </helpers>
+
+    <blocks>
+      <multistoreviewpricingpricegrouptierstore>
+        <class>Bss_MultiStoreViewPricingPriceGroupTierStore_Block</class>
+      </multistoreviewpricingpricegrouptierstore>
+      <adminhtml>
+        <rewrite>
+          <catalog_product_edit_tab_price_tier>Bss_MultiStoreViewPricingPriceGroupTierStore_Block_Adminhtml_Product_Edit_Tab_Price_Tier</catalog_product_edit_tab_price_tier>
+        </rewrite>
+      </adminhtml>
+    </blocks>
+
+    <models>
+      <multistoreviewpricingpricegrouptierstore>
+        <class>Bss_MultiStoreViewPricingPriceGroupTierStore_Model</class>
+        <resourceModel>multistoreviewpricingpricegrouptierstore_resource</resourceModel>
+      </multistoreviewpricingpricegrouptierstore>
+
+      <multistoreviewpricingpricegrouptierstore_resource>
+        <class>Bss_MultiStoreViewPricingPriceGroupTierStore_Model_Resource</class>
+        <deprecatedNode>catalog_resource_eav_mysql4</deprecatedNode>
+        <entities>
+          <tier_price>
+            <table>bss_multistoreviewpricing_product_tier_price</table>
+          </tier_price>
+          <group_price>
+            <table>bss_multistoreviewpricing_product_group_price</table>
+          </group_price>
+          <tierDefault>
+            <table>bss_multistoreviewpricing_product_tier_price_default</table>
+          </tierDefault>
+        </entities>
+      </multistoreviewpricingpricegrouptierstore_resource>
+
+      <catalog>
+        <rewrite>
+          <product_attribute_backend_groupprice>Bss_MultiStoreViewPricingPriceGroupTierStore_Model_Product_Rewrite_Attribute_Backend_Groupprice</product_attribute_backend_groupprice>
+          <product_attribute_backend_tierprice>Bss_MultiStoreViewPricingPriceGroupTierStore_Model_Product_Rewrite_Attribute_Backend_Tierprice</product_attribute_backend_tierprice>
+        </rewrite>
+      </catalog>
+
+      <catalog_resource>
+        <rewrite>
+          <product_collection>Bss_MultiStoreViewPricingPriceGroupTierStore_Model_Resource_Product_Collection</product_collection>
+        </rewrite>
+      </catalog_resource>
+    </models>
+
+    <resources>
+      <bss_multistoreviewpricingpricegrouptierstore_setup>
+        <setup>
+          <module>Bss_MultiStoreViewPricingPriceGroupTierStore</module>
+          <class>Mage_Catalog_Model_Resource_Setup</class>
+        </setup>
+      </bss_multistoreviewpricingpricegrouptierstore_setup>
+    </resources>
+  </global>
+
+  <adminhtml>
+    <events>
+      <adminhtml_catalog_product_edit_prepare_form>
+        <observers>
+          <multistoreviewpricingpricegrouptierstore_prepare_form>
+            <class>multistoreviewpricingpricegrouptierstore/observer</class>
+            <method>rendererAttributes</method>
+          </multistoreviewpricingpricegrouptierstore_prepare_form>
+        </observers>
+      </adminhtml_catalog_product_edit_prepare_form>
+      <catalog_product_save_after>
+        <observers>
+          <multistoreviewpricingpricegrouptierstore_product_save_after>
+            <class>multistoreviewpricingpricegrouptierstore/observer</class>
+            <method>saveProductAfter</method>
+          </multistoreviewpricingpricegrouptierstore_product_save_after>
+        </observers>
+      </catalog_product_save_after>
+    </events>
+
+    <acl>
+      <resources>
+        <all>
+          <title>Allow Everything</title>
+        </all> 
+        <admin>
+          <children>
+            <system>
+              <children>
+                <config>
+                  <children>
+                    <multistoreviewpricing>
+                      <title>Bss Multiple Store View Pricing Configuration</title>
+                    </multistoreviewpricing>    
+                  </children>  
+                </config> 
+              </children>   
+            </system>      
+          </children>    
+        </admin>
+      </resources> 
+    </acl>
+  </adminhtml>
+
+  <default>
+    <multistoreviewpricing>
+      <general>
+        <tier_price translate="label">0</tier_price>
+      </general>
+    </multistoreviewpricing>
+  </default>
+</config> 

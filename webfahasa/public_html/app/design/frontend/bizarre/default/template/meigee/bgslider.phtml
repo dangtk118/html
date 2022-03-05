@@ -1,0 +1,22 @@
+<?php
+$meigee_bizarre_bgslider = MAGE::helper('ThemeOptionsBizarre')->getThemeOptionsBizarre('meigee_bizarre_bgslider');
+$slider = $meigee_bizarre_bgslider;
+$mediaUrl = MAGE::helper('ThemeOptionsBizarre')->getThemeOptionsBizarre('mediaurl');
+if ($slider['slideroptions']['enabled']) {
+    $html = "";
+    $i = 0;
+    foreach ($slider['slides'] as $slide) {
+        if ($i > 0) {
+            $html .= ', ';
+        }
+        $html .= '"' . $mediaUrl . $slide . '"';
+        $i++;
+    }
+?>
+<script>
+        jQuery(window).load(function() {
+            jQuery.backstretch([<?php echo $html;?>], {duration: <?php echo $slider['slideroptions']['duration']; ?>, fade: <?php echo $slider['slideroptions']['fade']; ?>});
+        });
+</script>
+<?php 
+}

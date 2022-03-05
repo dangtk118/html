@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<config>    
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <customerregister translate="title" module="customerregister">
+                                        <title>Customer Register Coupon</title>
+                                    </customerregister>
+                                </children>
+                            </config>
+                        </children>
+		    </system>                    
+                </children>
+            </admin>
+        </resources>
+    </acl>  
+</config>

@@ -1,0 +1,32 @@
+<?php
+/**
+ * @category    AM
+ * @package     AM_RevSlider
+ * @copyright   Copyright (C) 2008-2013 ArexMage.com. All Rights Reserved.
+ * @license     GNU General Public License version 2 or later
+ * @author      ArexMage.com
+ * @email       support@arexmage.com
+ */
+?>
+<div class="tl-head">
+    <div class="tl-zindex">z-Index</div>
+    <div class="tl-control">
+        <div class="tl-visibility" title="<?php echo Mage::helper('revslider')->__('Show / Hide all layers') ?>">
+            <i class="eg-icon-eye"></i>
+            <i class="eg-icon-eye-off"></i>
+        </div>
+        <div class="tl-lock" title="<?php echo Mage::helper('revslider')->__('Lock / Unlock all layers') ?>">
+            <i class="eg-icon-lock-open"></i>
+            <i class="eg-icon-lock"></i>
+        </div>
+        <div class="tl-toend" title="<?php echo Mage::helper('revslider')->__('Snap all layers end time') ?>">
+            <i class="eg-icon-back-in-time"></i>
+        </div>
+    </div>
+    <div class="tl-time">
+        <?php echo Mage::helper('revslider')->__('Timing') ?>
+    </div>
+    <div class="tl-start"><?php echo Mage::helper('revslider')->__('Start') ?></div>
+    <div class="tl-end"><?php echo Mage::helper('revslider')->__('End') ?></div>
+</div>
+<div id="listLayers"></div>

@@ -1,0 +1,274 @@
+<?php
+$_product = $this->getProduct();
+
+$languages = [];
+$languages['like'] = $this->__("like");
+$languages['liked'] = $this->__("liked");
+$languages['report'] = $this->__("report");
+$languages['abuse'] = $this->__("Thank you for your feedback.");
+$languages['Verified_Purchase'] = $this->__("Verified Purchase");
+$languages['star'] = $this->__("star");
+$languages['write_review'] = $this->__("Write your review");
+$languages['close_review'] = $this->__("Close review");
+$languages['characters'] = $this->__("characters");
+$languages['add_comment_complete'] = $this->__('Your review has been accepted for moderation.');
+    
+//get comment
+$limit_comment = 12;
+$currentPage_comment = $this->getRequest()->getParam('p', 1);
+$product_helper = Mage::helper('fahasa_catalog/product');
+//$comment_list = $product_helper->getCommentList($_product->getId(), $currentPage_comment, $limit_comment, 'best-like');
+$ratingAverages = $product_helper->getFHSRatingAverages($_product->getId());
+
+$MEDIA_URL = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA, true);
+$SKIN_URL = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN);
+$queryfier = Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix');
+$PROD_COMMENT_FILE = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS)."lib/prod_comment.js?q=".$queryfier;
+
+$rating_other_desktop_html = $product_helper->getRattingOtherHtml(null, $_product->getEntityId(), 'desktop');
+$rating_other_mobile_html = $product_helper->getRattingOtherHtml(null, $_product->getEntityId(), 'mobile');
+
+if($ratingAverages):?>
+<?php
+    if(!$ratingAverages['reviews_count_fhs']){
+	$rating_one_star = 0;
+	$rating_two_star = 0;
+	$rating_three_star = 0;
+	$rating_four_star = 0;
+	$rating_five_star = 0;
+    }else{
+	$rating_one_star = round(100*($ratingAverages['total_star'][1]/$ratingAverages['reviews_count_fhs']));
+	$rating_two_star = round(100*($ratingAverages['total_star'][2]/$ratingAverages['reviews_count_fhs']));
+	$rating_three_star = round(100*($ratingAverages['total_star'][3]/$ratingAverages['reviews_count_fhs']));
+	$rating_four_star = round(100*($ratingAverages['total_star'][4]/$ratingAverages['reviews_count_fhs']));
+	$rating_five_star = round(100*($ratingAverages['total_star'][5]/$ratingAverages['reviews_count_fhs']));
+    }
+
+    $rating_five = round((5*($ratingAverages['rating_summary_fhs']/100)),1);
+    
+    
+    $have_goto = $this->getRequest()->getParam('goto', '');
+    $link_login = Mage::getUrl('customer/account/login/', array(
+                    Mage_Customer_Helper_Data::REFERER_QUERY_PARAM_NAME => Mage::helper('core')->urlEncode(
+                        Mage::getUrl('*/*/*', array('_current' => true)) .
+                        '?review-form=true')
+                    )
+                );
+?>
+<style>
+.review_like{
+    background: url(<?php echo $SKIN_URL . "frontend/ma_vanese/fahasa/images/ico_like_empty.png"; ?>) no-repeat bottom;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    height: 22px;
+    width: 22px;
+    display: inline-block;
+    margin-bottom: -0.05em;
+}
+.review_liked{
+    background: url(<?php echo $SKIN_URL . "frontend/ma_vanese/fahasa/images/ico_like_fill.png"; ?>) no-repeat bottom;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    height: 22px;
+    width: 22px;
+    display: inline-block;
+    margin-bottom: 0.1em;
+}
+.review_report{
+    background: url(<?php echo $SKIN_URL . "frontend/ma_vanese/fahasa/images/report_orange.png"; ?>) no-repeat bottom;
+    -webkit-background-size: 24px 22px;
+    -moz-background-size: 24px 22px;
+    -o-background-size: 24px 22px;
+    background-size: 24px 22px;
+    height: 22px;
+    width: 24px;
+    display: inline-block;
+    margin-bottom: -0.15em;
+}
+.review_reported{
+    background: url(<?php echo $SKIN_URL . "frontend/ma_vanese/fahasa/images/alert_fill.png"; ?>) no-repeat bottom;
+    -webkit-background-size: 24px 22px;
+    -moz-background-size: 24px 22px;
+    -o-background-size: 24px 22px;
+    background-size: 24px 22px;
+    height: 22px;
+    width: 24px;
+    display: inline-block;
+    margin-bottom: 0.1em;
+}
+.Verified_Purchase{
+    background: url(<?php echo $SKIN_URL . "frontend/ma_vanese/fahasa/images/verify.png"; ?>) no-repeat center center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    height: 22px;
+    width: 22px;
+    display: inline-block;
+}
+.rating_item{
+    background: url(<?php echo $SKIN_URL . "frontend/ma_vanese/fahasa/images/ico_star_gray.svg"; ?>) no-repeat center center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    height: 22px;
+    width: 22px;
+    display: inline-block;
+    cursor: pointer;
+    user-select: none;
+}
+.rating_item.active{
+    background: url(<?php echo $SKIN_URL . "frontend/ma_vanese/fahasa/images/ico_star_yellow.svg"; ?>) no-repeat center center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    height: 22px;
+    width: 22px;
+    display: inline-block;
+}
+</style>
+<div class="product-view-tab-content-rating">
+    <div class="product-view-tab-content-rating-chart">
+	<div>
+	    <div>
+		<div>
+		    <div>
+			<?php echo $rating_five;?><span>/5</span>
+		    </div>
+		    <div>
+			<div class="rating-box">
+			    <div class="rating" style="width:<?php echo $ratingAverages['rating_summary_fhs']?$ratingAverages['rating_summary_fhs']:"0";?>%"></div>
+			</div>
+			<div class="clear"></div>
+		    </div>
+		    <div>
+			(<?php echo ($ratingAverages['reviews_count_fhs']?$ratingAverages['reviews_count_fhs']:"0")."&nbsp;".$this->__('review');?>)
+		    </div>
+		</div>
+	    </div>
+	    <div>
+		<div>
+		    <span>5 <?php echo $languages['star'];?></span>
+		    <div class="review-rating"><div style="width: <?php echo $rating_five_star;?>%;"></div></div>
+		    <span><?php echo $rating_five_star;?>%</span>
+		</div>
+		<div>
+		    <span>4 <?php echo $languages['star'];?></span>
+		    <div class="review-rating"><div style="width: <?php echo $rating_four_star;?>%;"></div></div>
+		    <span><?php echo $rating_four_star;?>%</span>
+		</div>
+		<div>
+		    <span>3 <?php echo $languages['star'];?></span>
+		    <div class="review-rating"><div style="width: <?php echo $rating_three_star;?>%;"></div></div>
+		    <span><?php echo $rating_three_star;?>%</span>
+		</div>
+		<div>
+		    <span>2 <?php echo $languages['star'];?></span>
+		    <div class="review-rating"><div style="width: <?php echo $rating_two_star;?>%;"></div></div>
+		    <span><?php echo $rating_two_star;?>%</span>
+		</div>
+		<div>
+		    <span>1 <?php echo $languages['star'];?></span>
+		    <div class="review-rating"><div style="width: <?php echo $rating_one_star;?>%;"></div></div>
+		    <span><?php echo $rating_one_star;?>%</span>
+		</div>
+	    </div>
+	</div>
+	<?php if(!empty($rating_other_mobile_html)):?>
+	    <div class="ratings_other"><?php echo $rating_other_mobile_html;?></div>
+	<?php endif;?>
+	<div>
+	    <?php if(Mage::getSingleton('customer/session')->isLoggedIn() || Mage::helper('review')->getIsGuestAllowToWrite()):?>
+		<input class="btn_show_review_review" onclick="prodComment.review_show_click();" type="button" value="<?php echo $this->__('Write your review');?>"/>
+	    <?php else:?>
+	    <p class="review-nologged" id="review-form">
+		<?php echo $this->__('Only registered users can write reviews. Please, <a href="%s">log in</a> or <a href="%s">register</a>', $link_login , Mage::helper('customer')->getRegisterUrl()) ?>
+	    </p>
+	    <?php endif;?>
+	</div>
+    </div>
+    <div class="product-view-tab-content-rating-review hidden">
+	<div><a href="/review-hay-nhan-ngay-fpoint"><img src="<?php echo $MEDIA_URL."wysiwyg/Thang-10-2018/REVIEW-1263x80-446ae7.jpg";?>" /></a></div>
+	<div><?php echo $this->__("How do you rate this product?");?></div>
+	<div class="rating_choice">
+	    <div class="rating_item rating_item_1" data="1"></div>
+	    <div class="rating_item rating_item_2" data="2"></div>
+	    <div class="rating_item rating_item_3" data="3"></div>
+	    <div class="rating_item rating_item_4" data="4"></div>
+	    <div class="rating_item rating_item_5" data="5"></div>
+	    <div class="rating_item_msg validation-advice" style="display:none;"><?php echo $this->__('This is a required field.');?></div>
+	</div>
+	<div><?php echo $this->__('Your Name');?></div>
+	<div>
+	    <input type="text" id="nickname_field" class="input-text required-entry full-width" placeholder="<?php echo $this->__('Enter name to display when rating (required)');?>" value="">
+	</div>
+	<div><?php echo $this->__('Comment');?></div>
+	<div>
+	    <textarea id="review_field" cols="5" rows="3" class="required-entry full-width validate-length-minimum-100" placeholder="<?php echo $this->__('Enter your review of the product');?>"></textarea>
+	    <h6 class="pull-right" id="count-message"></h6>
+	</div>
+	<div>
+	    <input class="btn_post_review" onclick="prodComment.post_review_click();" type="button" value="<?php echo $this->__('Send comment');?>"/>
+	</div>
+    </div>
+    
+    <?php if(!empty($rating_other_desktop_html)):?>
+	<div class="ratings_other"><?php echo $rating_other_desktop_html;?></div>
+    <?php endif;?>
+</div>
+<?php endif;?>
+<div class="product-view-tab-content-review-comment" style="display:none;">
+    <div class="product-view-tab-content-review-comment_sort review_comment_tabs_swiper_container">
+	<ul class="fhs-tabs review_comment_tabs swiper-wrapper">
+	    <li class="active" onclick="prodComment.sort_change(this, 'last-review')"><a><?php echo $this->__('Newest');?></a><hr></li>
+	    <li onclick="prodComment.sort_change(this, 'best-like')"><a><?php echo $this->__('Best');?></a><hr></li>
+        </ul>
+    </div>
+    <div class="comment_content">
+	<ul class="comment_list">
+	</ul>
+    </div>
+    <div class="toolbar toolbar-bottom">
+	<div class="pager">
+		<div class="pages" id="pagination">
+		    <ol>
+		    </ol>
+		</div>
+	</div>
+    </div>
+</div>
+<div id="popup-fahasa-default-cover" onclick="prodComment.closeAlert();"></div>
+<div id="popup-notification-msg">
+    <div id="popup-fahasa-alert-logo" class="popup-fahasa-alert-logo">
+	<center><img src="<?php echo $SKIN_URL.'frontend/ma_vanese/fahasa/images/logo-alert-success.png?q='.$queryfier; ?>" /></center>
+    </div>
+    <div class="popup-fahasa-default-alert-content">
+	<div id="popup-fahasa-default-content-text" class="popup-fahasa-default-content-text" style="padding: 0 10px;">
+	</div>
+    </div>
+    <div class="popup-fahasa-default-footer-small btn-submit col-lg-12 col-md-12 col-sm-12 col-xs-12">
+	<button type="button" onclick="prodComment.closeAlert();" class="popup-fahasa-default-alert-confirm">
+	    <span>
+		<?php echo $this->__('Understood') ?>                          
+	    </span>
+	</button>
+    </div>
+</div>
+
+<script type="text/javascript" src="<?php echo $PROD_COMMENT_FILE; ?>"></script>
+<script type="text/javascript">
+    var prodComment = new ProdComment();
+    prodComment.initComment(<?php echo $_product->getId(); ?>, <?php echo json_encode($currentPage_comment);?>, <?php echo $limit_comment;?>, 5, 'last-review\   ', <?php echo json_encode($languages, JSON_UNESCAPED_UNICODE);?>);
+    <?php if(!empty($have_goto)):?>
+	prodComment.choiceTab(<?php json_encode($have_goto);?>);
+    <?php endif;?>
+    $jq(document).ready(function () {  
+	setTimeout(prodComment.gotoQueryString(),500);
+    });
+</script>

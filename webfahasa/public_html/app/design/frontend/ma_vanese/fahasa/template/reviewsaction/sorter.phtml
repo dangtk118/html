@@ -1,0 +1,88 @@
+<?php
+$review = Mage::getModel('review/review')
+    ->getCollection()
+    ->addStoreFilter(Mage::app()->getStore()->getId())
+    ->addEntityFilter('product', Mage::registry('current_product')->getId())
+    ->addStatusFilter(Mage_Review_Model_Review::STATUS_APPROVED);
+if(count($review) > 1){
+    // show sorter when list reviews > 1
+?>
+<div id="sorter-review" class="limiter form-group">
+<!--    <div class="col-md-4 hidden-sm hidden-xs">
+        <label for="select-review"><?php echo $this->__('Review sort') ?>:</label>
+    </div>-->
+    <div class="col-md-12 col-sm-12 col-sms-12">
+        <div class="dropdownfhs">
+            <select id="select-review" class="form-control" onchange="setReviewCollection(this.value)">
+                <option id ='best-like' value="best-like"><?php echo $this->__('best like') ?></option>
+                <option id='last-review' value="last-review"><?php echo $this->__('last review') ?></option>
+            </select>
+        </div>
+    </div>    
+    <input type="hidden" value="" />
+</div>
+
+<script type="text/javascript">
+    // selected
+    $jq(document).ready(function () {
+        var page = '<?php echo $_GET['p'] ?>';
+        var limit = '<?php echo $_GET['limit'] ?>';
+        var sortBy = '<?php echo $_GET['sorter']; ?>';
+        $jq("#sorter-review input").val(sortBy);
+        if (page || limit || sortBy) {
+            window.location.hash = '#customer-reviews';
+        }
+        if (sortBy) {
+            $jq('#select-review').val('<?php echo $_GET['sorter']; ?>');
+        }
+    });
+
+    function setReviewCollection(sortBy) {
+        $jq("#sorter-review input").val(sortBy);
+        changeHrefPager(sortBy);
+        var pager = $jq(".pager").html();
+        var numPager = $jq(".pager ol .current").html();
+        var sorter = $jq("#sorter-review input").val();
+        var parameters = {
+            "product_id": <?php echo Mage::registry('current_product')->getId(); ?>,
+            "numPager": numPager,
+            "sorter": sorter
+        };
+        $jq.ajax({
+            url: "<?php echo $this->getUrl('reviewsaction/index/sorter') ?>",            
+            type : 'post',
+            data : parameters,            
+            beforeSend: function(){
+                showLoadingAnimation();
+            },
+            success: function(data){
+                if(data.length > 0){
+                    $jq("#customer-reviews").html(data);
+                    $jq(".pager").html(pager);
+                }
+                hideLoadingAnimation();
+                return;
+            }
+        });
+    };
+        
+    function updateQueryStringParameter(uri, key, value) {
+        var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+        var separator = uri.indexOf('?') !== -1 ? "&" : "?";
+        if (uri.match(re)) {
+            return uri.replace(re, '$1' + key + "=" + value + '$2');
+        }
+        else {
+            return uri + separator + key + "=" + value;
+        }
+  }
+    
+    function changeHrefPager(sortBy){
+        $jq('.pager a').each(function(){
+            var newHref = this.href;
+            this.href = updateQueryStringParameter(newHref,"sorter",sortBy);
+        })
+    }
+
+</script>
+<?php }?>

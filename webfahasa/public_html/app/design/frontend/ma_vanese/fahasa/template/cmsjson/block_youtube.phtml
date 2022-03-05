@@ -1,0 +1,34 @@
+<?php $mobile = Mage::helper('fhsmobiledetect')->isMobile(); ?>
+<?php $content = json_decode($this->getData('data'), true); ?>
+<?php if ($content) :?>
+<?php 
+$width = $content[0]["width"];
+$height = $content[0]["height"];
+$webClass = $content[0]["webClass"];
+$youtubeLink =  $content[0]["youtubeLink"];
+?>
+<?php if($width && $height && $youtubeLink ):
+    
+$paddingBottom = ($height / $width)* 100; 
+?>
+<style>
+    .fhs-video-container {
+            position: relative;
+            padding-bottom: <?php echo $paddingBottom .'%'; ?>;
+            height: 0;
+            overflow: hidden;
+        }
+
+        .fhs-video-container iframe {
+            position: absolute;
+            top:0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+</style>
+<div class="fhs-video-container">
+    <iframe src="<?php echo $youtubeLink ?>" frameborder="0" width="<?php echo $width; ?>" height="<?php echo $height; ?>"></iframe>
+</div>
+<?php endif; ?>
+<?php endif; ?>

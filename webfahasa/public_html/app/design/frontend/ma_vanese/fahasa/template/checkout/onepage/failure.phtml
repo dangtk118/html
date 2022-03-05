@@ -1,0 +1,85 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2014 X.commerce, Inc. (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<div class="page-title">
+    <h1><?php echo $this->__('An error occurred in the process of payment') . " #" . $this->getRealOrderId() ?> !!!</h1>
+</div>
+<?php if ($error = $this->getErrorMessage()) : ?><p><?php echo "Error: " . $error ?></p><?php endif ?>
+<div class="failure_img">
+    <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('failure_cart_block')->toHtml() ?>
+</div>
+<?php if(Mage::getSingleton('customer/session')->isLoggedIn()):?>
+<?php if ($this->getRealOrderId()) : ?>
+    <div class="re-order">
+        <?php
+        $_order = Mage::getModel('sales/order')->loadByIncrementId($this->getRealOrderId());
+        $pamentMethod = $_order->getPayment()->getMethodInstance()->getCode();
+        ?>
+        <?php if (Mage::helper('sales/reorder')->canReorder($_order)) : ?>
+            <a href="<?php echo Mage::getUrl('sales/order/reorder', array('order_id' => $_order->getId())); ?>" class="link-reorder">
+                <button type="button" title="<?php echo $this->__('Reorder') ?>" class="button"><span><span><?php echo $this->__('Reorder') ?></span></span></button>
+            </a>
+        <?php endif ?>
+    </div>
+<?php endif; ?>
+<?php endif; ?>
+<div class="fail_apologize">
+<?php if ($this->getRealOrderId()) : ?><p><?php echo $this->__("We apologize for your unsuccessful payment. We are trying to resolve this issue as fast as possible. Here is order id: '%s' in case you want to contact us.", $this->getRealOrderId()) ?></p><?php endif ?>
+</div>
+<div class="ma-timer-title header-cd" style="margin: 20px 0">
+<h2><?php echo $this->__('Contact Us') ?></h2>
+</div>
+<div>
+    <?php if ($this->getRealOrderId()) : ?><p><?php echo $this->__('Order #') . $this->getRealOrderId() ?></p><?php endif ?>
+    <ul style="padding-left: 15px;">
+        <li class="list-style-d">
+            <?php echo $this->__('Please call us at:') ?>  1900.63.64.67
+        </li>
+        <li class="list-style-d">
+            <?php echo $this->__('Please email us at:') ?>  info@fahasa.com
+        </li>
+    </ul>
+</div>
+<div class="ma-timer-title header-cd" style="margin: 20px 0">
+<h2><?php echo $this->__('Most common reasons for a payment fail') ?></h2>
+</div>
+<div>    
+    <ol style="padding-left: 15px; list-style: decimal">
+        <li style="list-style: inherit">
+            <?php echo $this->__('Your credit card should be authorized by your credit card issuer to make an online payment by activating 3-D Security Code. Please contact your credit card company to verify this.') ?>
+        </li>
+        <li style="list-style: inherit">
+            <?php echo $this->__('The effective time for OTP code (One Time Password) is very short, usually 5 minutes. If waited for too long to input this OTP code, it will cause the payment to fail.') ?>
+        </li>
+        <li style="list-style: inherit">
+            <?php echo $this->__('When input expiration date for your credit card, the format need to be MM/YY. For example, if the expiration date is 05/2016, then input 05/16.') ?>
+        </li>
+    </ol>
+    <br/>
+    <p><?php echo $this->__('Click <a style="color: #c00" href="%s">here</a> to continue shopping.', $this->getContinueShoppingUrl()) ?></p>
+</div>
+
+

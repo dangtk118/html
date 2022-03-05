@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Bss_StoreConditionRules>
+      <active>true</active>
+      <codePool>local</codePool>
+    </Bss_StoreConditionRules>
+  </modules>
+</config>

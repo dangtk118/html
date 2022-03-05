@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!--
+/**
+* @category    AM
+* @package     AM_Extensions
+* @copyright   Copyright (C) 2008-2013 ArexMage.com. All Rights Reserved.
+* @license     GNU General Public License version 2 or later
+* @author      ArexMage.com
+* @email       support@arexmage.com
+*/
+-->
+<config>
+    <menu>
+        <am>
+            <title>AM</title>
+            <sort_order>71</sort_order>
+            <children>
+                <diagnostic translate="title">
+                    <title>Diagnostic</title>
+                    <children>
+                        <rewrite translate="title">
+                            <title>Check Rewrites</title>
+                            <action>amadmin/adminhtml_diagnostic/checkRewrites</action>
+                        </rewrite>
+                    </children>
+                    <sort_order>999</sort_order>
+                </diagnostic>
+            </children>
+        </am>
+    </menu>
+
+    <acl>
+        <resources>
+            <all>
+                <title>Allow Everything</title>
+            </all>
+            <admin>
+                <children>
+                    <am>
+                        <title>AM Extension</title>
+                        <children>
+                            <diagnostic>
+                                <children>
+                                    <rewrite translate="title">
+                                        <title>Check Rewrites</title>
+                                        <action>amadmin/adminhtml_diagnostic/checkRewrites</action>
+                                    </rewrite>
+                                </children>
+                            </diagnostic>
+                        </children>
+                    </am>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</config>

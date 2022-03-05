@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <TTS_Mocapay>
+            <active>true</active>
+            <codePool>local</codePool>
+            <depends>
+                <Mage_Payment />
+            </depends>
+        </TTS_Mocapay>
+    </modules>
+</config> 

@@ -1,0 +1,172 @@
+<?php if($this->getItems()->getSize()): ?>
+    <?php
+    $mobile = Mage::helper('fhsmobiledetect')->isMobile();    
+    $item_width = Mage::getStoreConfig('relatedslider/relatedslider_config/item_width');                
+    if($mobile){
+        $minSlides = 2;
+        $maxSlides = 4;
+        $slideWidth = 300;
+        $slideMargin = 20;
+    }else{
+        $minSlides = 1;
+        $maxSlides = 6;
+        $slideWidth = $item_width;
+        $slideMargin = 45;
+    }
+    $show_price = Mage::getStoreConfig('relatedslider/relatedslider_config/show_price');
+    $show_wishlist = Mage::getStoreConfig('relatedslider/relatedslider_config/show_wishlist');		
+    ?>
+        <div class="ma-relatedslider-container">
+            <div class="tabslider-title" style="float: none;">
+                <?php echo $this->__('Related Products') ?>
+            </div>
+            <?php if($mobile): ?>
+            <div class="bxslider fhs-related-slider swiper-container">        
+                <?php $rows = 1;
+                $i = 0; ?>
+                <div class=" swiper-wrapper" id="block-related">
+        <?php foreach ($this->getItems() as $_item): ?>
+                        <div class="swiper-slide relatedslider-item sl-width item"> 
+                            <div class="item-inner" style="position: relative;">
+                                <?php
+                                $specialprice = $_item->getFinalPrice();
+                                $price = $_item->getPrice();
+                                $discountLabel = Mage::helper('discountlabel')->handleDisplayDiscountLabel($_item, true, false);
+                                echo $discountLabel;
+                                ?>                        
+                                <div class="ma-box-content">
+                                    <div class="products clearfix">
+                                        <div class="product images-container">
+                                            <a href="<?php echo $_item->getProductUrl() ?>?fhs_campaign=RELATED_PRODUCT" title="<?php echo $this->stripTags($this->getImageLabel($_item, 'small_image'), null, true) ?>" class="product-image">
+                                                <span class="product-image">
+                                                    <img class="mobileImage" style="padding-bottom:0" src="<?php echo $this->helper('catalog/image')->init($_item, 'small_image')->resize(150, 250); ?>" width="270" height="364" class="flazy" alt="<?php echo $this->stripTags($this->getImageLabel($_item, 'small_image'), null, true) ?>" />
+                                                </span>					     
+                                            </a>
+                                        </div>                                
+                                    </div>                            
+                                    <h2 class="product-name"><a href="<?php echo $_item->getProductUrl() ?>?fhs_campaign=RELATED_PRODUCT" title="<?php echo $this->htmlEscape($_item->getName()) ?>"><?php echo $this->htmlEscape($_item->getName()) ?></a></h2>
+            <?php if ($show_price): ?>
+                                        <div class="price-label">
+                                            <div class="price-box">
+                                                <div class="price-box">
+                <?php echo $this->getPriceHtml($_item, true); ?>						
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php endif; ?>
+            <?php echo $this->getFahasaSummaryHtml($_item) ?>
+                                </div>
+                            </div>            
+                        </div>
+
+        <?php endforeach ?>
+                </div>
+                <script type="text/javascript">decorateList('block-related', 'none-recursive')</script>
+            </div>
+        </div>
+<script type="text/javascript">
+        var swiper = new Swiper('.swiper-container', {
+            slidesPerView: 'auto',
+            freeMode: true
+        });
+//        $jq(".swiper-container").css("visibility", "visible");
+        </script>
+<?php else:?>
+    <div class="bxslider fhs-related-slider" style="visibility: hidden;">        
+        <?php $rows =1;$i=0; ?>
+        <ul class="slides" id="block-related">
+        <?php foreach($this->getItems() as $_item): ?>
+			<?php if($i % $rows == 0) echo '<li class="relatedslider-item sl-width item"> <div class="item-inner" style="position: relative;">'; ?>
+				<?php
+                                    $specialprice = $_item->getFinalPrice();
+                                    $price = $_item->getPrice();
+                                    $discountLabel = Mage::helper('discountlabel')->handleDisplayDiscountLabel($_item, true, false);
+                                    echo $discountLabel;                                    
+			   ?>                        
+                        <div class="ma-box-content">
+                            <div class="products clearfix">
+                                <div class="product images-container">
+					<a href="<?php echo $_item->getProductUrl() ?>?fhs_campaign=RELATED_PRODUCT" title="<?php echo $this->stripTags($this->getImageLabel($_item, 'small_image'), null, true) ?>" class="product-image">
+					  <span class="product-image">
+                                            <?php 
+					   if ($mobile) { ?>
+						<img class="mobileImage" style="padding-bottom:0" src="<?php echo $this->helper('catalog/image')->init($_item, 'small_image')->resize(120, 161); ?>" width="270" height="364" class="flazy" alt="<?php echo $this->stripTags($this->getImageLabel($_item, 'small_image'), null, true) ?>" />
+					   <?php } else { ?>
+						<img style="padding-bottom:0" src="<?php echo $this->helper('catalog/image')->init($_item, 'small_image')->resize(270, 364); ?>" width="270" height="364" class="flazy" alt="<?php echo $this->stripTags($this->getImageLabel($_item, 'small_image'), null, true) ?>" />
+					   <?php } ?>
+					  </span>					     
+					</a>
+				</div>                                
+                            </div>                            
+                            <h2 class="product-name"><a href="<?php echo $_item->getProductUrl() ?>?fhs_campaign=RELATED_PRODUCT" title="<?php echo $this->htmlEscape($_item->getName()) ?>"><?php echo $this->htmlEscape($_item->getName()) ?></a></h2>
+                            <?php if( $show_price ): ?>
+                            <div class="price-label">
+                                    <div class="price-box"><div class="price-box">
+                                            <?php echo $this->getPriceHtml($_item, true); ?>						
+                                        </div></div>
+                                        </div>
+                            <?php endif; ?>
+                            <?php echo $this->getFahasaSummaryHtml($_item) ?>
+                        </div>
+                        </div>                        
+			<?php $i++;?>
+			<?php if($i % $rows == 0) echo "</li>"; ?>   
+        <?php endforeach ?>
+        <?php if($i % $rows != 0) echo "</li>"; ?>
+        </ul>
+        <script type="text/javascript">decorateList('block-related', 'none-recursive')</script>
+    </div>
+    <script type="text/javascript">
+    //<![CDATA[
+    $$('.related-checkbox').each(function(elem){
+        Event.observe(elem, 'click', addRelatedToProduct)
+    });
+
+    var relatedProductsCheckFlag = false;
+    function selectAllRelated(txt){
+        if (relatedProductsCheckFlag == false) {
+            $$('.related-checkbox').each(function(elem){
+                elem.checked = true;
+            });
+            relatedProductsCheckFlag = true;
+            txt.innerHTML="<?php echo $this->__('unselect all') ?>";
+        } else {
+            $$('.related-checkbox').each(function(elem){
+                elem.checked = false;
+            });
+            relatedProductsCheckFlag = false;
+            txt.innerHTML="<?php echo $this->__('select all') ?>";
+        }
+        addRelatedToProduct();
+    }
+
+    function addRelatedToProduct(){
+        var checkboxes = $$('.related-checkbox');
+        var values = [];
+        for(var i=0;i<checkboxes.length;i++){
+            if(checkboxes[i].checked) values.push(checkboxes[i].value);
+        }
+        if($('related-products-field')){
+            $('related-products-field').value = values.join(',');
+        }
+    }
+    $jq(document).ready(function() {
+        $jq('.ma-relatedslider-container .slides').bxSlider({
+            pause: 0,
+            minSlides: <?php echo $minSlides ?>,
+            maxSlides: <?php echo $maxSlides ?>,
+            slideWidth: <?php echo $slideWidth ?>,
+            slideMargin: <?php echo $slideMargin ?>,            
+            infiniteLoop:false,            
+            hideControlOnEnd: true,
+            preloadImages: 'all',
+            onSliderLoad: function(){
+                $jq(".fhs-related-slider").css("visibility", "visible");
+            }
+        });
+    });
+    //]]>
+    </script>
+    <?php endif;?>
+</div>
+<?php endif ?>

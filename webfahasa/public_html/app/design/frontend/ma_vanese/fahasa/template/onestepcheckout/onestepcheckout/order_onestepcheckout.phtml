@@ -1,0 +1,419 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+
+?>
+<?php 
+    $_order = $this->getOrder() ;
+    $sym_currency = Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol();
+    $isMobile = Mage::helper('fhsmobiledetect')->isMobile();
+    $disable_btn_cancel_order = false;
+?>
+<?php 
+    
+    $orderId = $_order->getIncrementId();
+    $total_final = 0;
+    $show_all_total = TRUE; 
+    $connection = Mage::getSingleton('core/resource')->getConnection('core_read');
+    $sql = "select qresult.entity_id, qresult.product_id, qresult.order_id, qresult.suborder_id, qresult.price,
+	    qresult.qty, qresult.sku, qresult.name, qresult.status, qresult.shipping_fee, qresult.cod_fee,
+	    qresult.giftwrap_fee, qresult.tryout_discount, qresult.discount_amount, qresult.created_at,
+	    ct.timestamp as 'confirmSubOrder_timestamp', pt.timestamp as 'packSubOrder_timestamp',
+	    dt.timestamp as 'deliverSubOrder_timestamp', qresult.status_timestamp, cpt.timestamp as 'completeSubOrder_timestamp'
+	    from (
+	       select pe.entity_id, product_id,
+	       so.order_id, so.suborder_id,
+	       avg(if(sb.bundle_id is null, soi.price, (1-sb.saving) * soi.price)) as price,
+	       sum(if(sb.bundle_id is null, soi.qty, sb.qty * soi.qty)) as qty,
+	       pe.sku, prodname.value AS name, so.status, so.shipping_fee, so.cod_fee,
+	       ifnull(so.giftwrap_fee, 0) giftwrap_fee,so.tryout_discount, so.discount_amount, so.created_at,so.status_timestamp
+	       from fahasa_suborder so
+	       join fahasa_suborder_item soi on so.order_id = soi.order_id and so.suborder_id = soi.suborder_id
+	       left join fahasa_suborder_bundle sb on soi.bundle_id = sb.bundle_id and soi.suborder_id = sb.suborder_id and soi.bundle_type = sb.bundle_type        
+	       LEFT JOIN fhs_catalog_product_entity pe ON soi.product_id = pe.entity_id
+	       LEFT JOIN fhs_catalog_product_entity_varchar prodname ON pe.entity_id = prodname.entity_id AND prodname.attribute_id = 71
+	       WHERE so.parent_id IS NULL AND so.order_id = '".$orderId."' GROUP BY so.suborder_id, soi.product_id
+	    ) qresult
+	    LEFT JOIN fahasa_bookstore_log ct ON ct.suborder_id = qresult.suborder_id AND ct.order_id = qresult.order_id AND ct.action like 'confirmSubOrder%'
+	    LEFT JOIN fahasa_bookstore_log pt ON pt.suborder_id = qresult.suborder_id AND ct.order_id = qresult.order_id AND pt.action = 'packSubOrderRest'
+	    LEFT JOIN fahasa_bookstore_log dt ON dt.suborder_id = qresult.suborder_id AND ct.order_id = qresult.order_id AND (dt.action = 'deliverSubOrder' OR dt.action = 'deliverSubOrderRest')
+	    LEFT JOIN fahasa_bookstore_log cpt ON cpt.suborder_id = qresult.suborder_id AND ct.order_id = qresult.order_id AND (cpt.action = 'completeSubOrder' OR cpt.action = 'completeSubOrderRest')
+	    GROUP BY qresult.suborder_id, qresult.product_id;";
+
+    $rows = $connection->fetchAll($sql);
+    $list = Array();
+    for ($i = 0; $i < count($rows); $i++) {
+        $show_all_total = FALSE;
+        $subOrderId = $rows[$i]['suborder_id'];
+        $OrderId = array($rows[$i]);
+        if($list[$subOrderId] == null){
+            array_push($list[$subOrderId]);
+            $list[$subOrderId] = $OrderId;
+        }  else {
+            array_push($list[$subOrderId],$rows[$i]);
+        }
+    }
+    if(count($list)>0){?>
+        <div class='panel'>
+            <?php if(count($list)>1){?>
+            <div class = 'panel-heading'>
+                <h2>
+                    <?php echo $this->__('Your order has been divided into %s suborder(s).',count($list)) ?>
+                </h2>
+            </div>
+        <?php }?>
+        <?php $no_list = 1; ?>
+        <?php foreach($list as $ent){
+        $divtitle = "";
+	if(($ent[0]["status"] == "delivering") ||
+	    ($ent[0]["status"] == "packed") ||
+	    ($ent[0]["status"] == "processing") ||
+	    ($ent[0]["status"] == "canceled") ||
+	    ($ent[0]["status"] == "confirmed") ||
+	    ($ent[0]["status"] == "complete")){
+		$disable_btn_cancel_order = true;
+	}
+        switch ($ent[0]["status"]) {
+            case "complete": $divtitle = "success";
+                break;
+            case "canceled": $divtitle = "danger";
+                break;
+            case "delivery_failed":
+            case "delivery_returned":
+            case "ebiz_returned":
+            case "permanent_no_stock":
+            case "returning":
+            case "returned":
+                $divtitle = "warning";
+                break;
+            case "delivering":
+            case "packed":
+            case "processing":
+                $divtitle = "primary";
+                break;
+            default :
+                $ent[0]["status"] = "processing";
+                $divtitle = "primary";
+                break;
+        }
+    ?>
+        <?Php
+            $total_price = 0;
+            $total_ = 0;
+            $qly_ = 0;
+            for ($j = 0; $j < count($ent); $j++) {
+                $total_price += $ent[$j]["price"] * round($ent[$j]["qty"]);
+                $total_shipping_fee = $ent[$j]["shipping_fee"];
+                $total_cod_fee = $ent[$j]["cod_fee"];
+                $total_tryout = $ent[$j]["tryout_discount"];
+                $total_discount_amount = $ent[$j]["discount_amount"];
+                $total_giftwrap_fee = $ent[$j]["giftwrap_fee"];
+                $qly_ = $qly_ + round($ent[$j]["qty"]);
+            }
+            $total_ = $total_price + $total_shipping_fee + $total_cod_fee - $total_tryout - $total_discount_amount + $total_giftwrap_fee;
+            ?>
+        <div id="sub_order_sroll_<?php echo $ent[0]["suborder_id"];?>" class='panel panel-<?php echo $divtitle;?>'>
+            <a role="button" data-toggle="collapse" href="#." hrefs="#sub_order_sroll_<?php echo $ent[0]["suborder_id"];?>" data-target="#sub_order_<?php echo $ent[0]["suborder_id"];?>" aria-expanded="true" class="panel-collapse collapsed">
+                <div class = 'panel-heading'>
+                  <div style="float: left;width: 33%;">
+                      <?php echo $no_list.".#". $ent[0]["suborder_id"] . "-" . $ent[0]["order_id"];?>
+                  </div>
+                  <div style="float: left;width: 26%;">
+                      <?php echo $this->getOrder()->formatPrice($total_)." ".$sym_currency;?>
+                  </div>
+                  <div style="float: left;width: 26%;">
+                      <?php echo $qly_ ?><?php echo "&nbsp;".$this->__(($isMobile==TRUE)?'prod':'product') ?>
+                  </div>
+                  <div style="float: left; width: 12%;">
+                      <?php echo $this->__($ent[0]["status"]);?>
+                  </div>
+                <div class="panel-icon"></div>
+                <div style="clear: both;"></div>
+            </div>
+            </a>
+            <div id="sub_order_<?php echo $ent[0]["suborder_id"];?>" class="collapse">
+                <table class="suborder-table-2 nonborder-table">                
+                    <thead>
+                        <tr>
+                            <th><?php echo $this->__('processing') ?></th>
+                            <th><?php echo $this->__('ready delivering') ?></th>
+                            <th><?php echo $this->__('delivering') ?></th>
+                            <th><?php echo $ent[0]["status"]=="canceled"?$this->__('canceled'):$this->__('complete') ?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php echo $this->getTrackingSubOrderLog($ent[0]); ?>
+                    </tbody>
+                </table>
+                <div style="overflow-x: auto;">
+                <table cellspacing="0" cellpadding="0" border="0" width="100%" class="suborder-table nonborder-table" style="margin-top: 0px;border-top-width: 0px;"> 
+                <thead>
+                    <tr>
+                        <th style="padding-left: 15px; min-width: 25vh; width: 40%; text-align:left;"><?php echo $this->__('Product Name') ?></th>
+                        <th style="text-align:left; min-width: 15vh; width: 15%;"><?php echo $this->__('Sku') ?></th>
+                        <th style="text-align:center;"><?php echo $this->__('Final price') ?></th>
+                        <th style="text-align:center;"><?php echo $this->__('Qty') ?></th>
+                        <th style="width: 15%; text-align:right;"><?php echo $this->__('Total amount') ?></th>
+                    </tr>
+                </thead>
+                <?Php
+                        $total_price = 0;
+                        $total_shipping_fee = 0;
+                        $total_cod_fee = 0;
+                        $total_tryout = 0;
+                        $total_discount_amount = 0;
+                        $total_giftwrap_fee = 0;
+                        $total_ = 0;
+                        for ($j = 0; $j < count($ent); $j++) {
+                            $total_price += $ent[$j]["price"] * round($ent[$j]["qty"]);
+                            $total_shipping_fee = $ent[$j]["shipping_fee"];
+                            $total_cod_fee = $ent[$j]["cod_fee"];
+                            $total_tryout = $ent[$j]["tryout_discount"];
+                            $total_discount_amount = $ent[$j]["discount_amount"];
+                            $total_giftwrap_fee = $ent[$j]["giftwrap_fee"];
+                            
+                            $product = \Mage::getModel('catalog/product')
+                                    ->setStoreId(\Mage::app()->getStore()->getStoreId())
+                                    ->load($ent[$j]["product_id"]);
+
+                            $productId = $product->entity_id;
+                            
+                            ?>
+                            <tr>
+                                <td style="padding-left: 15px; text-align: left;">
+				    <h3 style="width: inherit;" class="product-name">
+					<a href="<?php echo $product->getProductUrl();?>" style="height: auto;">
+						<?php echo $ent[$j]["name"] ?>
+					</a>
+					<?php if ((int) $ent[$j]["price"] !== 0):// not show when product is gift?>
+					    <?php
+					    if ($product->soon_release == 1 && ((int)$product->getData('price') !== 0 || $product->getTypeId() == 'bundle')) {
+						$message = Mage::helper('fahasa_catalog/product')->getProductExpectedMsg(null, $product->soon_release, $product->expected_date, $product->book_release_date)[0];
+						echo "<div class='label-stock-availabel'>".$message."</div>";
+					    }
+					    ?>
+					<?php endif; ?>
+				    </h3>
+                                </td>
+                                <td style="text-align: left;"><?php echo $ent[$j]["sku"] ?></td>
+                                <td style="text-align: center;"><?php echo $this->getOrder()->formatPrice($ent[$j]["price"]) ?></td>
+                                <td style="text-align: center;"><?php echo round($ent[$j]["qty"]) ?></td>
+                                <td style="text-align: right;"><?php echo $this->getOrder()->formatPrice($ent[$j]["price"]*round($ent[$j]["qty"])) ?></td>
+                            </tr>
+                            <?php
+                        }
+                        $total_ = $total_price + $total_shipping_fee + $total_cod_fee - $total_tryout - $total_discount_amount + $total_giftwrap_fee;
+                        $total_final += $total_;
+                        ?>
+                    </table>
+                </div>
+                <table class="suborder-table-2 nonborder-table">                
+                    <thead>
+                        <tr>
+                            <th><?php echo $this->__('Subtotal') ?></th>
+                            <th><?php echo $this->__('Shipping & Handling') ?></th>
+                            <?php if ($total_cod_fee != 0) { ?>
+                                <th><?php echo $this->__("Vietnam COD") ?></th>
+                            <?php } ?>
+                            <?php if ($total_tryout != 0) { ?>
+                                    <th><?php echo $this->__("F-point Discount") ?></th>
+                            <?php } ?>
+                            <?php if ($total_discount_amount != 0) { ?>
+                                    <th><?php echo $this->__("Discount") ?></th>
+                            <?php } ?>
+                            <?php if ($total_giftwrap_fee != 0) { ?>
+                                    <th><?php echo $this->__("Gift wrap") ?></th>
+                            <?php } ?>
+                            <th><?php echo $this->__('Grand Total') ?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><?php echo $this->getOrder()->formatPrice($total_price); ?></td>
+                            <td><?php echo $this->getOrder()->formatPrice($total_shipping_fee); ?></td>
+                        <?php if ($total_cod_fee != 0) { ?>
+                            <td><?php echo $this->getOrder()->formatPrice($total_cod_fee); ?></td>
+                        <?php } ?>
+                        <?php if ($total_tryout != 0) { ?>
+                            <td><?php echo "-" . $this->getOrder()->formatPrice($total_tryout); ?></td>
+                        <?php } ?>
+                        <?php if ($total_discount_amount != 0) { ?>
+                            <td><?php echo "-" . $this->getOrder()->formatPrice($total_discount_amount); ?></td>
+                        <?php } ?>
+                        <?php if ($total_giftwrap_fee != 0) { ?>
+                            <td><?php echo $this->getOrder()->formatPrice($total_giftwrap_fee); ?></td>
+                        <?php } ?>
+                            <td><?php echo $this->getOrder()->formatPrice($total_); ?></td>
+                        </tr> 
+                    </tbody>
+                </table>
+            </div>
+            
+        </div> 
+        <?php 
+        ++$no_list; }?>
+</div> 
+    <?php }
+    ?>
+<?php if ($_order && $show_all_total == TRUE){ ?>
+
+<?php //ORDER TABLE----------------------------------------------------------------?>
+
+<div style="overflow-x: auto;">
+<table cellspacing="0" cellpadding="0" border="0" width="100%" class="order-table non border-table" >
+    <thead>
+        <tr>
+            <th style="padding-left: 15px; min-width: 25vh; width: 40%; text-align:left;"><?php echo $this->__('Product Name') ?></th>
+            <th style="text-align:left; min-width: 15vh; width: 15%;"><?php echo $this->__('Sku') ?></th>
+            <th style="text-align:center;"><?php echo $this->__('Price') ?></th>
+            <th style="text-align:center;"><?php echo $this->__('Qty') ?></th>
+            <th style="text-align:right; width: 15%;"><?php echo $this->__('Subtotal') ?></th>
+        </tr>
+    </thead>
+    <?php $buffet_helper = Mage::helper("event/buffetcombo");?>
+    <!-- Check if Buffet Combo Event is Active -->
+    <?php 
+    if($buffet_helper->isBuffetActive()):
+        $items = $buffet_helper->getBuffetOrderItems($_order); 
+    
+        // Display Normal Items 
+        $i=0; 
+        foreach ($items['normal_items'] as $_item): 
+        $i++; 
+    ?>
+        <tbody <?php echo $i%2 ? "style='background-color: #a6a6a6;'" : '' ?>>
+            <?php echo $this->getItemHtml($_item) ?>
+        </tbody>
+    <?php endforeach; ?>
+        <!-- Display Buffet Combo -->
+        <tbody>
+            <?php foreach ($items['buffet_items'] as $key=>$_item): ?>
+                    <tr class="border">
+                        <td>
+                            <h3 class="product-name"><?php echo $_item->getName(); ?></h3>
+                        </td>
+                        <td><?php echo $_item->getSku(); ?></td>
+                        <td class="a-right">
+                            <span class="price-incl-tax">
+                                <span class="cart-price">
+                                    <span class="price"><?php echo Mage::helper('checkout')->formatPrice($_item->getPriceInclTax()) ?></span>                    
+                                </span>
+                            </span>
+                        </td>
+                        <td class="a-right">
+                            <span class="nobr">1</span>
+                        </td>
+                        <?php if($key==0): ?>
+                            <td class="a-right" rowspan="<?php echo $items['buffet_order']['count']; ?>" style="vertical-align: middle;">
+                                <div style="text-align:center">
+                                    <div><img src="<?php echo Mage::helper("event/buffetcombo")->getBuffetIcon(); ?>" width="100"/></div>
+                                    <span class="price-incl-tax">
+                                        <span class="cart-price">
+                                            <span class="price"><?php echo Mage::helper('checkout')->formatPrice($items['buffet_order']['price']) ?></span>                    
+                                        </span>
+                                    </span>
+                                </div>
+                            </td>
+                        <?php endif; ?>
+                    </tr>
+            <?php endforeach; ?>
+        </tbody>
+    <?php 
+    else: 
+        $i=0; foreach ($_order->getAllItems() as $_item):
+        if($_item->getParentItem()) continue; else $i++; 
+    ?>
+        <tbody>
+            <?php
+	    echo $this->getItemHtml($_item)
+		    ?>
+        </tbody>
+    <?php 
+        endforeach; 
+        endif; 
+    ?>
+    <tbody>
+        <?php
+            $delivery = Mage::getModel('onestepcheckout/delivery')->load($_order->getId(), 'order_id');
+            if($delivery->getId()):
+        ?>
+        <thead>
+            <tr>
+                <th colspan="5" align="left" bgcolor="#EAEAEA" style="font-size:13px; padding:3px 9px"><?php echo $this->__('Time of Delivery') ?></th>
+            </tr>
+        </thead>
+        <tr>
+            <td colspan="5" align="left" valign="top" style="font-size:11px; padding:3px 9px;">
+               <strong style="font-size:12px;"><?php echo $delivery->getDeliveryTimeDate();?></strong>
+            </td>
+        </tr>
+<?php endif; ?>
+    </tbody>
+    <tbody class="odd">
+        <?php echo $this->getChildHtml('order_totals') ?>
+    </tbody>
+</table>
+</div>
+<?php //ORDER TABLE END----------------------------------------------------------------?>
+
+<?php if ($this->helper('giftmessage/message')->isMessagesAvailable('order', $_order, $_order->getStore()) && $_order->getGiftMessageId()): ?>
+    <?php $_giftMessage = $this->helper('giftmessage/message')->getGiftMessage($_order->getGiftMessageId()); ?>
+    <?php if ($_giftMessage): ?>
+<br />
+<table cellspacing="0" cellpadding="0" border="0" width="100%" style="border:1px solid #EAEAEA;">
+    <thead>
+        <tr>
+            <th align="left" bgcolor="#EAEAEA" style="font-size:13px; padding:3px 9px"><strong><?php echo $this->__('Gift Message for this Order') ?></strong></th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        <tr>
+            <td colspan="4" align="left" style="padding:3px 9px">
+            <strong><?php echo $this->__('From:'); ?></strong> <?php echo $this->escapeHtml($_giftMessage->getSender()) ?>
+            <br /><strong><?php echo $this->__('To:'); ?></strong> <?php echo $this->escapeHtml($_giftMessage->getRecipient()) ?>
+            <br /><strong><?php 
+            echo $this->__('Message:'); ?></strong><br /> <?php echo $this->escapeHtml($_giftMessage->getMessage()) ?>
+            </td>
+        </tr>
+    </tbody>
+</table>
+    <?php endif; ?>
+<?php endif; ?>
+<?php }else{ ?>
+    <script>
+        $jq(document).ready(function() {
+            $jq("#order-final-total").html("<?php echo $this->__('Grand Totals').':&nbsp;'.addslashes($this->getOrder()->formatPrice($total_final))." ".$sym_currency ?>");
+        });
+    </script>
+<?php } ?>
+<script>
+    <?php if($disable_btn_cancel_order): ?>
+	$jq('#btn_cancel_order').html('');
+    <?php else: ?>
+	$jq('#btn_cancel_order').css("display", "inline");
+    <?php endif; ?>
+</script>

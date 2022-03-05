@@ -1,0 +1,296 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+/**
+ * @var Mage_Page_Block_Html_Header $this
+ */
+?>
+<?php
+$mobile = Mage::helper('fhsmobiledetect')->isMobile();
+$cache_helper = Mage::helper('fahasa_catalog/cache');
+
+//$this->getChildHtml('topLinks');
+$is_homepage = (Mage::app()->getRequest()->getOriginalPathInfo() == "/")?true:false;
+$SKIN_URL = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN);
+$queryfier = Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix');
+$CSS_FILE = $SKIN_URL."frontend/ma_vanese/fahasa/css/header.css?q=".$queryfier;
+
+$SELECT2_CSS = $SKIN_URL."frontend/ma_vanese/fahasa/css/select2.min.css?q=".$queryfier;
+$SELECT2_JS = $SKIN_URL."frontend/ma_vanese/fahasa/js/select2.min.js?q=".$queryfier;
+
+$noti_html = $this->getChildHtml('top_notification');
+$noti_mobile_html = $this->getChildHtml('top_notification_mobile');
+$catalogSearchHelper =  Mage::helper('catalogsearch');
+$stores = Mage::app()->getStores();
+	
+$ACCOUNT_SCRIPT = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS, true)."lib/account.js?q=".$queryfier;
+
+$top_menu_html = $this->getTopMenu();
+$vmegamenu_html = $cache_helper->getBlockId('vmegamenu');
+$top_banner_html = $cache_helper->getBlockId('header-top-banner');
+
+if(!empty($catalogSearchHelper->getEscapedQueryText())){
+    Mage::helper('productviewed')->addSearchHistory($catalogSearchHelper->getEscapedQueryText());
+}
+?>
+<script type="text/javascript" src="<?php echo $SELECT2_JS; ?>"></script>
+<script type="text/javascript" src="<?php echo $ACCOUNT_SCRIPT; ?>"></script>
+<script type="text/javascript">var fhs_account = new FhsAccount();</script>
+<link rel="stylesheet" type="text/css" href="<?php echo $CSS_FILE; ?>" media="all" />
+<link href='https://fonts.googleapis.com/css?family=Nunito Sans' rel='stylesheet'>
+<link rel="stylesheet" type="text/css" href="<?php echo $SELECT2_CSS; ?>" media="all" />
+<style type="text/css">
+    .custom-menu-homepage2 .col-md-3{
+	<?php if(!empty($top_menu_html)): ?>background-color: white;<?php endif; ?>
+	padding-left: 0px;
+    }
+</style>
+<div class="fhs-header_desktop">
+    <div class="fhs-header-top-banner" style="<?php echo "background-color:" . Mage::getStoreConfig('tab1/general/text_field'); ?>">
+        <div class="top-banner-block">
+            <?php echo $top_banner_html; ?>
+        </div>
+    </div>
+    <div class="container">
+	<div class="fhs-header-top-second-bar">
+	    <div>
+		<?php if ($is_homepage): ?>
+		    <div id="logo-theme" class="logo-store"><strong class="logo-title"><?php echo $this->getLogoAlt() ?></strong><a href="<?php echo $this->getUrl('') ?>" title="<?php echo $this->getLogoAlt() ?>" class="logo"><img src="<?php echo $this->getLogoSrcSecond() ?>" alt="<?php echo $this->getLogoAlt() ?>" /></a></div>
+		<?php else: ?>
+		    <a href="<?php echo $this->getUrl('') ?>" title="<?php echo $this->getLogoAlt() ?>" class="logo"><strong class="logo-title"><?php echo $this->getLogoAlt() ?></strong><img src="<?php echo $this->getLogoSrcSecond() ?>" alt="<?php echo $this->getLogoAlt() ?>" /></a>
+		<?php endif ?> 
+	    </div>
+	    <div>
+		<div class="box search_box ">
+		    <form id="search_mini_form_desktop" action="<?php echo $catalogSearchHelper->getResultUrl() ?>" method="get">
+			<div class="search pull-left">
+			<div class="form-search">
+			    <input id="search_desktop" type="text" name="<?php echo $catalogSearchHelper->getQueryParamName() ?>" autocomplete="off" placeholder="<?php echo $this->__('Search entire store here...');?>" value="<?php echo $catalogSearchHelper->getEscapedQueryText() ?>" class="input-search ">
+			    <span class="button-search fa fa-search"></span>
+			    <!--<button type="submit" title="<?php echo $this->__('Search') ?>" class="ves-button-search"></button>-->
+			    <div class="form-search-form"></div>
+			</div>
+			</div>
+		    </form>
+		</div>
+	    </div>
+	    <div>
+		<?php if ($noti_html) : ?>
+		    <div class="noti-top">
+			<?php echo $noti_html; ?>
+		    </div>
+		<?php endif;?>
+		<div class="cart-top">
+		    <div class="top-cart-contain">
+			<?php echo $this->getChildHtml('top_cart_mini') ?>
+		    </div> 
+		</div>
+		<?php echo $this->getChildHtml('top_account') ?>
+		<?php echo $this->getChildHtml('languages_dropdown') ?>
+	    </div>
+	</div>
+    </div>
+</div>
+<div class="fhs-header_mobile">
+    <div class="fhs-logo" style="text-align: center;">
+	<?php if ($is_homepage): ?>
+	    <div id="logo-theme" class="logo-store"><strong class="logo-title"><?php echo $this->getLogoAlt() ?></strong><a href="<?php echo $this->getUrl('') ?>" title="<?php echo $this->getLogoAlt() ?>" class="logo"><img src="<?php echo $this->getLogoSrcSecond() ?>" alt="<?php echo $this->getLogoAlt() ?>" /></a></div>
+	<?php else: ?>
+	    <a href="<?php echo $this->getUrl('') ?>" title="<?php echo $this->getLogoAlt() ?>" class="logo"><strong class="logo-title"><?php echo $this->getLogoAlt() ?></strong><img src="<?php echo $this->getLogoSrcSecond() ?>" alt="<?php echo $this->getLogoAlt() ?>" /></a>
+	<?php endif ?> 
+    </div>
+    <div class="fhs-header-top-bar">
+	<div id="ves-mainnav">				    
+	    <?php echo $vmegamenu_html; ?>  
+	</div>
+	<div class="search-mobile-header">
+	    <div class="ves-autosearch">
+		<?php echo $this->getChildHtml('topSearch') ?>
+	    </div> 
+	</div>
+	<div class="icons-mobile-header">
+		<?php if ($noti_mobile_html) : ?>
+		    <?php echo $noti_mobile_html; ?>
+		<?php endif;?>
+	    <?php echo $this->getChildHtml('top_cart_mini_mobile') ?>
+            <?php echo $this->getChildHtml('top_customer') ?>
+	</div>
+    </div>
+</div>
+<div class="header-breadcrumbs <?php if($is_homepage) : ?> background-menu-homepage <?php else : ?> background-menu-none-homepage <?php ;endif; ?> ">
+    <div class="container">
+        <div <?php if($is_homepage) : ?> class="row custom-menu-homepage" <?php else : ?> class="custom-menu-none-homepage no-padding-left"<?php ;endif; ?>>
+             <div class="col-md-3 hidden-max-width-992">
+                <?php if(!$mobile) :// echo $this->getChildHtml('verticalMenu') ?>
+                <?php echo $vmegamenu_html; ?>
+                 <?php endif; ?>
+            </div>
+            <?php if ($ma_banner = $this->getChildHtml('ma_banner')) : ?>
+                <div class="col-md-9">
+                    <?php echo $ma_banner ?>
+                </div>
+            <?php elseif(!$mobile) : ?>
+                <div class="col-md-9 hidden-max-width-992">
+                    <?php echo $top_menu_html; ?>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
+<script  type="text/javascript">
+	if(CUSTOMER_ID != ""){
+	    $jq('.fhs-header-top-bar').addClass('logined');
+	}
+	$jq(document).on('scroll',function () {
+	    calHeader();
+	});
+	function calHeader(){
+	    var point = getCurrentScroll();
+	    if(point >= 28){
+		$jq(".fhs-header_mobile .fhs-header-top-bar").addClass('holded');
+		$jq(".toolbar-header").addClass('toolbar-box-shadow');
+	    }else{
+		$jq(".fhs-header_mobile .fhs-header-top-bar").removeClass('holded');
+		$jq(".toolbar-header").removeClass('toolbar-box-shadow');
+	    }
+	}
+	function getCurrentScroll() {
+	    return window.pageYOffset || document.documentElement.scrollTop;
+	}
+	    
+	calHeader();
+	
+    <?php if(Mage::getStoreConfig('search_history_config/config/is_active') || Mage::getStoreConfig('search_history_config/keyword_hot/is_active')):?>
+	var is_in_search_form = false;
+	var is_focus_search_form = false;
+	var is_search_loaded = false;
+	
+	$jq('.input-search').focus(function() {
+	    if(!is_search_loaded){
+		getKeywords();
+	    }
+	    if(!fhs_account.isEmpty($jq('.form-search-form').html())){
+		$jq('.form-search-form').fadeIn(0);
+	    }
+	    is_focus_search_form = true;
+	  }).blur(function(){
+	    if(!is_in_search_form){
+		$jq('.form-search-form').fadeOut(0);
+	    }else{
+		$jq(this).focus();
+	    }
+	    is_focus_search_form = true;
+	  });
+	$jq('.form-search').hover(
+	    function(){
+		is_in_search_form = true;
+	    },
+	    function(){
+		is_in_search_form = false;
+	    }
+	);
+	function removeSearchHistory(){
+	    $jq('.form_search_history').remove();
+	    if($jq('.form-search-form .fhs_top_account_line').length >0){
+		$jq('.form-search-form .fhs_top_account_line').fadeOut(0);
+	    }
+	    
+	    if(fhs_account.isEmpty($jq('.form-search-form').html())){
+		$jq('.form-search-form').fadeOut(0);
+	    }
+	    $jq.ajax({
+		url: '/productviewed/index/removeSeachHistory',
+		method: 'post',
+		dataType : "json",
+		contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+		success: function (data) {
+		    if(data['success']){
+		    }
+		}
+	    });
+	}
+	function getKeywords(){
+	    is_search_loaded = true;
+	    $jq.ajax({
+		url: '/productviewed/index/getKeyword',
+		method: 'post',
+		dataType : "json",
+		contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+		success: function (data) {
+		    if(data['success']){
+			let data_form = '';
+			let history = '';
+			let keyword = '';
+			Object.keys(data['history']).forEach(function(key){
+			    history += "<span>"+data['history'][key]+"</span>";
+			});
+			if(!fhs_account.isEmpty(history)){
+			    let history_title = '<div class="form-search-form-title form_search_history"><div><span><img src="<?php echo $SKIN_URL."frontend/ma_vanese/fahasa/images/ico-searchhistory.svg";?>"/></span><span><?php echo $this->__("Search history");?></span></div><div onclick="removeSearchHistory();"><?php echo $this->__('Clear');?></div></div>';
+			    let history_content = '<div class="form-search-form-content form_search_history">'+history+'</div>';
+			    history = history_title+history_content;
+			}
+			
+			Object.keys(data['keyword']).forEach(function(key){
+			    let mark = '?';
+			    if(data['keyword'][key]['url'].indexOf("?") != -1){
+				mark = "&";
+			    }
+			    keyword += "<span><a href='"+data['keyword'][key]['url']+mark+"fhs_campaign=POPULAR_SEARCH'>"+data['keyword'][key]['value']+"</a></span>";
+			});
+			if(!fhs_account.isEmpty(keyword)){
+			    let keyword_title = '<div class="form-search-form-title"><span><img src="<?php echo $SKIN_URL."frontend/ma_vanese/fahasa/images/ico-searchtrending.svg";?>"/></span><span><?php echo $this->__("Keyword hot");?></span></div>';
+			    let keyword_content = '<div class="form-search-form-content">'+keyword+'</div>';
+			    keyword = keyword_title+keyword_content;
+			}
+			
+			if(!fhs_account.isEmpty(history) && !fhs_account.isEmpty(keyword)){
+			    data_form = history + "<div class='fhs_top_account_line'></div>" + keyword;
+			}else{
+			    data_form = history + keyword;
+			}
+			
+			
+			if(!fhs_account.isEmpty(data_form)){
+			    $jq('.form-search-form').html(data_form);
+			    $jq('.form-search-form-content.form_search_history span').click(function(){
+				let keyw = $jq(this).text();
+				$jq('.input-search').val(keyw);
+				$jq('.form-search').append('<input type="hidden" name="fhs_campaign" value="SEARCH_HISTORY">');
+				$jq(".button-search").click();
+			    });
+			    if(is_focus_search_form){
+				$jq('.form-search-form').fadeIn(0);
+			    }
+			}
+		    }
+		}
+	    });
+	}
+    <?php endif;?>
+</script>
+
+<?php if(Mage::getStoreConfig('productviewed_config/config/is_active')):?>
+    <script type="text/javascript" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS, true)."lib/product_viewed.js?q=".$queryfier; ?>"></script>
+<?php endif;?>

@@ -1,0 +1,99 @@
+<?php 
+/******************************************************
+ * Website: http://www.plazathemes.com
+*******************************************************/
+$queryfier = Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix');
+$skin_url = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true);
+$loading_icon_url = $skin_url.'frontend/ma_vanese/fahasa/images/ring_loader.gif';
+$fhs_campaign_homepage_text = 'fhs_campaign=homepageslider';
+?> 
+<?php if($this->getConfig('enabled')){ ?>	  <!-- start enable -->
+	<?php $cur_store = Mage::app()->getStore()->getId() ?>
+	  <!-- Swiper -->
+	  <div class="inivoslider swiper-container">
+		<div class="swiper-wrapper" width="920" height="420">
+		    <?php
+                        // Get data banner
+                        $slide = $this->getDataBanner7();
+                        $path = Mage::getBaseUrl('media');					
+                        $qty_Item = $this->getConfig('qty_item');
+                        if ($this->getConfig('auto')) { $auto = 'true'; } else { $auto = 'false'; }
+                        /* Get max item & qty item */
+                        if ($qty_Item > count($slide)) {
+                                $qty_Item = count($slide);
+                        }
+                    ?>
+                    <?php
+                        $i = 1;
+                        foreach($slide as $s) {
+                            if($i <= $qty_Item) {
+                                //Get images slide show
+                                $st1 = $s['image'];
+                                $p1 = strpos($st1,'banner7');
+                                $st2 = substr($st1,$p1+7);
+                                $p2 = strpos($st2,'"');
+                                $imag = substr($st2,0,$p2);
+                    ?>
+		    <div class="swiper-slide">
+			<a href="<?php if($s['link']) { echo $s['link'] .'?'.$fhs_campaign_homepage_text . $i ;} else{ echo '#';} ?>">
+			    <img class="swiper-lazy" src="<?php echo $path.'magentothem/banner7'.$imag;?>" alt="" title="#banner7-caption<?php echo $i; ?>"  />
+			    <div class="swiper-lazy-preloader"><img style='padding-bottom:0' src='<?php echo $loading_icon_url;?>'/></div>
+			</a>
+			<?php $i++; ?>
+		    </div>
+                    <?php
+                            }//end if
+                        } // end foreach
+                    ?>
+		</div>
+	    <!-- Add Arrows -->
+	    <div class="swiper-button swiper-button-prev swiper-btn-banner">
+	    </div>
+	    <div class="swiper-button swiper-button-next swiper-btn-banner">
+	    </div>
+	  </div>
+	  <!-- Initialize Swiper -->
+        <script type="text/javascript">       
+	    function resizeHeightImg(){
+		let cW = $jq('.inivoslider .swiper-wrapper').width();
+		let aW = $jq('.inivoslider .swiper-wrapper').attr('width');
+		let aH = $jq('.inivoslider .swiper-wrapper').attr('height');
+		let img_height = Math.round((cW/aW) * aH);
+		$jq('.inivoslider .swiper-wrapper').css("height", img_height);
+	    }
+	    resizeHeightImg();
+	    $jq(window).on('resize', function(){
+		resizeHeightImg();
+	    });
+            var inivoslider;
+            $jq(document).ready(function(){
+		inivoslider = new Swiper('.inivoslider', {
+		    autoplay: {
+			delay: 3000,
+		    },
+		    loop: true,
+		    preloadImages: false,
+		    lazy: true,
+		    navigation: {
+		      nextEl: '.swiper-button-next',
+		      prevEl: '.swiper-button-prev',
+		    },
+		});
+		
+		if(!isMobile()){
+		    $jq('.inivoslider').hover(function(){
+			inivoslider.autoplay.stop();
+			//$jq('.swiper-button').fadeIn(100);
+		    },
+		    function(){
+			inivoslider.autoplay.start();
+			//$jq('.swiper-button').fadeOut(100);
+		    });
+		}
+            });    
+	    function isMobile() {
+		try{ document.createEvent("TouchEvent"); return true; }
+		catch(e){ return false; }
+	    }
+        </script>	
+<?php } ?> <!-- end enable -->

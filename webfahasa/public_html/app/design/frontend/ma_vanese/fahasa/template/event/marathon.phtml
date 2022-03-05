@@ -1,0 +1,306 @@
+<?php
+$media_url = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . "event/";
+$rank_avatar_1 = $media_url. Mage::getStoreConfig('event_marathon/config/rank_avatar_1');
+$rank_avatar_2 = $media_url. Mage::getStoreConfig('event_marathon/config/rank_avatar_2');
+$rank_avatar_3 = $media_url. Mage::getStoreConfig('event_marathon/config/rank_avatar_3');
+
+?>
+<style type="text/css">
+    
+    .event-marathon{
+        border: 1px solid #e6e6e6;background-color: #fff;
+        margin-top: 15px;
+    }
+    
+    .event-marathon-header{
+        border-bottom: 1px solid #e6e6e6;
+        padding: 10px;
+    }
+    
+    .event-marathon-body{
+        margin: 15px;
+    }
+    
+    #event-marathon-timer{
+        margin: 20px auto;
+        padding: 15px;
+        text-align: center;
+        font-weight: bold;
+        font-size: 16px;
+        max-width: 320px;
+        margin-bottom: 25px;
+    }
+    
+    .event-marathon-body table{
+        margin: 0;
+        border: none !important;
+    }
+    
+    .event-marathon table td{
+        border: none !important;
+    }
+    
+    .event-marathon table tr.even{
+        background-color: #eee;
+    }
+    
+    .event-marathon-rank {
+        text-align:center;
+    }
+    
+    .event-marathon-rank-number{
+        position: relative;
+        height: 100px;
+        margin: 0 auto;
+        width: 100px;
+    }
+    
+    .event-marathon-rank-number.sub{
+        width: 100px;
+    }
+    
+    .event-marathon-rank .number{
+        font-size: 55px;
+        font-weight: bold;
+        text-align: center;
+        vertical-align: middle;
+        color: #fff;
+    }
+    
+    .event-marathon-rank .rank-sub{
+        width: 90px;
+        height: 90px;
+        overflow: hidden;
+    }
+    
+    .event-marathon-rank .number.rank-sub{
+        font-size: 40px;
+        width: 90px;
+        height: 90px;
+        padding-top: 20px;
+    }
+    
+    .event-marathon-rank .rank-main{
+        width: 100px;
+        height: 100px;
+    }
+    
+    .event-marathon-rank .number.rank-main{
+        width: 90px;
+        height: 90px;
+        margin-top: 5px;
+        margin-left: 5px;
+    }
+    
+    .event-marathon-rank-image-sub{
+        margin-top: -90px;
+    }
+    
+    .event-marathon-rank-image-main{
+        margin-top: -100px;
+    }
+    
+    .event-marathon-rank-image{
+        float: right;
+    }
+    
+    .event-marathon-rank .name{
+        font-size: 16px;
+        color: #fff;
+        font-weight: bold;
+        line-height: 23px;
+    }
+    
+    .event-marathon-rank .phone{
+        font-size: 16px;
+        color: #fff;
+        font-weight: bold;
+    }    
+    
+    .event-marathon-rank .total{
+        font-size: 16px;
+        color: #fff;
+        font-weight: bold;
+    }
+    
+    #event-marathon-timer .number{
+        margin: 10px;
+        border: 2px solid #fff;
+        padding: 5px;
+        font-size: 19px;
+        color: #fff;
+    }
+    
+    #event-marathon-last-update{
+        float: right;
+        margin: 10px;
+    }
+    
+    #event-marathon-me{
+        margin: 10px 0px;
+        font-size: 16px;
+        padding: 15px;
+        background-color: #73b4e2;
+        color: #fff;
+    }
+</style>
+
+<div class="event-marathon">
+    <div class="event-marathon-header">
+        <h1 style="margin-left: 10px;font-weight: bold;color: #f90;">MARATHON</h1>
+    </div>
+    <div class="row event-marathon-body">
+        <div class="col-md-6" style="background-image: linear-gradient(to right, #ffb100 , #ffc800);">
+            <div class="row" style="padding-top: 32px;">
+                <div id="event-marathon-rank-2" class="col-md-4 col-xs-4 event-marathon-rank" style="min-height:180px; padding-left: 5px; padding-right: 5px;">
+                    <div class="event-marathon-rank-number sub">
+                        <div class="event-marathon-rank rank-sub">
+                            <div class="event-marathon-rank number rank-sub">2</div>
+                            <?php if($rank_avatar_2): ?>
+                            <img width="90" class="event-marathon-rank-image event-marathon-rank-image-sub" src="<?php echo $rank_avatar_2; ?>"/>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    <h4 class="name"></h4>
+                    <div class="phone"></div>
+                    <div class="total"></div>
+                </div>
+                <div id="event-marathon-rank-1" class="col-md-4 col-xs-4 event-marathon-rank" style="padding-left: 5px; padding-right: 5px;">
+                    <div class="event-marathon-rank-number">
+                        <div class="event-marathon-rank rank-main">
+                            <div class="event-marathon-rank number rank-main">1</div>
+                            <?php if($rank_avatar_1): ?>
+                            <img width="100" height="100" style="height:105px" class="event-marathon-rank-image event-marathon-rank-image-main" src="<?php echo $rank_avatar_1; ?>"/>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    <h4 class="name"></h4>
+                    <div class="phone"></div>
+                    <div class="total"></div>
+                </div>
+                <div id="event-marathon-rank-3" class="col-md-4 col-xs-4 event-marathon-rank" style="padding-left: 5px; padding-right: 5px;">
+                    <div class="event-marathon-rank-number sub">
+                        <div class="event-marathon-rank rank-sub">
+                            <div class="event-marathon-rank number rank-sub">3</div>
+                            <?php if($rank_avatar_3): ?>
+                            <img width="90" class="event-marathon-rank-image event-marathon-rank-image-sub" src="<?php echo $rank_avatar_3; ?>"/>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    <h4 class="name"></h4>
+                    <div class="phone"></div>
+                    <div class="total"></div>
+                </div>
+            </div>
+            <div id="event-marathon-timer">
+                <div style="color: #fff;">ĐẾM NGƯỢC ĐẾN KẾT QUẢ TOP10</div>
+                <div class="number">
+                    <span class="day">0</span>
+                    <span>Ngày</span>
+                    <span class="hour">00</span>
+                    <span>:</span>
+                    <span class="minute">00</span>
+                    <span>:</span>
+                    <span class="second">00</span>
+                    <span id="event-marathon-timer-tick"></span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div>
+                <span id="event-marathon-last-update">Cập Nhật Lúc: <span class="time"></span></span>
+                <h2 style="color: #f28b03;font-weight: bold;">Bảng Xếp Hạng</h2>
+            </div>
+            <table style="font-weight: bold;font-size: 15px;">
+                <tbody id="event-marathon-list">
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td> 
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div id="event-marathon-me" style="display:none">
+                Hiện tại bạn đang ở vị trí <span id="event-marathon-me-rank">101</span> và có <span id="event-marathon-me-total">3</span> đơn hàng hoàn tất.
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    const EVENT_MARATHON_URL = "/event/index/marathon";
+    const Text_Label = {
+        'don_hang': "<?php echo $this->__('don_hang') ?>"
+    }
+    
+    $jq.ajax({
+        url: EVENT_MARATHON_URL,
+        method: 'post',
+        success: function (data) {
+            if(data.result){
+                $list = $jq("#event-marathon-list");
+                $list.empty();
+                
+                $jq("#event-marathon-last-update .time").html(data['data']['update_at']);
+                
+                let new_list = data['data']['new_list'];
+                
+                let end_date = data['data']['complete_date'];
+                
+                for(let i=3; i < new_list.length; i++){
+                    $item_html = $jq("<tr><td>" + (i+1) + "</td><td>" + new_list[i]['name'] + "</td><td>" 
+                            + new_list[i]['phone'] + "</td><td> " 
+                            + new_list[i]['total_orders'] + " " + Text_Label['don_hang'] + "</td>/tr>");
+                    
+                    if(i%2==1){
+                        $item_html.addClass('even');
+                    }
+                    
+                    $list.append($item_html);
+                }
+                
+                $rank_1 = $jq("#event-marathon-rank-1");
+                $rank_1.find("h4.name").text(new_list[0]['name']);
+                $rank_1.find("div.phone").text(new_list[0]['phone']);
+                $rank_1.find("div.total").text(new_list[0]['total_orders'] + " " + Text_Label['don_hang']);
+                
+                $rank_2 = $jq("#event-marathon-rank-2");
+                $rank_2.find("h4.name").text(new_list[1]['name']);
+                $rank_2.find("div.phone").text(new_list[1]['phone']);
+                $rank_2.find("div.total").text(new_list[1]['total_orders'] + " " + Text_Label['don_hang']);
+                
+                $rank_3 = $jq("#event-marathon-rank-3");
+                $rank_3.find("h4.name").text(new_list[2]['name']);
+                $rank_3.find("div.phone").text(new_list[2]['phone']);
+                $rank_3.find("div.total").text(new_list[2]['total_orders'] + " " + Text_Label['don_hang']);
+                
+                $day_label = $jq("#event-marathon-timer .day");
+                $hour_label = $jq("#event-marathon-timer .hour");
+                $minute_label = $jq("#event-marathon-timer .minute");
+                $second_label = $jq("#event-marathon-timer .second");
+                
+                setInterval(function(){
+                    let vn_time_moment = moment(new Date()).utcOffset(7);
+                    let vn_time_formated = vn_time_moment.format("YYYY/MM/DD HH:mm:ss");
+                    let time = Helper.substractDates(vn_time_formated, end_date);
+                    
+                    $day_label.text(time.days);
+                    $hour_label.text(Helper.zeroPad(time.hours, 2));
+                    $minute_label.text(Helper.zeroPad(time.minutes, 2));
+                    $second_label.text(Helper.zeroPad(time.seconds, 2));
+                }, 1000);
+                
+                /// Logged In Customer
+                if(data['customer']){
+                    $jq("#event-marathon-me").show();
+                    let customer_data = JSON.parse(data['customer']);
+                    $jq("#event-marathon-me-rank").html(parseInt(customer_data['rank']) + 1);
+                    $jq("#event-marathon-me-total").html(customer_data['total_orders']);
+                }
+            }
+        }
+    });
+    
+</script>

@@ -1,0 +1,37 @@
+<?php if ('sales_order' == Mage::app()->getRequest()->getControllerName() ): ?>
+<div class="entry-edit">
+    <div class="entry-edit-head">
+        <h4 class="icon-head head-fieldsmanager-comment">Thông Tin Bán Hàng</h4>
+    </div>
+    <div class="fieldset">
+        <form action="<?php echo $this->getFormUrl(); ?>" method="post" id="ord_form">
+            <input type="hidden" name="form_key" value="<?php echo $this->getFormKey(); ?>" />
+            <input type="hidden" name="token" value="<?php echo $this->getToken(); ?>" />  
+            <table cellspacing="17">
+                <tr>
+                    <td class="label"><label for="don_vi_ban_hang">Đơn Vị Bán Hàng</label></td>
+                    <td class="value">                                    
+                        <input type="text" class="input-text" name="don_vi_ban_hang" value="<?php echo $this->getDonViBanHang(); ?>" style="width:150px; float:left; display:inline;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label"><label for="don_vi_giao_hang">Đơn Vị Giao Hàng</label></td>
+                    <td class="value">
+                        <input type="text" class="input-text" name="don_vi_giao_hang" value="<?php echo $this->getDonViGiaoHang(); ?>" style="width:150px; float:left; display:inline;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td style="float: right">
+                        <button onclick="editForm.submit()">Update</button>  
+                    </td>            
+                </tr>
+            </table>
+        </form>
+        <script type="text/javascript">
+            editForm = new varienForm('ord_form');
+        </script>
+    </div>
+</div>
+
+<?php endif; ?>

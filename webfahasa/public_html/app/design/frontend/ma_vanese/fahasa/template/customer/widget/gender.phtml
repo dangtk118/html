@@ -1,0 +1,10 @@
+<div style="float: left; line-height: 30px;"><?php echo $this->__('Gender') ?></div>
+<div class="input-box dropdownfhs" style="width: 100px !important; display: inline-block; clear: none; float: left; margin-left: 10px;">
+    <select id="<?php echo $this->getFieldId('gender') ?>" name="<?php echo $this->getFieldName('gender') ?>" title="<?php echo $this->__('Gender') ?>"<?php if ($this->isRequired()): ?> class="validate-select"<?php endif; ?> <?php echo $this->getFieldParams() ?>>
+        <?php $options = Mage::getResourceSingleton('customer/customer')->getAttribute('gender')->getSource()->getAllOptions(); ?>
+        <?php $value = $_GET['gender']; ?>
+        <?php foreach ($options as $option): ?>
+            <option value="<?php echo $option['value'] ?>"<?php if ($option['value'] == $value) echo ' selected="selected"' ?>><?php echo $this->__($option['label']) ?></option>
+        <?php endforeach; ?>
+    </select>
+</div>

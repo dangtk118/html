@@ -1,0 +1,266 @@
+<?php if(MagE::getStoreConfig('event_source/config/is_active')):?>
+<?php
+    $product_helper = Mage::helper('fahasa_catalog/product');
+    $skin_url = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true);
+    $queryfier = Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix');
+    
+    $block_id = "block_event_source".rand(100000,999999);
+    
+    $affId = $product_helper->xss_clean($this->getRequest()->getParam('affId', ''));
+    $areaId = $product_helper->xss_clean($this->getRequest()->getParam('areaId', ''));
+    $levelId = $product_helper->xss_clean($this->getRequest()->getParam('levelId', ''));
+    
+    $TABSLIDER_SCRIPT = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS, true)
+        ."lib/tabslider.js?q="
+        .Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix'); 
+    $TABSLIDER_SCRIPT = '<script type="text/javascript" src="'.$TABSLIDER_SCRIPT.'"></script>';
+?>
+
+<style>
+    .selectbox_event_source_v2{
+	margin-top: 15px;
+	padding: 28px;
+	display: flex;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	flex-direction:column;
+	align-items: center;
+	-webkit-align-items: center;
+	font-family: 'Nunito Sans';
+	border-radius: 24px;
+	-moz-border-radius: 24px;
+	-webkit-border-radius: 24px;
+    }
+    .selectbox_event_source_v2 > div:nth-of-type(1){
+	display: flex;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	font-size: 2.16em;
+	text-transform: uppercase;
+	font-weight: 700;
+	text-align: center;
+    }
+    .selectbox_event_source_v2 > div:nth-of-type(2){
+	width: 100%;
+	display: flex;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	flex-direction:row;
+	align-items: center;
+	-webkit-align-items: center;
+    }
+    .selectbox_event_source_v2 > div:nth-of-type(2) > div{
+	padding: 28px 12px 0 12px;
+	width: calc(100% / 3);
+	display: flex;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	flex-direction:column;
+	align-items: flex-start;
+	-webkit-align-items: flex-start;
+	-webkit-justify-content: flex-start;
+	justify-content: flex-start;
+    }
+    .selectbox_event_source_v2_title{
+	font-size: 1.25em;
+	text-transform: uppercase;
+	font-weight: 700;
+	white-space: nowrap;
+    }
+    .selectbox_event_source_v2_content{
+	margin-top:12px;
+	width: 100%;
+	height: 48px;
+    }
+    
+    .selectbox_event_source_v2 .select2-selection__rendered{
+	font-size: 1.2em;
+    }
+    .selectbox_event_source_v2 .select2-selection{
+	height: 48px;
+	border-radius: 12px;
+	-moz-border-radius: 12px;
+	-webkit-border-radius: 12px;
+    }
+    .selectbox_event_source_v2 .select2-container--default .select2-selection--single .select2-selection__clear{
+	font-size: 1.5em;
+    }
+    .selectbox_event_source_v2 .select2-container--default .select2-selection--single .select2-selection__clear > span{
+	height: 28px;
+	width: 28px;
+    }
+    .selectbox_event_source_v2 .select2-container .select2-selection--single .select2-selection__rendered{
+	padding-left: 32px;
+	padding-right: 45px;
+    }
+    .selectbox_event_source_v2 .select2-container--default.select2-container--open.select2-container--below .select2-selection--single, 
+    .selectbox_event_source_v2 .select2-container--default.select2-container--open.select2-container--below .select2-selection--multiple{
+	border-bottom-left-radius: 12px;
+	border-bottom-right-radius: 12px;
+    }
+    .select2-container--default.select2-container--open.select2-container--above .select2-selection--single,
+    .select2-container--default.select2-container--open.select2-container--above .select2-selection--multiple{
+	border-top-left-radius: 12px;
+	border-top-right-radius: 12px;
+    }
+    
+    .selectbox_event_source_v2 .select2-selection__placeholder{
+	left: 32px;
+	font-size: 1.2em;
+    }
+    .selectbox_event_source_v2 .select2-container--default .select2-selection--single .select2-selection__arrow{
+	width: 21px;
+	right: 24px;
+    }
+    .selectbox_event_source_v2 .select2-container--default .select2-selection--single .select2-selection__arrow b{
+	border-width: 10px 10px 0 10px;
+    }
+    .select2-dropdown{
+	padding: 16px;
+	border-radius: 12px;
+	-moz-border-radius: 12px;
+	-webkit-border-radius: 12px;
+    }
+    .select2-dropdown--above{
+	margin-top: -8px;
+    }
+    .select2-dropdown--below{
+	margin-top: 8px;
+    }
+    .select2-container--open .select2-dropdown--above{
+	border-bottom-left-radius: 12px;
+	border-bottom-right-radius: 12px;
+    }
+    .select2-container--open .select2-dropdown--below{
+	border-top-left-radius: 12px;
+	border-top-right-radius: 12px;
+    }
+    .select2-container--default .select2-search--dropdown .select2-search__field{
+	border-radius: 4px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+    }
+    @media screen and (max-width: 992px){
+	.selectbox_event_source_v2 > div:nth-of-type(1){
+	    font-size: 1.6em;
+	}
+	.selectbox_event_source_v2_title{
+	    font-size: 1.18em;
+	}
+	.selectbox_event_source_v2 > div:nth-of-type(2){
+	    flex-direction:column;
+	    -webkit-justify-content: flex-start;
+	    justify-content: flex-start;
+	}
+	.selectbox_event_source_v2 > div:nth-of-type(2) > div{
+	    width: 100%;
+	}
+    }
+    @media screen and (max-width: 500px){
+	.selectbox_event_source_v2{
+	    padding: 24px 16px;
+	}
+	.selectbox_event_source_v2 > div:nth-of-type(1){
+	    font-size: 1.4em;
+	}
+	.selectbox_event_source_v2 > div:nth-of-type(2) > div{
+	    padding: 24px 0 0 0;
+	}
+	.selectbox_event_source_v2_title{
+	    font-size: 1.08em;
+	}
+	.selectbox_event_source_v2_content{
+	    margin-top: 8px;
+	}
+	.selectbox_event_source_v2 .select2-selection__rendered,
+	.selectbox_event_source_v2 .select2-selection__placeholder{
+	    font-size: 1.1em;
+	}
+	.selectbox_event_source_v2 .select2-container--default .select2-selection--single .select2-selection__arrow b{
+	    border-width: 8px 8px 0 8px;
+	}
+	.selectbox_event_source_v2 .select2-selection{
+	    height: 40px;
+	}
+	.selectbox_event_source_v2 .select2-container .select2-selection--single .select2-selection__rendered{
+	    padding-left: 16px;
+	    padding-right: 32px;
+	}
+	.selectbox_event_source_v2 .select2-container--default .select2-selection--single .select2-selection__arrow{
+	    width: 16px;
+	    right: 16px;
+	}
+	.selectbox_event_source_v2 .select2-container--default .select2-selection--single .select2-selection__clear > span{
+	    height: 28px;
+	    width: 28px;
+	}
+    }
+</style>
+<div class="clear"></div>
+    <div id="<?php echo $block_id."_select";?>" class="selectbox_event_source_v2" style="display:none;">
+	<div id="<?php echo $block_id."_title_selection_block";?>">Điền thông tin để xem sản phẩm phù hợp dành cho bạn</div>
+	<div>
+	    <div>
+		<div id="<?php echo $block_id."_title_area";?>" class="selectbox_event_source_v2_title"></div>
+		<div class="selectbox_event_source_v2_content">
+		    <select id="<?php echo $block_id."_selectbox_area";?>" class="form-control">
+		    </select>
+		</div>
+	    </div>
+
+	    <div>
+		<div id="<?php echo $block_id."_title_level";?>" class="selectbox_event_source_v2_title"></div>
+		<div class="selectbox_event_source_v2_content">
+		    <select id="<?php echo $block_id."_selectbox_level";?>" class="form-control">
+		    </select>
+		</div>
+	    </div>
+
+	    <div>
+		<div id="<?php echo $block_id."_title_checkout";?>" class="selectbox_event_source_v2_title"></div>
+		<div class="selectbox_event_source_v2_content">
+		    <select id="<?php echo $block_id."_selectbox_checkout";?>" class="form-control">
+		    </select>
+		</div>
+	    </div>
+	</div>
+    </div>
+ 
+<div id="<?php echo $block_id; ?>" style="display:none; margin-top: 15px;" class="page-empty-banner col-lg-12 col-md-12 col-sm-12">
+    <div class="col-main">
+             <div class="container">
+                <div class="container-inner">
+		<div style="justify-content: center;">
+		    <!-- Begin Content -->
+		    <div class="clear"></div>
+		    <div class="fhs-product-grid loading">
+			<div id="<?php echo $block_id.'_header';?>" class="fhs-product-grid-title-icon" style="display:none; background-color: #fff;"><span id="<?php echo $block_id.'_title';?>"></span></div>
+			<div class="fhs-product-slider-content">
+			    <div id="<?php echo $block_id.'_slider';?>" class="swiper-container">
+				<ul id="<?php echo $block_id.'_list';?>" class="swiper-wrapper fhs-product-slider-list"></ul>
+			    </div>
+			    <div class="fhs-tab-slider-prev position-tab-prev swiper-button-prev" ></div>
+			    <div class="fhs-tab-slider-next position-tab-next swiper-button-next" ></div>
+			    <div class="clear fhs_bar_bottom mobile_link">
+				<a id="<?php echo $block_id."_view_more";?>" href="/"><?php echo $this->__('View more'); ?></a>
+			    </div>
+			</div>
+		    </div>
+		    <!-- End Content -->
+		</div>
+	    </div>
+	</div>
+    </div>
+</div>
+<div id="<?php echo $block_id. "_static_block"; ?>" style="display:none;" class="page-empty-banner col-lg-12 col-md-12 col-sm-12">
+</div>
+    <script type="text/javascript" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS, true)."lib/event_source.js?q=".$queryfier; ?>"></script>
+    <script type="text/javascript">
+	var fhs_eventsource = new EventSource();
+	fhs_eventsource.init_V2('<?php echo $block_id;?>', <?php echo json_encode($affId);?>, <?php echo json_encode($areaId);?>, <?php echo json_encode($levelId);?>, <?php echo json_encode($TABSLIDER_SCRIPT);?>);
+    </script>
+<?php endif;?>

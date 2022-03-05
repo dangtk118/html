@@ -1,0 +1,263 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+/**
+ * @var Mage_Page_Block_Html_Header $this
+ */
+?>
+<?php if (Mage::getStoreConfig('asidebar/general/enable') == 1): ?>
+<?php 
+    $productviewed_enable = Mage::getStoreConfig('productviewed_config/config/is_active');
+?>
+<?php 
+    $skin_url = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true);
+    $queryfier = Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix');
+?>
+<!-- Asidebar Begin-->
+    <style type="text/css">
+	.fhs-asidebar{
+	    position: fixed;
+	    top: 0;
+	    right: 0;
+	    bottom: 0;
+	    z-index: 999;
+	    display: flex;
+	    display: -webkit-box;
+	    display: -ms-flexbox;
+	    display: -webkit-flex;
+	    flex-direction:row;
+	    -webkit-box-pack: center;
+	    -ms-flex-pack: center;
+	    -webkit-box-align: center;
+	    -ms-flex-align: center;
+	    align-items: flex-start;
+	    -webkit-align-items: flex-start;
+	    -webkit-justify-content: flex-start;
+	    justify-content: flex-start;
+	}
+	.fhs-asidebar-tab{
+	    position: absolute;
+	    width: 40px;
+	    top: 22vh;
+	    left: 0;
+	    z-index: 1;
+	    -webkit-transform: translate(-100%, 0);
+	    -ms-transform: translate(-100%, 0);
+	    -moz-transform: translate(-100%, 0);
+	    transform: translate(-100%, 0);
+	}
+	.fhs-asidebar-tab-items{
+	    padding: 0 !important;
+	}
+	.fhs-asidebar-tab-items > li{
+	    display: flex;
+	    display: -webkit-box;
+	    display: -ms-flexbox;
+	    display: -webkit-flex;
+	    flex-direction:column;
+	    -webkit-box-pack: center;
+	    -ms-flex-pack: center;
+	    -webkit-box-align: center;
+	    -ms-flex-align: center;
+	    align-items: center;
+	    -webkit-align-items: center;
+	    -webkit-justify-content: flex-start;
+	    justify-content: flex-start;
+	    background-color: #6c6c78;
+	    padding: 8px 0;
+	    position: relative;
+	    cursor: pointer;
+	    user-select: none;
+	}
+	.fhs-asidebar-tab-items > li > .title{
+	    overflow: hidden;
+	    -webkit-transform: rotate(90deg);
+	    -moz-transform: rotate(90deg);
+	    -ms-transform: rotate(90deg);
+	    -o-transform: rotate(90deg);
+	    transform: rotate(90deg);
+	    color: white;
+	    width: 150px;
+	    margin-top: 69px;
+	}
+	.fhs-asidebar-tab-items > li > .icon{
+	    padding: 8px 0;
+	}
+	.fhs-asidebar-tab-items > li.productviewed{
+	    height: 175px;
+	}
+	.fhs-asidebar-tab-items > li:hover{
+	    background-color: #F39801;
+	}
+	.fhs-asidebar-content{
+	    width: 0;
+	    -webkit-transition: all .1s;
+	    transition: all .1s;
+	    background-color: white;
+	    height: 100%;
+	    overflow: hidden;
+	}
+	.fhs-asidebar.active > .fhs-asidebar-content{
+	    -webkit-box-shadow: 0 0 10px 2px #6c6c78;
+	    -moz-box-shadow: 0 0 10px 2px #6c6c78;
+	    box-shadow: 0 0 10px 2px #6c6c78;
+	    width: 400px;
+	}
+	
+	.fhs-asidebar-content-productviewed{
+	    height: 100%;
+	}
+	.fhs-asidebar-content-productviewed .fhs-product-grid-content{
+	    height: calc(100% - 80px);
+	    overflow-y: scroll;
+	    align-items: flex-start !important;
+	    -webkit-align-items: flex-start !important;
+	    -webkit-justify-content: flex-start !important;
+	    justify-content: flex-start !important;
+	}
+	.fhs-asidebar-content-productviewed-bottom{
+	    height: 80px;
+	    display: flex;
+	    display: -webkit-box;
+	    display: -ms-flexbox;
+	    display: -webkit-flex;
+	    flex-direction:column;
+	    -webkit-box-pack: center;
+	    -ms-flex-pack: center;
+	    -webkit-box-align: center;
+	    -ms-flex-align: center;
+	    align-items: center;
+	    -webkit-align-items: center;
+	    -webkit-justify-content: center;
+	    justify-content: center;
+	}
+	.fhs-asidebar-content-productviewed-bottom button{
+	    display: flex;
+	    justify-content: center;
+	    color: #C92127;
+	    border: 2px solid #C92127;
+	    padding: 6px;
+	    width: 160px;
+	    font-size: 1em;
+	    font-weight: 700;
+	    transition: all 0.3s;
+	    box-shadow: 0px 4px 6px hsl(0, 0%, 90%);
+	    -moz-box-shadow: 0px 4px 6px hsl(0, 0%, 90%);
+	    -webkit-box-shadow: 0px 4px 6px hsl(0, 0%, 90%);
+	    border-radius: 8px;
+	    -moz-border-radius: 8px;
+	    -webkit-border-radius: 8px;
+	    text-transform: uppercase;
+	    transition: all 0.3s;
+	}
+	.fhs-asidebar-content-productviewed-bottom button:hover {
+	    box-shadow: 0px 6px 8px hsl(0, 0%, 90%);
+	    -moz-box-shadow: 0px 6px 8px hsl(0, 0%, 90%);
+	    -webkit-box-shadow: 0px 6px 8px hsl(0, 0%, 90%);
+	    transform: scale(1.03);
+	}
+	
+	/* width */
+	.fhs-asidebar-content-productviewed .fhs-product-grid-content::-webkit-scrollbar {
+	  width: 18px;
+	}
+
+	/* Track */
+	.fhs-asidebar-content-productviewed .fhs-product-grid-content::-webkit-scrollbar-track {
+	    background-color:#fff;
+	}
+
+	/* Handle */
+	.fhs-asidebar-content-productviewed .fhs-product-grid-content::-webkit-scrollbar-thumb {
+	  background: #fed89a; 
+	  border-radius: 10px;
+	  border:4px solid #fff;
+	}
+
+	/* Handle on hover */
+	.fhs-asidebar-content-productviewed .fhs-product-grid-content::-webkit-scrollbar-thumb:hover {
+	  background: #ffe2b3; 
+	}
+	
+	@media screen and (max-width: 1000px){
+	    .fhs-asidebar{
+		display: none;
+	    }
+	}
+    </style>
+    <div class="fhs-asidebar">
+	<div class="fhs-asidebar-tab">
+	    <ul class="fhs-asidebar-tab-items">
+	    <?php if($productviewed_enable):?>
+		<li class="productviewed">
+		    <span class="icon"><img src="<?php echo $skin_url.'frontend/ma_vanese/fahasa/images/ico_daxem.svg?q='.$queryfier;?>"/></span>
+		    <span class="title"><?php echo $this->__('Product viewed');?></span>
+		</li>
+	    <?php endif; ?>
+	    </ul>
+	</div>
+	<div class="fhs-asidebar-content">
+	    <?php if($productviewed_enable):?>
+		<div class="fhs-asidebar-content-item fhs-asidebar-content-productviewed">
+		    <div class="fhs-product-grid-content">
+			<ul id="products_viewed_aside" class="fhs-product-grid-list"></ul>
+		    </div>
+		    <div class="fhs-asidebar-content-productviewed-bottom">
+			<a href="/productviewed">
+			    <button type="button" is_buynow="true" class="">
+				<span><?php echo $this->__('View more');?></span>
+			    </button>
+			</a>
+		    </div>
+		</div>
+	    <?php endif; ?>
+	</div>
+    </div>
+    <?php if($productviewed_enable):?>
+	<?php $slider_limit = Mage::getStoreConfig('productviewed_config/config/slider_limit');?>
+	
+    <script type="text/javascript">
+	var product_viewed_asidebar = new ProductViewed();
+    </script>
+    <?php endif;?>
+    <script type="text/javascript">
+	$jq('.fhs-asidebar-tab-items li').click(function(){
+	    if($jq(".fhs-asidebar").hasClass('active')){
+		$jq(".fhs-asidebar").removeClass('active');
+	    }else{
+		$jq(".fhs-asidebar").addClass('active');
+		<?php if($productviewed_enable):?>
+		    product_viewed_asidebar.initProductViewedPage(false, <?php echo $slider_limit;?>);
+		<?php endif;?>
+	    }
+	});
+	$jq(document).on('click', function (e) {
+	    if ($jq(e.target).closest(".fhs-asidebar").length === 0) {
+		$jq(".fhs-asidebar").removeClass('active');
+	    }
+	});
+    </script>
+<!-- Asidebar End-->
+<?php endif; ?>

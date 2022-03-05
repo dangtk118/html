@@ -1,0 +1,87 @@
+<div id="birthdaycake-block" class="col-md-12" style="text-align: center;">
+    <div id="birthdaycake">
+        <div id="cake" style=" margin: auto;cursor: url('<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . "wysiwyg/Thang-8-2018/Event/"; ?>Birthday-cake-knife.png'), auto;">
+            <div>
+                <img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . "wysiwyg/Thang-8-2018/Event/Banh_2.gif" ?>" alt="">
+            </div>
+        </div>
+    </div>
+    <div class="youama-noti-window-sucess">
+        <div class="youama-window-outside">
+            <span class="close lg-close">×</span>
+            <div class="youama-window-inside">
+                <div class="youama-window-title">
+                    <h3 class="error"></h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+        jQuery("div.youama-noti-window-sucess .close").click(function () {
+            jQuery("div.youama-noti-window-sucess").fadeOut();
+            jQuery(".youama-ajaxlogin-cover").fadeOut();
+        });
+        new Ajax.Request(
+                '<?php echo $this->getUrl('event/index/check', array('_secure' => true)) ?>', {
+                    method: 'post',
+                    onLoading: function () {
+                        jQuery('.youama-ajaxlogin-loader').fadeIn();
+                    },
+                    onLoaded: function () {
+                        jQuery('.youama-ajaxlogin-loader').fadeOut();
+                    },
+                    onSuccess: function (transport) {
+                        if (200 == transport.status) {
+                            var valueGift = transport.responseText;
+                            if (valueGift != "" && valueGift != "guest") {
+                                $jq("#birthdaycake").html(valueGift);
+                                var html = '<div class="played"><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . "wysiwyg/Thang-8-2018/Event/"; ?>' + valueGift + '.png" alt=""></div>';
+                                jQuery("#birthdaycake").html(html);
+                            }
+                        }
+                    }
+                }
+        );
+    });
+    $jq("#cake").click(function () {
+        jQuery('div.youama-ajaxlogin-cover').fadeIn();
+        new Ajax.Request(
+                '<?php echo $this->getUrl('event/index/postRandom', array('_secure' => true)) ?>', {
+                    method: 'post',
+                    onLoading: function () {
+                        jQuery('.youama-ajaxlogin-loader').fadeIn();
+                    },
+                    onLoaded: function () {
+                        jQuery('.youama-ajaxlogin-loader').fadeOut();
+                    },
+                    onSuccess: function (transport) {
+                        if (200 == transport.status) {
+                            var valueGift = transport.responseText;
+                            switch (valueGift) {
+                                case "NO_GIFT":
+                                    jQuery('div.youama-noti-window-sucess h3.error').html("<div style='text-align:center;'><span style='font-size: 20px;'>Bánh đã được cắt hết.</span> <br><span style='font-size: 16px;'>Hẹn bạn đến sớm vào ngày mai nhé!</span></div>");
+                                    jQuery('div.youama-noti-window-sucess').fadeIn();
+                                    break;
+                                case "ERR_NEED_LOGIN":
+                                    jQuery(".youama-login-window").fadeIn();
+                                    break;
+                                default:
+                                    var html = '<div><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . "wysiwyg/Thang-8-2018/Event/"; ?>' + valueGift + '.png" alt=""></div>';
+                                    var html1 = '<div><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . "wysiwyg/Thang-8-2018/Event/"; ?>Birthday-cake-cut.png" alt=""></div>';
+                                    jQuery('div.youama-noti-window-sucess h3.error').html(html);
+                                    jQuery('div.youama-noti-window-sucess').fadeIn();
+                                    jQuery("#birthdaycake").html(html1);
+                                    break;
+                            }
+                        } else {
+                            jQuery('div.youama-noti-window-sucess h3.error').html("");
+                            jQuery('div.youama-noti-window-sucess h3.error').html("<div style='text-align:center;font-size: 20px;'>Không thể cắt bánh lúc này. <br>Mời bạn quay lại sau nhé!</div>");
+                            jQuery('div.youama-noti-window-sucess').fadeIn();
+                        }
+                    }
+                }
+        );
+    });
+</script>

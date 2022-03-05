@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<config>
+    <tabs>
+        <checkoutmessage translate="label">
+            <label>Checkout Message</label>
+            <sort_order>150</sort_order>
+        </checkoutmessage>
+    </tabs>
+    <sections>
+        <checkoutmessage translate="label" module="adminhtml">
+            <label>Checkout Message</label>
+            <tab>checkoutmessage</tab>
+            <sort_order>10</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <checkoutmessage_group translate="label comment">
+                    <label>checkoutmessage group</label>
+                    <sort_order>50</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <link1 translate="label comment">
+                            <label>link 1</label>
+                            <comment>Ex: new-york-times-bestsellers</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </link1>
+                    </fields>
+                </checkoutmessage_group>
+            </groups>
+        </checkoutmessage>
+    </sections>
+</config>

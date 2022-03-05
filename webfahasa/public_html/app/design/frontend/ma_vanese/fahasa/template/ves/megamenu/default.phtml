@@ -1,0 +1,99 @@
+<?php
+/******************************************************
+ * @package Ves Megamenu module for Magento 1.4.x.x and Magento 1.7.x.x
+ * @version 1.0.0.1
+ * @author http://landofcoder.com
+ * @copyright	Copyright (C) December 2010 LandOfCoder.com <@emai:landofcoder@gmail.com>.All rights reserved.
+ * @license		GNU General Public License version 2
+*******************************************************/
+$enable_offcanvas = Mage::getStoreConfig("ves_megamenu/ves_megamenu/enable_offcanvas");
+//$enable_vertical_offcanvas = Mage::getStoreConfig("ves_verticalmenu/ves_verticalmenu/enable_offcanvas");
+$navigation_tab = Mage::getStoreConfig("ves_megamenu/ves_megamenu/navigation_tab");
+$navigation_tab = $navigation_tab?$navigation_tab:'<i class="fa fa-bars"></i> '.$this->__("Menu");
+$mobile = Mage::helper('fhsmobiledetect')->isMobile();
+if($mobile){
+    $navigation_tab = '<i class="fa fa-bars"></i> '.$this->__("My Account");
+}
+/*
+if(!$enable_vertical_offcanvas) {
+	$enable_offcanvas = true;
+}*/
+?>
+<div class="ves-megamenu  <?php if(!$enable_offcanvas): ?>hidden-xs hidden-sm<?php else: ?> offcanvas-actived<?php endif; ?>">
+	<div class="navbar navbar-inverse">
+		<div id="mainmenutop" class="megamenu offset-canvas-menu-play" role="navigation"  data-offcanvas="<?php echo $enable_offcanvas?'true':'false'; ?>">
+			<div class="navbar">
+				<a href="javascript:;" class="navbar-toggle hide">
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                </a>                               
+				<div class="collapse navbar-collapse navbar-ex1-collapse">
+					<?php if($menu_top = $this->getChildHtml("top.menu.top")): ?>
+                                    <?php // neu khong echo $menuHtml or Topmenu thi` comment navbar-nav ra de show menu account trong mobile?>
+                                    <!--<div class="navbar-nav">-->
+					<div class="close-mobile-nav close-block hidden-lg hidden-md">
+						<?php echo $menu_top;//Top menu content ?>
+                                            <?php if($mobile){echo $this->getLayout()->getBlock('top.links')->toHtml();}?>
+					</div>
+                                    <!--</div>-->
+					<?php endif; ?>
+                                        <?php echo $menuHtml; ?>
+					<?php if($menu_footer = $this->getChildHtml("top.menu.footer")): ?>
+					<div class="menu-footer hidden-lg hidden-md">
+						<?php echo $menu_footer;//Footer menu content ?>
+					</div>
+					<?php endif ;?>
+				</div>                                
+				<!-- Off canvas tab icon just show on offcanvasmenu -->
+				<div class="navbar-offcanvas-tab hidden"><?php echo $navigation_tab; ?></div>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+jQuery(window).ready( function(){
+
+	/*  Fix First Click Menu */
+	jQuery(document.body).on('click', '#mainmenutop [data-toggle="dropdown"]' ,function(event){
+		event.stopImmediatePropagation();
+		jQuery(this).parent().show();
+
+		var clickable = jQuery(this).data("clickable");
+        clickable = (typeof(clickable) != "undefined")?clickable:1;
+
+        if(!mobilecheck()) {
+            clickable = 1;
+        }
+
+        if(clickable == 1) {
+			if(!jQuery(this).parent().hasClass('open') && this.href && this.href != '#'){
+				window.location.href = this.href;
+			}
+		}
+
+		return false;
+
+	});
+	jQuery(document.body).on('dblclick', '#mainmenutop [data-toggle="dropdown"]' ,function(event){
+		event.stopImmediatePropagation();
+		jQuery(this).parent().show();
+
+		var clickable = jQuery(this).data("clickable");
+        clickable = (typeof(clickable) != "undefined")?clickable:1;
+
+        if(!mobilecheck()) {
+            clickable = 1;
+        }
+
+        if(clickable == 1) {
+			if(!jQuery(this).parent().hasClass('open') && this.href && this.href != '#'){
+				window.location.href = this.href;
+			}
+		}
+
+		return false;
+
+	});
+});
+</script>

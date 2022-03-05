@@ -1,0 +1,43 @@
+<?php
+$dir = "/var/www/html/static/hoisach/";
+$baseUrl = "http://www.fahasa.com/static/hoisach/";
+?>
+<table id="hoi-sach"  class="display responsive nowrap" style="width: 100%; word-wrap: break-word;" cellspacing="0">
+    <thead>
+        <tr>
+            <th>&nbsp;</th>
+            <th>Stt</th>
+            <th>Tên</th>
+            <th>Link hình ảnh</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+        if (is_dir($dir)) {
+            if ($dh = opendir($dir)) {
+                $i = 0;
+                while (($file = readdir($dh)) !== false) {
+                    if ($file == '.' || $file == '..') {
+                        continue;
+                    }
+                    ?>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td><?php echo ++$i; ?></td>
+                        <td>
+                            <a target="_blank" href="<?php echo $baseUrl . $file; ?>?utm_source=hoisach&utm_medium=hinh&utm_campaign=hoisachanh-2016-w1t3">
+                                <?php
+                                echo str_replace(".jpg", "", $file);
+                                ?>
+                            </a>
+                        </td>
+                        <td><a target="_blank" href="<?php echo $baseUrl . $file; ?>?utm_source=hoisach&utm_medium=hinh&utm_campaign=hoisachanh-2016-w1t3">Xem ảnh</a></td>
+                    </tr>
+                    <?php
+                }
+                closedir($dh);
+            }
+        }
+        ?>
+    </tbody>
+</table>

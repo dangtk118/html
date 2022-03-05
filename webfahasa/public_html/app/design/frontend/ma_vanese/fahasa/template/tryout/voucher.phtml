@@ -1,0 +1,203 @@
+<?php
+    $helper = Mage::helper("fpointstorev2/data");
+    //$page_limit = (int) Mage::getStoreConfig('fpointstorev2_config/config/page_limit');
+    //$current_page = 1;
+    $is_voucher_fhs = $this->getRequest()->getParam('is_partner', 0);
+    $customer_id = Mage::getSingleton('customer/session')->getCustomer()->getEntityId();
+    $is_active_wallet_voucher = Mage::getStoreConfig('fpointstorev2_config/wallet_voucher/is_active');
+    $vouchers_fhs = $helper->getVoucherHistoryList($customer_id, true, $is_active_wallet_voucher, false, false, 1, 0, false);
+    $vouchers_partner = $helper->getVoucherHistoryList($customer_id, false, false, false, false, 1, 0);
+    
+    $media_url = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA, true);
+    $skin_url = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true);
+    $queryfier = Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix');
+    
+    $CSS_FILE = $skin_url."frontend/ma_vanese/fahasa/css/fpointstore_v2.css?q=".$queryfier;
+    $FS_SCRIPT = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS, true)."lib/fpointstore_v2.js?q=".$queryfier;
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo $CSS_FILE; ?>" media="all" />
+<script type="text/javascript" src="<?php echo $FS_SCRIPT; ?>"></script>
+<style>
+    .my-account{
+	display: none;
+    }
+</style>
+</div>
+<div class="fhs_account_wallet_voucher">
+    <div class="fhs_account_wallet_voucher_title"><?php echo $this->__('My vouchers');?></div>
+<div>
+    <ul id="fhs_wallet_voucher_tab" class="fhs-tabs">
+	<li class="fhs_wallet_voucher_tab_fhs <?php echo (!$is_voucher_fhs)?"active":""; ?>"><a><?php echo $this->__("My voucher"); ?></a><hr></li>
+	<li class="fhs_wallet_voucher_tab_partner <?php echo ($is_voucher_fhs)?"active":""; ?>"><a><?php echo $this->__("Voucher Partner"); ?></a><hr></li>
+    </ul>
+</div>
+</div>
+</div>
+<div class="col-main col-lg-9 col-md-9 col-sm-12 col-xs-12 col-fhs-main-body fhs-wallet-voucher-page" style="margin-top: 4px;"> 
+<div id="voucher_fahasa" <?php echo $is_voucher_fhs?'style="display:none;"':'';?>>
+    <?php if(!empty($vouchers_fhs)):?>
+	<div class="fhs-event-promo-list-item fhs-event-promo-list-item-green">
+	    <div class="fhs-event-promo-list">
+	    <?php foreach ($vouchers_fhs as $key=>$item): ?>
+		    <div class="fhs-event-promo-list-item fhs-event-promo-list-item-green">
+			    <div>
+				<img src="<?php echo $skin_url . 'frontend/ma_vanese/fahasa/images/ico_coupongreen.svg?q=' . $queryfier; ?>"/>
+			    </div>
+			    <div>
+				<div>
+				    <div <?php echo $item['rule_content']?'class="fhs-event-promo-list-item-content" onclick="showVoucherDetail(this,'.$key.',true);"':'';?> >
+					<div><?php echo $item['name']; ?></div>
+
+					<div><?php echo $item['description']; ?></div>
+					<div class="fhs_voucher_code"><?php echo $this->__('Voucher code')." - ".$item['coupon_code']; ?></div>
+					<?php if(!empty($item['expire_date'])):?>
+					    <div class="fhs_voucher_expiry"><?php echo $this->__("EXP").": ".$item['expire_date'];?></div>
+					<?php endif;?>
+				    </div>
+				    <div>
+				    <?php if($item['rule_content']):?>
+					<div class="fhs-event-promo-list-item-detail" onclick="showVoucherDetail(this,<?php echo $key;?>,true)"><?php echo $this->__('Detail');?>
+					    <div class="fhs-event-promo-list-item-btndata">
+						<a href="/<?php echo $item['page_detail']; ?>"><button type="button" title="<?php echo $this->__('Buy now'); ?>" class="btn-close-popup-event fhs-btn-view-promo-detail-coupon"><span><?php echo $this->__('Buy now'); ?></span></button></a>
+					    </div>
+					</div>
+				    <?php endif;?>
+					<div class="fhs-event-promo-list-item-button">
+					    <a href="/<?php echo $item['page_detail']; ?>"><button type="button" title="<?php echo $this->__('Buy now'); ?>" class="fhs-btn-view-promo-coupon"><span><?php echo $this->__('Buy now'); ?></span></button></a>
+					</div>
+				    </div>
+				</div>
+			    </div>
+			</div>
+		<?php endforeach; ?>    
+	    </div>
+	</div>
+    <?php else:?>
+	<div class="voucher_empty">
+	    <img src="<?php echo $skin_url."/frontend/ma_vanese/fahasa/images/ico_couponemty.svg?q=".$queryfier;?>">
+	    <div><?php echo $this->__("Don't have promotion");?></div>
+	</div>
+    <?php endif;?>
+</div>
+
+<div id="voucher_partner"  <?php echo !$is_voucher_fhs?'style="display:none;"':'';?>>
+    <?php if(!empty($vouchers_partner)):?>
+	<div class="fhs-event-promo-list-item">
+	    <div class="fhs-event-promo-list">
+	    <?php foreach ($vouchers_partner as $key=>$item): ?>
+		    <div class="fhs-event-promo-list-item">
+			    <div>
+				<img src="<?php echo $item['image_logo']; ?>"/>
+			    </div>
+			    <div>
+				<div>
+				    <div <?php echo $item['rule_content']?'class="fhs-event-promo-list-item-content" onclick="showVoucherDetail(this,'.$key.',false);"':'';?> >
+					<div><?php echo $item['name']; ?></div>
+
+					<div><?php echo $item['description']; ?></div>
+					<div class="fhs_voucher_code"><?php echo $this->__('Voucher code')." - ".$item['coupon_code']; ?></div>
+					<?php if(!empty($item['expire_date'])):?>
+					    <div class="fhs_voucher_expiry"><?php echo $this->__("EXP").": ".$item['expire_date'];?></div>
+					<?php endif;?>
+				    </div>
+				    <div>
+				    <?php if($item['rule_content']):?>
+					<div class="fhs-event-promo-list-item-detail" onclick="showVoucherDetail(this,<?php echo $key;?>,false)"><?php echo $this->__('Detail');?>
+					    <div class="fhs-event-promo-list-item-btndata">
+						<button type="button" title="<?php echo $this->__('Copy code'); ?>" onclick="fhs_account.copyCouponCode('<?php echo $item['coupon_code']; ?>');" coupon="<?php echo $item['coupon_code'];?>" apply="1" class="btn-close-popup-event fhs-btn-view-promo-detail-coupon"><span><?php echo $this->__('Copy code'); ?></span></button>
+					    </div>
+					</div>
+				    <?php endif;?>
+					<div class="fhs-event-promo-list-item-button">
+					    <button type="button" onclick="fhs_account.copyCouponCode('<?php echo $item['coupon_code']; ?>');" title="<?php echo $this->__('Copy code'); ?>" coupon="<?php echo $item['coupon_code'];?>" apply="1" class="fhs-btn-view-promo-coupon" ><span><?php echo $this->__('Copy code'); ?></span></button>
+					</div>
+				    </div>
+				</div>
+			    </div>
+			</div>
+		<?php endforeach; ?>    
+	    </div>
+	</div>
+    <?php else:?>
+	<div class="voucher_empty">
+	    <img src="<?php echo $skin_url."/frontend/ma_vanese/fahasa/images/ico_couponemty.svg?q=".$queryfier;?>">
+	    <div><?php echo $this->__("Don't have promotion");?></div>
+	</div>
+    <?php endif;?>
+    
+</div>
+
+
+
+<div id="popup-loading-event-cart" class="popup-loading-event-cart_hasbottom">
+    <div class="popup-loading-event-cart-detail" style="display: block;">
+	<div class="popup-loading-event-cart-title">
+	    <div class="fhs-event-promo-title">
+		<div class="fhs-event-promo-title-center"><?php echo $this->__('Terms & Conditions'); ?></div>
+		<div class="fhs-event-promo-title-right lg-close" onclick="closeVoucherDetail();">
+		    <div><img src="<?php echo $skin_url . 'frontend/ma_vanese/fahasa/images/ico_delete_gray.svg?q=' . $queryfier; ?>"/></div>
+		</div>
+	    </div>
+	</div>
+	<div class="popup-loading-event-cart-content">
+	    <div class="fhs-event-promo-list">
+		<div id="fhs-event-promo-list-detail" class="fhs-event-promo-list-item">
+		</div>
+	    </div>
+	    <div id="fhs-event-promo-list-detail-content" class="fhs-event-promo-list-detail-content">
+	    </div>
+	</div>
+    </div>
+    <div class="popup-loading-event-cart-bottom">
+	<div id="popup_event_cart_detail_close" class="close-popup-event" style="display: block;">
+	</div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var vouchers_fhs = <?php echo json_encode($vouchers_fhs, JSON_UNESCAPED_UNICODE);?>;
+    var vouchers_partner = <?php echo json_encode($vouchers_partner, JSON_UNESCAPED_UNICODE);?>;
+    var fpointstore = new FpointStoreV2();
+    $jq('#fhs_wallet_voucher_tab li').click(function(){
+	if(!$jq(this).hasClass("active")){
+	    $jq('#fhs_wallet_voucher_tab li').removeClass("active");
+	    $jq(this).addClass("active");
+	}
+	if($jq(this).hasClass("fhs_wallet_voucher_tab_fhs")){
+	    $jq('#voucher_partner').fadeOut(0);
+	    $jq('#voucher_fahasa').fadeIn(0);
+	    fpointstore.updateQueryStringParam("is_partner", 0);
+	}else{
+	    $jq('#voucher_fahasa').fadeOut(0);
+	    $jq('#voucher_partner').fadeIn(0);
+	    fpointstore.updateQueryStringParam("is_partner", 1);
+	}
+    });
+    $jq(".btn-close-popup-event").click(function(e){
+	$jq('.youama-ajaxlogin-cover').fadeOut(0);
+	$jq('#popup-loading-event-cart').fadeOut(0);
+    });
+    function showVoucherDetail(e, index, is_fhs_voucher = true){
+	let detail = '';
+	if(is_fhs_voucher){
+	    detail = vouchers_fhs[index]['rule_content'];
+	}else{
+	    detail = vouchers_partner[index]['rule_content'];
+	}
+	$jq('#fhs-event-promo-list-detail-content').html(detail);
+	
+	let $item = $jq(e).parents('.fhs-event-promo-list-item');
+	let $data = $item.find('.fhs-event-promo-list-item-btndata');
+	
+	let btn = $data.html();
+	$jq('#popup_event_cart_detail_close').html(btn);
+	    
+	$jq('.youama-ajaxlogin-cover').fadeIn(0);
+	$jq('#popup-loading-event-cart').fadeIn(0);
+    }
+    function closeVoucherDetail(){
+	$jq('#popup-loading-event-cart').fadeOut(0);
+	$jq('.youama-ajaxlogin-cover').fadeOut(0);
+    }
+</script>
+</div>

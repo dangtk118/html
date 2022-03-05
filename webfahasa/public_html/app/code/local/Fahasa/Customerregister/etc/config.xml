@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <Fahasa_Customerregister>
+            <version>0.1.0</version>
+        </Fahasa_Customerregister>
+    </modules>
+    <global>
+        <helpers>
+            <customerregister>
+                <class>Fahasa_Customerregister_Helper</class>
+            </customerregister>
+        </helpers>
+        <events>
+            <fhs_success_register_after_save>
+                <observers>
+                    <customerregister_register_after_save>
+                        <type>singleton</type>               
+                        <class>Fahasa_Customerregister_Model_Observer</class>
+                        <method>fhs_success_register_after_new</method>
+                    </customerregister_register_after_save>
+                </observers>
+            </fhs_success_register_after_save>
+        </events>
+        <resources>
+            <customerregister_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </customerregister_write>
+            <customerregister_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </customerregister_read>
+            <customerregister_setup>
+                <setup>
+                    <module>Fahasa_Customerregister</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>                
+            </customerregister_setup>                       
+        </resources>        
+    </global> 
+    <default>
+        <customerregister>
+            <donate>
+                <enable>1</enable>
+                <from_date>2018-01-01 00:00:00</from_date>
+                <telephone>0</telephone>
+                <email>0</email>
+                <gender>0</gender>
+                <dob>0</dob>
+            </donate>
+        </customerregister>
+    </default>       
+</config>
+

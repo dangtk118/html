@@ -1,0 +1,23 @@
+<?php
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ *
+ * @author lamhung
+ */
+?>
+<?php if (Mage::getStoreConfig('suggestion/general/enable') == 1): ?>
+<!-- Suggestion Product Begin-->
+<?php 
+    $PAGE_SCRIPT = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS)
+            ."lib/suggestion.js?q="
+            .Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix');
+    
+?>
+<script type="text/javascript" src="<?php echo $PAGE_SCRIPT; ?>"></script>
+<!-- End Suggestion Product -->   
+<?php endif; ?> 

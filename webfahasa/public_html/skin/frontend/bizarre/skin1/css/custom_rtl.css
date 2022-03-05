@@ -1,0 +1,20 @@
+header.header .form-search button {float: left;}
+header.header .form-search input {float: right;}
+header#header .quick-access {text-align: right;}
+body.boxed-layout .slider-container .prev,
+body.boxed-layout .related-wrapper-bottom .block-related .prev,
+.slider-container .prev {left: auto; right: 10px;}
+body.boxed-layout .slider-container .next, 
+body.boxed-layout .related-wrapper-bottom .block-related .next,
+.slider-container .next {right: auto; left: 10px;}
+
+.text-banner .text-banner-content.skin-1 {left: auto; right: 50%;}
+.text-banner .text-banner-content a.banner-link i, 
+.text-banner .text-banner-content.skin-2 a.banner-link i {
+	margin-left: 0;
+	transition: margin-right 400ms ease;
+	-o-transition: margin-right 400ms ease;
+	-moz-transition: margin-right 400ms ease;
+	-webkit-transition: margin-right 400ms ease;
+}
+.text-banner .text-banner-content.skin-2 {left: auto; right: 7%; text-align: right;}

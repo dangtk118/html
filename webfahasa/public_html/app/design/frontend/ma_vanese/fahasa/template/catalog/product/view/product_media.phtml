@@ -1,0 +1,278 @@
+
+<?php
+$product = Mage::registry('current_product_redis');
+$product_default = $product;
+
+if(Mage::registry('product_default')){
+    $product_default = Mage::registry('product_default');
+    $product_default['image'] = $product_default['img_src'];
+}
+    
+$skin_url = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true);
+$loading_icon_url = $skin_url.'frontend/ma_vanese/fahasa/images/ring_loader.gif';
+
+$gallery_images = $product['media'];
+$videos_json = array();
+$videos_thumbs = array();
+$gallery_count = 0;
+$products_slider = array();
+
+if(!empty($product['media_gallery'])){
+    if(!empty($product['media_gallery']['images'])){
+	foreach($product['media_gallery']['images'] as $item){
+	    if($item['type'] == 'image'){
+		$gallery_images[] = $item;
+	    }else{
+		$videos_json[] = $item;
+	    }
+	    $gallery_count++;
+	}
+    }
+}
+
+if(sizeof($videos_json)){
+    $video_sort_order = [];
+    foreach ($videos_json as $key => $item) {
+	if(empty($item['position'])){
+	    $videos_json[$key]['position'] = 2;
+	    $item['position'] = 2;
+	}
+	$video_sort_order[$key] = $item['position'];
+    }
+    array_multisort($video_sort_order, SORT_ASC, $videos_json);
+}
+?>
+
+<div class="product-view-image">
+    <div class="product-view-thumbnail">
+	<?php if ($gallery_count > 0): ?>
+	    <?php 
+		$current_number_image = 0; 
+		$current_number_video = 0;
+		$video_item = 0;
+		$limit = 4;
+		$is_show = false;
+	    ?>
+		<div class="lightgallery">
+		<?php for($i = 0; $i < $gallery_count; $i++): ?>
+		    <?php $is_show_video = false; ?>
+		    
+		    <?php //Add Video ?>
+		    <?php if(!empty($videos_json[$current_number_video])):?>
+			<?php 
+			    $video = $videos_json[$current_number_video];
+			    if(!empty($video['position'])){
+				if((($video['position']-1) <= ($current_number_image + $current_number_video)) 
+				    || ($current_number_image >= count($gallery_images))){
+				    $is_show_video = true;
+				}
+			    }else{
+				$is_show_video = true;
+			    }
+			?>
+			<?php if($is_show_video):?>
+			    <?php if($video['type']=="local"):?>
+				<a class="include-in-gallery" id='lightgallery-item-<?php echo ($current_number_image + $current_number_video);?>' <?php echo $this->mediaItemStyle($current_number_image, $current_number_video, $limit, $item_count); ?> data-html="#video_<?php echo $video_item; $video_item++;?>">
+				    <img src="<?php echo $video['imageLink']; ?>">
+				    <div class="gallery-video-poster">
+				      <img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true)."frontend/ma_vanese/fahasa/images/play-white.png" ?>">
+				    </div>
+				    <div class="gallery-video-poster-orange" style="display: none">
+				      <img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true)."frontend/ma_vanese/fahasa/images/play-orange.png" ?>">
+				    </div>
+				</a>
+			    <?php else: ?>
+				<a class="include-in-gallery" id='lightgallery-item-<?php echo ($current_number_image + $current_number_video);?>' <?php echo $this->mediaItemStyle($current_number_image, $current_number_video, $limit, $item_count); ?> href="<?php echo $video['videoLink']; ?>">
+				    <img src="<?php echo $video['imageLink']; ?>">
+				    <div class="gallery-video-poster">
+				      <img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true)."frontend/ma_vanese/fahasa/images/play-white.png" ?>">
+				    </div>
+				    <div class="gallery-video-poster-orange" style="display: none">
+				      <img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true)."frontend/ma_vanese/fahasa/images/play-orange.png" ?>">
+				    </div>
+				</a>
+			    <?php endif; ?>
+			    <?php $current_number_video++;?>
+			<?php endif;?>
+		    <?php endif; ?>
+		    
+		    <?php //Add Image ?>
+		    <?php if(!$is_show_video):?>
+			<?php if(!empty($gallery_images[$current_number_image])):?>
+			    <?php $_image = $gallery_images[$current_number_image];?>
+				<a class="include-in-gallery" id='lightgallery-item-<?php echo ($current_number_image + $current_number_video);?>' <?php echo $this->mediaItemStyle($current_number_image, $current_number_video, $limit, $item_count);?> href="<?php echo $_image['file']; ?>"   title="<?php echo $product_default['name'];?>">
+				    <img src="<?php echo $_image['file'];  ?>" alt="image">
+				</a>
+			    <?php $current_number_image++ ?>
+			<?php endif; ?>
+		    <?php endif; ?>
+		    
+		    <?php //Add more ?>
+		    <?php 
+		    if((($current_number_image + $current_number_video) > ($limit+1)) && (!$is_show)):?>
+		    <a id="lightgallery-more">
+			<label>
+			    <?php echo "+".($gallery_count-$limit)?>
+			</label>
+		    </a>
+		    <?php $is_show = true;?>
+		    <?php endif; ?>
+		<?php endfor;?>
+	    </div>
+	    <?php if(!empty($videos_json)):?>
+		<?php $video_item = 0; ?>
+		<?php foreach($videos_json as $video):?>
+		    <?php if($video['type']=="local"):?>
+			<div style="display:none;" id="video_<?php echo $video_item; $video_item++;?>">
+			    <video class="lg-video-object lg-html5" controls preload="metadata">
+				<source src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . $video['videoLink']; ?>" type="video/mp4">
+				 <?php echo $this->__('Your browser does not support HTML5 video');?>.
+			    </video>
+			</div>
+		    <?php endif;?>
+		<?php endforeach ?>
+	    <?php endif;?>
+	<?php else: ?>
+	<div class="lightgallery">
+	    <a class="include-in-gallery" id='lightgallery-item1' href="<?php echo $product_default['image']; ?>" title="<?php echo $this->escapeHtml($product_default['name']);?>">
+		<img style="height:66px;width: 66px;" class="lazyload" src='<?php echo $loading_icon_url;?>' data-src="<?php echo $product_default['image']; ?>" alt="image">
+	    </a>
+	</div>
+	<?php endif; ?> 
+    </div>
+    <div class="product-view-image-product">
+	<img id="image" class="fhs-p-img lazyload" src='<?php echo $loading_icon_url;?>' data-src="<?php echo $product_default['image']; ?>" alt="<?php echo $this->escapeHtml($product_default['name']); ?>" title="<?php echo $this->escapeHtml($product_default['name']); ?>" />
+    </div>
+    <div class="clear"></div>
+    <div class="swiper-container product-view-image-product-swiper">
+	<div class="swiper-wrapper">
+	    <?php if ($gallery_count > 0): ?>
+			<?php 
+			    $current_number_image = 0; 
+			    $current_number_video = 0;
+			    $video_item = 0;
+			?>
+			<?php for($i = 0; $i < $gallery_count; $i++): ?>
+			    <?php $is_show_video = false; ?>
+			    <?php //Add Video ?>
+			    <?php if(!empty($videos_json[$current_number_video])):?>
+				<?php 
+				    $video = $videos_json[$current_number_video];
+				    if(!empty($video['position'])){
+					if((($video['position']-1) <= ($current_number_image + $current_number_video)) 
+					    || ($current_number_image >= count($gallery_images))){
+					    $is_show_video = true;
+					}
+				    }else{
+					$is_show_video = true;
+				    }
+				?>
+				<?php if($is_show_video):?>
+					<div class="swiper-slide">
+					    <div class="swiper-wrapper-item include-in-gallery-mobile" data_id='lightgallery-item-<?php echo ($current_number_image + $current_number_video);?>'>
+						<?php if($video['type']=="local"):?>
+							<img class="swiper-lazy" src="<?php echo $video['imageLink']; ?>">
+							<div class="gallery-video-poster">
+							  <img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true)."frontend/ma_vanese/fahasa/images/play-white.png" ?>">
+							</div>
+						<?php else: ?>
+							<img class="swiper-lazy" src="<?php echo $video['imageLink']; ?>">
+							<div class="gallery-video-poster">
+							  <img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true)."frontend/ma_vanese/fahasa/images/play-white.png" ?>">
+							</div>
+						<?php endif; ?>
+						<div class="swiper-lazy-preloader"><img src='<?php echo $loading_icon_url;?>'/></div>
+					    </div>
+					</div>
+				    <?php $current_number_video++;?>
+				<?php endif;?>
+			    <?php endif; ?>
+
+			    <?php //Add Image ?>
+			    <?php if(!$is_show_video):?>
+				<?php if(!empty($gallery_images[$current_number_image])):?>
+				    <?php $_image = $gallery_images[$current_number_image];?>
+				    <?php 
+					if(!empty($_image['entity_id'])){
+					    $products_slider[$_image['entity_id']] = ($current_number_image + $current_number_video);
+					}
+					?>
+					<div class="swiper-slide">
+					    <div class="swiper-wrapper-item include-in-gallery-mobile" data_id='lightgallery-item-<?php echo ($current_number_image + $current_number_video);?>'>
+						<img class="swiper-lazy" src="<?php echo $_image['file']; ?>" alt="image">
+						<div class="swiper-lazy-preloader"><img src='<?php echo $loading_icon_url;?>'/></div>
+					    </div>
+					</div>
+				    <?php $current_number_image++ ?>
+				<?php endif; ?>
+			    <?php endif; ?>
+			<?php endfor;?>
+		    <?php else: ?>
+			<div class="swiper-slide">
+			    <div class="swiper-wrapper-item">
+				<img id="image" class="fhs-p-img swiper-lazy" src="<?php echo $product_default['image']; ?>" alt="<?php echo $this->escapeHtml($product_default['name']); ?>" title="<?php echo $this->escapeHtml($product_default['name']); ?>" />
+			    </div>
+			</div>
+		    <?php endif;?>
+	</div>
+	<!-- Add Pagination -->
+	<div class="swiper-pagination"></div>
+    </div>
+
+    <!-- Initialize Swiper -->
+    <div class="clear"></div>
+</div>
+
+<script type="text/javascript">
+    var product_image_swiper = new Swiper('.product-view-image-product-swiper', {
+	pagination: {
+	    el: '.swiper-pagination',
+	    type: 'fraction',
+	},
+	preloadImages: false,
+	lazy: true,
+    });
+    
+    product_image_swiper.slideTo(<?php echo $products_slider[$product_default['entity_id']];?>,0,false );
+    var products_slider = <?php echo json_encode($products_slider, JSON_UNESCAPED_UNICODE);?>;
+    $jq(".product-view-image-product").attr('img_index',<?php echo $products_slider[$product_default['entity_id']];?>);
+
+    $jq(document).ready(function () {
+	
+        $jq(".lightgallery").lightGallery({
+            mode: 'lg-fade',
+            hideBarsDelay: 500,
+            swipeThreshold : 10,
+            thumbnail: true,
+            download: false,
+            preload: 2,
+            speed: 300,
+	    selector: '.include-in-gallery'
+        }); 
+	if($jq('.product-view-image .swiper-pagination-fraction > .swiper-pagination-total').text() == '1'){
+	    $jq('.product-view-image .swiper-pagination-fraction').hide();
+	}
+        $jq(".product-view-image-product").click(function (){
+            let img_index = $jq(this).attr('img_index');
+	    if(fhs_account.isEmpty(img_index)){
+		img_index = 0;
+	    }
+	    $jq("#lightgallery-item-"+img_index).trigger( "click" );
+        });
+        $jq("#more-views-lightgallery").click(function (){
+            $jq("#lightgallery-item-<?php echo $limit;?>").trigger( "click" );
+        });
+        $jq("#lightgallery-more").click(function (){
+            $jq("#lightgallery-item-<?php echo $limit;?>").trigger( "click" );
+        });
+        $jq(".include-in-gallery-mobile").click(function (){
+	    let data_id = $jq(this).attr('data_id');
+	    let $gallery_item = $jq('#'+data_id);
+	    if($gallery_item.length > 0){
+		$gallery_item.trigger( "click" );
+	    }else{
+		$jq("#lightgallery-item-<?php echo $limit;?>").trigger( "click" );
+	    }
+        });
+    }); 
+</script>

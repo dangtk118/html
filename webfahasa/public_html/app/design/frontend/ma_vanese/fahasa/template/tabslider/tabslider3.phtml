@@ -1,0 +1,144 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+/**
+ * Product info event cart data template
+ *
+ * @see Mage_Catalog_Block_Product_View
+ */
+?>
+<?php
+
+$skin_url = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true);
+$queryfier = Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix');
+$helperSeries = Mage::helper('seriesbook');
+$icon_event_title = $skin_url.'frontend/ma_vanese/fahasa/images/event_cart_2/ico_coupon.svg';
+$icon_event_title = null;
+$icon_coupon_type = $skin_url.'frontend/ma_vanese/fahasa/images/event_cart_2/{{NAME}}.svg';
+$icon_down_orange = $skin_url.'frontend/ma_vanese/fahasa/images/ico_down_orange.svg?q='.$queryfier;
+$loading_icon_url = $skin_url.'frontend/ma_vanese/fahasa/images/ring_loader.svg';
+$loading_icon_url_gif = $skin_url.'frontend/ma_vanese/fahasa/images/ring_loader.gif';
+
+$tabslider3_CSS = $skin_url."frontend/ma_vanese/fahasa/css/tabslider3.css?q=".$queryfier;
+//$eventcart2_CSS = $skin_url."frontend/ma_vanese/fahasa/css/eventCartProView.css";
+$tabslider3_JS = $skin_url."frontend/ma_vanese/fahasa/js/tabslider3.js?q=".$queryfier;
+//$eventcart2_JS = $skin_url."frontend/ma_vanese/fahasa/js/eventCartProView.js";
+
+
+$identify = $this->getIdentify(); // "highly-recommendation"
+$layout = $this->getLayoutId(); // "grid"
+$tabslider_title = $this->getTitle(); // ""
+$OnlyType = $this->getOnlyTypeId();
+$campaign_text = $this->getRelatedProductCampaignStr();
+$_cateArrayId = array();
+
+if(Mage::registry('current_product_redis')){
+    $product = Mage::registry('current_product_redis');
+    $_productId = $product['entity_id'];
+    $_cateArrayId['mid_id'] = $product['category_mid_id'];
+    $_cateArrayId['cate_id'] = $product['category_3_id'];
+    $_cateArrayId['main_id'] = $product['category_main_id'];
+}elseif($_product = $this->getProduct()){
+    $_productId = $_product->getEntityId();
+    $_cateArrayId['mid_id'] = $_product->getData('category_mid_id');
+    $_cateArrayId['cate_id'] = $_product->getData('category_1_id');
+    $_cateArrayId['main_id'] = $_product->getData('category_main_id');
+}
+
+$typeData['isLoad'] = false;
+$typeData['typeId'] = null;
+if (!empty($OnlyType) && isset($OnlyType)) {
+    $typeData['typeId'] = (int) $OnlyType;
+    $typeData['isLoad'] = true;
+} else if ($OnlyType === '0') {
+    $typeData['typeId'] = (int) $OnlyType;
+    $typeData['isLoad'] = true;
+}
+
+$languages = [];
+$languages['view_more'] = $this->__('View More');
+$languages['view_less'] = $this->__('View Less');
+$languages['related_promotions'] = $tabslider_title ? $tabslider_title : $this->__('Related Promotions');
+$languages['view_more_promotions'] = $this->__('View More Promotions');
+$languages['terms'] = $this->__('Terms & Conditions');
+$languages['applyOne'] = "Áp dụng 1 lần";
+$languages['details'] = $this->__('Details');
+$languages['iconLoadingURL'] = $loading_icon_url;
+$languages['iconLoadingURLgif'] = $loading_icon_url_gif;
+$languages['fhs_campaign_str'] = "?fhs_campaign=" . $campaign_text;
+$languages['fhs_campaign_series'] = "?fhs_campaign=" . $helperSeries->getFhsCampaignSeriPage();
+$languages['baseUrl'] = Mage::getBaseUrl();
+$languages['tabs_id'] = array();
+
+
+if($identify == "recommendatedApi"){
+    $prodCat2Id = $_cateArrayId['mid_id'];
+    $prodCatMainId = $_cateArrayId['main_id'];
+    $arraySplit = Mage::helper('tabslider/data')->getArrayTabSlider3($prodCat2Id, $prodCatMainId);
+
+    $arrayTabId = array();
+    foreach ($arraySplit as $value) {
+        $tab_id = (int) $value['only_type_id'];
+        array_push($arrayTabId,$tab_id);
+    }
+    $languages['tabs_id'] = $arrayTabId;
+}
+//$post_list_url = "http://app3.fahasa.com:18082/api/related_products";
+//$post_products_url = "http://app3.fahasa.com:18082/api/tab_related_products"; 
+
+?>
+<?php if(1==2): ?>
+<!--<link rel="stylesheet" type="text/css" href="<?php echo $tabslider3_CSS; ?>" media="all" />-->
+<!--<script type="text/javascript" src="<?php echo $tabslider3_JS; ?>"></script>-->
+<?php endif; ?>
+<div class="fhs_tabslider3_container" id="fhs_tabslider3_tab_<?php echo $identify; ?>" >
+    <div class="fhs_tabslider3_header">
+        <?php if($icon_event_title): ?><div class="fhs_tabslider3_title_icon"><img src= "<?php echo $icon_event_title; ?>"/></div><?php endif; ?>
+        <div class="fhs_tabslider3_title"><?php echo $languages['related_promotions']; ?></div>
+    </div>
+    <div id="fhs_tabslider3_tabs_content_<?php echo $identify; ?>" style="display:none">
+        <?php if($typeData['isLoad'] === false) :  ?>
+        <div class="fhs_tabslider3_tabs_swiper_container">
+            <ul class="fhs_tabslider3_tabs fhs-tabs swiper-wrapper" id="fhs_tabslider3_ul_<?php echo $identify; ?>"></ul>
+        </div>
+        <?php else : ?>
+        <div style='padding-bottom:10px;'></div>
+        <?php  endif;?>
+        <div class="fhs_tabslider3_products_container" id="fhs_tabslider3_pro_<?php echo $identify; ?>"></div>
+    </div>   
+    <div class="fhs_tabslider3_loading_icon" id="fhs_tabslider3_loading_<?php echo $identify; ?>" style="display:block" ><img src="<?php echo $loading_icon_url; ?>" class="img-responsive center-block"></div>
+</div>
+
+
+<script type="text/javascript">
+    let TABSLIDER3_POST_URL_<?php echo $identify; ?> = "<?php echo $this->getUrl('tabslider/index/getRecommendedData', array('_secure' => true)) ?>";
+    let TABSLIDER3_POST_URL_2_<?php echo $identify; ?>= "<?php echo $this->getUrl('tabslider/index/getProductData', array('_secure' => true)) ?>";
+    let languages<?php echo $identify; ?> = <?php echo json_encode($languages,JSON_UNESCAPED_UNICODE) ?>;
+    let catArray<?php echo $identify; ?> = <?php echo json_encode($_cateArrayId,JSON_UNESCAPED_UNICODE)?>;
+    let typeData<?php echo $identify; ?> = <?php echo json_encode($typeData,JSON_UNESCAPED_UNICODE) ?>;
+    var tabslider3<?php echo $identify; ?> = new Tabslider3();
+    tabslider3<?php echo $identify; ?>.init( languages<?php echo $identify; ?>, '<?php echo $identify; ?>', <?php echo $_productId; ?>,
+    catArray<?php echo $identify; ?>,typeData<?php echo $identify; ?>, TABSLIDER3_POST_URL_<?php echo $identify; ?>, TABSLIDER3_POST_URL_2_<?php echo $identify; ?>);  
+</script>

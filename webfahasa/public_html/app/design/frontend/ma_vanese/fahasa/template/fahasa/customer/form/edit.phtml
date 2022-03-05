@@ -1,0 +1,517 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2014 X.commerce, Inc. (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+    $customer = $this->getCustomer();
+    $telephone = $customer->getTelephone();
+    $referCode = $customer->getReferCode();
+    $email = $customer->getRealEmail();
+    $gender = $customer->getGender();
+    $status_company = Mage::getStoreConfig('vip_input/general/active_vip_company');
+    $VAT = Mage::helper('fahasa_customer')->getVAT($customer->getEntityId());
+    
+    if($customer->getDob()){$dob = strtotime($customer->getDob());}
+    
+    //fpoinstore check vip
+    $company_disabled = "";
+    $helper = Mage::helper("fpointstorev2/data");
+    $vip_info = $helper->getVipInfo($customer->getEntityId(), $customer->getCompanyId(), false);
+    if($vip_info['id'] && !$customer->getIsEditVip()){
+	$company_disabled = "disabled";
+    }
+    $donate_telephone_str = '';
+    $donate_email_str = '';
+    $donate_dob_str = '';
+    $donate_gender_str = '';
+    $donateFpoint = Mage::helper('fahasa_customer')->getDonateFpoint($customer);
+    if($donateFpoint['telephone'] > 0){
+	$donate_telephone_str = $this->__('Get %s F-Points', number_format($donateFpoint['telephone'], 0, ",", "."));
+    }
+    if($donateFpoint['email'] > 0){
+	$donate_email_str = $this->__('Get %s F-Points', number_format($donateFpoint['email'], 0, ",", "."));
+    }
+    if($donateFpoint['dob'] > 0){
+	$donate_dob_str = $this->__('Get %s F-Points', number_format($donateFpoint['dob'], 0, ",", "."));
+    }
+    if($donateFpoint['gender'] > 0){
+	$donate_gender_str = $this->__('Get %s F-Points', number_format($donateFpoint['gender'], 0, ",", "."));
+    }
+?>
+<style>
+    .col-fhs-main-body{
+	background: #F0F0F0 !important;
+	padding-right: 0 !important;
+	padding-left: 0 !important;
+    }
+    .my-account{
+	padding-right: 15px;
+	padding-left: 15px;
+	margin-top: 0 !important;
+    }
+</style>
+    <div style="background-color: #fff;">
+	    <div class="page-title-2">
+		<h1><?php echo $this->__('Account Information') ?></h1>
+	    </div>
+	    <?php echo $this->getMessagesBlock()->toHtml() ?>
+	    <form action="<?php echo $this->getUrl('customer/account/editPost') ?>" method="post" id="form-account-info" autocomplete="off">
+		<div>
+		    <?php echo $this->getBlockHtml('formkey')?>
+
+		    <div class="fhs-input-box fhs-input-group-horizontal-account">
+			<label><?php echo $this->__('Last Name');?>*</label>
+			<div class="fhs-input-item">
+			    <div class="fhs-input-group">
+				<input class="fhs-textbox" type="text" placeholder="<?php echo $this->__('Press last name') ?>" id="lastname" name="lastname" value="<?php echo $customer->getLastname();?>" maxlength="200"/>
+				<span class="fhs-input-icon fhs-textbox-alert"></span>
+			    </div>
+			</div>
+			<div class="fhs-input-alert"></div>
+		    </div>
+		    <div class="fhs-input-box fhs-input-group-horizontal-account">
+			<label><?php echo $this->__('First Name');?>*</label>
+			<div class="fhs-input-item">
+			    <div class="fhs-input-group">
+				<input class="fhs-textbox" type="text" placeholder="<?php echo $this->__('Press first name') ?>" id="firstname" name="firstname" value="<?php echo $customer->getFirstname();?>" maxlength="200"/>
+				<span class="fhs-input-icon fhs-textbox-alert"></span>
+			    </div>
+			</div>
+			<div class="fhs-input-alert"></div>
+		    </div>
+
+		    <div class="fhs-input-box fhs-input-group-horizontal-account fhs-input-send">
+			<label><?php echo $this->__('Phone number');?></label>
+			<?php if(empty($telephone) || empty($referCode)):?>
+			<label class="fhs-input-description"><?php echo $donate_telephone_str;?></label>
+			<?php endif;?>
+			<div class="fhs-input-item">
+			    <div class="fhs-input-group">
+				<input class="fhs-textbox" type="text" id="telephone" name="telephone" <?php echo (empty($telephone) || empty($referCode))?"noti='true'":"";?> value="<?php echo $telephone?>" maxlength="11" readonly="true" />
+				<span class="fhs-input-icon fhs-textbox-changephone"><?php 
+				if(empty($telephone)){
+				    echo $this->__('Add new');
+				}else if(empty($referCode)){
+				    echo $this->__('Confirm');
+				}else{
+				    echo $this->__('Change');
+				}
+				?></span>
+			    </div>
+			</div>
+			<?php if(empty($telephone) || empty($referCode)):?>
+			    <label class="fhs-input-description"><?php echo $donate_telephone_str;?></label>
+			<?php endif;?>
+			<div class="fhs-input-alert"></div>
+		    </div>
+		    <div class="fhs-input-box fhs-input-group-horizontal-account fhs-input-send">
+			<label><?php echo $this->__('Email');?></label>
+			<?php if(empty($email)):?>
+			<label class="fhs-input-description"><?php echo $donate_email_str;?></label>
+			<?php endif;?>
+			<div class="fhs-input-item">
+			    <div class="fhs-input-group">
+				<input class="fhs-textbox" type="text" placeholder="<?php echo $this->__('No email') ?>" id="email" name="email" <?php echo empty($email)?"noti='true'":"";?> value="<?php echo $email;?>" maxlength="200" readonly="true" />
+				<span class="fhs-input-icon fhs-textbox-changeemail"><?php echo empty($email)?$this->__('Add new'):$this->__('Change');?></span>
+			    </div>
+			</div>
+			<?php if(empty($email)):?>
+			    <label class="fhs-input-description"><?php echo $donate_email_str;?></label>
+			<?php endif;?>
+			<div class="fhs-input-alert"></div>
+		    </div>
+
+		    <div class="fhs-input-box fhs-input-group-horizontal-account">
+			<label><?php echo $this->__('Gender');?>*</label>
+			<?php if(!$customer->getGender()):?>
+			    <label class="fhs-input-description"><?php echo $donate_gender_str;?></label>
+			<?php endif;?>
+			<div class="fhs-input-item" style="display:-webkit-inline-box !important;">
+			    <div class="fhs-input-group">
+				<div>
+				    <label class='fhs-radio' style="margin-top: 2px;" ><?php echo $this->__('Male') ?>
+					<input type="radio" class="gender-radio" name="gender-radio" onchange="changeGender('1');"<?php if($customer->getGender() == 1){echo 'checked="checked"';} ?>/>
+					<span class="radiomark"></span>
+				    </label>
+				</div>
+				<div>
+				    <label class='fhs-radio' style="margin-top: 2px;" ><?php echo $this->__('Female') ?>
+					<input type="radio" class="gender-radio" name="gender-radio" onchange="changeGender('2');" <?php if($customer->getGender() == 2){echo 'checked="checked"';} ?>/>
+				    <span class="radiomark"></span>
+				    </label>
+				</div>
+				<input hidden="true" type="text" id="gender" name="gender" value="<?php echo $customer->getGender();?>"/>
+				<div style="width: 42px;"></div>
+				<div style="clear: both;"></div>
+
+				<span class="fhs-input-icon fhs-textbox-alert"></span>
+			    </div>
+			</div>
+			<?php if(!$customer->getGender()):?>
+			    <label class="fhs-input-description"><?php echo $donate_gender_str;?></label>
+			<?php endif;?>
+			<div class="fhs-input-alert"></div>
+		    </div>
+
+		    <div class="fhs-input-box fhs-input-group-horizontal-account fhs-input-send">
+			<label><?php echo $this->__('Birthday');?>*</label>
+			<?php if(empty($dob)):?>
+			    <label class="fhs-input-description"><?php echo $donate_dob_str;?></label>
+			<?php endif;?>
+			<div class="fhs-input-item" style="padding:0 !important;">
+			    <div class="fhs-input-group customer-dob">
+				<div class="account-input-bod">
+				    <input <?php echo $dob?'readonly':''; ?> class='fhs_input_date_group_day account-input-birthday' name="day" type="text" style="text-align: center;" maxlength="2" placeholder="DD" value="<?php echo $dob?date("d", $dob):''; ?>"/>
+				</div>
+				<div class="account-input-bod">
+				    <input <?php echo $dob?'readonly':''; ?> class='fhs_input_date_group_month account-input-birthday' name="month" type="text" style="text-align: center;" maxlength="2" placeholder="MM" value="<?php echo $dob?date("m", $dob):''; ?>"/>
+				</div>
+				<div class="account-input-bod">
+				    <input <?php echo $dob?'readonly':''; ?> class='fhs_input_date_group_year account-input-birthday' name="year" type="text" style="text-align: center;" maxlength="4" placeholder="YYYY" value="<?php echo $dob?date("Y", $dob):''; ?>"/>
+				</div>
+				<div class="dob-full" style="display:none;">
+				    <input type="hidden" id="dob" class="fhs_input_date_group_full" value="<?php echo $dob?date("d", $dob).'/'.date("m", $dob).'/'.date("Y", $dob):''?>" name="dob" />
+				</div>
+			    </div>
+			</div>
+			<?php if(empty($dob)):?>
+			    <label class="fhs-input-description"><?php echo $donate_dob_str;?></label>
+			<?php endif;?>
+			<div class="fhs-input-alert"></div>
+		    </div>
+
+		    <?php if($status_company == 1):?>
+		    <div class="fhs-input-box fhs-input-group-horizontal-account">
+			<label><?php echo $this->__('VIP Id');?></label>
+			<div class="fhs-input-item">
+			    <div class="fhs-input-group">
+				<input class="fhs-textbox" type="text" placeholder="<?php echo $this->__('Press VIP ID') ?>*" id="company_id" name="company_id" value="<?php echo $customer->getCompanyId()?$customer->getCompanyId():''; ?>" maxlength="200" <?php echo $company_disabled?>/>
+			    </div>
+			</div>
+			<div class="fhs-input-alert"></div>
+		    </div>
+		    <?php endif;?>
+		    <div class="account-row" style="margin-top: 10px;">
+			<label class='account-title'></label>
+			<div class='account-input' >
+			    <label class='fhs-checkbox' ><?php echo $this->__('Change Password') ?>
+				<input type="checkbox" name="change_password" id="change_password" value="1" title="<?php echo $this->__('Change Password') ?>"<?php if($this->getCustomer()->getChangePassword()==1): ?> checked="checked"<?php endif; ?>/>
+				<span class="checkmark"></span>
+			    </label>
+			</div>
+			<div style="clear: both;"></div>
+		    </div>
+		    <div class="fhs-edit-account-password-form" style="display:none;">
+			<div class="fhs-input-box fhs-input-group-horizontal-account">
+			    <label><?php echo $this->__('Current Password');?>*</label>
+			    <div class="fhs-input-item">
+				<div class="fhs-input-group">
+				    <input class="fhs-textbox" type="password" placeholder="<?php echo $this->__('Current Password') ?>" name="current_password" id="current_password" value="" maxlength="16"/>
+				    <span class="fhs-input-icon fhs-textbox-alert"></span>
+				</div>
+			    </div>
+			    <div class="fhs-input-alert"></div>
+			</div>
+			<div class="fhs-input-box fhs-input-group-horizontal-account">
+			    <label><?php echo $this->__('New Password');?>*</label>
+			    <div class="fhs-input-item">
+				<div class="fhs-input-group">
+				    <input class="fhs-textbox" type="password" placeholder="<?php echo $this->__('New Password') ?>" name="password" id="password" value="" maxlength="16"/>
+				    <span class="fhs-input-icon fhs-textbox-alert"></span>
+				</div>
+			    </div>
+			    <div class="fhs-input-alert"></div>
+			</div>
+			<div class="fhs-input-box fhs-input-group-horizontal-account">
+			    <label><?php echo $this->__('Confirm New Password');?>*</label>
+			    <div class="fhs-input-item">
+				<div class="fhs-input-group">
+				    <input class="fhs-textbox" type="password" placeholder="<?php echo $this->__('Confirm New Password') ?>"  name="confirmation" id="confirmation" value="" maxlength="16"/>
+				    <span class="fhs-input-icon fhs-textbox-alert"></span>
+				</div>
+			    </div>
+			    <div class="fhs-input-alert"></div>
+			</div>
+		    </div>
+		</div>
+		<div style="text-align: center;padding: 20px 0 10px 0;">
+		    <button type="button" title="<?php echo $this->__('Save changed') ?>" id="btn-save-account-info" class="btn-save-confirm"><span><span><?php echo $this->__('Save changed') ?></span></span></button>
+		</div>
+	    </form>
+    </div>
+</div>
+    <div class="my-account my-account-gtgt" style="background-color: #fff; margin-top: 15px !important;">
+	<div class="my-account">
+	    <div class="page-title-2">
+		<h1><?php echo $this->__('Information Outputting Invoice') ?></h1>
+	    </div>
+	    <div>
+		<div class="account-row">
+		    <label class='account-title'><?php echo $this->__('Buyer\'s full name'); ?></label>
+		    <input class='account-input' id="txt_vat_name" placeholder="<?php echo $this->__('Press buyer\'s full name'); ?>" value="<?php echo $VAT['name']; ?>" type="text"/>
+		</div>
+		<div class="account-row">
+		    <label class='account-title'><?php echo $this->__('Company name'); ?></label>
+		    <input class='account-input' id="txt_vat_company" placeholder="<?php echo $this->__('Press company name'); ?>" value="<?php echo $VAT['company']; ?>" type="text"/>
+		    
+		</div>
+		<div class="account-row">
+		    <label class='account-title'><?php echo $this->__('Address company'); ?></label>
+		    <input class='account-input' id="txt_vat_address" placeholder="<?php echo $this->__('Press address company'); ?>" value="<?php echo $VAT['address']; ?>" type="text"/>
+		</div>
+		<div class="account-row">
+		    <label class='account-title'><?php echo $this->__('Tax/VAT number company'); ?></label>
+		    <input class='account-input' id="txt_vat_taxcode" placeholder="<?php echo $this->__('Press Tax/GTGT number company'); ?>" value="<?php echo $VAT['taxcode']; ?>" type="text"/>
+		</div>
+		<div class="account-row">
+		    <label class='account-title'><?php echo $this->__('Invoice receipt email'); ?></label>
+		    <input class='account-input' id="txt_vat_email" placeholder="<?php echo $this->__('Press invoice receipt email'); ?>" value="<?php echo $VAT['email']; ?>" type="text"/>
+		</div>
+	    </div>
+	    <div style="text-align: center;padding: 20px 0 10px 0;">
+		<button type="button" id="btn_save_vat" title="<?php echo $this->__('Save changed') ?>" onclick="saveVAT()" class="btn-save-confirm"><span><?php echo $this->__('Save changed') ?></span></button>
+	    </div>
+	</div>
+    </div>
+</div>
+<div id="popup-fahasa-default-cover"></div>
+<div id="popup-fahasa-alert">
+    <div class="popup-fahasa-alert-logo">
+	<center><img src="<?php echo $this->getSkinUrl('images/logo-alert-success.png') ?>"></center>
+    </div>
+    <div class="popup-fahasa-default-alert-content">
+	<div class="popup-fahasa-default-content-text">
+	    <?php echo $this->__('Update info completed');?>!
+	</div>
+    </div>
+    <div class="popup-fahasa-default-footer-small btn-submit col-lg-12 col-md-12 col-sm-12 col-xs-12">
+	<button type="button" onclick="hideAlert();" class="popup-fahasa-default-alert-confirm">
+	    <span>
+		<?php echo $this->__('Ok') ?>                          
+	    </span>
+	</button>
+    </div>
+</div>
+
+<div class="youama-change-window youama-changePhone-window">
+    <div class="popup-change-title">
+	<?php echo $this->__('Change phone number');?>
+    </div>
+    <div class="popup-change-content">
+	<form>
+	<div class="fhs-input-box fhs-input-send">
+	    <label><?php echo $this->__('Phone number');?></label>
+	    <div class="fhs-input-group">
+		<input class="fhs-textbox" type="text" placeholder="<?php echo $this->__('Enter phone number') ?>" id="change_phone" name="youama-email" value="" maxlength="11" autocomplete="off" />
+		<span class="fhs-input-icon fhs-textbox-phonesend"><?php echo $this->__('Send OTP code');?></span>
+	    </div>
+	    <div class="fhs-input-alert"></div>
+	</div>
+	<div class="fhs-input-box">
+	    <label><?php echo $this->__('Confirm OTP code');?></label>
+	    <div class="fhs-input-group">
+		<input class="fhs-textbox" type="text" placeholder="<?php echo $this->__('6 characters') ?>" id="change_phone_otp" name="otpvalue" value="" maxlength="6" autocomplete="off" disabled="disabled"/>
+		<span class="fhs-input-icon fhs-textbox-alert"></span>
+	    </div>
+	    <div class="fhs-input-alert"></div>
+	</div>
+	<div class="fhs-input-box">
+	    <div class="fhs-btn-box">
+		<button type="button" title="<?php echo $this->__('Confirm') ?>" class="fhs-btn-confirm fhs-btn-changephone" disabled><span><?php echo $this->__('Confirm') ?></span></button>
+		<button type="button" title="<?php echo $this->__('Go back')?>" class="fhs-btn-back lg-close fhs-btn-backPhone"><span><?php echo $this->__('Go back') ?></span></button>
+	    </div>
+	</div>
+	<div class="fhs-popup-msg fhs-changephone-msg"></div>
+	</form>
+    </div>
+</div>    
+
+<div class="youama-change-window youama-changeEmail-window">
+    <div class="popup-change-title">
+	<?php echo $this->__('Change email');?>
+    </div>
+    <div class="popup-change-content">
+	<div class="fhs-input-box fhs-input-send">
+	    <label><?php echo $this->__('Email');?></label>
+	    <div class="fhs-input-group">
+		<input class="fhs-textbox" type="text" placeholder="<?php echo $this->__('Enter Email') ?>" id="change_email" name="youama-email" value="" maxlength="200" autocomplete="off" />
+		<span class="fhs-input-icon fhs-textbox-emailsend"><?php echo $this->__('Send OTP code');?></span>
+	    </div>
+	    <div class="fhs-input-alert"></div>
+	</div>
+	<div class="fhs-input-box">
+	    <label><?php echo $this->__('Confirm OTP code');?></label>
+	    <div class="fhs-input-group">
+		<input class="fhs-textbox" type="text" placeholder="<?php echo $this->__('6 characters') ?>" id="change_email_otp" name="otpvalue" value="" maxlength="6" autocomplete="off" disabled="disabled"/>
+		<span class="fhs-input-icon fhs-textbox-alert"></span>
+	    </div>
+	    <div class="fhs-input-alert"></div>
+	</div>
+	<div class="fhs-input-box">
+	    <div class="fhs-btn-box">
+		<button type="button" title="<?php echo $this->__('Confirm') ?>" class="fhs-btn-confirm fhs-btn-changeemail" disabled><span><?php echo $this->__('Confirm') ?></span></button>
+		<button type="button" title="<?php echo $this->__('Go back')?>" class="fhs-btn-back lg-close fhs-btn-backemail"><span><?php echo $this->__('Go back') ?></span></button>
+	    </div>
+	</div>
+	<div class="fhs-popup-msg fhs-changeemail-msg"></div>
+    </div>
+</div>    
+<script type="text/javascript">
+//<![CDATA[
+    save_vat_url = '<?php echo $this->getUrl('customer/account/saveVAT', array('_secure' => true)) ?>';
+    function saveVAT(){
+	var company = $('txt_vat_company').value;
+	var address = $('txt_vat_address').value;
+	var taxcode = $('txt_vat_taxcode').value;
+	var name = $('txt_vat_name').value;
+	var email = $('txt_vat_email').value;
+	var params = {
+	    company: company,
+	    address: address,
+	    taxcode: taxcode,
+	    name: name,
+	    email: email
+	}
+	new Ajax.Request(
+	save_vat_url, {
+	    method: 'post',
+	    parameters: params,
+	    onLoading: function () {
+		showLoadingAnimation();
+	    },
+	    onLoaded: function () {
+		hideLoadingAnimation();
+	    },
+	    onSuccess: function (result) {
+		if(JSON.parse(result.responseText).success == true){
+		    showAlert();
+		}
+	    },
+	    onFailure: function (request, status, error) {
+		hideLoadingAnimation();
+		alert(request.statusText);
+	    }
+	});
+    }
+    function hideLoadingAnimation() {
+	$jq('.loadding_ajaxcart,#wraper_ajax,.wrapper_box').remove();
+    }
+    function showLoadingAnimation(){
+	var loading_bg = $jq('#ajaxconfig_info button').attr('name');
+	var opacity = $jq('#ajaxconfig_info button').attr('value');
+	var loading_image = $jq('#ajaxconfig_info img').attr('src');
+	var style_wrapper =  "position: fixed;top:0;left:0;filter: alpha(opacity=70); z-index:99999;background-color:"+loading_bg+"; width:100%;height:100%;opacity:"+opacity+"";
+	var loading = '<div id ="wraper_ajax" style ="'+style_wrapper+'" ><div  class ="loadding_ajaxcart" style ="z-index:999999;position:fixed; top:50%; left:50%;"><img src="'+loading_image+'"/></div></div>';
+	if($jq('#wraper_ajax').length==0) {
+	    $jq('body').append(loading);
+	}
+    }
+    function changeGender(gender){
+	$('gender').value = gender;
+    }
+    function showAlert(){
+	jQuery("#popup-fahasa-default-cover").fadeIn();
+	jQuery('#popup-fahasa-alert').fadeIn();
+    }
+    function hideAlert(){
+	jQuery("#popup-fahasa-default-cover").fadeOut();
+	jQuery('#popup-fahasa-alert').fadeOut();
+    }
+//]]>
+</script>
+<script>
+    $jq(document).ready(function(){
+	fhs_account.initAccountInfo();
+	fhs_account.setDateBox('.customer-dob');
+	$jq('#btn-save-account-info').click(function(){
+	    let is_pass = true;
+
+	    let lastname = $jq('#lastname');
+	    if(!fhs_account.validateTextbox('text',lastname.val().trim(), lastname)){
+		is_pass = false;
+	    }
+	    
+	    let firstname = $jq('#firstname');
+	    if(!fhs_account.validateTextbox('text',firstname.val().trim(), firstname)){
+		is_pass = false;
+	    }
+	    
+	    let gender = $jq('#gender');
+	    if(!fhs_account.validateTextbox('text',gender.val().trim(), gender)){
+		is_pass = false;
+	    }
+	    let dob = $jq('#dob');
+	    if(!fhs_account.validateTextbox('date',dob.val().trim(), dob)){
+		is_pass = false;
+	    }
+	    
+	    if($jq('#change_password').is(":checked")){
+		let current_password = $jq('#current_password');
+		if(!fhs_account.validateTextbox('password',current_password.val().trim(), current_password)){
+		    is_pass = false;
+		}
+		
+		let password = $jq('#password');
+		if(!fhs_account.validateTextbox('password',password.val().trim(), password)){
+		    is_pass = false;
+		}
+		
+		let confirmation = $jq('#confirmation');
+		if(!fhs_account.validateTextbox('password',confirmation.val().trim(), confirmation)){
+		    is_pass = false;
+		}else{
+		    if(password.val().trim() != confirmation.val().trim()){
+			let $input_box = confirmation.parents('.fhs-input-box');
+			let alert_message = $input_box.children('.fhs-input-alert');
+			$input_box.removeClass('checked-pass');
+			$input_box.addClass('checked-error');
+			alert_message.text('<?php echo $this->__('The confirmation password is incorrect');?>');
+			is_pass = false;
+		    }
+		}
+		
+		
+	    }
+	    
+	    if(is_pass){
+		$jq('#form-account-info').submit();
+	    }
+	});
+	$jq('#change_password').click(function(){
+	    PasswordShow($jq(this).is(":checked"));
+	});
+	
+    });
+    function PasswordShow(isShow){
+	if(isShow){
+	    $jq('.fhs-edit-account-password-form').fadeIn(0);
+	}else{
+	    $jq('.fhs-edit-account-password-form').fadeOut(0);
+	}
+    }
+    
+    <?php if($customer->getChangePassword()): ?>
+	$jq("#change_password").attr('checked', true);
+	PasswordShow(true);
+    <?php endif; ?>
+</script>

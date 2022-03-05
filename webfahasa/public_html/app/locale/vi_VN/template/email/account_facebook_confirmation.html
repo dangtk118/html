@@ -1,0 +1,53 @@
+<!--@subject Xác nhận tài khoản cho {{var customer.name}} @-->
+<!--@vars
+{"store url=\"\"":"Store Url",
+"var logo_url":"Email Logo Image Url",
+"var logo_alt":"Email Logo Image Alt",
+"store url=\"customer/account/\"":"Customer Account Url",
+"htmlescape var=$customer.name":"Customer Name",
+"var customer.email":"Customer Email",
+"store url=\"customer/account/confirm/\" _query_id=$customer.id _query_key=$customer.confirmation _query_back_url=$back_url":"Confirmation Url",
+"htmlescape var=$customer.password":"Customer password"}
+@-->
+
+<!--@styles
+@-->
+
+<body style="background:#F6F6F6; font-family:Verdana, Arial, Helvetica, sans-serif; font-size:12px; margin:0; padding:0;">
+<div style="background:#F6F6F6; font-family:Verdana, Arial, Helvetica, sans-serif; font-size:12px; margin:0; padding:0;">
+<table cellspacing="0" cellpadding="0" border="0" width="100%">
+    <tr>
+        <td align="center" valign="top" style="padding:20px 0 20px 0">
+            <table bgcolor="#FFFFFF" cellspacing="0" cellpadding="10" border="0" width="650" style="border:1px solid #c00;">
+                <!-- [ header starts here] -->
+                <tr>
+                    <td valign="top"><a href="{{store url=""}}"><img src="{{var logo_url}}" alt="{{var logo_alt}}" style="margin-bottom:10px;" border="0"/></a></td>
+                </tr>
+                <tr>
+                    <td valign="top" style="padding: 30px">
+                            <h1 style="font-size:22px; font-weight:normal; line-height:22px; margin:0 0 11px 0;">Xin chào {{htmlescape var=$customer.name}},</h1>
+                            <p style="font-size:12px; line-height:16px; margin:0;">E-mail {{var customer.email}} của bạn phải được xác nhận trước khi sử dụng để đăng nhập vào www.fahasa.com bằng Facebook.</p>
+                            <p style="font-size:12px; line-height:16px; margin:0;">Để xác nhận e -mail, xin vui lòng , nhấn vào <a href="{{store url="customer/account/confirmFacebook/" _query_id=$customer.id {{if isConfirm}}_query_key=$customer.confirmation{{/if}} _query_back_url=$back_url _query_facebookId=$facebookId _query_facebookKey=$facebookKey}}" style="color:#1E7EC8;">link xác nhận này</a>.</p>                            
+                        </td>
+                </tr>                
+                <tr>
+                    <td bgcolor="cc0000" align="center" style="background:#c00; text-align:center; color: white">
+                        <center>
+                            <p style="font-size:12px; margin:0;">
+                                <strong>{{config path='trans_email/ident_sales/name'}}</strong><br>
+                                Điện thoại hỗ trợ: {{config path='general/store_information/phone'}} &nbsp; - &nbsp; Email: <a style="color: white" href="mailto:{{config path='trans_email/ident_sales/email'}}">{{config path='trans_email/ident_sales/email'}}</a>
+                            </p>
+                        </center>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td align="center" style="text-align:center; padding-bottom: 20px">
+            <p style="font-size:13px; font-weight: bold; margin:0; color:black;">Chúng tôi thành thật xin lỗi nếu email này làm phiền bạn!</p>
+        </td>
+    </tr>    
+</table>
+</div>
+</body>

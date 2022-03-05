@@ -1,0 +1,8 @@
+<config> 
+    <modules>       
+        <Sonassi_FastSearchIndex> 
+            <active>true</active> 
+            <codePool>community</codePool> 
+        </Sonassi_FastSearchIndex> 
+   </modules>
+</config>

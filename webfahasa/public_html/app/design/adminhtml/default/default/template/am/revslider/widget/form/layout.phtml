@@ -1,0 +1,69 @@
+<?php
+/**
+ * @category    AM
+ * @package     AM_RevSlider
+ * @copyright   Copyright (C) 2008-2014 ArexMage.com. All Rights Reserved.
+ * @license     GNU General Public License version 2 or later
+ * @author      ArexMage.com
+ * @email       support@arexmage.com
+ */
+?>
+<?php $element = $this->getElement() ?>
+<tr>
+    <td class="label"><?php echo $element->getLabel() ?></td>
+    <td class="value">
+        <div id="layout-preshow">
+            <div id="layout-preshow-page">
+                <div class="layout-preshow-text">BROWSER</div>
+                <div id="layout-preshow-theme">
+                    <div class="layout-preshow-text">PAGE</div>
+                </div>
+                <div id="layout-preshow-slider">
+                    <div class="layout-preshow-text">SLIDER</div>
+                </div>
+                <div id="layout-preshow-grid">
+                    <div class="layout-preshow-text">LAYERS GRID</div>
+                </div>
+            </div>
+        </div>
+        <p class="note"><?php echo $element->getNote() ?></p>
+    </td>
+</tr>
+<script type="text/javascript">
+    document.observe('dom:loaded', function(){
+        updateLayoutPreview();
+
+        'layout|auto_height|force_full_width|full_screen_align_force'.split('|').each(function(elm){
+            Event.observe($(elm), 'change', function(){
+                updateLayoutPreview();
+            });
+        });
+    });
+
+    function updateLayoutPreview(){
+        var layout = $('layout-preshow'),
+            classes = [];
+
+        var layout_type = $('layout').value;
+        switch (layout_type){
+            case 'fullwidth':
+                classes.push('lp-autoresponsive');
+                break;
+            case 'responsitive':
+                classes.push('lp-custom');
+                break;
+            default:
+                classes.push('lp-' + layout_type);
+        }
+        if (!$('auto_height').disabled && $('auto_height').value == 'on'){
+            classes.push('lp-autoheight');
+        }
+        if (!$('force_full_width').disabled && $('force_full_width').value == 'on'){
+            classes.push('lp-fullwidth');
+        }
+        if (!$('full_screen_align_force').disabled && $('full_screen_align_force').value == 'on'){
+            classes.push('lp-fullscreenalign');
+        }
+        layout.className = classes.join(' ');
+    }
+</script>

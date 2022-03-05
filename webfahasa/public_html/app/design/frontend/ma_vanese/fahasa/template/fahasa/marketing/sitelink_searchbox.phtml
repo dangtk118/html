@@ -1,0 +1,16 @@
+<!-- gg sitelink searchbox -->
+<script type="application/ld+json">
+    <?php 
+        $schema = '{'
+            . '"@context": "http://schema.org",'
+            . '"@type": "WebSite",'
+            . '"url":"' . Mage::getBaseUrl() . '",'
+            . '"potentialAction":{'
+            . '"@type":"SearchAction",' 
+            . '"target":"' . Mage::getBaseUrl() . 'catalogsearch/result/?q={search_term_string}",'
+            . '"query-input":"required name=search_term_string"'
+            . '}}';      
+        echo $schema;
+    ?>
+</script>
+<!-- gg sitelink searchbox -->

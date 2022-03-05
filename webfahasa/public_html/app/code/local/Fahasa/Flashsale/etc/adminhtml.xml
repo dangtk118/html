@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<config>
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <flashsale_config translate="title" module="flashsale">
+                                        <title>Flash Sale Config</title>
+                                    </flashsale_config>
+                                </children>
+                            </config>
+                        </children>
+                    </system>                    
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</config>

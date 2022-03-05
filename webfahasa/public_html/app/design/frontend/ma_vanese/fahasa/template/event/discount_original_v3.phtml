@@ -1,0 +1,418 @@
+<?php
+$the_le_link = $this->getData('the-le-link');
+$xem_them_link = $this->getData('xem-them-link');
+$item_size = $this->getData('item-size');
+$is_center = $this->getData('is_center');
+$coupon_type = $this->getData('coupon_type');
+$id = $this->getData('id');
+$vid = 'v3_'.$id;
+if(!$id){
+    $id = 2;
+}
+$limit = $this->getData('limit');
+if(!$limit){
+    $limit = 50;
+}
+if(!$item_size){
+    $item_size = 'col-md-4 col-ms-4 col-xs-12';
+}
+if(!$coupon_type){
+    $coupon_type = 'grid';
+    //$coupon_type = 'slider';
+    //$coupon_type = 'dyn';
+}
+$blockId = $this->getData("blockId");
+$helper = Mage::helper('fhsrule');
+?>
+
+<style type="text/css">
+    #fhs_buffet_coupon_<?php echo $vid; ?> {
+	display: none;
+        min-height: 100px;
+        margin-top: 10px;
+	text-align: center;
+	margin: 10px 9.5px 0 9.5px;
+    }
+    .fhs_buffet_coupon_<?php echo $vid; ?>_grid {
+	<?php if($coupon_type == 'grid' || $coupon_type == 'dyn'):?>
+	    display: block;
+	<?php else:?>
+	    display: none;
+	<?php endif;?>
+    }
+    
+    .fhs_buffet_coupon_<?php echo $vid; ?>_xem_them_link a{
+        float: right;
+        margin-right: 20px;
+        padding: 5px;
+        color: #FF9800;
+    }
+    
+    .fhs_buffet_coupon_<?php echo $vid; ?>_list{
+	display: flex;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	flex-direction:row;
+	-webkit-flex-wrap: wrap; /* Safari */
+	flex-wrap:         wrap;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: flex-start;
+	-webkit-align-items: flex-start;
+	-webkit-justify-content: center;
+	justify-content: center;
+    }
+    .fhs_buffet_coupon_<?php echo $vid; ?>_list > div{
+	padding: 0 7.5px 0 7.5px;
+	margin: 4px 0;
+	height: 140px;
+	<?php if($coupon_type == 'grid'):?>
+	<?php endif;?>
+    }
+    .fhs_buffet_coupon_<?php echo $vid; ?>_list_item{
+	width: 100%;
+	height:100%;
+	background-color: white;
+	display: flex;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	flex-direction:row;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: flex-start;
+	-webkit-align-items: flex-start;
+	-webkit-justify-content: flex-start;
+	justify-content: flex-start;
+	-webkit-box-shadow: 0 0 8px 0 hsl(0, 0%, 30%);
+	-moz-box-shadow: 0 0 8px 0 hsl(0, 0%, 30%);
+	box-shadow: 0 0 8px 0 hsl(0, 0%, 30%);
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+    }
+    .fhs_buffet_coupon_<?php echo $vid; ?>_list_item > div:first-of-type{
+	height:100%;
+	text-align: left;
+    }
+    .fhs_buffet_coupon_<?php echo $vid; ?>_list_item > div:first-of-type{
+	width: calc(100% - 150px);
+	padding: 8px;
+    }
+    .fhs_buffet_coupon_<?php echo $vid; ?>_list_item > div:first-of-type > div:first-of-type{
+	height: calc(100% - 14px);
+	overflow-y: auto;
+	margin-bottom: 4px;
+    }
+    .fhs_buffet_coupon_<?php echo $vid; ?>_list_item > div:first-of-type > div:first-of-type > div:first-of-type{
+	font-size: 1.4em;
+	font-weight: 650;
+    }
+    .fhs_buffet_coupon_<?php echo $vid; ?>_list_item > div:first-of-type > div:first-of-type > div:nth-of-type(2){
+    }
+    .fhs_buffet_coupon_<?php echo $vid; ?>_list_item > div:first-of-type > div:first-of-type > div:last-of-type{
+    }
+    .fhs_buffet_coupon_<?php echo $vid; ?>_list_item > div:first-of-type > div:last-of-type{
+	height: 10px;
+	background-color: #e6e6e6;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+    }
+    .fhs_buffet_coupon_<?php echo $vid; ?>_list_item > div:first-of-type > div:last-of-type > div{
+	height:100%;
+	background-color: #28B928;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+    }
+    .fhs_buffet_coupon_<?php echo $vid; ?>_list_item > div:nth-of-type(2){
+	display: flex;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	flex-direction:column;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+	-webkit-align-items: center;
+	-webkit-justify-content: center;
+	justify-content: center;
+	width: 11px;
+	height:100%;
+    }
+    .fhs_buffet_coupon_<?php echo $vid; ?>_list_item > div:nth-of-type(2) > div:first-of-type{
+	width: 100%;
+	height:6px;
+	background-color: #F7931E;
+	-moz-border-radius-bottomleft: 6px;
+	-moz-border-radius-bottomright: 6px;
+	-webkit-border-bottom-left-radius: 6px;
+	-webkit-border-bottom-right-radius: 6px;
+    }
+    .fhs_buffet_coupon_<?php echo $vid; ?>_list_item > div:nth-of-type(2) > div:nth-of-type(2){
+	width: 3px;
+	height: 100%;
+	background-color: #F7931E;
+	margin-top: -5px;
+	margin-bottom: -5px;
+    }
+    .fhs_buffet_coupon_<?php echo $vid; ?>_list_item > div:nth-of-type(2) > div:last-of-type{
+	width: 100%;
+	height:6px;
+	background-color: #F7931E;
+	-moz-border-top-left-radius: 6px;
+	-moz-border-top-right-radius: 6px;
+	-webkit-border-top-left-radius: 6px;
+	-webkit-border-top-right-radius: 6px;
+    }
+    .fhs_buffet_coupon_<?php echo $vid; ?>_list_item > div:last-of-type{
+	display: flex;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	flex-direction:column;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+	-webkit-align-items: center;
+	-webkit-justify-content: center;
+	justify-content: center;
+	width: 140px;
+	padding: 8px;
+    }
+    .fhs_buffet_coupon_<?php echo $vid; ?>_list_item > div:last-of-type > div:first-of-type{
+	
+    }
+    .fhs_buffet_coupon_<?php echo $vid; ?>_list_item > div:last-of-type > div:nth-of-type(2){
+	padding: 8px;
+	font-size: 1.2em;
+	font-weight: 700;
+	color: #F39801;
+    }
+    .fhs_buffet_coupon_<?php echo $vid; ?>_list_item > div:last-of-type > div:nth-of-type(3){
+	
+    }
+    .fhs_buffet_coupon_<?php echo $vid; ?>_list_item > div:last-of-type > div:last-of-type{
+	max-width: 100%;
+    }
+    
+    
+    .fhs-input-box.fhs-input-btn .fhs-input-group > .fhs-input-icon:disabled{
+    background: rgb(224,224,224);
+    background: -moz-linear-gradient(90deg, rgba(224,224,224,1) 0%, rgba(224,224,224,1) 100%);
+    background: -webkit-linear-gradient(90deg, rgba(224,224,224,1) 0%, rgba(224,224,224,1) 100%);
+    background: linear-gradient(90deg, rgba(224,224,224,1) 0%, rgba(224,224,224,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#e0e0e0",endColorstr="#e0e0e0",GradientType=1);
+    border: none;
+    color: #636363;
+}
+/*.fhs-input-box.fhs-input-btn .fhs-input-group > .fhs-input-icon:hover{
+    box-shadow: 0px 6px 8px hsl(0, 0%, 90%);
+    -moz-box-shadow: 0px 6px 8px hsl(0, 0%, 90%);
+    -webkit-box-shadow: 0px 6px 8px hsl(0, 0%, 90%);
+    transform: scale(1.03);
+}*/
+.fhs-input-box.fhs-input-btn .fhs-input-group > .fhs-input-icon:active{
+    box-shadow: 0px 2px 4px hsl(0, 0%, 90%);
+    -moz-box-shadow: 0px 2px 4px hsl(0, 0%, 90%);
+    webkit-box-shadow: 0px 2px 4px hsl(0, 0%, 90%);
+    transform: scale(0.98);
+}
+
+    .fhs_buffet_coupon_<?php echo $vid; ?>_slider{
+	<?php if($coupon_type == 'slider'):?>
+	    display: block;
+	<?php else:?>
+	    display: none;
+	<?php endif;?>
+    }
+    .fhs_buffet_coupon_<?php echo $vid; ?>_slider_list{
+	display: flex;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	flex-direction:row;
+	-webkit-flex-wrap: nowrap; /* Safari */
+	flex-wrap:         nowrap;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: flex-start;
+	-webkit-align-items: flex-start;
+	-webkit-justify-content: flex-start;
+	justify-content: flex-start;
+	margin-left: 4px;
+	margin-right: 4px;
+    }
+    .fhs_buffet_coupon_<?php echo $vid; ?>_slider_list > div{
+	margin: 4px 0;
+	height: 140px;
+    }
+    
+    <?php if($coupon_type == 'dyn'){
+	echo  
+    "@media screen and (max-width: 992px){
+	.fhs_buffet_coupon_".$vid."_slider{
+	    display: block !important;
+	}
+	.fhs_buffet_coupon_".$vid."_grid{
+	    display: none !important;
+	}
+    }
+    @media screen and (min-width: 992px){
+	.fhs_buffet_coupon_".$vid."_list > div{
+	    min-width: 370px;
+	}
+    }";
+    }?>
+    
+    <?php if($coupon_type == 'grid'){
+	echo
+	"
+	.fhs_buffet_coupon_".$vid."_list > div{
+	    min-width: 370px;
+	}
+	@media screen and (max-width: 320px){
+	    .fhs_buffet_coupon_".$vid."_list > div{
+		min-width: 270px;
+	    }
+	    .fhs_buffet_coupon_".$vid."_list_item > div:first-of-type{
+	        width: calc(100% - 92px);
+	    }
+	    .fhs_buffet_coupon_".$vid."_list_item > div:last-of-type{
+		width: 92px;
+	    }
+	}";
+    }?>
+</style>
+<div <?php if(!is_null($blockId)) : echo 'id="' . $blockId . '"' ; endif; ?>>
+    <div id="fhs_buffet_coupon_<?php echo $vid; ?>">
+	<?php if($coupon_type == 'grid' || $coupon_type == 'dyn'):?>
+	<div class="fhs_buffet_coupon_<?php echo $vid; ?>_grid">
+	    <div class="fhs_buffet_coupon_<?php echo $vid; ?>_list">
+		</div>
+	    <?php if($xem_them_link): ?>
+		<div class="fhs_buffet_coupon_<?php echo $vid; ?>_xem_them_link">
+		    <a href="<?php echo $xem_them_link; ?>">Xem Thêm</a>
+		</div>
+	    <?php endif; ?>
+	    <div class="clear"></div>
+	</div>
+	<?php endif;?>
+
+	<?php if($coupon_type == 'slider' || $coupon_type == 'dyn'):?>
+	<div class="swiper-container fhs_buffet_coupon_<?php echo $vid; ?>_slider">
+	    <div class="swiper-wrapper fhs_buffet_coupon_<?php echo $vid; ?>_slider_list"></div>
+	</div>
+	<?php endif;?>
+    </div>
+</div>
+<script type="text/javascript">
+    $jq(document).ready(function () {
+        $jq.ajax({
+            url: "/node_api/fhsrule/event_couponsshow",
+	    data: {'id': <?php echo $id; ?>, 'limit': <?php echo $limit; ?>},
+            method: 'post',
+            success: function (data) {
+                if (!data.result || data.periods.length <= 0) {
+                    return;
+                }
+		
+		<?php if($coupon_type == 'grid' || $coupon_type == 'dyn'):?>
+		    let coupons = '';
+		    for (let i = 0; i < data.periods.length; i++) {
+			coupons += printDiscountOriginalV3<?php echo $id; ?>PeriodHtml(data.periods[i], '<?php echo $item_size;?>');
+		    }
+		    $jq(".fhs_buffet_coupon_<?php echo $vid; ?>_list").html(coupons);
+		<?php endif;?>
+
+		<?php if($coupon_type == 'slider' || $coupon_type == 'dyn'):?>
+		    let slider_coupons = '';
+		    for (let i = 0; i < data.periods.length; i++) {
+			slider_coupons += printDiscountOriginalV3<?php echo $id; ?>PeriodHtml(data.periods[i], 'swiper-slide');
+		    }
+		    $jq(".fhs_buffet_coupon_<?php echo $vid; ?>_slider_list").html(slider_coupons);
+		    let s_width = $jq(document).width();
+		    let spaceBetween = 15;
+		    if(s_width >= 412){
+			s_width = 365;
+		    }else{
+			s_width = s_width - 40;
+			spaceBetween = 8;
+		    }
+		    new Swiper('.fhs_buffet_coupon_<?php echo $vid; ?>_slider', {
+			width: s_width,
+			spaceBetween: spaceBetween,
+		    });
+		<?php endif;?>
+		
+		$jq('#fhs_buffet_coupon_<?php echo $vid; ?>').fadeIn();
+            }
+        });
+	
+        function printDiscountOriginalV3<?php echo $id; ?>PeriodHtml(period, size) {
+            let btn_disabled_srt = '';
+            let btn_title = '<?php echo $this->__('Copy code');?>';
+	    let code = '?????'
+	    let progress = period['progress'];
+	    let btn_class_waiting = '';
+
+            if (!period['has_passed']) {
+                btn_title = '<?php echo $this->__('Come in soon');?>';
+                btn_class_waiting = 'waiting';
+		btn_disabled_srt = "disabled='true'";
+		progress = 0;
+            }else{
+		if(period['coupon_code']){
+		    code = period['coupon_code'];
+		}else{
+		    code = "&nbsp;";
+		}
+	    }
+	    if (period['is_effective']) {
+                btn_title = '<?php echo $this->__('Out of code');?>';
+                btn_class_waiting = '';
+		btn_disabled_srt = "disabled='true'";
+		progress = 0;
+            }
+	    
+            return "<div class=\""+size+"\">"
+				    +"<div class=\"fhs_buffet_coupon_<?php echo $vid; ?>_list_item\">"
+					+"<div class=\"fhs_buffet_coupon_info\">"
+					    +"<div>"
+						+"<div>" + period['title'] + "</div>"
+						+"<div>" + period['discount'] + "</div>"
+						+"<div>" + period['description'] + "</div>"
+					    +"</div>"
+					    +"<div><div style=\"width: " + progress + "%;\"></div></div>"
+					+"</div>"
+					+"<div><div></div><div></div><div></div>"
+					+"</div>"
+					+"<div class=\"fhs_buffet_coupon_result\">"
+					    +"<div>" + period['display_time'] + "</div>"
+					    +"<div class=\"fhs_buffet_coupon_code\">"+code+"</div>"
+					    +"<div>"
+						+"<div class=\"fhs-btn-box\">"
+						    +"<button type=\"button\" title=\""+btn_title+"\" class=\"fhs-btn-coupon-copy "+btn_class_waiting+"\" onclick=\"fhs_account.copyCouponCode('"+code+"');\" "+btn_disabled_srt+"><span>"+btn_title+"</span></button>"
+						    +"<button type=\"button\" title=\"<?php echo $helper->__('Rules details')?>\" class=\"fhs-btn-coupon-rule\" onclick=\"window.location.href='<?php echo $the_le_link; ?>'\" <?php echo $the_le_link?'':"style='display:none;'";?>><span><?php echo $helper->__('Rules details')?></span></button>"
+						+"</div>"
+					    +"</div>"
+					+"</div>"
+				+"</div>"
+			    +"</div>";
+        }
+
+    });
+
+</script>

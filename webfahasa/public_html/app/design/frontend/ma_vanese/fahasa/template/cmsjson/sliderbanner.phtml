@@ -1,0 +1,16 @@
+<?php $content = json_decode($this->getData('data'), true); ?>
+
+<?php if ($content): ?>
+    <?php foreach ($content as $data): ?>
+        <div class="swiper-slide <?php echo $data["webClass"] ?>">
+            <a href="<?php echo $this->handleURLLink($data["urlLink"]); ?>">
+                <?php $mobile = Mage::helper('fhsmobiledetect')->isMobile(); ?>
+                <?php if (!$mobile) : ?>
+                    <img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . $data["urlWebImg"] ?>" alt="" />
+                <?php else: ?>
+                    <img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . $data["urlMobileImg"] ?>" alt="" />
+                <?php endif; ?>
+            </a>
+        </div>
+    <?php endforeach; ?>
+<?php endif; ?>

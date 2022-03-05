@@ -1,0 +1,173 @@
+.block-testimonial-sidebar, .menu-recent{
+    margin-top: 0px;
+}
+
+.menu-recent{
+    background-color: white;
+    margin-bottom: 30px;
+}
+
+.menu-recent .bx-wrapper .bx-controls a{
+    margin-top: -36px;
+}
+
+.menu-recent .bx-wrapper .bx-controls a.bx-next{
+    right: -8px !important;
+    background: url(../images/btn-slider.png) -12px 2px no-repeat;
+    background-color: black;
+}
+
+.menu-recent .bx-wrapper .bx-controls a.bx-prev{
+    left: 5px !important;
+    background: url(../images/btn-slider.png) 1px 2px no-repeat;
+    background-color: black;
+}
+
+.menu-recent .bx-wrapper .bx-controls a.bx-prev:hover, .menu-recent .bx-wrapper .bx-controls a.bx-next:hover{
+    background-color: #F7941E;
+}
+
+.menu-recent .blog-titles h2{
+    text-indent: 20px;
+    background-color: #F7941E;
+}
+
+.menu-recent .bx-wrapper{
+    margin: 10px;
+}
+
+.menu-recent li a.readmore{
+    margin-bottom: 30px;
+    background-color: #F7941E;
+    border-radius: 7px;
+    font-weight: 600;
+    font-family: "Poppins", sans-serif;
+    color: white;
+}
+
+.menu-recent li a.readmore:hover{
+    background-color: #c00;
+    color: white;
+}
+
+.menu-recent .blog-titles{
+    width: 100%;
+}
+
+.menu-recent .blog-title{
+    font-family: "OpenSansBold",Arial,Helvetica,sans-serif;
+    color: black !important;
+}
+
+.block-blog .menu-categories ul li{
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+}
+
+.block-blog .menu-categories ul li a{
+    font-size: 14px;
+    color: #6f6c6c;
+}
+
+.block .block-title strong{
+    padding-left: 0px;
+}
+
+#fhs-blog .postWrapper{
+    clear: none;
+    margin-bottom: 5px;
+    padding: 0px;
+    font-family: "OpenSansRegular";
+}
+
+#fhs-blog .post-image{
+    text-align: center;
+    object-fit: cover
+}
+
+.postTitle{
+    border: none;
+    margin-bottom: 5px;
+}
+
+.postTitle h2{
+    font-size: 20px;
+    font-family: "OpenSansRegular";
+    font-weight: bold;
+    line-height: 30px;
+}
+
+.postTitle h2 a{
+    color: #3d3d3d;
+}
+
+.postContent{
+    line-height: 25px;
+    font-size: 12px;
+    color: #222;
+}
+
+.postDetails{
+    margin-bottom: 20px;
+    color: #a8a8a8;
+}
+
+.post-comment{
+    background-color: white;
+    padding: 10px;
+}
+
+.blog-post-comment .postTitle{
+    margin-top: 20px;
+    margin-bottom: 5px;
+    background-color: white;
+    padding-left: 10px;
+}
+
+.blog-post-comment .postCommnentForm{
+    background-color: white;
+    padding: 10px;
+}
+
+.commentDetails .username{
+    font-weight: bold;
+}
+
+#fhs-blog .toolbar, .blog-post-comment .toolbar{
+    margin-bottom: 10px;
+}
+
+.latest-comment .comment{
+    padding-top: 10px;
+    padding-bottom: 15px;
+    border-bottom: 1px dotted #ccc;
+    background-color: white;
+}
+
+.latest-comment .username{
+
+    padding: 0px;
+}
+.latest-comment .datetime{
+    padding: 0px;
+}
+
+.latest-comment .username{
+    font-weight: bold;
+    font-size: 14px;
+    text-transform: uppercase;
+    margin: 5px 0;
+}
+
+.latest-comment .content{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.latest-comment .post-name{
+    padding: 0px;
+}
+
+.latest-comment .datetime{
+    color: #9b9b9b;
+}

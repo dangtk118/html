@@ -1,0 +1,245 @@
+<?php 
+    $helper = Mage::helper("fpointstorev2/data");
+    $page_limit = (int) Mage::getStoreConfig('fpointstorev2_config/config/page_limit');
+    $fpoint = Mage::helper('tryout')->determinetryout();
+    $islogin = Mage::getSingleton('customer/session')->isLoggedIn();
+    $vip_info = [];
+    $combo_list = [];
+    $customer_id = 0;
+    if($islogin){
+	$customer = Mage::getSingleton('customer/session')->getCustomer();
+	$customer_id = $customer->getEntityId();
+	$vip_info = $helper->getVipInfo($customer->getEntityId(), $customer->getCompanyId());
+	if($vip_info){
+	    $combo_can_buy = $vip_info['combo_buy_limit'] - $vip_info['combo_bought_times'];
+	    if($combo_can_buy > 0){
+		$combo_list = $helper->getComboList($customer->getEntityId(), $vip_info['id'],$vip_info['order_times']);
+	    }else{
+		$next_order = $helper->getVipNextOrder($vip_info['id'], $vip_info['order_times']);
+		if($next_order){
+		    $next_order_times = $next_order['order_times'] - $vip_info['order_times'];
+		    $next_combo_buy_limit = $next_order['combo_buy_limit'] - $vip_info['combo_bought_times'];
+		    $combo_list = $helper->getCombos($customer->getEntityId(), $vip_info['id'], $next_order['order_times'], 0, false);
+		}
+	    }
+	}
+    }
+    
+    $categories = $helper->getCategories();
+
+    $category_id = $this->getRequest()->getParam('cat_id', 0);
+    $current_page = 1;
+    $gifts = $helper->getGiftList($category_id, $current_page, $page_limit, $customer_id);
+    $media_url = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA, true);
+    $skin_url = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true);
+    $queryfier = Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix');
+    
+    $CSS_FILE = $skin_url."frontend/ma_vanese/fahasa/css/fpointstore_v2.css?q=".$queryfier;
+    $FS_SCRIPT = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS, true)."lib/fpointstore_v2.js?q=".$queryfier;
+    
+    $over = ($page_limit > sizeof($gifts));
+    $language = [];
+    $language['Change_now'] = $this->__("Change now");
+    $language['discount'] = $this->__("Discount ");
+    $language['code_normal'] = $this->__("Enter partner's VIP code");
+    $language['code_error'] = $this->__("Your partner VIP code is incorrect");
+    $language['queryfier'] = $queryfier;
+    $loading_icon_url = $skin_url.'frontend/ma_vanese/fahasa/images/ring_loader.gif';
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo $CSS_FILE; ?>" media="all" />
+<script type="text/javascript" src="<?php echo $FS_SCRIPT; ?>"></script>
+        <div class="page-empty-banner col-lg-12 col-md-12 col-sm-12">
+              <div style="text-align: center">
+		    <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('fpointstore_top_banner')->toHtml(); ?>
+	      </div>  
+        <div class="col-main">
+             <div class="container">
+                <div class="container-inner">
+
+<div style="justify-content: center;">
+    <!-- Begin info -->
+    <?php if($islogin):?>
+	<div id="fpointstore_info" class="fpointstore-page <?php echo (!$vip_info)?'fpointstore-page-info':'';?>">
+	    <div id="fpointstore_info_left">
+		<div class="fpoint-icon" ><img src="<?php echo $media_url.'wysiwyg/fpointstore/logo/ico_coin.png?q='.$queryfier; ?>" width="50"/></div>
+		<div class="fpoint-info">
+		    <div style="font-size: 1.2em;"><?php echo $this->__("You currently have");?>:</div>
+		    <div style="color: #F39801">
+			<span id="fpoint_info" style="font-size: 3em;font-weight: 750;"><?php echo number_format($fpoint, 0, ",", "."); ?></span>
+			<span style="font-size: 1.2em; font-weight: 600;">&nbsp;F-POINT</span>
+		    </div>
+		</div>
+	    </div>
+	    <div id="fpointstore_info_right">
+		    <?php if(!$vip_info):?>
+			<div class="vip-info">
+			    <div style="font-size: 1.2em;"><?php echo $this->__("Partner's VIP code (only applicable 1 code only once)");?></div>
+			    <div style="display: flex; margin-top: 16px; ">
+				<input id="txt_vip_code_info" class="" type="text" placeholder="<?php echo $this->__("Enter partner's VIP code");?>" />
+				<input id="btn_vip_code_info" type="button" onclick="fpointstore.updateVIP_Click()" value="<?php echo $this->__("Confirm");?>" />
+			    </div>
+			</div>
+		    <?php else:?>
+			<div class="vip-info-combo">
+			    <?php if(($combo_can_buy > 0) && $combo_list):?>
+				<div><?php echo $this->__("You have a chance to redeem <span>%s</span> in <span>%s</span> combo vouchers", $combo_can_buy, sizeof($combo_list));?></div>
+			    <?php elseif($next_order):?>
+				<div><?php echo $this->__("Complete <span>%s</span> order", $next_order_times);?></div>
+				<div><?php echo $this->__("get more <span>%s</span> chance to buy combo voucher", $next_combo_buy_limit);?></div>
+			    <?php endif;?>
+			</div>
+		    <?php endif;?>
+	    </div>
+	</div>
+    <?php endif;?>
+    <!-- End info -->
+
+    <!-- Begin slides -->
+    <?php if($islogin && $vip_info && $combo_list):?>
+	<div id="fpointstore_combo_info">
+	  <!-- Swiper -->
+	  <div class="swiper-container">
+		<div class="swiper-wrapper" width="1230" height="350">
+		    <?php foreach ($combo_list as $combo): ?>
+			<?php if(!$combo['is_over']): ?>
+			    <div class="swiper-slide">
+				<a href="/fpointstore/detail/combo/id/<?php echo $combo['id']; ?>">
+				    <img class="swiper-lazy" style="width: 1230px;" data-src="<?php echo $media_url.$combo['image']."?q=".$queryfier; ?>" alt="" title="<?php echo $combo['name']; ?>" />
+				    <div class="swiper-lazy-preloader"><img style='padding-bottom:0' src='<?php echo $loading_icon_url;?>'/></div>
+				</a>
+			    </div>
+			<?php elseif($combo['is_over']):?>
+			    <div class="swiper-slide">
+				<div class="fpointstore_combo_info-image">
+				    <div>
+					<img class="swiper-lazy" style="width: 1230px;" class="swiper-lazy" data-src="<?php echo $media_url.$combo['image']."?q=".$queryfier; ?>" alt="" title="<?php echo $combo['name']; ?>" />
+					<div class="swiper-lazy-preloader"><img style='padding-bottom:0' src='<?php echo $loading_icon_url;?>'/></div>
+				    </div>
+				    <div>
+					<img src="<?php echo $skin_url.'frontend/ma_vanese/fahasa/images/fpointstore/ico_hetvoucher.png?q='.$queryfier; ?>"/>
+				    </div>
+				</div>
+				
+			    </div>
+			<?php else:?>
+			    <div class="swiper-slide">
+				<img class="swiper-lazy" data-src="<?php echo $media_url.$combo['image']."?q=".$queryfier; ?>" alt="" title="banner" />
+				<div class="swiper-lazy-preloader"><img style='padding-bottom:0' src='<?php echo $loading_icon_url;?>'/></div>
+			    </div>
+			<?php endif;?>
+		    <?php endforeach;?>
+		</div>
+	    <!-- Add Arrows -->
+	    <div class="swiper-button swiper-button-prev <?php echo (sizeof($combo_list) == 1)?'swiper-button-hidden':''; ?>">
+		<img src="<?php echo $skin_url."frontend/ma_vanese/fahasa/images/fpointstore/ico_slide_left.png?q=".$queryfier; ?>" width="44px"/>
+	    </div>
+	    <div class="swiper-button swiper-button-next <?php echo (sizeof($combo_list) == 1)?'swiper-button-hidden':''; ?>">
+		<img src="<?php echo $skin_url."frontend/ma_vanese/fahasa/images/fpointstore/ico_slide_right.png?q=".$queryfier; ?>" width="44px"/>
+	    </div>
+	  </div>
+	</div>
+	  <!-- Initialize Swiper -->
+	  <script type="text/javascript">
+	    function resizeHeightImg(){
+		let cW = $jq('#fpointstore_combo_info .swiper-wrapper').width();
+		let aW = $jq('#fpointstore_combo_info .swiper-wrapper').attr('width');
+		let aH = $jq('#fpointstore_combo_info .swiper-wrapper').attr('height');
+		let img_height = Math.round((cW/aW) * aH);
+		$jq('#fpointstore_combo_info .swiper-wrapper').css("height", img_height);
+	    }
+	    resizeHeightImg();
+	    $jq(window).on('resize', function(){
+		resizeHeightImg();
+	    });
+            $jq(document).ready(function(){
+		var swiper = new Swiper('.swiper-container', {
+		    <?php if(sizeof($combo_list) > 1):?>
+			autoplay: {
+			    delay: 5000,
+			},
+		    <?php endif;?>
+		    loop: true,
+		    preloadImages: false,
+		    lazy: true,
+		    navigation: {
+		      nextEl: '.swiper-button-next',
+		      prevEl: '.swiper-button-prev',
+		    }
+		});
+		
+		if(!isMobile()){
+		    $jq('.swiper-container').hover(function(){
+			<?php if(sizeof($combo_list) > 1):?>
+			    swiper.autoplay.stop();
+			<?php endif;?>
+			//$jq('.swiper-button').fadeIn(100);
+		    },
+		    function(){
+			<?php if(sizeof($combo_list) > 1):?>
+			    swiper.autoplay.start();
+			<?php endif;?>
+			//$jq('.swiper-button').fadeOut(100);
+		    });
+		}
+            });  
+	    function isMobile() {
+		try{ document.createEvent("TouchEvent"); return true; }
+		catch(e){ return false; }
+	    }   
+	</script>
+    <?php endif;?>
+    <!-- End slides -->
+
+    <!-- Begin Content -->
+    <div id="fpointstore_voucher_info" class="fpointstore-page">
+	<div id="fpointstore-header-menu">
+	    <ol id="fpointstore-page-menu">
+		<li id="fpointstore_menu_item_0" class="fpointstore-menu-item <?php echo ($category_id == 0)?"active":"";?>" onclick="fpointstore.category_click(0)"><a>Tất cả</a><hr></li>
+		<?php 
+		foreach ($categories as $cat):?>
+		    <li id="fpointstore_menu_item_<?php echo $cat['id']; ?>" class="fpointstore-menu-item <?php echo ($category_id == $cat['id'])?"active":"";?>" onclick="fpointstore.category_click(<?php echo $cat['id']; ?>)"><a><?php echo $cat['name']; ?></a><hr></li>
+		<?php endforeach;?>
+	    </ol>
+	<div style="clear: both;"></div>
+	</div>
+	<div>
+	    <ol id="fpointstore-grid">
+		<?php foreach ($gifts as $gift):?>
+		    <li class="col-md-4 col-sm-6 col-xs-12 fpointstore-grid-item">
+			<a href="/fpointstore/detail/voucher/id/<?php echo $gift['id']; ?>">
+			    <div class="fpointstore-grid-item-box">
+				<img class="lazyload" src='<?php echo $loading_icon_url;?>' data-src="<?php echo $media_url.$gift['image'].'?q='.$queryfier; ?>" />
+				<div class="fpointstore-grid-item-box-lable"><?php echo $gift['name']."&nbsp;-&nbsp;".$language['discount']." ".$gift['discount']; ?></div>
+				<div class="fpointstore-grid-item-box-bottom">
+				    <div class="fpointstore-grid-item-box-button <?php echo ($gift['fpoint']>$fpoint)?"disabled":"";?>">
+					<div><span><?php echo $language['Change_now'];?></span></div>
+					<div><span></span><?php echo number_format($gift['fpoint'], 0, ",", "."); ?> F-Point</div>
+				    </div>
+				</div>
+			    </div>
+			</a>
+		    </li>
+		<?php endforeach;?>
+	    </ol>
+	</div>
+	<div id="fpointstore_bottom" style="clear: both;"></div>
+    </div>
+    <!-- End Content -->
+</div>
+		    
+		</div>
+	    </div>
+	</div>
+    </div>
+<script type="text/javascript">
+    var fpointstore = new FpointStoreV2();
+    fpointstore.initGiftPage(
+	    <?php echo $fpoint;?>, 
+	    <?php echo json_encode($category_id);?>, 
+	    <?php echo json_encode($current_page);?>, 
+	    <?php echo $over?"true":"false";?>,
+	    '<?php echo $media_url;?>', 
+	    <?php echo json_encode($language, JSON_UNESCAPED_UNICODE);?>
+	);
+    
+</script>

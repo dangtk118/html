@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layout>
+    <default>
+        <reference name="head">
+            <action method="addItem">
+                <type>skin_js</type>
+                <file helper="fhsmobiledetect/getJSForMobile"/>
+            </action>
+        </reference>
+    </default>
+</layout>

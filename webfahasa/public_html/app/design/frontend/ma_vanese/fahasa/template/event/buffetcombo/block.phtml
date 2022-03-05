@@ -1,0 +1,142 @@
+<?php 
+    $is_mobile = Mage::helper('fhsmobiledetect')->isMobile();
+    $text_labels = json_decode($this->getData('text_labels'), true);
+    $category_data = json_decode($this->getData('category_data'), true);
+?>
+
+<style type="text/css">
+    #event-buffetcombo-block{
+        margin: 15px 0px 0px 0px !important;
+        padding: 0px;
+        background: #fff;
+    }
+    
+    #event-buffetcombo-head{
+        background-color: #fff;
+        border-bottom: 1px solid #e6e6e6;
+        padding: 10px 0px;
+    }
+    
+    .buffetcombo-menu-item.active a{
+        color: #F7931E !important;
+        border: 1px solid #F7931E;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+    
+    .buffetcombo-more{
+        color: #F7931E;
+        padding: 5px 15px!important;
+        width: auto!important;
+        display: inline-block;
+        margin: 0px;
+        min-width: 100px;
+        float: right;
+        border-radius: 0px;
+        text-align: center;
+        font-size: 13px;
+    }
+    
+    #event-buffetcombo-menu{
+        margin-top: 10px;
+    }
+    
+    #event-buffetcombo-menu ul{
+        padding: 0px;
+    }
+    
+    #event-buffetcombo-menu .buffetcombo-menu-item{
+        display: inline;
+        text-align: center;
+        cursor: pointer;
+    }
+    
+    #event-buffetcombo-menu a {
+        font-size: 14px;
+        display: inline-block;
+        padding: 5px 10px;
+        margin: 0px 10px;
+        text-decoration: none;
+        color: #333;
+    }
+    
+    #event-buffetcombo-container{
+        padding-right: 15px;
+    }
+    
+    .buffetcombo-item-out-of-stock{
+        position: relative;
+        z-index: 2;
+        margin-top: -80px;
+        display: flex;
+        top: -75px;
+        pointer-events: none;
+    }
+
+    .buffetcombo-item-out-of-stock-mobile{
+        position: relative;
+        z-index: 2;
+        margin-top: -40px;
+        display: flex;
+        top: -75px;
+        pointer-events: none;
+    }
+
+    .event-buffetcombo-msg-info{
+        padding: 10px;
+        color: #fff;
+        background-color: #ff971e;
+        font-size: 14px;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    
+</style>
+
+<div id="event-buffetcombo-block" class="row">
+    <div style="border: 1px solid #e6e6e6;">
+        <div id="event-buffetcombo-head">
+            <div id="event-buffetcombo-icon" >
+                <a href="<?php echo $this->getData('urlLink');?>" class="block-header">
+                    <img style="width: 90px; margin: 0 20px;" width="120px" src="<?php echo Mage::helper("event/buffetcombo")->getBuffetIcon(); ?>"/>
+                    <span  class="block-header-title">BUFFET COMBO</span>
+                </a>
+            </div>
+            <div id="event-buffetcombo-menu"  class="buffetcombo-swiper-menu">
+                <ul class="swiper-wrapper">
+                </ul>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+        <div>
+            <div id="event-buffetcombo-msg-total" class="event-buffetcombo-msg-info" style="display:none"><?php echo $this->__('We run out of Buffet Combos.'); ?></div>
+        </div>
+        <div id="event-buffetcombo-container"></div>
+       <div class="tabs-xem-them xem-them-item-aaa">
+            <a href="<?php echo $this->getData('urlLink');?>" ><?php echo $this->__('Xem Them'); ?></a>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="/js/lib/event/buffetcombo.js?q=<?php echo Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix'); ?>"></script>
+<script type="text/javascript">
+    let is_mobile = "<?php echo $is_mobile; ?>";
+    let $text_labels_input = <?php echo json_encode($text_labels);?>;
+    let category_data = <?php echo json_encode($category_data);?>;
+    let text_labels;
+    if ($text_labels_input){
+        text_labels = $text_labels_input;
+    } else {
+        text_labels = {
+            'all': "<?php echo $this->__('All'); ?>",
+            'van_hoc': "<?php echo $this->__('Van Hoc'); ?>",
+            'kinh_te': "<?php echo $this->__('Kinh Te'); ?>",
+            'tam_ly_ky_nang': "<?php echo $this->__('Tam Ly Ky Nang'); ?>",
+            'nuoi_day_con': "<?php echo $this->__('Nuoi Day Con'); ?>",
+        };
+    }
+    
+    let eventBuffetCombo = new EventBuffetCombo();
+    eventBuffetCombo.init(text_labels, is_mobile, false, category_data);
+</script>

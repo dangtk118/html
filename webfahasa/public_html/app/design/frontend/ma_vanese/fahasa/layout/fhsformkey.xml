@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <default>
+        <reference name="head">
+            <block type="fhsformkey/formkey" name="fhs.formkey" template="fahasa/fhsformkey/fhsformkey.phtml"/>
+        </reference>
+    </default>
+</layout>

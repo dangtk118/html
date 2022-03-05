@@ -1,0 +1,48 @@
+<?php
+$MEDIA_URL = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);
+
+/*
+$iconsData = '[
+        {
+            "img": "http://placehold.jp/36x36.png",
+            "link": "/flashsale",
+            "title": "Ma giam gia"
+        },{
+            "img": "http://placehold.jp/36x36.png",
+            "link": "/flashsale",
+            "title": "Ma giam gia"
+        },{
+            "img": "http://placehold.jp/36x36.png",
+            "link": "/flashsale",
+            "title": "Ma giam gia"
+        },{
+            "img": "http://placehold.jp/36x36.png",
+            "link": "/flashsale",
+            "title": "Ma giam gia"
+        },{
+            "img": "http://placehold.jp/36x36.png",
+            "link": "/flashsale",
+            "title": "Ma giam gia"
+        },{
+            "img": "http://placehold.jp/36x36.png",
+            "link": "/flashsale",
+            "title": "Ma giam gia"
+        }
+    ]';
+*/
+
+$iconsData = $this->getData('data');
+$icons = json_decode($iconsData, true);
+
+?>
+
+<div class="row cms-icon-menu">
+    <?php foreach ($icons as $icon): ?>
+        <div class="col-sms-3 col-sm-3 col-md-3">
+            <div>
+                <a href="<?php echo $icon['link']; ?>"><img src="<?php echo $MEDIA_URL.$icon['img']; ?>" class="center" /></a>
+            </div>
+            <div class="cms-icon-menu-item-name"><?php echo $icon['title']; ?></div>
+        </div>
+    <?php endforeach; ?>
+</div>

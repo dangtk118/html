@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <Fahasa_Coreextended>
+            <version>0.1.0</version>
+        </Fahasa_Coreextended>
+    </modules>
+    <frontend>
+        <routers>
+            <customer>
+                <args>
+                    <modules>
+                        <fahasa_coreextended before="Mage_Customer">Fahasa_Coreextended_Frontend_Customer</fahasa_coreextended>
+                    </modules>
+                </args>
+            </customer>
+        </routers>
+    </frontend>
+    <global>
+        <helpers>
+            <coreextended>
+                <class>Fahasa_Coreextended_Helper</class>
+            </coreextended>
+        </helpers>
+        <blocks>
+            <review>
+                <rewrite>
+                    <helper>Fahasa_Coreextended_Block_Helper</helper>
+                </rewrite>
+            </review>
+            <catalog>
+                <rewrite>
+                    <product_list_related>Fahasa_Coreextended_Block_Product_List_Related</product_list_related>
+                </rewrite>
+            </catalog>
+        </blocks>
+        <models>
+            <salesrule_resource>
+                <rewrite>
+                    <rule_collection>Fahasa_Coreextended_Model_Resource_Rule_Collection</rule_collection>
+                </rewrite>
+            </salesrule_resource>
+        </models>
+    </global>
+</config>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <tabs>
+        <fpoint translate="label" module="tryout">
+            <label>Fpoint config</label>
+            <sort_order>99999</sort_order>
+        </fpoint>
+    </tabs>
+    <sections>
+        <fpoint_input translate="label" module="tryout">
+            <label>Fpoint config</label>
+            <tab>fpoint</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>1000</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>  
+            <groups>
+                <general translate="label comment">
+                    <label>General</label>
+                    <sort_order>50</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <no_apply_fpoint translate="label comment">
+                            <label>List sku no apply when use F-Point</label>
+                            <comment>Ex: 1903041244305a,1903041244312a,...</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </no_apply_fpoint>
+                    </fields>
+                </general>
+            </groups> 
+                          
+        </fpoint_input>
+    </sections>
+</config>

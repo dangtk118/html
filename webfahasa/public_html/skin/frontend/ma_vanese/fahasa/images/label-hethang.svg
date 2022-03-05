@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="162" height="162" viewBox="0 0 162 162">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="Rectangle_758" data-name="Rectangle 758" width="162" height="162" transform="translate(1147 357)" fill="#fff" stroke="#707070" stroke-width="1"/>
+    </clipPath>
+    <clipPath id="clip-path-2">
+      <rect id="Rectangle_757" data-name="Rectangle 757" width="162" height="162" transform="translate(-15828.566 -1484.566)" fill="#fff" stroke="#707070" stroke-width="1"/>
+    </clipPath>
+  </defs>
+  <g id="label-hethang" transform="translate(-1147 -357)" clip-path="url(#clip-path)">
+    <g id="label-hethang-2" data-name="label-hethang" transform="translate(16975.566 1841.566)" clip-path="url(#clip-path-2)">
+      <g id="Layer_2" data-name="Layer 2" transform="matrix(0.961, 0.276, -0.276, 0.961, -15802.724, -1503.081)">
+        <g id="Layer_1" data-name="Layer 1">
+          <path id="Path_684" data-name="Path 684" d="M83.689,8.431a75.368,75.368,0,0,1,31.338,6.824l-8.907,8.931-8.336,8.349L32.565,97.882l-8.339,8.352-8.911,8.931A75.229,75.229,0,0,1,83.689,8.431M152.5,53.179a75.29,75.29,0,0,1-99.19,99.379q4.449-4.465,8.911-8.927l.162-.162,8.239-8.258.325-.325q32.122-32.174,64.247-64.371l4.209-4.2q2.1-2.106,4.2-4.225l7-7.017,1.908-1.911M83.689,3.231a80.473,80.473,0,0,0-69.717,120.64L27.908,109.9l8.336-8.352,65.219-65.336,8.336-8.349,13.939-13.975A80.074,80.074,0,0,0,83.689,3.231ZM153.916,44.4,139.909,58.43q-4.2,4.225-8.4,8.421L66.93,131.538l-8.4,8.42L44.518,153.991A80.481,80.481,0,0,0,153.9,44.4Z" transform="translate(-3.231 -3.231)" fill="#e0e0e0"/>
+          <path id="Path_685" data-name="Path 685" d="M88.268,31.859A56.132,56.132,0,0,1,105.083,34.4l-2.72,2.727L37.144,102.46l-2.723,2.727A56.444,56.444,0,0,1,88.268,31.859m54.169,40.569a56.48,56.48,0,0,1-69.909,70.039l2.671-2.678.292-.289,64.264-64.4,2.668-2.671M88.268,26.66a61.62,61.62,0,0,0-55.759,87.825l8.336-8.352,65.2-65.346,8.336-8.349a61.332,61.332,0,0,0-26.11-5.778Zm56.223,36.363q-4.2,4.225-8.4,8.42Q103.8,103.77,71.508,136.116l-8.4,8.421A61.649,61.649,0,0,0,144.475,63.01Z" transform="translate(-7.81 -7.81)" fill="#e0e0e0"/>
+          <path id="Path_686" data-name="Path 686" d="M90.919,44.512a46.733,46.733,0,0,1,9.659,1L45.534,100.667A46.459,46.459,0,0,1,90.912,44.509m.007-4.277a50.7,50.7,0,0,0-47.449,68.55l65.222-65.343a50.6,50.6,0,0,0-17.774-3.2Z" transform="translate(-10.461 -10.463)" fill="#e0e0e0"/>
+          <path id="Path_687" data-name="Path 687" d="M144.778,90.568A46.454,46.454,0,0,1,90.67,144.783q27.055-27.1,54.108-54.208m2.2-8.261Q114.7,114.647,82.4,146.993A50.718,50.718,0,0,0,146.968,82.32Z" transform="translate(-18.704 -18.687)" fill="#e0e0e0"/>
+        </g>
+        <text id="HẾT_HÀNG" data-name="HẾT HÀNG" transform="matrix(0.707, -0.707, 0.707, 0.707, 33.441, 143.679)" fill="#e0e0e0" font-size="28" font-family="Nunito-ExtraBold, Nunito" font-weight="800" letter-spacing="0.03em"><tspan x="0" y="0">HẾT HÀNG</tspan></text>
+      </g>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <Fahasa_Vmegamenu>
+            <active>true</active>
+            <codePool>local</codePool>
+            <depends>
+                <Magentothem_Vmegamenu />
+            </depends>
+        </Fahasa_Vmegamenu>
+    </modules>
+</config>

@@ -1,0 +1,219 @@
+
+/*** basic styles ***/
+
+/*body { margin: 30px; }*/ 
+#ykienkhachhang  h1 { font-size: 1.5em; color: #FFFFFF; font-weight: bold; width: 100%;}
+#ykienkhachhang  h2 { font-size: 1.3em; color: #FFFFFF; line-height: 20px; padding-bottom: 10px;}
+#ykienkhachhang  label { font-size: 13px; color: #F00; line-height: 20px; text-align: justify;}
+.ykienkhachhang-title { font-size: 2.5em; color: #d9534f; line-height: 30px; font-weight: bold; text-align: center; margin-bottom: 20px;}
+#ykienkhachhang .container { 
+  width: 100%; 
+  margin: 5px;
+}
+
+#ykienkhachhang  input[type=radio].with-font,
+#ykienkhachhang input[type=checkbox].with-font {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+}
+    
+#ykienkhachhang input[type=radio].with-font ~ label:before,
+#ykienkhachhang input[type=checkbox].with-font ~ label:before {
+    font-family: FontAwesome;
+    display: inline-block;
+    content: "\f1db";
+    letter-spacing: 10px;
+    font-size: 1.8em;
+    color: #ffffff;
+    width: 1.4em;
+}
+
+#ykienkhachhang input[type=radio].with-font:checked ~ label:before,
+#ykienkhachhang input[type=checkbox].with-font:checked ~ label:before  {
+    content: "\f00c";
+    font-size: 1.8em;
+    color: darkgreen;
+    letter-spacing: 5px;
+}
+#ykienkhachhang input[type=checkbox].with-font ~ label:before {        
+    content: "\f096";
+}
+#ykienkhachhang input[type=checkbox].with-font:checked ~ label:before {
+    content: "\f046";        
+    color: darkgreen;
+}
+#ykienkhachhang input[type=radio].with-font:focus ~ label:before,
+#ykienkhachhang input[type=checkbox].with-font:focus ~ label:before,
+#ykienkhachhang input[type=radio].with-font:focus ~ label,
+#ykienkhachhang input[type=checkbox].with-font:focus ~ label
+{                
+    color: green;
+}
+/*
+ * Row with equal height columns
+ * --------------------------------------------------
+ */
+#ykienkhachhang .row-eq-height {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display:         flex;
+}
+
+/*
+ * Styles copied from the Grid example to make grid rows & columns visible.
+ */
+#ykienkhachhang  .container {
+  padding-right: 15px;
+  padding-left: 15px;
+  background: none;
+}
+
+#ykienkhachhang  h4 {
+  margin-top: 25px;
+}
+/*#ykienkhachhang  .col-xs-1, .col-sm-1, .col-md-1, .col-lg-1, .col-xs-2, .col-sm-2, .col-md-2, .col-lg-2, .col-xs-3, .col-sm-3, .col-md-3, .col-lg-3, .col-xs-4, .col-sm-4, .col-md-4, .col-lg-4, .col-xs-5, .col-sm-5, .col-md-5, .col-lg-5, .col-xs-6, .col-sm-6, .col-md-6, .col-lg-6, .col-xs-7, .col-sm-7, .col-md-7, .col-lg-7, .col-xs-8, .col-sm-8, .col-md-8, .col-lg-8, .col-xs-9, .col-sm-9, .col-md-9, .col-lg-9, .col-xs-10, .col-sm-10, .col-md-10, .col-lg-10, .col-xs-11, .col-sm-11, .col-md-11, .col-lg-11, .col-xs-12, .col-sm-12, .col-md-12, .col-lg-12 {
+  padding: 0px;
+}*/
+
+/*
+ * Callout styles copied from Bootstrap's main docs.
+ */
+/* Common styles for all types */
+#ykienkhachhang  .bs-callout {
+  padding: 20px;
+  margin: 20px 0;
+  border-left: 3px solid #eee;
+}
+#ykienkhachhang  .bs-callout h4 {
+  margin-top: 0;
+  margin-bottom: 5px;
+}
+#ykienkhachhang  .bs-callout p:last-child {
+  margin-bottom: 0;
+}
+#ykienkhachhang  .bs-callout code {
+  background-color: #fff;
+  border-radius: 3px;
+}
+/* Variations */
+#ykienkhachhang  .bs-callout-danger {
+  background-color: #fdf7f7;
+  border-color: #d9534f;
+}
+#ykienkhachhang  .bs-callout-danger h4 {
+  color: #d9534f;
+}
+#ykienkhachhang  .bs-callout-warning {
+  background-color: #fcf8f2;
+  border-color: #f0ad4e;
+}
+#ykienkhachhang  .bs-callout-warning h4 {
+  color: #f0ad4e;
+}
+#ykienkhachhang  .bs-callout-info {
+  background-color: #f4f8fa;
+  border-color: #5bc0de;
+}
+#ykienkhachhang  .bs-callout-info h4 {
+  color: #5bc0de;
+}
+#ykienkhachhang .phan1, #ykienkhachhang .phan2, #ykienkhachhang .phan3{
+    border-top: 1px solid #F0F0F0;
+    text-align: left;
+    margin-bottom: 10px;
+}
+
+#ykienkhachhang .phan1 span,#ykienkhachhang .phan2 span, #ykienkhachhang .phan3 span{
+    text-align: left;
+    color: #F39801;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+#ykienkhachhang .phan1 p,#ykienkhachhang .phan2 p, #ykienkhachhang .phan3 p{
+    line-height: 20px;
+    margin-top:15px;
+}
+
+#ykienkhachhang .phan1 .content-left,#ykienkhachhang .phan1 .content-right{
+    background-color: #14aeea;
+}
+#ykienkhachhang .phan1 .content-middle{
+    background-color: #0c566d;
+}
+#ykienkhachhang .phan2 .content-left,#ykienkhachhang .phan2 .content-right{
+    background-color: #EBCB4A;
+}
+#ykienkhachhang .phan2 .content-middle{
+    background-color: #6b5e27;
+}
+#ykienkhachhang .phan3 .content-left,#ykienkhachhang .phan3 .content-right{
+    background-color: #F14C4C;
+}
+#ykienkhachhang .phan3 .content-middle{
+    background-color: #6d1d23;
+}
+#ykienkhachhang .content-right{
+    padding: 10px;
+}
+#ykienkhachhang .input-note{
+    text-align: left;
+    display: none;
+}
+#ykienkhachhang .content-middle, #ykienkhachhang .content-left{
+    display: flex;
+    align-items: center;
+}
+#ykienkhachhang .content-left, #ykienkhachhang .content-middle{
+    text-align: center;
+}
+#ykienkhachhang .input-text{
+    /*display: none;*/
+    background-color: #ff9100;
+    margin-bottom: 10px;
+}
+#ykienkhachhang img{
+    width:100%;
+    height:auto;
+}
+#ykienkhachhang .content-middle img{
+    width: 80%;
+    margin: auto;
+}
+#ykienkhachhang div{
+    padding: 0px;
+}
+#ykienkhachhang .btn-submit{
+    margin: auto;
+    margin-bottom: 20px;
+    text-align: right;
+}
+#ykienkhachhang .btn-success{
+    background-color: #000;
+    background-image: none;
+    border-color: #000;
+}
+#ykienkhachhang .survey_success{
+    /*background-color: #ff9100;*/
+    text-align: center;
+    padding: 20px;
+}
+#ykienkhachhang .survey_success span,#ykienkhachhang .survey_success i{
+    color: #3c763d;
+    font-size: 2em;
+}
+#ykienkhachhang .err_message{
+    display: none;
+    text-align: center;
+    font-size: 2em;
+    margin-bottom: 10px; 
+    padding: 10px;
+    background-color: #F14C4C;
+}

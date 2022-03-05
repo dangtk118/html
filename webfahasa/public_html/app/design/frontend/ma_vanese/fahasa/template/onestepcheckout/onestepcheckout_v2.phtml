@@ -1,0 +1,1189 @@
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places&language=en"></script><script type="text/javascript">if((navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/iPod/i))) {	$$('.onestepcheckout-index-index')[0].addClassName('iphone');}</script>
+<?php
+    $session = Mage::getSingleton('checkout/session');
+    $product_helper = Mage::helper('fahasa_catalog/product');
+    $customer_helper = Mage::helper("fahasa_customer");
+    
+    $skin_url = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true);
+    $queryfier = Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix');
+    $PROGRESS_BAR_JS = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS, true)."progressbar/progressbar.min.js?q=".$queryfier;
+    $PROMOTION_SCRIPT = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS, true)."lib/promotion.js?q=".$queryfier;
+    $CHECKOUT_OUTSTOCK_PRODUCT_SCRIPT = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS, true)."lib/checkout_outstock_product.js?q=".$queryfier;
+    $PS_SCRIPT = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS, true)."lib/ps.js?q=".$queryfier;
+    
+    $_helper = Mage::helper('onestepcheckout');
+    $cache_helper = Mage::helper('fahasa_catalog/cache');
+    
+    $hashSessionKey = $_helper->getHashSessionKeyAsciiArr();
+    $cities = Mage::helper('directory')->getRegionJson();
+    $districts = Mage::helper('vietnamshipping')->getCityJson();
+    $wards = Mage::helper('vietnamshipping')->getWard2Json();
+    
+    $languages = $product_helper->getLanguagesList('payment');
+    
+    $locale_class = ($languages['locale'] != 'vi_VN')?'fhs_en':'';
+    
+    $address = $customer_helper->getCustomerAddressList();
+    $is_login = Mage::getSingleton('customer/session')->isLoggedIn();
+    $payment_methods = $this->getPaymentMethods();
+    
+    
+    $event_cart = Mage::helper('eventcart')->checkEventCart(null, true, true);
+    $event_cart_payment_method = $event_cart['affect_payments_checkout'];
+    $event_cart_limit = 2;
+    $total_html = '';
+    $grandtotal_html = '';
+    $is_freeship_html = '';
+//    foreach ($cart['totals'] as $item){
+//	 if($item->code == 'grand_total'){
+//	    $grandtotal_html = "<div>".$item->title."</div>"
+//		."<div>".number_format(round($item->price, 2), 0, ".", ",")." đ</div>";
+//	 }elseif($item->code == 'is_freeship'){
+//	     if($item->price == 1){
+//		$is_freeship_html = "<div class='fhs_checkout_total_is_freeship'><div>".$item->title."</div><div>".$languages['yes']."</div></div>" ;
+//	     }
+//	 }else{
+//	    $total_html .= "<div class='fhs_checkout_total_".$item->code."'>"
+//		    ."<div>".$item->title."</div>"
+//		    ."<div>".number_format(round($item->price, 2), 0, ".", ",")." đ</div>"
+//		    ."</div>";
+//	 }
+//    }
+    
+    $eventCart_keys =  Mage::getStoreConfig('eventcart_config/config/event_cart_list');
+    if(!empty($eventCart_keys)){
+	$eventCart_keys = explode(",",$eventCart_keys);
+    }else{
+	$eventCart_keys = array('affect_coupons','affect_freeships','affect_payments','affect_carts',);
+    }
+  
+    $promotion_popup_html = $product_helper->getPromotionPopupHtml(array(), $languages, array());
+    
+    $couponCode = $this->getQuote()->getCouponCode();
+    $fhsCoin = Mage::getSingleton('core/session')->getFhsCoin();
+    if(!$couponCode && $fhsCoin['code']){
+	$couponCode = $fhsCoin['code'];
+	$_coinCode = $fhsCoin['code'];
+    }
+    $coupon_label = Mage::getSingleton('core/session')->getCouponLabel();
+    
+    $freeshipCode = Mage::getSingleton('checkout/type_onepage')->getQuote()->getFreeshipCode();
+    $freeship_coupon_label = Mage::getSingleton('core/session')->getFreeshipLabel();
+    
+    $tutorialBlockHtml = '';
+//    $is_active_wallet_voucher = Mage::getStoreConfig('fpointstorev2_config/wallet_voucher/is_active');
+    $gtgt_note = Mage::getStoreConfig('fieldsmanager/general/gtgt_note');
+?>
+<script type="text/javascript" src="<?php echo $PROGRESS_BAR_JS; ?>"></script>
+<div class="fhs-co-banner">
+    <?php echo $cache_helper->getBlockId('checkout-block-banner');?>
+</div>
+
+<?php if(!$is_login):?>
+<div class="fhs_checkout_alert">
+    <div><img src="<?php echo $skin_url."frontend/ma_vanese/fahasa/images/ico_warning_white.svg?q=".$queryfier;?>"/></div>
+    <div>
+	<?php echo $this->__('Already registered? %s>Login now',"<span onclick=\"fhs_account.showLoginPopup('login');\$jq('#login_username').focus();\"")."</span>";?>
+    </div>
+</div>
+<?php endif;?>
+
+<!-- Shipping address start -->
+<div id="fhs_checkout_block_address" class="fhs_checkout_block">
+    <div class="fhs_checkout_block_title"><?php echo $this->__("Shipping Address"); ?></div>
+    <div class="fhs_checkout_block_content">
+	<?php if (!empty($address['address_list'])): ?>
+	    <div class="fhs_checkout_block_address_list">
+		<div>
+		    <ul id="fhs_checkout_address" class="fhs_checkout_block_address_list_items">
+			<?php foreach($address['address_list'] as $key=>$item):?>
+			    <li class="fhs_checkout_block_address_list_item">
+				<div>
+				    <label class="fhs-radio-big" style="margin-top: 2px;"> <?php echo $this->escapeHtml($item['fullname'].'&nbsp;&nbsp;|&nbsp;&nbsp;'.$item['address'].'&nbsp;&nbsp;|&nbsp;&nbsp;'.$item['telephone']);?>
+					<input type="radio" id="fhs_checkout_block_address_list_item_<?php echo $key;?>" name="fhs_checkout_block_address_list_item_option" class="fhs_checkout_block_address_list_item_option" value="<?php echo $key;?>" onchange="fhs_onestepcheckout.updateShippingAddress();fhs_onestepcheckout.updateAddressDefault();" <?php echo ($key == $address['address_id_defaul'])?'checked':'';?>>
+					<span class="radiomark-big"></span>
+				    </label>
+				</div>
+				<div>
+				    <span onclick="fhs_onestepcheckout.showPopupAddress(<?php echo $key;?>, 'change');">
+					<?php echo $languages['edit'];?>
+				    </span>
+				    <span onclick="fhs_onestepcheckout.deleteAddress(<?php echo $key;?>);">
+					<?php echo $languages['delete'];?>
+				    </span>
+				</div>
+			    </li>
+			<?php endforeach; ?>
+		    </ul>
+		</div>
+		<div class="fhs_checkout_block_address_list-btn" onclick="fhs_onestepcheckout.showPopupAddress();">
+		    <span><img src="<?php echo $skin_url."frontend/ma_vanese/fahasa/images/ico_add_circle_red.svg?q=".$queryfier;?>"/></span>
+		    <span><?php echo $this->__('Shipping to other address');?></span>
+		</div>
+	    </div>
+	    <div id="fhs_checkout_block_address_popup">
+		<div class="fhs_checkout_block_address_popup_title"><span><?php echo $this->__('Add new shipping address')?></span><span><?php echo $this->__('Change shipping address')?></span></div>
+		<div class="fhs_checkout_block_address_popup_content">
+		<div class="fhs_checkout_block_address_block">
+		    <div class="fhs-input-box fhs-input-group-horizontal-shippingaddress">
+			<label><?php echo $this->__('Full name of recipient');?></label>
+			<div class="fhs-input-item">
+			    <div class="fhs-input-group">
+				<input class="fhs-textbox require_check_address" type="text" validate_type="fullname" placeholder="<?php echo $this->__('Press full name of recipient'); ?>" id="fhs_address_fullname" name="fullname" value="" maxlength="100"/>
+				<input type="hidden" id="fhs_address_firstname" name="firstname" />
+				<input type="hidden" id="fhs_address_lastname" name="lastname" />
+				<span class="fhs-input-icon fhs-textbox-alert"></span>
+			    </div>
+			</div>
+			<div class="fhs-input-alert"></div>
+		    </div>
+		    <div class="fhs-input-box fhs-input-group-horizontal-shippingaddress">
+			<label><?php echo $this->__('Phone number');?></label>
+			<div class="fhs-input-item">
+			    <div class="fhs-input-group">
+				<input class="fhs-textbox require_check_address" type="text" validate_type="shipping_telephone" placeholder="<?php echo $this->__('Press phone number'); ?>" id="fhs_address_telephone" name="telephone" value="" maxlength="11"/>
+				<span class="fhs-input-icon fhs-textbox-alert"></span>
+			    </div>
+			</div>
+			<div class="fhs-input-alert"></div>
+		    </div>
+		    <div class="fhs-input-box fhs-input-group-horizontal-shippingaddress">
+			<label><?php echo $this->__('Country');?></label>
+			<div class="fhs-input-item">
+			    <div class="fhs-input-group">
+				<?php echo $this->getCountryHtmlSelect('fhs_address');?>
+				<input class="fhs-textbox require_check_address" style="display: none;" type="text" validate_type="text" placeholder="<?php echo $this->__('Press country'); ?>" id="fhs_address_country" name="country" value="" maxlength="200"/>
+				<span class="fhs-input-icon fhs-textbox-alert"></span>
+			    </div>
+			</div>
+		    </div>
+		    <div class="fhs-input-box fhs-input-group-horizontal-shippingaddress">
+			<label><?php echo $this->__('Province/City');?></label>
+			<div class="fhs-input-item">
+			    <div class="fhs-input-group">
+				<select id="fhs_address_city_select" class="fhs-input-select">
+				</select>
+				<input class="fhs-textbox require_check_address" style="display: none;" type="text" validate_type="text" placeholder="<?php echo $this->__('Press province/City'); ?>" id="fhs_address_city" name="city" value="" maxlength="200"/>
+			    </div>
+			</div>
+			<div class="fhs-input-alert"></div>
+		    </div>
+		    <div class="fhs-input-box fhs-input-group-horizontal-shippingaddress">
+			<label><?php echo $this->__('District');?></label>
+			<div class="fhs-input-item">
+			    <div class="fhs-input-group">
+				<select id="fhs_address_district_select" class="fhs-input-select">
+				</select>
+				<input class="fhs-textbox require_check_address" style="display: none;" type="text" validate_type="text" placeholder="<?php echo $this->__('Press district'); ?>" id="fhs_address_district" name="district" value="" maxlength="200"/>
+			    </div>
+			</div>
+			<div class="fhs-input-alert"></div>
+		    </div>
+		    <div class="fhs-input-box fhs-input-group-horizontal-shippingaddress">
+			<label><?php echo $this->__('Zip/Postal Code');?></label>
+			<div class="fhs-input-item">
+			    <div class="fhs-input-group">
+				<input class="fhs-textbox" type="text" placeholder="<?php echo $this->__('Press zip/Postal Code'); ?>" id="fhs_address_postcode" name="postcode" value="" maxlength="20"/>
+				<span class="fhs-input-icon fhs-textbox-alert"></span>
+			    </div>
+			</div>
+			<div class="fhs-input-alert"></div>
+		    </div>
+		    <div class="fhs-input-box fhs-input-group-horizontal-shippingaddress">
+			<label><?php echo $this->__('Wards');?></label>
+			<div class="fhs-input-item">
+			    <div class="fhs-input-group">
+				<select id="fhs_address_wards_select" class="fhs-input-select">
+				</select>
+				<input class="fhs-textbox require_check_address" style="display: none;" type="text" validate_type="text" placeholder="<?php echo $this->__('Press district'); ?>" id="fhs_address_ward" name="district" value="" maxlength="200"/>
+			    </div>
+			</div>
+			<div class="fhs-input-alert"></div>
+		    </div>
+		    <div class="fhs-input-box fhs-input-group-horizontal-shippingaddress">
+			<label><?php echo $this->__('Shipping address');?></label>
+			<div class="fhs-input-item">
+			    <div class="fhs-input-group">
+				<input class="fhs-textbox require_check_address" type="text" validate_type="text" placeholder="<?php echo $this->__('Press shipping address'); ?>" id="fhs_address_street" name="address" value="" maxlength="100"/>
+				<span class="fhs-input-icon fhs-textbox-alert"></span>
+			    </div>
+			</div>
+			<div class="fhs-input-alert"></div>
+		    </div>
+		</div>
+		<div class="fhs_checkout_block_address_popup_btn">
+		    <div class="fhs-btn-box">
+			<button type="button" title="<?php echo $this->__('Save Address')?>" class="fhs-btn-confirm fhs-btn-saveaddress" disabled=""><span><?php echo $this->__('Save Address')?></span></button>
+			<button type="button" title="<?php echo $this->__('Cancel')?>" class="fhs-btn-back lg-close fhs-btn-saveaddress-cancel lg-close"><span><?php echo $this->__('Cancel')?></span></button>
+		    </div>
+		</div>
+	    </div>
+	    <script type="text/javascript">
+		$jq("#fhs_address_country_select").select2({
+		    placeholder: "<?php echo $this->__('Choose country'); ?>",
+		    allowClear: false
+		});
+		$jq("#fhs_address_city_select").select2({
+			placeholder: "<?php echo $languages['choose_city']; ?>",
+			allowClear: false
+			});
+		$jq("#fhs_address_district_select").select2({
+			placeholder: "<?php echo $languages['choose_district']; ?>",
+			allowClear: false
+			});
+		$jq("#fhs_address_wards_select").select2({
+			placeholder: "<?php echo $languages['choose_wards']; ?>",
+			allowClear: false
+			});
+	    </script>
+	    </div>
+	<?php else:?>
+	    <div class="fhs_checkout_block_address_block">
+		<div class="fhs-input-box fhs-input-group-horizontal-shippingaddress">
+		    <label><?php echo $this->__('Full name of recipient');?></label>
+		    <div class="fhs-input-item">
+			<div class="fhs-input-group">
+			    <input class="fhs-textbox require_check check_shipping_address" type="text" validate_type="fullname" placeholder="<?php echo $this->__('Press full name of recipient'); ?>" id="fhs_shipping_fullname" name="fullname" value="" maxlength="100"/>
+			    <input type="hidden" id="fhs_shipping_firstname" name="firstname" />
+			    <input type="hidden" id="fhs_shipping_lastname" name="lastname" />
+			    <span class="fhs-input-icon fhs-textbox-alert"></span>
+			</div>
+		    </div>
+		    <div class="fhs-input-alert"></div>
+		</div>
+		<div class="fhs-input-box fhs-input-group-horizontal-shippingaddress" <?php echo $is_login?'style="display:none;"':'';?>>
+		    <label><?php echo $this->__('Email');?></label>
+		    <div class="fhs-input-item">
+			<div class="fhs-input-group">
+			    <input class="fhs-textbox require_check check_shipping_address" type="text" validate_type="email" placeholder="<?php echo $this->__('Press email'); ?>" id="fhs_shipping_email" name="email" value="" maxlength="200"/>
+			    <span class="fhs-input-icon fhs-textbox-alert"></span>
+			</div>
+		    </div>
+		    <div class="fhs-input-alert"></div>
+		</div>
+		<div class="fhs-input-box fhs-input-group-horizontal-shippingaddress">
+		    <label><?php echo $this->__('Phone number');?></label>
+		    <div class="fhs-input-item">
+			<div class="fhs-input-group">
+			    <input class="fhs-textbox require_check check_shipping_address" type="text" validate_type="shipping_telephone" placeholder="<?php echo $this->__('Press phone number'); ?>" id="fhs_shipping_telephone" name="telephone" value="" maxlength="11"/>
+			    <span class="fhs-input-icon fhs-textbox-alert"></span>
+			</div>
+		    </div>
+		    <div class="fhs-input-alert"></div>
+		</div>
+		<div class="fhs-input-box fhs-input-group-horizontal-shippingaddress">
+		    <label><?php echo $this->__('Country');?></label>
+		    <div class="fhs-input-item">
+			<div class="fhs-input-group">
+			    <?php echo $this->getCountryHtmlSelect('fhs_shipping');?>
+			    <input class="fhs-textbox require_check check_shipping_address" style="display: none;" type="text" validate_type="text" placeholder="<?php echo $this->__('Press country'); ?>" id="fhs_shipping_country" name="country" value="" maxlength="200"/>
+			    <span class="fhs-input-icon fhs-textbox-alert"></span>
+			</div>
+		    </div>
+		</div>
+		<div class="fhs-input-box fhs-input-group-horizontal-shippingaddress">
+		    <label><?php echo $this->__('Province/City');?></label>
+		    <div class="fhs-input-item">
+			<div class="fhs-input-group">
+			    <select id="fhs_shipping_city_select" class="fhs-input-select">
+			    </select>
+			    <input class="fhs-textbox require_check check_shipping_address" style="display: none;" type="text" validate_type="text" placeholder="<?php echo $this->__('Press province/City'); ?>" id="fhs_shipping_city" name="city" value="" maxlength="200"/>
+			</div>
+		    </div>
+		    <div class="fhs-input-alert"></div>
+		</div>
+		<div class="fhs-input-box fhs-input-group-horizontal-shippingaddress">
+		    <label><?php echo $this->__('District');?></label>
+		    <div class="fhs-input-item">
+			<div class="fhs-input-group">
+			    <select id="fhs_shipping_district_select" class="fhs-input-select">
+			    </select>
+			    <input class="fhs-textbox require_check check_shipping_address" style="display: none;" type="text" validate_type="text" placeholder="<?php echo $this->__('Press district'); ?>" id="fhs_shipping_district" name="district" value="" maxlength="200"/>
+			</div>
+		    </div>
+		    <div class="fhs-input-alert"></div>
+		</div>
+		<div class="fhs-input-box fhs-input-group-horizontal-shippingaddress">
+		    <label><?php echo $this->__('Zip/Postal Code');?></label>
+		    <div class="fhs-input-item">
+			<div class="fhs-input-group">
+			    <input class="fhs-textbox check_shipping_address" type="text" placeholder="<?php echo $this->__('Press zip/Postal Code'); ?>" id="fhs_shipping_postcode" name="postcode" value="" maxlength="20"/>
+			    <span class="fhs-input-icon fhs-textbox-alert"></span>
+			</div>
+		    </div>
+		    <div class="fhs-input-alert"></div>
+		</div>
+		<div class="fhs-input-box fhs-input-group-horizontal-shippingaddress">
+		    <label><?php echo $this->__('Wards');?></label>
+		    <div class="fhs-input-item">
+			<div class="fhs-input-group">
+			    <select id="fhs_shipping_wards_select" class="fhs-input-select">
+			    </select>
+			    <input class="fhs-textbox require_check check_shipping_address" style="display: none;" type="text" validate_type="text" placeholder="<?php echo $this->__('Press district'); ?>" id="fhs_shipping_ward" name="district" value="" maxlength="200"/>
+			</div>
+		    </div>
+		    <div class="fhs-input-alert"></div>
+		</div>
+		<div class="fhs-input-box fhs-input-group-horizontal-shippingaddress">
+		    <label><?php echo $this->__('Shipping address');?></label>
+		    <div class="fhs-input-item">
+			<div class="fhs-input-group">
+			    <input class="fhs-textbox require_check check_shipping_address" type="text" validate_type="text" placeholder="<?php echo $this->__('Press shipping address'); ?>" id="fhs_shipping_street" name="street" value="" maxlength="100"/>
+			    <span class="fhs-input-icon fhs-textbox-alert"></span>
+			</div>
+		    </div>
+		    <div class="fhs-input-alert"></div>
+		</div>
+	    </div>
+	    <script type="text/javascript">
+		$jq("#fhs_shipping_country_select").select2({
+		    placeholder: "<?php echo $this->__('Choose country'); ?>",
+		    allowClear: false
+		});
+		$jq("#fhs_shipping_city_select").select2({
+			placeholder: "<?php echo $languages['choose_city']; ?>",
+			allowClear: false
+			});
+		$jq("#fhs_shipping_district_select").select2({
+			placeholder: "<?php echo $languages['choose_district']; ?>",
+			allowClear: false
+			});
+		$jq("#fhs_shipping_wards_select").select2({
+			placeholder: "<?php echo $languages['choose_wards']; ?>",
+			allowClear: false
+			});
+	    </script>
+	<?php endif; ?>
+	<div class="fhs_checkout_block_loading"><div><div id="default-icon-loading" style="height: 40px; width: 40px; background: url('<?php echo $languages['loading_img']; ?>') no-repeat center center transparent; background-size: 40px;"></div></div></div>
+    </div>
+</div>
+<!-- Shipping address end -->
+
+<!-- Shipping Method start -->
+<div id="fhs_checkout_block_shippingmethod" class="fhs_checkout_block">
+    <div class="fhs_checkout_block_title"><?php echo $this->__("Shipping Method"); ?></div>
+    <div class="fhs_checkout_block_content">
+	<div class="fhs_checkout_block_radio_list">
+	    <div id="fhs_checkout_shippingmethod_title" class="fhs_checkout_block_radio_list_title"></div>
+	    <div>
+		<ul id="fhs_checkout_shippingmethod" class="fhs_checkout_block_radio_list_items">
+		</ul>
+	    </div>
+	    <div id="fhs_checkout_shippingmethod_msg" class="fhs_checkout_block_radio_list_msg"><?php echo $languages['emptyshippingmethod'];?></div>
+	</div>
+	<div class="fhs_checkout_block_loading"><div><div id="default-icon-loading" style="height: 40px; width: 40px; background: url('<?php echo $languages['loading_img']; ?>') no-repeat center center transparent; background-size: 40px;"></div></div></div>
+    </div>
+    <div class="fhs_checkout_block_alert"><?php echo $language['notempty'];?></div>
+</div>
+<!-- Shipping Method end -->
+
+<!-- Payment method start -->
+<div id="fhs_checkout_block_paymentmethod" class="fhs_checkout_block">
+    <div class="fhs_checkout_block_title"><?php echo $this->__("Payment Method"); ?></div>
+    <div class="fhs_checkout_block_content">
+	<div class="fhs_checkout_block_radio_list">
+	    <div>
+		<ul id="fhs_checkout_paymentmethod" class="fhs_checkout_block_radio_list_items">
+		    <?php foreach($payment_methods as $payment_method):?>
+                    <?php
+                        $iconPath = 'images/payment_icon/ico_'. $payment_method['value'].'.svg';
+                        $iconPayment = $this->getSkinUrl($iconPath, array('_secure'=>true)); 
+                    ?>
+			<li class="fhs_checkout_block_radio_list_item <?php echo $payment_method['value'];?>">
+                                <div class="fhs_checkout_paymentmethod_with_tutorial">
+                                <div class="fhs-radio-big-with-icon-container">
+                                    <label class="fhs-radio-big fhs-raido-big-with-icon">
+                                            <div class="fhs-payment-name-with-icon-container">
+                                                <div style="background: url(<?php echo $iconPayment . '?q=' .$queryfier; ?>) no-repeat center center;width: 40px;"></div>
+                                                <div class="fhs-payment-name"><?php echo $payment_method['label'];?></div>
+                                                <input type="radio" id="fhs_checkout_paymentmethod_<?php echo $payment_method['value'];?>" name="fhs_checkout_paymentmethod_option" class="fhs_checkout_paymentmethod_option" value="<?php echo $payment_method['value'];?>" <?php if($payment_method['value'] == 'cashondelivery'){echo 'checked';}?>>
+                                                <span class="radiomark-big"></span>
+                                            </div>
+                                    </label>
+                                    <?php 
+                                        $payment_method_value = $payment_method['value']; 
+                                        if($event_cart_payment_method[$payment_method_value] && $event_cart_payment_method):
+                                        //$tutorialBlockHtml = $this->getLayout()->createBlock('cms/block')->setBlockId($payment_method['tutorialID'])->toHtml();
+                                    ?>
+                                        <div class="fhs_checkout_paymentmethod_tutorial" onclick="showTutorialDetail('<?php echo $payment_method_value?>')">Chi tiết</div>
+                                    <?php endif; ?>
+                                </div>
+                                    <?php if($event_cart_payment_method[$payment_method_value] &&  $event_cart_payment_method): ?>
+                                    <div class ="fhs_checkout_paymentmethod_lable" onclick="showTutorialDetail('<?php echo $payment_method_value?>')"><?php echo $event_cart_payment_method[$payment_method_value]['title']; ?></div>
+                                    <?php endif; ?>
+                                </div>
+			</li>
+		    <?php endforeach; ?>
+		</ul>
+	    </div>
+	</div>
+	<div class="fhs_checkout_block_loading"><div><div id="default-icon-loading" style="height: 40px; width: 40px; background: url('<?php echo $languages['loading_img']; ?>') no-repeat center center transparent; background-size: 40px;"></div></div></div>
+    </div>
+    <div class="fhs_checkout_block_alert"><?php echo $language['notempty'];?></div>
+</div>
+<!-- Payment method end -->
+
+<!-- Membership Fahasa start -->
+<?php if($is_login):?>
+<div class="fhs_checkout_block">
+    <div class="fhs_checkout_block_title"><?php echo $this->__("Membership Fahasa"); ?></div>
+    <div class="fhs_checkout_block_content">
+	<div class="fhs_label fhs_checkout_member <?php echo $locale_class;?>">
+	    <?php 
+	    $fpoint = Mage::helper('tryout')->determinetryout()?>
+	    <span><?php echo $this->__('Your current F-Point is:');?></span><span class="fhs_checkout_fpoint"><?php echo Mage::helper('checkout')->formatPrice($fpoint); ?></span>
+	</div>
+	<div>
+	    <input class="with-font" type="checkbox" id="fhs_checkout_fpoint" value="<?php echo $fpoint;?>" <?php if ($_helper->checkTryoutSession() && $fpoint > 0): ?> checked="checked"<?php endif; ?> <?php if($fpoint <= 0):?>disabled<?php endif; ?>/>
+	    <label class="fhs_input_checkbox <?php if($fpoint <= 0):?>fhs_input_checkbox_disabled<?php endif; ?>" for="fhs_checkout_fpoint"><?php echo $this->__('Use F-point for place order'); ?></label>
+	</div>
+	<?php $freeshipTimes = Mage::helper('freeship')->getFreeShip();?>
+	<div class="fhs_label fhs_checkout_member <?php echo $locale_class;?>">
+	    <span><?php echo $this->__('Amount freeship:');?></span><span><?php echo $freeshipTimes.'&nbsp;'.$this->__('times')?></span>
+	</div>
+	<div>
+	    <input class="with-font" type="checkbox" id="fhs_checkout_freeship" value="<?php echo $freeshipTimes;?>" <?php if ($session->getData('onestepcheckout_freeship') == 1): ?> checked="checked"<?php endif;?> <?php if($freeshipTimes <= 0):?>disabled<?php endif; ?>/>
+	    <label class="fhs_input_checkbox <?php if($freeshipTimes <= 0):?>fhs_input_checkbox_disabled<?php endif; ?>" for="fhs_checkout_freeship"><?php echo $this->__('Use freeship'); ?></label>
+	</div>
+	<div class="fhs_checkout_block_loading"><div><div id="default-icon-loading" style="height: 40px; width: 40px; background: url('<?php echo $languages['loading_img']; ?>') no-repeat center center transparent; background-size: 40px;"></div></div></div>
+    </div>
+</div>
+<?php endif;?>
+<!-- Membership Fahasa end -->
+
+<!-- Promotion start -->
+<div class="fhs_checkout_block fhs_checkout_block_coupon_desktop">
+    <div class="fhs_checkout_block_title"><?php echo $this->__("Promotion code/Gift code"); ?></div>
+    <div class="fhs_checkout_block_content">
+	<div class="fhs_checkout_block_address_block">
+	    <div class="fhs-input-box fhs-input-btn fhs-input-group-horizontal-coupon">
+		<label><?php echo $this->__('Promotion code/Gift');?></label>
+		<div class="fhs-input-item">
+		    <div class="fhs-input-group">
+			<input class="fhs-textbox fhs_checkout_coupon" type="text" validate_type="text" placeholder="<?php echo $this->__('Press promotion code/Gift'); ?>" id="fhs_checkout_coupon" name="coupon" value="" maxlength="200" />
+			<span id="fhs_checkout_btn_coupon" onclick="fhs_promotion.btn_coupon_click(this);" class="fhs-input-icon"  ><?php echo $languages['apply'];?></span>
+			<div class="fhs_checkout_block_coupon_search" onclick="fhs_promotion.showEventCart();"><span><?php echo $this->__('Choose code');?></span></div>
+		    </div>
+		</div>
+		<div class="fhs_label_coupon_label">
+		    <?php $need_whitespace = false;?>
+		    <?php if(!empty($coupon_label) && !empty($couponCode)):?>
+			<?php $need_whitespace = true;?>
+			<div class="fhs_label_coupon_label_orange"><div><?php echo $coupon_label;?></div><div onclick="fhs_promotion.applyCoupon(this);" coupon="<?php echo $couponCode; ?>" apply="0"><img src="<?php echo $languages['ico_delete_orange']?>"/></div></div>
+		    <?php endif;?>
+		    
+		    <?php if(!empty($freeship_coupon_label) && !empty($freeshipCode)):?>
+			<?php if($need_whitespace):?>
+			    <div class="white_space_4"></div>
+			<?php endif;?>
+			<div class="fhs_label_coupon_label_green"><div><?php echo $freeship_coupon_label;?></div><div onclick="fhs_promotion.applyCoupon(this);" coupon="<?php echo $freeshipCode; ?>" apply="0"><img src="<?php echo $languages['ico_delete_green']?>"/></div></div>
+		    <?php endif;?>
+		</div>
+		<?php echo $languages['coupon_info'];?>
+		<div class="fhs-input-alert"></div>
+	    </div>
+	</div>
+	<div class="fhs_checkout_block_loading"><div><div id="default-icon-loading" style="height: 40px; width: 40px; background: url('<?php echo $languages['loading_img']; ?>') no-repeat center center transparent; background-size: 40px;"></div></div></div>
+    </div>
+</div>
+
+<style>
+@media screen and (max-width: 992px){
+    .fhs-input-group-horizontal-coupon  > .fhs_label_coupon_label{
+	display: none;
+    }
+}
+</style>
+<div class="fhs_checkout_block fhs_checkout_block_coupon_mobile">
+    <div class="fhs_checkout_block_title" onclick="fhs_promotion.showEventCart();">
+	<img style="padding-right: 8px;" src="<?php echo $skin_url . 'frontend/ma_vanese/fahasa/images/ico_coupon_orange.svg?q=' . $queryfier; ?>"/>
+	<span><?php echo $this->__('Choose code');?></span>
+	<div class="fhs_checkout_block_title_icon_viewmore"><img src="<?php echo $skin_url . 'frontend/ma_vanese/fahasa/images/chevron-right.svg?q=' . $queryfier; ?>"/></div>
+    </div>
+    <div class="fhs_checkout_block_content" <?php echo empty($coupon_label)?'style="display:none;"':'';?>>
+	<div class="fhs_label_coupon_label">
+	    <?php $need_whitespace = false;?>
+	    <?php if(!empty($coupon_label) && !empty($couponCode)):?>
+		<?php $need_whitespace = true;?>
+		<div class="fhs_label_coupon_label_orange"><div><?php echo $coupon_label;?></div><div onclick="fhs_promotion.applyCoupon(this);" coupon="<?php echo $couponCode; ?>" apply="0"><img src="<?php echo $languages['ico_delete_orange']?>"/></div></div>
+	    <?php endif;?>
+
+	    <?php if(!empty($freeship_coupon_label) && !empty($freeshipCode)):?>
+		<?php if($need_whitespace):?>
+		    <div class="white_space_4"></div>
+		<?php endif;?>
+		<div class="fhs_label_coupon_label_green"><div><?php echo $freeship_coupon_label;?></div><div onclick="fhs_promotion.applyCoupon(this);" coupon="<?php echo $freeshipCode; ?>" apply="0"><img src="<?php echo $languages['ico_delete_green']?>"/></div></div>
+	    <?php endif;?>
+	</div>
+    </div>
+</div>
+<!-- Promotion end -->
+
+<!-- Source tracking start -->
+<?php if(MagE::getStoreConfig('event_source/config/is_active')):?>
+    <?php 
+	$block_event_source_id = "block_event_source".rand(100000,999999);
+    ?>
+    <div id="<?php echo $block_event_source_id."_select";?>" class="fhs_checkout_block fhs-input-group-horizontal-coupon" style="display:none;">
+	<div class="fhs_checkout_block_title"><?php echo $this->__("School"); ?></div>
+	<div class="fhs_checkout_block_content">
+	    <div class="fhs_checkout_block_address_block">
+		<div class="fhs-input-box fhs-input-btn fhs-input-group-horizontal-coupon">
+		    <label id="<?php echo $block_event_source_id."_title_list";?>"><?php echo $title_checkout;?></label>
+		    <div class="fhs-input-item">
+			<div class="fhs-input-group">
+			    <select id='<?php echo $block_event_source_id."_selectbox";?>' class="form-control">
+			    </select>
+			</div>
+		    </div>
+		    <div class="fhs-input-alert"></div>
+		</div>
+	    </div>
+	    <div class="fhs_checkout_block_loading"><div><div id="default-icon-loading" style="height: 40px; width: 40px; background: url('<?php echo $languages['loading_img']; ?>') no-repeat center center transparent; background-size: 40px;"></div></div></div>
+	</div>
+    </div>
+    <script type="text/javascript" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS, true)."lib/event_source.js?q=".$queryfier; ?>"></script>
+    <script type="text/javascript">
+	var fhs_eventsource = new EventSource();
+	fhs_eventsource.initSelectBox('<?php echo $block_event_source_id;?>');
+    </script>
+<?php endif;?>
+<!-- Source tracking end -->
+
+<!-- Other information start -->
+<div id="fhs_checkout_block_otherInfo" class="fhs_checkout_block">
+    <div class="fhs_checkout_block_title"><?php echo $this->__("Other information"); ?></div>
+    <div class="fhs_checkout_block_content">
+	<div class="fhs_checkout_block_address_block gtgt">
+	    <div class="fhs-input-box fhs-input-group-horizontal-checkbox" style="padding-top:4px;">
+		<div class="fhs-input-checkbox">
+		    <input class="with-font" type="checkbox" id="fhs_checkout_note_checkbox" value=""/>
+		    <label class="fhs_input_checkbox" for="fhs_checkout_note_checkbox"><?php echo $this->__('Note'); ?></label>
+		</div>
+		<div class="fhs-input-item">
+		    <div class="fhs-input-group">
+			<input class="fhs-textbox require_check check_other_info" validate_type="text" type="text" placeholder="<?php echo $this->__('Press note'); ?>" id="fhs_checkout_note" name="note" value="" maxlength="200"/>
+			<span class="fhs-input-icon fhs-textbox-alert"></span>
+			<div class="fhs-input-group-title-box"><?php echo $this->__('Note'); ?></div>
+		    </div>
+		</div>
+		<div class="fhs-input-alert"></div>
+	    </div>
+	    <div class="fhs-input-box fhs-input-group-horizontal-checkbox">
+		<div class="fhs-input-checkbox">
+		    <input class="with-font" type="checkbox" id="fhs_checkout_vat_checkbox" value="1" />
+		    <label class="fhs_input_checkbox" for="fhs_checkout_vat_checkbox"><?php echo $this->__('Outputting invoice'); ?> <a style="margin-left: 8px; color: #007bff; text-decoration: underline;" href="/huong-dan-thanh-toan-va-xuat-hd#gtgt_page" target="_blank"><?php echo $languages['detail'];?></a></span></label>
+		</div>
+		<?php if(!empty($gtgt_note)):?>
+		    <div class="fhs-input-alert-info"><?php echo $gtgt_note;?></div>
+		<?php endif;?>
+		<div class="fhs-input-item">
+		    <div class="fhs-input-group">
+			<input class="fhs-textbox require_group_check" validate_type="text" type="text" placeholder="<?php echo $this->__('Press buyer\'s full name'); ?>" id="fhs_checkout_customername" name="companycustomername" value="" maxlength="200"/>
+			<span class="fhs-input-icon fhs-textbox-alert"></span>
+			<div class="fhs-input-group-title-box"><?php echo $this->__('Buyer\'s full name'); ?></div>
+		    </div>
+		    <div class="fhs-input-group">
+			<input class="fhs-textbox require_group_check" validate_type="text" type="text" placeholder="<?php echo $this->__('Press company name'); ?>" id="fhs_checkout_companyname" name="companyname" value="" maxlength="200"/>
+			<span class="fhs-input-icon fhs-textbox-alert"></span>
+			<div class="fhs-input-group-title-box"><?php echo $this->__('Company name'); ?></div>
+		    </div>
+		    <div class="fhs-input-group">
+			<input class="fhs-textbox require_group_check" validate_type="address" type="text" placeholder="<?php echo $this->__('Press address company'); ?>" id="fhs_checkout_companyaddress" name="companyaddress" value="" maxlength="200"/>
+			<span class="fhs-input-icon fhs-textbox-alert"></span>
+			<div class="fhs-input-group-title-box"><?php echo $this->__('Address company'); ?></div>
+		    </div>
+		    <div class="fhs-input-group">
+			<input class="fhs-textbox require_group_check" validate_type="taxcode" type="text" placeholder="<?php echo $this->__('Press Tax/GTGT number'); ?>" id="fhs_checkout_companyvat" name="companyvat" value="" maxlength="200"/>
+			<span class="fhs-input-icon fhs-textbox-alert"></span>
+			<div class="fhs-input-group-title-box"><?php echo $this->__('Tax/GTGT number'); ?></div>
+		    </div>
+		    <div class="fhs-input-group">
+			<input class="fhs-textbox require_group_check" validate_type="email" type="text" placeholder="<?php echo $this->__('Press invoice receipt email'); ?>" id="fhs_checkout_email" name="companyemail" value="" maxlength="200"/>
+			<span class="fhs-input-icon fhs-textbox-alert"></span>
+			<div class="fhs-input-group-title-box"><?php echo $this->__('Invoice receipt email'); ?></div>
+		    </div>
+		</div>
+		<div class="fhs-input-alert"></div>
+	    </div>
+	</div>
+	<div class="fhs_checkout_block_loading"><div><div id="default-icon-loading" style="height: 40px; width: 40px; background: url('<?php echo $languages['loading_img']; ?>') no-repeat center center transparent; background-size: 40px;"></div></div></div>
+    </div>
+</div>
+<!-- Other information end -->
+
+<!-- checkout start -->
+<div class="fhs_checkout_block">
+    <div class="fhs_checkout_block_title"><?php echo $this->__("Check order again"); ?></div>
+    <div class="fhs_checkout_block_content">
+	<div id="fhs_checkout_products" class="fhs_checkout_products">
+	    <?php 
+	    foreach($cart['products'] as $product): ?>
+		<div class="fhs_checkout_products_item">
+		    <div class="fhs_checkout_products_item_img">
+			<img src="<?php echo $product->image;?>"/>
+		    </div>
+		    <div class="fhs_checkout_products_item_detail">
+			<div class="fhs_checkout_products_item_name">
+			    <div><?php echo $product->name;?></div>
+			    
+			    <?php if(!empty($product->soon_release)):?>
+				<?php echo "<div class='notice'>".$product->soon_release."</div>";?>
+			    <?php endif;?>
+			    
+			    <?php
+			    if(!empty($event_cart['affect_items'])):?>
+				<?php foreach($event_cart['affect_items'] as $event_item):?> 
+				    <?php if($event_item['product_id'] == $product->productId):?>
+					<?php if($event_item['reach_percent'] >= 100):?>
+					    <div class="fhs-info-promo-icon complete-color">
+						<div><img src="<?php echo $languages['ico_check'];?>"/></div>
+						<div><?php echo $event_item['promo_message'];?></div>
+					    </div>
+					<?php else:?>
+					    <div class="fhs-info-promo-icon process-color">
+						<div><img src="<?php echo $$languages['ico_promo_sp'];?>"/></div>
+						<div><?php echo $event_item['promo_message'];?></div>
+					    </div>
+					<?php endif;?>
+				    <?php endif;?>
+				<?php endforeach;?>
+			    <?php endif;?>
+			</div>
+			<div class="fhs_checkout_products_item_price">
+                            <div>
+                                <?php echo number_format(round($product->price, 2), 0, ".", ",");?>đ
+                            </div>
+                            <?php if($product->original_price != 0 && $product->price != 0 && $product->original_price != $product->price ) :?>	
+                            <div class="fhs_checkout_products_item_original_price">
+                                <?php echo number_format(round($product->original_price, 2), 0, ".", ",");?>đ
+                            </div>
+                            <?php endif; ?>
+			</div>
+			<div class="fhs_checkout_products_item_qty">
+			    <span><?php echo $languages['quantity'];?>: </span>
+			    <?php echo $product->quantity;?>
+			</div>
+			<div class="fhs_checkout_products_item_total">
+			    <?php echo number_format(round(($product->price * $product->quantity), 2), 0, ".", ",");?>đ
+			</div>
+		    </div>
+		</div>
+	    <?php endforeach;?>
+	</div>
+	<div class="fhs_checkout_total fhs_checkout_total_mobile">
+	    <?php echo $total_html.$is_freeship_html."<div class='fhs_checkout_total_grand_total'>".$grandtotal_html."</div>";?>
+	</div>
+	<div class="fhs-bsidebar">
+	    <div class="fhs-bsidebar-content">
+		<div class="container">
+		    <div class="fhs_checkout_total fhs_checkout_total_desktop">
+			<?php echo $total_html.$is_freeship_html."<div class='fhs_checkout_total_grand_total'>".$grandtotal_html."</div>";?>
+		    </div>
+		    <div class="fhs_checkout_bottom">
+			<div>
+			    <div class="fhs_checkout_total_grand_total">
+				<?php echo $grandtotal_html;?>
+			    </div>
+			    <div><a href="/checkout/cart/"><span style="padding-right: 8px;"><img src="<?php echo $skin_url.'frontend/ma_vanese/fahasa/images/btn_back.svg?q='.$queryfier;?>"/></span><span><?php echo $this->__('Back to cart'); ?></span></a></div>
+			</div>
+			<div>
+			    <div class="fhs-btn-box">
+				<button type="button" title="<?php echo $this->__('Order Confirmation');?>" class="fhs-btn-confirm fhs-btn-orderconfirm"><span><?php echo $this->__('Order Confirmation');?></span></button>
+			    </div>
+			</div>
+		    </div>
+		</div>
+	    </div>
+	</div>
+	<div class="fhs_checkout_block_loading"><div><div id="default-icon-loading" style="height: 40px; width: 40px; background: url('<?php echo $languages['loading_img']; ?>') no-repeat center center transparent; background-size: 40px;"></div></div></div>
+    </div>
+</div>
+
+<!-- event cart promotion start -->
+<div id="fhs_checkout_event_promotion_block" class="fhs_checkout_block" <?php echo (empty($event_cart_affect_carts_html))?"style='display:none;'":'';?>>
+    <div class="fhs_checkout_block_title"><div class="fhs-event-promo-title"><div class="fhs-event-promo-title-left"><span><img src="<?php echo $skin_url.'frontend/ma_vanese/fahasa/images/ico_promo_donhang.svg?q='.$queryfier;?>"/></span><span><?php echo $this->__('Promotion for total order'); ?></span></div></div></div>
+    <div class="fhs_checkout_block_content">
+	<div id="fhs_checkout_event_promotion" class="fhs_checkout_block_address_block">
+	    <?php echo $event_cart_affect_carts_html; ?>
+	</div>
+	<div class="fhs_checkout_block_loading"><div><div id="default-icon-loading" style="height: 40px; width: 40px; background: url('<?php echo $languages['loading_img']; ?>') no-repeat center center transparent; background-size: 40px;"></div></div></div>
+    </div>
+</div>
+<!-- event cart promotion end -->
+
+<!-- event cart popup start! -->
+<div id="popup-loading-event-cart">
+    <div class="popup-loading-event-cart-info">
+	<div class="popup-loading-event-cart-title">
+	    <div class="fhs-event-promo-title">
+		<div class="fhs-event-promo-title-left">
+		    <span><img src="<?php echo $skin_url . 'frontend/ma_vanese/fahasa/images/promotion/ico_coupon.svg?q=' . $queryfier; ?>"/></span>
+		    <span><?php echo $this->__('Choose code'); ?></span>
+		    <span class="fhs_label_note" style="margin-left: 8px;"><?php echo $languages['coupon_info'];?></span>
+		</div>
+		<div class="fhs-event-promo-title-right">
+		    <div class="fhs_event_promo_btn_close lg-close" onclick="fhs_promotion.closeEventCart();"><img src="<?php echo $skin_url . 'frontend/ma_vanese/fahasa/images/ico_delete_gray.svg?q=' . $queryfier; ?>"/></div>
+		</div>
+	    </div>
+	</div>
+	<div class="fhs-input-box fhs-input-btn fhs-input-group-horizontal-coupon popup-loading-event-cart-coupon">
+	    <div class="fhs_checkout_block_content">
+		<div class="fhs_checkout_block_address_block">
+		    <div class="fhs-input-box fhs-input-btn fhs-input-group-horizontal-coupon">
+			<div class="fhs-input-item">
+			    <div class="fhs-input-group">
+				<input class="fhs-textbox fhs_checkout_coupon" type="text" validate_type="text" placeholder="<?php echo $this->__('Press promotion code/Gift'); ?>" name="coupon" value="" maxlength="200" />
+				<span id="fhs_checkout_btn_coupon" onclick="fhs_promotion.btn_coupon_click(this);" class="fhs-input-icon"  ><?php echo $languages['apply'];?></span>
+				<div class="fhs_checkout_block_coupon_search" onclick="fhs_promotion.showEventCart();"><span><?php echo $this->__('Choose code');?></span> <span class="fhs_label_note"><?php echo $this->__('can choose 2'); ?></span></div>
+			    </div>
+			</div>
+			<?php echo $languages['coupon_info'];?>
+			<div class="fhs-input-alert"></div>
+		    </div>
+		</div>
+		<div class="fhs_checkout_block_loading"><div><div id="default-icon-loading" style="height: 40px; width: 40px; background: url('<?php echo $languages['loading_img']; ?>') no-repeat center center transparent; background-size: 40px;"></div></div></div>
+	    </div>
+	</div>
+	<div class="popup-loading-event-cart-content">
+<!--	    <ul id="popup-loading-event-cart-content-tab" class="fhs-tabs" <?php echo (!$is_login || !$is_active_wallet_voucher)?"style='display:none'":"";?> >
+		<li class="fhs-tabs-item fhs-tabs-item-promotion active"><a><?php echo $this->__("Promotion code"); ?></a><hr></li>
+		<li class="fhs-tabs-item fhs-tabs-item-walletvoucher"><a><?php echo $this->__("My voucher"); ?></a><hr></li>
+	    </ul>-->
+	    <div id="popup-loading-event-cart-content-tabs" class="loading">
+		
+<!-- promotion voucher -->
+	    <div class="popup-loading-event-cart-content-promotion">
+		<?php echo $promotion_popup_html;?>
+	    </div>
+	    
+<?php if($is_login && $is_active_wallet_voucher):?>
+<!-- wallet voucher -->
+<!--	    <div class="popup-loading-event-cart-content-wallet">
+		<div class="fhs-event-promo-list-empty">
+		    <img src="<?php echo $languages['ico_couponemty']; ?>"/>
+		    <div><?php echo $languages['no_promotion'];?></div>
+		</div>
+	    </div>-->
+<?php endif;?>
+
+	    </div>
+	</div>
+    </div>
+    <div class="popup-loading-event-cart-detail">
+	<div class="popup-loading-event-cart-title">
+	    <div class="fhs-event-promo-title">
+		<div class="fhs-event-promo-title-left" onclick="fhs_promotion.closeEventCartDetail();">
+		    <div><img src="<?php echo $skin_url . 'frontend/ma_vanese/fahasa/images/ico_back_blue.svg?q=' . $queryfier; ?>"/></div>
+		</div>
+		<div class="fhs-event-promo-title-center"><?php echo $languages['terms_conditions']; ?></div>
+		<div class="fhs-event-promo-title-right lg-close" onclick="fhs_promotion.closeEventCart();">
+		    <div><img src="<?php echo $skin_url . 'frontend/ma_vanese/fahasa/images/ico_delete_gray.svg?q=' . $queryfier; ?>"/></div>
+		</div>
+	    </div>
+	</div>
+	<div class="popup-loading-event-cart-content">
+	    <div class="fhs-event-promo-list">
+		<div id="fhs-event-promo-list-detail" class="fhs-event-promo-list-item">
+		</div>
+	    </div>
+	    <div id="fhs-event-promo-list-detail-content" class="fhs-event-promo-list-detail-content">
+	    </div>
+	</div>
+    </div>
+    <div class="popup-loading-event-cart-bottom">
+	<div id="popup_event_cart_info_close" class="close-popup-event">
+	    <button type="button" title="<?php echo $this->__("Close"); ?>" class="btn-close-popup-event"><span><?php echo $this->__("Close"); ?></span></button>
+	</div>
+	<div id="popup_event_cart_detail_close" class="close-popup-event">
+	</div>
+    </div>
+</div>
+    
+<script type="text/javascript" src="<?php echo $PROMOTION_SCRIPT; ?>"></script>
+<script type="text/javascript" src="<?php echo $PS_SCRIPT; ?>"></script>
+<script type="text/javascript">
+    var fhs_promotion = new Promotion();
+    fhs_promotion.initPromotion(<?php echo !empty($event_cart)?json_encode($event_cart, JSON_UNESCAPED_UNICODE):'{}';?>, <?php echo json_encode($languages, JSON_UNESCAPED_UNICODE);?>, <?php echo json_encode($eventCart_keys, JSON_UNESCAPED_UNICODE);?>, false);
+    var ps = new PrivateSecure(<?php echo json_encode($hashSessionKey);?>);    
+</script>
+<!-- event cart popup end -->
+
+<!-- event cart option type start -->
+<link rel="stylesheet" type="text/css" href="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true)
+	."frontend/ma_vanese/fahasa/css/event_cart.css?q="
+	.Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix'); ?>" media="all" />
+<div id="fhs_checkout_block_event_cart" class="fhs_checkout_block" style="display: none;">
+    <div class="fhs_checkout_block_title"><?php echo $this->__("Check order again"); ?></div>
+    <div class="fhs_checkout_block_content">
+	<div id="event_cart">
+	    <input type="hidden" id="event_cart_data" name="event_cart" value="0"/>
+	    <div class="event_cart_header">
+	    </div>
+	    <div class="event_cart_notificate" style="display: none;">
+		Địa chỉ nhận hàng tại các khu vực sau của nội: <a onclick="fhs_onestepcheckout.openEventCartNotiPopup();">Bấm xem chi tiết</a>
+	    </div>
+	    <div class="event_cart_content">
+	    </div>
+	    <div class="event_cart_cancel">
+		<input class="event_cart_cancel_btn" onclick="fhs_onestepcheckout.clearChoice();" type="button" value=""/>
+	    </div>
+	    <div class="event_cart_resutl" style="display: none;">
+		<div class="event_cart_resutl_title"></div>
+		<div class="event_cart_resutl_content"></div>	
+	    </div>
+	    <div class="event_cart_footer" style="display: none;">
+	    </div>
+	    <div class="clear"></div>
+	</div>
+	<div class="fhs_checkout_block_loading"><div><div id="default-icon-loading" style="height: 40px; width: 40px; background: url('<?php echo $languages['loading_img']; ?>') no-repeat center center transparent; background-size: 40px;"></div></div></div>
+    </div>
+</div>
+    
+<div id="fahasa_dialog_wrapper-cover" onclick="$jq('.fahasa_dialog_wrapper').fadeOut();$jq('#fahasa_dialog_wrapper-cover').fadeOut();"></div>
+<div class="fahasa_dialog_wrapper">
+    <a class="fahasa_dialog_wrapper_close" onclick="$jq('.fahasa_dialog_wrapper').fadeOut();$jq('#fahasa_dialog_wrapper-cover').fadeOut();">
+	<div class="fahasa_dialog_wrapper_close_btn">
+	<span class="fa fa-times fa-6"></span>
+	</div>
+    </a>
+<div class="fahasa_dialog">
+  <div class="fahasa_dialog_header">CHI TIẾT ĐIỀU KIỆN CHƯA THỎA</div>
+  <div class="fahasa_dialog_content">
+	  <ul class="fahasa_dialog_content_list">
+	    <li>
+	    </li>
+	</ul>
+  </div>
+  <div class="fahasa_dialog_footer">
+      <button type="button" onclick="location.href='/checkout/cart/'" class="fahasa_dialog_footer_btn">
+	    <span>
+		Xem giỏ hàng
+	    </span>
+	</button>
+	<button type="button" onclick="fhs_onestepcheckout.onclickEventCartConfirmButton();" class="fahasa_dialog_footer_btn confirm">
+	    <span>
+		Xem trang chương trình                    
+	    </span>
+	</button>
+  </div>
+</div>
+</div>
+<!-- event cart option type end -->
+
+<!-- Popups start-->
+<div id="popup-default-loading" style="padding-top: 10px;">
+    <div id="popup-default-loading-icon" style="padding: 15px 0;">
+        <div id="container-progress-loading" style="position: relative;text-align:center;"></div>
+	<!--<center><div id="default-icon-loading" style="height: 128px; width: 128px; background: url('<?php echo $languages['loading_img']; ?>') no-repeat center center transparent; background-size: 110px;"></div></center>-->
+    </div>
+    <div id="popup-default-loading-logo" class="popup-fahasa-alert-logo" style="display: none;">
+	<center><img src="<?php echo $this->getSkinUrl('images/logo-alert-fail.png') ?>"/></center>
+    </div>
+    <div class="popup-default-loading-content">
+	<div id="popup-default-loading-context-text" class="popup-fahasa-default-content-text" style="padding: 15px;">
+	    <?php echo $this->__('Your order has been received and is processing'); ?>...
+	</div>
+    </div>
+    <div class="popup-fahasa-default-footer-small btn-submit col-lg-12 col-md-12 col-sm-12 col-xs-12">
+	<button type="button" onclick="fhs_onestepcheckout.tryLoadOrderStatus();" id="popup-default-loading-confirm" class="popup-fahasa-default-alert-confirm" style="display: none;">
+	    <span>
+		<?php echo $this->__('Try again') ?>                          
+	    </span>
+	</button>
+    </div>
+</div>
+<div id="popup-fahasa-alert">
+    <div class="popup-fahasa-alert-logo">
+	<center><img src="<?php echo $this->getSkinUrl('images/logo-alert-fail.png') ?>"/></center>
+    </div>
+    <div class="popup-fahasa-default-alert-content">
+	<div class="popup-fahasa-default-content-text">
+	    
+	</div>
+    </div>
+    <div class="popup-fahasa-default-footer-small btn-submit col-lg-12 col-md-12 col-sm-12 col-xs-12">
+	<button type="button" onclick="$jq('#popup-fahasa-alert').fadeOut();$jq(' .youama-ajaxlogin-cover').fadeOut();" class="popup-fahasa-default-alert-confirm lg-close">
+	    <span>
+		<?php echo $this->__('Ok') ?>                          
+	    </span>
+	</button>
+    </div>
+</div>
+<div id="popup_fahasa_shipping_confirm">
+    <div class="popup-fahasa-default-header-small" style="text-transform: uppercase;">
+	<?php echo $this->__('Confirm shipping Address') ?>
+    </div>
+    <div class="popup-fahasa-default-content">
+	<div id="shipping_address_confirm_content"></div>
+    </div>
+    <div class="popup-fahasa-default-footer-small btn-submit col-lg-12 col-md-12 col-sm-12 col-xs-12">		
+	<button id="btn_shipping_confirm_cancel" onclick="$jq('#popup_fahasa_shipping_confirm').fadeOut();$jq(' .youama-ajaxlogin-cover').fadeOut();"  type="button" class="popup-fahasa-default-confirm-small cancel lg-close">
+	    <span>
+		<?php echo $this->__('Cancel') ?>                   
+	    </span>
+	</button>
+	<button id="btn_shipping_confirm_confirm" onclick="is_confirm_shipping_addres = false;
+							$jq(' .youama-ajaxlogin-cover').fadeOut();
+							$jq('#popup_fahasa_shipping_confirm').fadeOut();
+							fhs_onestepcheckout.createOrder();" 
+	type="button" class="popup-fahasa-default-confirm-small confirm lg-yes">
+	    <span>
+		<?php echo $this->__('Confirm') ?>                          
+	    </span>
+	</button>
+    </div>
+</div>
+
+<!-- Choose Out of stock product Begin -->
+<?php if (Mage::getStoreConfig('eventcart_config/config/show_checkout_stock') == 1):
+    $languages_checkout_stock = $product_helper->getLanguagesList('checkout_stock');
+    $outstock_explain = str_replace("%s",'<span class="province"></span>', $languages_checkout_stock['outstock_explain']);
+?>
+<script type="text/javascript" src="<?php echo $CHECKOUT_OUTSTOCK_PRODUCT_SCRIPT; ?>"></script>
+<script type="text/javascript">
+    var checkout_outstock_product = new CheckoutOutStockProduct("<?php echo $skin_url;?>", <?php echo json_encode($languages_checkout_stock, JSON_UNESCAPED_UNICODE);?>);
+</script>
+<div id="popup-out-stock-product">
+    <div class="popup-out-stock-product-list" >
+        <div class="header">
+            <div>
+               <?php echo $languages_checkout_stock['outstock_title'];?>
+            </div>
+            <div class="lg-close"  onclick="checkout_outstock_product.hidePopupOutStockProduct();">
+                <img src="<?php echo $skin_url . 'frontend/ma_vanese/fahasa/images/ico_delete_gray.svg?q=' . $queryfier; ?>"/>
+            </div>
+        </div>
+        <div  class="title"><?php echo $outstock_explain;?></div>
+        <div class="message"></div>
+        <div class='list-cart'>
+        </div>
+        <div class="popup-fahasa-default-footer-small btn-submit " style="box-shadow: 0px -3px 5px -4px rgb(0 0 0 / 55%);display: flex; flex-direction: row; justify-content: flex-end; padding: 16px;">
+            <button class="btn-continue-payment" onclick="checkout_outstock_product.onPressContinuePayment();">
+                <span><?php echo $languages_checkout_stock['continue_payment'];?></span>
+            </button>
+        </div>
+    </div>
+    <div class="popup-out-stock-product-detail" style="display: none;">
+        <div class="header">
+            <div>
+               <?php echo $languages_checkout_stock['choose_replace_product'];?>
+            </div>
+            <div class="lg-close btn-back"  onclick="checkout_outstock_product.hidePopupOutStockProductInDetail();">
+                <img src="<?php echo $skin_url . 'frontend/ma_vanese/fahasa/images/ico_back_gray.svg?q=' . $queryfier; ?>"/>
+            </div>
+            <div class="lg-close"  onclick="checkout_outstock_product.hidePopupOutStockProduct();">
+                <img src="<?php echo $skin_url . 'frontend/ma_vanese/fahasa/images/ico_delete_gray.svg?q=' . $queryfier; ?>"/>
+            </div>
+        </div>
+        <div class="content">
+            <div class='block-title'><?php echo $languages_checkout_stock['product_not_available'];?></div>
+            <div class="main-product">
+            </div>
+            <div class="block-title"><?php echo $languages_checkout_stock['product_recommendation'];?></div>
+            <div class="list-product" ></div>
+        </div>
+    </div>
+</div>
+<?php endif; ?> 
+<!-- Choose Out of stock product End --> 
+<!-- Popups end-->
+
+<!-- Script start -->
+<script type="text/javascript">
+    var fhs_onestepcheckout = new OneStepCheckout();
+    fhs_onestepcheckout.loadProgress();
+    fhs_onestepcheckout.init(<?php echo $is_login?'true':'false';?>,<?php echo (!empty($address['address_list']))?'true':'false';?>, <?php echo json_encode($address['address_list'], JSON_UNESCAPED_UNICODE);?>, <?php echo $cities;?>,<?php echo $districts;?>,<?php echo $wards;?>,<?php echo json_encode($languages, JSON_UNESCAPED_UNICODE);?>, <?php echo (Mage::getStoreConfig('eventcart_config/config/show_confirm_shipping_address'))?'true':'false';?>, <?php echo $event_cart_limit; ?>);
+    <?php if((empty($address['address_list']))):?>
+    <?php
+    $address_default = Mage::helper('fahasa_customer')->getCheckoutAddressDefault();
+    ?>
+    <?php if(!empty($address_default)):?>
+	fhs_onestepcheckout.setShippingDefault(<?php echo json_encode($address_default, JSON_UNESCAPED_UNICODE);?>);
+    <?php endif;?>
+    <?php endif;?>
+</script>
+<!-- Script end -->
+
+<!-- check duplicated product start -->
+<div class="duplicated-order-cover"></div>
+<div id="duplicated-order">
+    <div class="title" style="background-color: #F39801">
+        <h2><?php echo $this->__("Duplicated items from current processing orders")?></h2>
+        <p><?php echo $this->__("Are you sure to buy?")?></p>
+    </div>
+    <input hidden="true" id="pass-duplicated-order" value="false">
+    <div class="content">
+        <table></table>
+        <div class="col-sm-12 col-md-12 col-sms-12 confirm-box">
+            <div class="col-sm-6 col-md-6 col-sms-6">
+                <a id="shopping_cart" href="<?php echo Mage::getBaseUrl(); ?>checkout/cart"><?php echo $this->__("View cart") ?></a> 
+            </div>
+            <div class="col-sm-6 col-md-6 col-sms-6">
+                <a id="duplicated-order-pass" href="javascript:void(0)"><?php echo $this->__("Continue buying") ?></a>
+            </div>
+        </div>
+    </div>
+    <div class="cleaner"></div>
+</div>
+<div id="duplicated-item">
+    <div class="title" >
+        <h2><?php echo $this->__("Warning") ?></h2>
+        <h3><?php echo $this->__("Cart has items with quantity of 2") ?></h3>
+    </div>
+    <input hidden="true" id="pass-duplicated-item" value="false"> 
+    <div class="content col-sm-12 col-md-12 col-sms-12">
+        <div class="col-sm-12 col-md-12 col-sms-12 confirm-box">
+            <div class="col-sm-6 col-md-6 col-sms-6">
+                <a id="shopping_cart" href="<?php echo Mage::getBaseUrl(); ?>checkout/cart"><?php echo $this->__("View cart") ?></a> 
+            </div>
+            <div class="col-sm-6 col-md-6 col-sms-6">
+                <a id="duplicated-item-pass" href="javascript:void(0)"><?php echo $this->__("Place Order") ?></a>
+            </div>
+        </div>
+    </div>
+    <div class="cleaner"></div>
+</div>
+<script type="text/javascript">
+
+    $jq(document).ready(function() {
+        jQuery("#duplicated-order-pass").click(function(){
+            jQuery("#pass-duplicated-order").val(true);
+            jQuery('#duplicated-order').hide();
+            jQuery(".duplicated-order-cover").fadeOut();
+        });
+        
+        jQuery("#duplicated-item-pass").click(function(){
+            jQuery("#pass-duplicated-item").val(true);
+            jQuery('#duplicated-item').hide();
+            jQuery(".duplicated-order-cover").fadeOut();
+            oscPlaceOrder(this);
+        });
+        
+        // check uplicated order
+//        new Ajax.Request(
+//            '<?php // echo $this->getUrl('onestepcheckout/index/duplicatedOrder', array('_secure' => true)) ?>', {
+//                method: 'post',
+//                onLoading: function () {
+//                    jQuery('.youama-ajaxlogin-loader').fadeIn();
+//                },
+//                onLoaded: function () {
+//                    jQuery('.youama-ajaxlogin-loader').fadeOut();
+//                },
+//                onFailure: function (request, status, error) {
+//                    alert(request.statusText);
+//                },
+//                onSuccess: function (transport) {
+//                    if (200 == transport.status) {
+//                        var orderItems = JSON.parse(transport.responseText);
+//                        if(Object.keys(orderItems).length == 0){
+//                            jQuery("#pass-duplicated-order").val(true);
+//                        }else{
+//                            
+//                            var html = "";
+//                            for(var k in orderItems){
+//                                var item = orderItems[k];
+//                                html +=
+//                                    "<tr>" 
+//                                        + "<td>"
+//                                            +"<div class='col-sm-12 col-md-12 col-sms-12'>"
+//                                                +"<div class='col-md-5 col-sm-5 col-sms-4' style='text-align:center;'>"
+//                                                    +"<img style='max-width: 100px;' src='<?php echo Mage::getModel('catalog/product_media_config')->getMediaUrl($image); ?>" + item["data"]["img"]+ "'/>"
+//                                                +"</div>"
+//                                                +"<div class='col-md-7 col-sm-7 col-sms-8'>"
+//                                                    +"<div class='col-md-12 col-sm-12 col-sms-12'>"
+//                                                        +"<h3 class='product-name'>" + item["data"]["name"]+ "</h3>"
+//                                                    +"</div>";
+//                                                    for(var i = 0; i< item['item'].length;i++){
+//                                                        var itemOrder =  item['item'][i];
+//                                                        html +=
+//                                                            "<div class='col-md-12 col-sm-12 col-sms-12 order-item'>"
+//                                                                +"<h4> <a href='<?php echo Mage::getBaseUrl(); ?>sales/order/view/order_id/" + itemOrder["orderId"]+ "' target='_blank'>#" + itemOrder["orderId"]+ " - " + itemOrder["orderStatus"] + "</a></h4>"
+//                                                            +"</div>";
+//                                                    }
+//                                            html +=
+//                                                "</div>"
+//                                            +"</div>"
+//                                        +"</td>"
+//                                    + "</tr>";
+//                            }
+//                            jQuery('#duplicated-order table').html(html);
+//                            jQuery(".duplicated-order-cover").fadeIn();
+//                            jQuery('#duplicated-order').fadeIn();
+//                            return true;
+//                        }
+//                    }
+//                }
+//            }
+//        );
+//        
+//        // check uplicated item
+//        new Ajax.Request(
+//            '<?php // echo $this->getUrl('onestepcheckout/index/duplicatedItem', array('_secure' => true)) ?>', {
+//                method: 'post',
+//                onLoading: function () {
+//                    jQuery('.youama-ajaxlogin-loader').fadeIn();
+//                },
+//                onLoaded: function () {
+//                    jQuery('.youama-ajaxlogin-loader').fadeOut();
+//                },
+//                onFailure: function (request, status, error) {
+//                    alert(request.statusText);
+//                },
+//                onSuccess: function (transport) {
+//                    var duplicatedItem = transport.responseText;
+//                    
+//                    // have qty = 2 in cart
+//                    if(duplicatedItem == 1){
+//                        jQuery("#pass-duplicated-item").val(false);
+//                    }else{
+//                        jQuery("#pass-duplicated-item").val(true);
+//                    }
+//                }
+//            }
+//        );
+    });
+    
+    function showTutorialDetail(code){
+        let data = <?php echo json_encode($event_cart_payment_method,JSON_UNESCAPED_UNICODE) ?>;
+        let content = '';
+        if(data && data[code] ){
+           content = data[code].rule_content;
+           $jq('#fhs-vnpay-detail-content').html(content);
+        }
+	$jq('.popup-vnpay-tutorial-detail').fadeIn(0);
+	$jq('.youama-ajaxlogin-cover').fadeIn();
+	$jq('#popup-vnpay-tutorial').fadeIn(10,function(){$jq("#popup-vnpay-tutorial").focus();});
+    }
+    
+    /// click icon X to close :
+    function closePopupTutorial(){
+        if($jq('#popup-vnpay-tutorial').is(":visible")){
+            $jq('#popup-vnpay-tutorial').fadeOut(0);
+            $jq('.youama-ajaxlogin-cover').fadeOut(0);
+        }
+    }
+</script>
+<!-- check duplicated product start -->
+<div id="popup-vnpay-tutorial" style="display: none;">
+    <div class="popup-vnpay-tutorial-detail">
+	<div class="popup-vnpay-tutorial-title">
+	    <div class="fhs-vnpay-title">
+		<div class="fhs-vnpay-title-center"><?php echo $languages['terms_conditions']; ?></div>
+		<div class="fhs-vnpay-title-right lg-close" onclick="closePopupTutorial();">
+		    <div><img src="<?php echo $skin_url . 'frontend/ma_vanese/fahasa/images/ico_delete_gray.svg?q=' . $queryfier; ?>"/></div>
+		</div>
+	    </div>
+	</div>
+	<div class="popup-vnpay-tutorial-content">
+	    <div id="fhs-vnpay-detail-content" class="fhs-vnpay-detail-content"><?php // echo $tutorialBlockHtml ?></div>
+	</div>
+    </div>
+    <div class="popup-vnpay-tutorial-bottom">
+	<div id="popup-vnpay-tutorial_info_close" class="close-popup-event" style="display: none;">
+	    <button type="button" title="<?php echo $this->__("Close"); ?>" class="btn-close-popup-event"><span><?php echo $this->__("Close"); ?></span></button>
+	</div>
+	<!--<div id="popup_event_cart_detail_close" class="close-popup-event" style="display: block;"></div>-->
+    </div>
+</div>
+

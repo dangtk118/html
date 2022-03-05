@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<config>
+  	<modules>
+    	<Bss_MultiStoreViewPricingCatalogRule>
+      		<active>true</active>
+      		<codePool>local</codePool>
+      		<depends>
+				    <Bss_MultiStoreViewPricing />
+				    <Mage_CatalogRule />
+			    </depends>
+    	</Bss_MultiStoreViewPricingCatalogRule>
+  	</modules>
+</config>

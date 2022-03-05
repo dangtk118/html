@@ -1,0 +1,79 @@
+<?php
+    $MEDIA_URL = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);
+    
+    /// $title = "This is a very long title";
+    $title= $this->getData('author_title');
+    /*
+    $author_images_data = '[
+        {
+            "img": "http://placehold.jp/400x250.png",
+            "link": "/nguyen-nhat-anh",
+            "name": "J.K Rowning"
+        },
+        {
+            "img": "http://placehold.jp/400x250.png",
+            "link": "/nguyen-nhat-anh",
+            "name": "Nguyen Nhat Anh"
+        },
+        {
+            "img": "http://placehold.jp/400x250.png",
+            "link": "/nguyen-nhat-anh",
+            "name": "Rosie Nguyen"
+        }
+    ]';
+    */
+    
+    $author_images_data = $this->getData('author_images');
+    
+    $author_images = json_decode($author_images_data, true);
+    
+    /*
+    $book_images_data = '[
+        {
+            "img": "http://placehold.jp/250x250.png",
+            "title": "Lop Hoc Mat Ngu",
+            "link": "/vo-bai-tap-toan-nang-cao-lop-2-quyen-1.html",
+            "subtitle": "Tuyen tap"
+        },
+        {
+            "img": "http://placehold.jp/250x250.png",
+            "title": "Than Tuong K-Pop",
+            "link": "/vo-bai-tap-toan-nang-cao-lop-2-quyen-1.html",
+            "subtitle": "Tuyen tap"
+        },
+        {
+            "img": "http://placehold.jp/250x250.png",
+            "title": "Sach Chuyen The Thanh Phim",
+            "link": "/vo-bai-tap-toan-nang-cao-lop-2-quyen-1.html",
+            "subtitle": "Tuyen tap"
+        }
+    ]';
+    */
+    
+    $book_images_data = $this->getData('book_images');
+    $book_images = json_decode($book_images_data, true);   
+    $loading_icon_url = $this->getSkinUrl('images/ring_loader.svg'); 
+?>
+
+<div class="cms-top-authors hidden-xs">
+    <div class="cms-top-authors-title">
+        <h3><?php echo $title; ?></h3>
+    </div>
+    <div class="row cms-top-authors-img">
+        <?php foreach($author_images as $img): ?>
+        <div class="col-sms-4 col-sm-4 col-md-4">
+            <a href="<?php echo $img['link']; ?>"><img class="lazyload" src='<?php echo $loading_icon_url;?>' data-src="<?php echo $MEDIA_URL.$img['img']; ?>"/></a>
+            <a href="<?php echo $img['link']; ?>"><div class="cms-top-authors-img-name"><?php echo $img['name']; ?></div></a>
+        </div>
+        <?php endforeach; ?>
+    </div>
+    <div class="row cms-top-authors-book">
+        <?php foreach($book_images as $book): ?>
+        <div class="col-sm-4 col-md-4">
+            <a href="<?php echo $book['link']; ?>"><img class="lazyload" src='<?php echo $loading_icon_url;?>' data-src="<?php echo $MEDIA_URL.$book['img']; ?>"/></a>
+            <a href="<?php echo $book['link']; ?>"><div class="cms-top-authors-book-title"><?php echo $book['title']; ?></div></a>
+            <div><?php echo $book['subtitle']; ?></div>
+        </div>
+        <?php endforeach; ?>
+    </div>
+</div>

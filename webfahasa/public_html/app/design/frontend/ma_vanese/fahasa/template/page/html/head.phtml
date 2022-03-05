@@ -1,0 +1,392 @@
+
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2014 X.commerce, Inc. (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<meta http-equiv="Content-Type" content="<?php echo $this->getContentType() ?>" />
+<?php 
+    $currentUrl = str_replace(":81", "", Mage::helper('core/url')->getCurrentUrl());
+    $seo_title = $this->getNewTitle();
+    $seo_description = "Sách tiếng Việt - Fahasa hệ thống nhà sách chuyên nghiệp. Đáp ứng tất cả các yêu cầu về sách";
+    $seo_keywords = htmlspecialchars($this->getKeywords());
+
+    if(Mage::registry('current_product')){ 
+	$product = Mage::registry('current_product');
+	$seo_title = $product->getName();
+	$cat = $product->getCategoryMainId();
+	$cat1 = $product->getData('category_1_id');
+	$type = $product->getTypeId();
+	$discountPercent = Mage::helper("discountlabel")->handleDiscountPercent($product);
+	$des = str_replace("<br/>", " ", str_replace("<br />", " ", $product->getDescription()));
+	if ($discountPercent > 0) {
+	    // handle type ngoai van/ quoc van
+	    if ($cat !== "3165") {
+		$discountLabel = "giảm giá";
+	    } else {
+		$discountLabel = "discount";
+	    }
+	    $str = $product->getName() . ", $discountLabel " . $discountPercent . "%, " . $des;
+	} else {
+	    $str = $product->getName() . ", " . $des;
+	}
+	$wraptext = wordwrap(trim(strip_tags($str)), 155, "---\n---", false);
+	$wraptext = str_replace('"', "'", $wraptext);
+	$breakpos = strpos($wraptext, "---\n---");
+
+	if ($cat1 == 5979 || $cat1 == 202 || $cat1 == 206 || $cat1 == 201 || $cat1 == 5978 || $cat1 == 5981) {
+	    if ($type == "bundle") {
+		if (strpos($seo_title, "Combo") !== false) {
+		    $seo_title = str_replace("Combo", "Combo Truyện", $seo_title . " - FAHASA.COM");
+		} else if (strpos($seo_title, "BST") !== false) {
+		    $seo_title = str_replace("BST", "BST Truyện", $seo_title . " - FAHASA.COM");
+		} else if (strpos($seo_title, "[Bản Đặc Biệt]") !== false ) {
+		    $seo_title = str_replace("[Bản Đặc Biệt]", "[Bản Đặc Biệt] Truyện", $seo_title . " - FAHASA.COM");
+		} else {
+		    $seo_title = "Truyện " . $seo_title . " - FAHASA.COM";
+		}
+	    } else {
+		$seo_title = "Truyện " . $seo_title . " - FAHASA.COM";
+	    }
+	} else if ($cat1 == 5944 || $cat1 == 151) {
+	    if ($type == "bundle") {
+		if (strpos($seo_title, "Combo") !== false ) {
+		    $seo_title = str_replace("Combo", "Combo Truyện Tranh", $seo_title . " - FAHASA.COM");
+		} else if (strpos($seo_title, "BST") !== false) {
+		    $seo_title = str_replace("Combo", "Combo Truyện Tranh", $seo_title . " - FAHASA.COM");
+		} else if (strpos($seo_title, "[Bản Đặc Biệt]") !== false ) {
+		    $seo_title = str_replace("[Bản Đặc Biệt]", "[Bản Đặc Biệt] Truyện Tranh", $seo_title . " - FAHASA.COM");
+		} else {
+		    $seo_title = "Truyện Tranh " . $seo_title . " - FAHASA.COM";
+		}
+	    } else {
+		$seo_title = "Truyện Tranh " . $seo_title . " - FAHASA.COM";
+	    }
+	} else if ($cat == 4) {
+	    if ($type == "bundle") {
+		if (strpos($seo_title, "Combo") !== false) {
+		    $seo_title = str_replace("Combo", "Combo Sách", $seo_title . " - FAHASA.COM");
+		} else if (strpos($seo_title, "BST") !== false) {
+		    $seo_title = str_replace("BST", "BST Sách", $seo_title . " - FAHASA.COM");
+		} else if (strpos($seo_title, "[Bản Đặc Biệt]") !== false ) {
+		    $seo_title = str_replace("[Bản Đặc Biệt]", "[Bản Đặc Biệt] Sách", $seo_title . " - FAHASA.COM");
+		} else {
+		    $seo_title = "Sách " . $seo_title . " - FAHASA.COM";
+		}
+	    } else {
+		$seo_title = "Sách " . $seo_title . " - FAHASA.COM";
+	    }
+	}
+	if ($breakpos) {
+	    $seo_description = substr($wraptext, 0, strpos($wraptext, "---\n---")) . ' ...';
+	} else {
+	    $seo_description = $wraptext;
+	}
+	
+    }elseif(Mage::registry('current_product_redis')){ 
+	$product = Mage::registry('current_product_redis');
+	$seo_title = $product['name'];
+	$cat = $product['category_main_id'];
+	$cat1 = $product['category_3_id'];
+	$type = $product['type_id'];
+	$discountPercent = $product['discount_percent'];
+	$des = str_replace("<br/>", " ", str_replace("<br />", " ", $product['description']));
+	if ($discountPercent > 0) {
+	    // handle type ngoai van/ quoc van
+	    if ($cat !== "3165") {
+		$discountLabel = "giảm giá";
+	    } else {
+		$discountLabel = "discount";
+	    }
+	    $str = $seo_title . ", $discountLabel " . $discountPercent . "%, " . $des;
+	} else {
+	    $str = $seo_title . ", " . $des;
+	}
+	$wraptext = wordwrap(trim(strip_tags($str)), 155, "---\n---", false);
+	$wraptext = str_replace('"', "'", $wraptext);
+	$breakpos = strpos($wraptext, "---\n---");
+
+	if ($cat1 == 5979 || $cat1 == 202 || $cat1 == 206 || $cat1 == 201 || $cat1 == 5978 || $cat1 == 5981) {
+	    if ($type == "bundle") {
+		if (strpos($seo_title, "Combo") !== false) {
+		    $seo_title = str_replace("Combo", "Combo Truyện", $seo_title . " - FAHASA.COM");
+		} else if (strpos($seo_title, "BST") !== false) {
+		    $seo_title = str_replace("BST", "BST Truyện", $seo_title . " - FAHASA.COM");
+		} else if (strpos($seo_title, "[Bản Đặc Biệt]") !== false ) {
+		    $seo_title = str_replace("[Bản Đặc Biệt]", "[Bản Đặc Biệt] Truyện", $seo_title . " - FAHASA.COM");
+		} else {
+		    $seo_title = "Truyện " . $seo_title . " - FAHASA.COM";
+		}
+	    } else {
+		$seo_title = "Truyện " . $seo_title . " - FAHASA.COM";
+	    }
+	} else if ($cat1 == 5944 || $cat1 == 151) {
+	    if ($type == "bundle") {
+		if (strpos($seo_title, "Combo") !== false ) {
+		    $seo_title = str_replace("Combo", "Combo Truyện Tranh", $seo_title . " - FAHASA.COM");
+		} else if (strpos($seo_title, "BST") !== false) {
+		    $seo_title = str_replace("Combo", "Combo Truyện Tranh", $seo_title . " - FAHASA.COM");
+		} else if (strpos($seo_title, "[Bản Đặc Biệt]") !== false ) {
+		    $seo_title = str_replace("[Bản Đặc Biệt]", "[Bản Đặc Biệt] Truyện Tranh", $seo_title . " - FAHASA.COM");
+		} else {
+		    $seo_title = "Truyện Tranh " . $seo_title . " - FAHASA.COM";
+		}
+	    } else {
+		$seo_title = "Truyện Tranh " . $seo_title . " - FAHASA.COM";
+	    }
+	} else if ($cat == 4) {
+	    if ($type == "bundle") {
+		if (strpos($seo_title, "Combo") !== false) {
+		    $seo_title = str_replace("Combo", "Combo Sách", $seo_title . " - FAHASA.COM");
+		} else if (strpos($seo_title, "BST") !== false) {
+		    $seo_title = str_replace("BST", "BST Sách", $seo_title . " - FAHASA.COM");
+		} else if (strpos($seo_title, "[Bản Đặc Biệt]") !== false ) {
+		    $seo_title = str_replace("[Bản Đặc Biệt]", "[Bản Đặc Biệt] Sách", $seo_title . " - FAHASA.COM");
+		} else {
+		    $seo_title = "Sách " . $seo_title . " - FAHASA.COM";
+		}
+	    } else {
+		$seo_title = "Sách " . $seo_title . " - FAHASA.COM";
+	    }
+	}
+	if ($breakpos) {
+	    $seo_description = substr($wraptext, 0, strpos($wraptext, "---\n---")) . ' ...';
+	} else {
+	    $seo_description = $wraptext;
+	}
+	
+    }elseif (Mage::registry('current_category')){ 
+	$cat = Mage::registry('current_category');
+	$cat_name = "sản phẩm";
+	$cat_name_short = "SP";
+	if(strlen($cat->getUrlPath()) >= 7){
+	    if((substr( $cat->getUrlPath(), 0, 4 ) === "sach") || (substr( $cat->getUrlPath(), 0, 7 ) === "foreign")){
+		$cat_name = "sách";
+		$cat_name_short = "SACH";
+	    }
+	}
+	$seo_title = "Tổng hợp ".$cat_name." ".$cat->getName()." tại Fahasa.com";
+	$seo_description = $seo_title.", với ưu đãi hàng ngày lên tới 50%, giao hàng miễn phí toàn quốc chỉ từ 250k.";
+	$seo_keywords = $cat_name." ".$cat->getName().", ".$cat_name_short." ".strtolower($cat->getName()).", ".strtolower($cat->getName());
+    
+    }elseif (strpos($currentUrl, "/blog/")){ 
+	if($this->getDescription()){
+	    $seo_description = $this->getDescription();
+	}
+	
+    }elseif(Mage::registry('current_voucher')){ 
+    $voucher_info = Mage::registry('current_voucher');
+	if($voucher_info['name']){
+	    $seo_title = $voucher_info['name']." - ".$this->__("Discount ").": ".$voucher_info['discount']. " - FAHASA.COM";
+	}
+	
+    }elseif(Mage::registry('current_combo_voucher')){ 
+	$combo_info = Mage::registry('current_combo_voucher');
+	if($combo_info['name']){
+	    $seo_title = $combo_info['name']. " - FAHASA.COM";
+	}
+    }else{
+	$SeoData = $this->getDataSEO();
+	if($SeoData){
+	    if($SeoData['type'] == 'supplier'){
+		$seo_title = "Tổng hợp sản phẩm của ".$SeoData['name']." giảm tới 50% tại Fahasa.com";
+		$seo_description = "Danh mục sản phẩm của ".$SeoData['name'].". với ưu đãi hàng ngày lên tới 50%, giao hàng miễn phí toàn quốc chỉ từ 250k.";
+		$seo_keywords = "Nhà xuất bản ".$SeoData['name']
+			.", NXB ".strtolower($SeoData['name'])
+			.", Nhà cung cấp ".$SeoData['name']
+			.", NCC ".strtolower($SeoData['name'])
+			.", ".strtolower($SeoData['name']);
+	    }else if($SeoData['type'] == 'author'){
+		$seo_title = "Sách của ".$SeoData['name']." giảm tới 50% tại Fahasa.com";
+		$seo_description = "Tuyển tập các tựa sách mới nhất và nổi tiếng của tác giả ".$SeoData['name'].". Giao hàng toàn quốc dù chỉ 1 cuốn.";
+		$seo_keywords = "Tác giả ".$SeoData['name'].", TG ".strtolower($SeoData['name']).", ".strtolower($SeoData['name']);
+	    }else if($SeoData['type'] == 'bookname_from_exist_keysearch'){
+		$seo_title = "Tổng hợp danh mục ".$SeoData['name']." tại Fahasa.com";
+		$seo_description = $seo_title.", với ưu đãi hàng ngày lên tới 50%, giao hàng miễn phí toàn quốc chỉ từ 250k.";
+		$seo_keywords = "Danh mục ".$SeoData['name'].", DM ".strtolower($SeoData['name']).", ".strtolower($SeoData['name']);
+	    }
+	}
+    }
+?>
+    
+<title><?php echo $seo_title; ?></title>
+<meta name="description" content="<?php echo $seo_description ?>">
+<meta name="keywords" content="<?php echo $seo_keywords; ?>" />
+<meta name="robots" content="<?php echo htmlspecialchars($this->getRobots()) ?>" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="p:domain_verify" content="cbc2e84e0738473689487ead377f46f2"/>
+<meta property="fb:app_id" content="331898836987489"/>
+<link rel="icon" href="<?php echo $this->getFaviconFile(); ?>" type="image/x-icon" />
+<link rel="shortcut icon" href="<?php echo $this->getFaviconFile(); ?>" type="image/x-icon" />
+
+
+
+<!--[if lt IE 7]>
+<script type="text/javascript">
+//<![CDATA[
+    var BLANK_URL = '<?php echo $this->helper('core/js')->getJsUrl('blank.html') ?>';
+    var BLANK_IMG = '<?php echo $this->helper('core/js')->getJsUrl('spacer.gif') ?>';
+//]]>
+</script>
+
+<![endif]-->
+<?php echo $this->getCssJsHtml() ?>
+<?php echo $this->getChildHtml() ?>
+<?php echo $this->helper('core/js')->getTranslatorScript() ?>
+<?php echo $this->getIncludes() ?>
+<?php if (!(Mage::getSingleton('cms/page')->getIdentifier() == 'ma_vanesa2_home' && Mage::app()->getFrontController()->getRequest()->getRouteName() == 'cms')): ?>
+    <style type="text/css">
+        .category-vmega_toggle{
+            display:none;
+        }
+    </style>
+<?php endif;?>
+    
+<?php /* Open Graph Protocol for Facebook and SEO START */ ?>
+<?php if (Mage::registry('current_product')): ?>
+    <?php $review = Mage::registry('current_review'); ?>
+    <?php $product = Mage::registry('current_product'); ?>
+    <?php if ($review): ?>
+        <!--hanlde og tag for review page-->
+        <meta property="og:title" content="<?php echo "Review của " . $product->getName(); ?>" />
+        <?php $des = $review->getDetail(); ?>
+    <?php else: ?>
+        <!--hanlde og tag for product page-->
+        <meta property="og:title" content="<?php echo ($product->getName()); ?>" />
+        <?php $des = $product->getName() . " - " . $product->getDescription(); ?>
+    <?php endif; ?>
+    <meta property="og:type" content="product" />
+    <meta property="og:image" content="<?php echo $this->helper('catalog/image')->init($product, 'small_image')->resize(200, 200); ?>" />
+    <meta property="og:url" content="<?php echo Mage::registry('product')->getProductUrl(); ?>" />
+    <?php
+    $wraptext = wordwrap(trim(strip_tags($des)), 300, "---\n---", false);
+    $wraptext = str_replace('"', "'", $wraptext);
+    $breakpos = strpos($wraptext, "---\n---");
+    ?>
+    <meta property="og:description" content="<?php
+    if ($breakpos) {
+        echo substr($wraptext, 0, strpos($wraptext, "---\n---")) . ' ...';
+    } else {
+        echo $wraptext;
+    }
+    ?>" />
+    <meta property="og:site_name" content="Fahasa.com" />
+    
+<?php elseif (Mage::registry('current_product_redis')): ?>
+    <?php $review = Mage::registry('current_review'); ?>
+    <?php $product = Mage::registry('current_product_redis'); ?>
+    <?php if ($review): ?>
+        <!--hanlde og tag for review page-->
+        <meta property="og:title" content="<?php echo "Review của " . $product['name']; ?>" />
+        <?php $des = $review->getDetail(); ?>
+    <?php else: ?>
+        <!--hanlde og tag for product page-->
+        <meta property="og:title" content="<?php echo ($product['name']); ?>" />
+        <?php $des = $product['name'] . " - " . $product['description']; ?>
+    <?php endif; ?>
+    <meta property="og:type" content="product" />
+    <meta property="og:image" content="<?php echo $this->helper('catalog/image')->init(Mage::getModel('catalog/product'), 'small_image', $product['image_path'])->resize(200, 200)->__toString(); ?>" />
+    <meta property="og:url" content="<?php echo $product['url']; ?>" />
+    <?php
+    $wraptext = wordwrap(trim(strip_tags($des)), 300, "---\n---", false);
+    $wraptext = str_replace('"', "'", $wraptext);
+    $breakpos = strpos($wraptext, "---\n---");
+    ?>
+    <meta property="og:description" content="<?php
+    if ($breakpos) {
+        echo substr($wraptext, 0, strpos($wraptext, "---\n---")) . ' ...';
+    } else {
+        echo $wraptext;
+    }
+    ?>" />
+    <meta property="og:site_name" content="Fahasa.com" />
+<?php elseif (Mage::registry('current_category')): ?>
+    <meta property="og:title" content="<?php echo Mage::registry('current_category')->getName() ?>" />
+    <meta property="og:type" content="product.group" /> 
+    <meta property="og:image" content="https://www.fahasa.com/media/wysiwyg/Thang-10-2017/logo_mascot_200px.jpg" />
+    <meta property="og:url" content="<?php echo Mage::registry('current_category')->getUrl(); ?>" />
+    <meta property="og:description" content="<?php echo strip_tags(Mage::registry('current_category')->getName()) ?>" />
+    <meta property="og:site_name" content="Fahasa.com" />
+<?php else: ?>
+    <?php
+    $querySearch = array_key_exists('q', $_GET) ? Mage::helper('catalogsearch')->escapeHtml($_GET['q']) : null;
+    ?>
+    <?php if ($querySearch): ?>
+        <meta property="og:title" content="<?php echo $querySearch; ?>" />
+        <meta property="og:type" content="product.group" />
+        <meta property="og:image" content="https://www.fahasa.com/media/wysiwyg/Thang-10-2017/logo_mascot_200px.jpg" />
+        <meta property="og:url" content="<?php echo $currentUrl; ?>" />
+        <meta property="og:description" content="<?php echo $querySearch; ?>" />
+        <meta property="og:site_name" content="Fahasa.com" />        
+    <?php else: ?>
+        <?php if (strpos($currentUrl, "?eventId=")) : ?>
+            <?php
+            $giftId = $_GET["giftId"];
+            $eventId = $_GET["eventId"];
+            $pageInfor = Mage::helper('event')->getSharedInforById($eventId, $giftId);
+            ?>
+            <meta property="og:url" content="<?php echo $currentUrl; ?>" />
+            <meta property="og:title" content="<?php echo $pageInfor["title"]; ?>" />
+            <meta property="og:description" content="<?php echo $pageInfor["description"]; ?>" />
+            <meta property="og:type" content="product.group" />
+            <meta property="og:image" content="<?php echo $pageInfor["image"]; ?>" />
+        <?php elseif (!empty($meta_array = Mage::helper("event/data")->getMetaEventShareFB($this->getRequest()->getParam('event', ''),$this->getRequest()->getParam('id', '')))) : ?>
+	    <meta property="og:url" content="<?php echo $currentUrl; ?>" />
+	    <meta property="og:title" content="<?php echo $meta_array['title']; ?>" />
+	    <meta property="og:description" content="<?php echo $meta_array['description']; ?>" /> 
+	    <meta property="og:type" content="product" />
+	    <meta property="og:image" content="<?php echo $meta_array['image']; ?>" />
+	    <meta property="og:image:secure_url" content="<?php echo $meta_array['image']; ?>" />
+	    <meta property="og:image:width" content="<?php echo $meta_array['width'];?>"/>
+	    <meta property="og:image:height" content="<?php echo $meta_array['height'];?>"/>
+	    <meta property="og:site_name" content="<?php echo $meta_array['site']; ?>" />
+        <?php elseif (strpos($currentUrl, "/blog/")) : ?>
+            <?php
+//            $identifier = substr($currentUrl, strlen(Mage::getBaseUrl() . 'blog/'));
+//            $identifier = str_replace("/", "", $identifier);
+              $blogId = $_GET["postId"];
+            ?>
+            <?php if ($blogId) : ?>
+                <?php $post = Mage::getModel('blog/post')->load($blogId); ?>
+                <meta property="og:url" content="<?php echo $currentUrl; ?>" />
+                <meta property="og:title" content="<?php echo $post["title"]; ?>" />
+                <meta property="og:description" content="<?php echo $post["short_content"]; ?>" />
+                <meta property="og:type" content="product.group" />
+                <meta property="og:image" content="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . $post["thumbnailimage"]; ?>" />
+            <?php else : ?>
+                <meta property="og:url" content="<?php echo $currentUrl; ?>" />
+                <meta property="og:image" content="https://www.fahasa.com/media/wysiwyg/Thang-10-2017/logo_mascot_200px.jpg" />
+                <meta property="og:description" content="Sale Khủng. Hot 1000 độ. Giảm đến 50%++." />
+                <meta property="og:site_name" content="Fahasa.com" />
+            <?php endif; ?>
+        <?php else : ?>
+            <meta property="og:url" content="<?php echo $currentUrl; ?>" />
+            <meta property="og:image" content="https://www.fahasa.com/media/wysiwyg/Thang-10-2017/logo_mascot_200px.jpg" />
+            <meta property="og:description" content="Sale Khủng. Hot 1000 độ. Giảm đến 50%++." />
+            <meta property="og:site_name" content="Fahasa.com" />
+        <?php endif ?>
+    <?php endif; ?>    
+<?php endif; ?>
+<?php /* Open Graph Protocol for Facebook and SEO END */ ?>

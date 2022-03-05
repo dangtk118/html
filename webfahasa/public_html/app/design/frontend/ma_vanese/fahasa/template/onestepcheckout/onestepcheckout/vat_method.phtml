@@ -1,0 +1,87 @@
+<div style="padding-bottom: 8px;">
+    <input class="with-font" type="checkbox" 
+	   id="onestepcheckout_vat_checkbox"
+	   onclick="getVAT();" value="0" />
+    <label for="onestepcheckout_vat_checkbox" style="padding-bottom: 8px;"><?php echo $this->__('Outputting invoice.'); ?></label>
+</div>
+<div class="clear"></div>
+<div id="onestepcheckout_vat-info" style="display:none;">
+    <div style="margin-bottom: 20px;">
+	<label><?php echo $this->__('Company');?></label>
+	<div class="input-box"><input type="text" id="txt_vat_company" value="" class=" input-text" title="<?php echo $this->__('Company');?>"></div>
+    </div>
+    <div style="margin-bottom: 20px;">
+	<label><?php echo $this->__('Address');?></label>
+	<div class="input-box"><input type="text" id="txt_vat_address" value="" class=" input-text" title="<?php echo $this->__('Address');?>"></div>
+    </div>
+    <div style="margin-bottom: 20px;">
+	<label><?php echo $this->__('Tax/VAT number');?></label>
+	<div class="input-box"><input type="text" id="txt_vat_taxcode" value="" class=" input-text" title="<?php echo $this->__('Tax/VAT number');?>"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    get_vat_url = '<?php echo $this->getUrl('onestepcheckout/index/getVAT', array('_secure' => true)) ?>';
+    var isLogin = "<?php if ($this->isCustomerLoggedIn()){echo true;}else{echo false;}?>";
+    var customer_vat = null;
+    Event.observe('txt_vat_company', 'change', function() {
+	$('fm_vat_company').value = $('txt_vat_company').value;
+    });
+    Event.observe('txt_vat_address', 'change', function() {
+	$('fm_vat_address').value = $('txt_vat_address').value;
+    });
+    Event.observe('txt_vat_taxcode', 'change', function() {
+	$('fm_vat_taxcode').value = $('txt_vat_taxcode').value;
+    });
+    if($('fm_vat_company') == null){
+	if($('vat-information'))
+	    $('vat-information').style.display = 'none';
+    }
+    function getVAT(){
+	if($('onestepcheckout_vat_checkbox').checked){
+	    $('onestepcheckout_vat-info').style.display = '';
+	    if (isLogin == "1"){
+		if(customer_vat){
+		    showVAT();
+		    return;
+		}
+		new Ajax.Request(
+		get_vat_url, {
+		    method: 'post',
+		    onLoading: function () {
+			showLoadingAnimation();
+		    },
+		    onLoaded: function () {
+			hideLoadingAnimation();
+		    },
+		    onSuccess: function (result) {
+			customer_vat = JSON.parse(result.responseText);
+			if(customer_vat.success == true){
+			    showVAT();
+			}
+		    }
+		});
+	    }
+	}
+	else{
+	    $('onestepcheckout_vat-info').style.display = 'none';
+	    clearVAT();
+	}
+    }
+    function showVAT(){
+	$('txt_vat_company').value = customer_vat.company;
+	$('txt_vat_address').value = customer_vat.address;
+	$('txt_vat_taxcode').value = customer_vat.taxcode;
+	$('fm_vat_company').value = customer_vat.company;
+	$('fm_vat_address').value = customer_vat.address;
+	$('fm_vat_taxcode').value = customer_vat.taxcode;
+    }
+    function clearVAT(){
+	$('txt_vat_company').value = "";
+	$('txt_vat_address').value = "";
+	$('txt_vat_taxcode').value = "";
+	$('fm_vat_company').value = "";
+	$('fm_vat_address').value = "";
+	$('fm_vat_taxcode').value = "";
+    }
+</script>

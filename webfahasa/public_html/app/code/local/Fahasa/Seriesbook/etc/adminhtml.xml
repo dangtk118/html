@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<config>
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <seriesbook_config translate="title" module="seriesbook">
+                                        <title>Series Book_Config</title>
+                                    </seriesbook_config>
+                                </children>
+                            </config>
+                        </children>
+                    </system>                    
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</config>

@@ -1,0 +1,167 @@
+<?php  
+    $cache_helper = Mage::helper('fahasa_catalog/cache');
+    
+    if($product = Mage::registry('current_product_redis')){
+	$url = $product['url'];
+	$name = $product['name'];
+	if(!empty($product['category_4_id'])){
+	    $cat_id = $product['category_4_id'];
+	}elseif(!empty($product['category_3_id'])){
+	    $cat_id = $product['category_3_id'];
+	}elseif(!empty($product['category_mid_id'])){
+	    $cat_id = $product['category_mid_id'];
+	}elseif(!empty($product['category_main_id'])){
+	    $cat_id = $product['category_main_id'];
+	}else{
+	    $cat_id = 1;
+	}
+    }else{
+	if(!Mage::registry('product') && $this->getProductId()) {
+	    $product = Mage::getModel('catalog/product')->load($this->getProductId());
+	    Mage::register('product', $product);
+	}
+	if($product){
+	    $url = $product->getUrl();
+	    $name = $product->getName();
+	    $cat_id = end($product->getCategoryIds());
+	}
+    }
+    $mobile = Mage::helper('fhsmobiledetect')->isMobile();
+?>
+<?php if($product !== NULL): ?>
+<?php
+    $Breadcrumb_data = $cache_helper->getData('breadcrumbs_category_'.$cat_id);
+    $_category = $cache_helper->getCategory($cat_id);
+    Mage::register('product_category', $_category);
+    
+    if(empty($Breadcrumb_data)){
+	$catids = str_replace("1/2/","",$_category->getPath());
+	$cats = explode("/", $catids);
+	$productCrumb = array();
+	$itemsCrumb = array();
+	$i = 1;
+
+	// home Crumb
+	$homeCrumb = (object) [
+		    "@type" => "ListItem",
+		    "position" => $i ++,
+		    "item" => (object) [
+			"@id" => Mage::getBaseUrl(),
+			"name" => "Fahasa"
+		    ]
+	];
+	array_push($itemsCrumb, $homeCrumb);
+
+	$_catCollection =  $categories = Mage::getModel('catalog/category')
+	    ->getCollection()
+		->addAttributeToSelect("name")
+		->addAttributeToSelect("url")
+	    ->addFieldToFilter('entity_id', array('in'=> $cats));
+	foreach ($_catCollection as $_cat) {
+	    $item = array('label' => $_cat->getName(),
+			  'title' => $_cat->getName(),
+			  'link' => $_cat->getUrl(),
+			  'first' => false,
+			  'last' => false,
+			  'readonly' => false);
+	    array_push($productCrumb, $item);
+
+	    $itemCrumb = (object) [
+			"@type" => "ListItem",
+			"position" => $i ++,
+			"item" => (object) [
+			    "@id" => $_cat->getUrl(),
+			    "name" => $_cat->getName()
+			]
+	    ];
+	    array_push($itemsCrumb, $itemCrumb);
+	}
+
+	// product Crumb
+	$proCrumb = (object) [
+		    "@type" => "ListItem",
+		    "position" => $i ++,
+		    "item" => (object) [
+			"@id" => $url,
+			"name" => $name
+		    ]
+	];
+	array_push($itemsCrumb, $proCrumb);
+	
+	// Crumb title
+	$breadcrumbList = (object) [
+		    "@context" => "http://schema.org",
+		    "@type" => "BreadcrumbList",
+		    "itemListElement" => $itemsCrumb
+	];
+
+	// Crumb json
+	$breadcrumbListJson = json_encode($breadcrumbList);
+	
+	$Breadcrumb_data = array(
+	    'productCrumb' => $productCrumb,
+	    'breadcrumbListJson' => $breadcrumbListJson
+	);
+	//save cache
+	$cache_helper->setData('breadcrumbs_category_'.$cat_id, $Breadcrumb_data);
+    }else{
+	$productCrumb = $Breadcrumb_data['productCrumb'];
+	$breadcrumbListJson = $Breadcrumb_data['breadcrumbListJson'];
+    }
+    
+
+    ?>
+
+<!-- start breadcrumb json -->
+    <script type="application/ld+json">
+        <?php echo $breadcrumbListJson; ?>
+    </script>
+<!-- end breadcrumb json-->
+    <div id="ves-breadcrumbs" class="breadcrumbs hidden-xs">
+        <div class="container-inner breadcrumbs">
+            <?php if (!$mobile) { ?>
+                <ol class="breadcrumb">
+                    <?php foreach ($productCrumb as $_crumbName => $_crumbInfo): ?>
+                        <li class="<?php echo $_crumbName ?>">
+                            <?php if ($_crumbInfo['link']): ?>
+                                <a href="<?php echo $_crumbInfo['link'] ?>" title="<?php echo $this->escapeHtml($_crumbInfo['title']) ?>"><?php echo $this->escapeHtml($_crumbInfo['label']) ?></a>
+                            <?php elseif ($_crumbInfo['last']): ?>
+                                <strong><?php echo $this->escapeHtml($_crumbInfo['label']) ?></strong>
+                            <?php else: ?>
+                                <?php echo $this->escapeHtml($_crumbInfo['label']) ?>
+                            <?php endif; ?>
+                            <?php if (!$_crumbInfo['last']): ?>
+                                <span>/ </span>
+                            <?php endif; ?>
+                        </li>
+                    <?php endforeach; ?>
+                </ol>
+            <?php } ?>
+        </div>   
+
+    </div>
+<?php elseif($crumbs && is_array($crumbs)): ?>
+    <div id="ves-breadcrumbs" class="breadcrumbs hidden-xs">
+	<div class="container-inner breadcrumbs">
+	    <?php if(!$mobile){ ?>
+            <ol class="breadcrumb">
+                <?php foreach($crumbs as $_crumbName=>$_crumbInfo): ?>
+                    <li class="<?php echo $_crumbName ?>">
+                    <?php if($_crumbInfo['link']): ?>
+                        <a href="<?php echo $_crumbInfo['link'] ?>" title="<?php echo $this->escapeHtml($_crumbInfo['title']) ?>"><?php echo $this->escapeHtml($_crumbInfo['label']) ?></a>
+                    <?php elseif($_crumbInfo['last']): ?>
+                        <strong><?php echo $this->escapeHtml($_crumbInfo['label']) ?></strong>
+                    <?php else: ?>
+                        <?php echo $this->escapeHtml($_crumbInfo['label']) ?>
+                    <?php endif; ?>
+                    <?php if(!$_crumbInfo['last']): ?>
+                        <span>/ </span>
+                    <?php endif; ?>
+                    </li>
+                <?php endforeach; ?>
+            </ol>
+ 	    <?php }?>
+        </div>
+</div>
+
+<?php endif; ?>

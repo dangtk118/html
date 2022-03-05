@@ -1,0 +1,63 @@
+<div class="main-container" style="margin: -15px;">
+    <?php
+       $postList =  $this->getTopPostSlider();
+    ?>
+    <div class="container-inner">
+        <div class="row">
+            <div class="col-xs-12" style="padding-bottom: 4px;">
+                <div class = "col-md-8" style="padding: 0px; padding-right: 4px; margin-top: 5px;">
+                    <div style="height: 300px; position: relative">
+                        <a href="<?php echo Mage::getBaseUrl().$postList[0]['url'];?>">
+                            <img style="object-fit: cover; height: 300px; width: 800px;" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).$postList[0]['imageUrl'] ?>"/></a>
+                        <div class="text-block-left" >
+                            <span style="font-size: 14px; color: white;"><a href="<?php echo Mage::getBaseUrl().$postList[0]['url']; ?>"><?php echo $postList[0]['blogTitle']; ?></a></span>
+                            <p class="text-concat"><?php echo $postList[0]["short_content"]; ?></p>
+                        </div>
+                    </div>
+                </div>
+                <div class ="col-md-4" style="padding: 0px; ">
+                    <div style="height: 300px; padding: 0px; margin-top: 5px;">
+                            <a href="<?php echo Mage::getBaseUrl().$postList[1]['url']; ?>"><img style="object-fit: cover; height: 300px; width: 400px;" 
+                                                                              src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).$postList[1]['imageUrl']; ?>" /></a>
+                            <div class="text-block-right">
+                                <p><a href="<?php echo Mage::getBaseUrl().$postList[1]['url']; ?>"><b><?php echo $postList[1]['blogTitle']; ?></b></a></p>
+                            </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12">
+                <div class = "col-md-4" style="padding: 0px;">
+                    <div style="height: 160px; border-right: 4px solid #F0f0f0;">
+                        <a href="<?php echo Mage::getBaseUrl().$postList[2]['url']; ?>"><img style="object-fit: cover; height: 160px; width: 400px;" 
+                                                                          src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).$postList[2]['imageUrl']; ?>" /></a>
+                        <div class="text-block-bottom" style="margin-right: 4px;">
+                            <a href="<?php echo Mage::getBaseUrl().$postList[2]['url']; ?>"><b><?php echo $postList[2]['blogTitle']; ?></b></a>
+                        </div>
+                    </div>
+                </div>
+                <div class = "col-md-4" style="padding: 0px;">
+                    <div style="height: 160px; border-right: 4px solid #F0f0f0;" >
+                        <a href="<?php echo Mage::getBaseUrl().$postList[3]['url']; ?>"><img style="object-fit: cover; height: 160px; width: 400px;" 
+                                                                          src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).$postList[3]['imageUrl']; ?>" /></a>
+                        <div class="text-block-bottom" style="margin-right: 4px;">
+                            <a href="<?php echo Mage::getBaseUrl().$postList[3]['url']; ?>"><b><?php echo $postList[3]['blogTitle']; ?></b></a>
+                        </div>
+                    </div>
+                </div>
+                <div class = "col-md-4" style="padding: 0px; margin-right: -4px;">
+                    <div style="height: 160px;">
+                        <a href="<?php echo Mage::getBaseUrl().$postList[4]['url']; ?>"><img style="object-fit: cover; height: 160px; width: 400px;" 
+                                                                          src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).$postList[4]['imageUrl']; ?>" /></a>
+                        <div class="text-block-bottom">
+                            <a href="<?php echo Mage::getBaseUrl().$postList[4]['url']; ?>"><b><?php echo $postList[4]['blogTitle']; ?></b></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div   style="background: #F0f0f0; height: 20px; width: 104%; margin-left: -15px">
+</div>
+
+

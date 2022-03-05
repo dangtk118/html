@@ -1,0 +1,12 @@
+.home-sidebar .faq .item > span {margin-left: 10px; margin-right: 20px;}
+.home-sidebar .faq .question i {left: auto; right: -20px;}
+.home-sidebar .faq .answer:before {left: auto; right: -14px;}
+.home-sidebar .faq .answer:after {left: auto; right: -14px;}
+.slider-container .prev {left: auto!important; right: 10px!important;}
+.slider-container .next {right: auto!important; left: 10px!important;}
+.text-banner .text-banner-content {left: auto; right: 7%;}
+header.header .form-search button {float: left;}
+header.header .form-search input {float: right;}
+header#header h2.logo {margin-right: 0; margin-left: 20px;}
+.nav-container li.level-top.nav-1 > a,
+.nav-container li.level-top.nav-1 > a:hover {border-radius: 0 6px 0 0; -moz-border-radius: 0 6px 0 0;}

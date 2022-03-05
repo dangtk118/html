@@ -1,0 +1,65 @@
+/**
+ * @category    Mana
+ * @package     ManaPro_FilterTree
+ * @copyright   Copyright (c) http://www.manadev.com
+ * @license     http://www.manadev.com/license  Proprietary License
+ */
+.m-expanded > .m-tree-item, .m-collapsed > .m-tree-item, .m-leaf > .m-tree-item { padding-left: 15px; }
+.m-expanded > .m-tree-item, .m-collapsed > .m-tree-item { cursor: pointer; }
+.m-expanded > .m-tree-item { background: transparent url(../images/manapro_filtertree/expanded.png) 0 4px no-repeat; }
+.m-collapsed > .m-tree-item { background: transparent url(../images/manapro_filtertree/collapsed.png) 0 4px no-repeat; }
+.m-expanded > .m-tree-item:hover { background: transparent url(../images/manapro_filtertree/expanded_over.png) 0 4px no-repeat; }
+.m-collapsed > .m-tree-item:hover { background: transparent url(../images/manapro_filtertree/collapsed_over.png) 0 4px no-repeat; }
+.m-expanded > ul, .m-collapsed > ul { margin-left: 10px; }
+
+.m-child-category-list { margin-left: 20px; }
+/* -----button detele all----- */
+.delete-all-category {
+    cursor: pointer;
+    border: 1px solid #f7941E !important;
+    background-color: white!important;
+    padding: 10px 10px 8px 10px;
+    display: flex;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    flex-direction:row;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-align-items: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+}
+.delete-all-category div{
+    color :#F7941E;
+    font-size: 14px;
+}
+.delete-all-category a{
+    margin : 0!important;
+}
+/*.m-parent-category-list li:not(:first-child):before {
+    content: '\f104';
+    color : #666;
+    font-size: 14px;
+    left: -8px;
+    background: url(../images/ico_trai_den.png) no-repeat center;
+    content: "";
+    display: inline-block;
+        width: 8px;
+    height: 23px;
+    background-size: 7px 10px;
+}*/
+
+.m-parent-category-list li:not(:first-child){
+    /*font-weight: bold;*/
+}
+
+.m-subtract-icon{
+    background: transparent url(http://192.168.1.18/skin/frontend/base/default/images/tru.png) no-repeat center;
+    width: 14px;
+    margin-right: 2px;
+    background-size: contain;
+}

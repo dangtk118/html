@@ -1,0 +1,17 @@
+header#header .quick-access {float: right;}
+.nav-container a.level-top:before {right: auto; left: 0;}
+header#header .welcome-msg {margin-right: 20px; margin-left: 70px;}
+header.header .form-search button {float: left;}
+header.header .form-search input {float: right;}
+header#header h2.logo {margin-right: 0; margin-left: 20px;}
+.text-banner .text-banner-content {left: auto; right: 13%;}
+.address-block .text-banner {text-align: right;}
+.address-block .banner-title i {margin-right: 0; margin-left: 5px;}
+.text-banner .text-banner-content.skin-2 {left: auto; right: 19%;}
+.text-banner .text-banner-content.skin-1 {left: auto; right: 27%;}
+body.boxed-layout .slider-container .prev,
+body.boxed-layout .related-wrapper-bottom .block-related .prev,
+.slider-container .prev {left: auto; right: 0;}
+body.boxed-layout .slider-container .next, 
+body.boxed-layout .related-wrapper-bottom .block-related .next,
+.slider-container .next {right: auto; left: 0;}

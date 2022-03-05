@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Bss_StoreConditionRules>
+      <version>1.0.1</version>
+    </Bss_StoreConditionRules>
+  </modules>
+  <global>
+    <helpers>
+      <storeconditionrules>
+        <class>Bss_StoreConditionRules_Helper</class>
+      </storeconditionrules>
+    </helpers>
+    <models>
+      <storeconditionrules>
+        <class>Bss_StoreConditionRules_Model</class>
+      </storeconditionrules>
+    </models>
+    <events>
+      <salesrule_rule_condition_combine>
+        <observers>
+          <add_store_condition_to_sales_rule>
+            <class>storeconditionrules/observer</class>
+            <method>addStoreConditionToSalesRule</method>
+          </add_store_condition_to_sales_rule>
+        </observers>
+      </salesrule_rule_condition_combine>
+    </events>
+  </global>
+
+  <adminhtml>
+    <acl>
+      <resources>
+        <all>
+          <title>Allow Everything</title>
+        </all> 
+        <admin>
+          <children>
+            <system>
+              <children>
+                <config>
+                  <children>
+                    <storeconditionrules>
+                      <title>Bss Shopping Cart Price Rules Per Store Configuration</title>
+                    </storeconditionrules>    
+                  </children>  
+                </config> 
+              </children>   
+            </system>      
+          </children>    
+        </admin>
+      </resources> 
+    </acl>
+  </adminhtml>
+
+  <default>
+    <storeconditionrules>
+      <general>
+        <active translate="label">1</active>
+      </general>
+    </storeconditionrules>
+  </default>
+</config> 

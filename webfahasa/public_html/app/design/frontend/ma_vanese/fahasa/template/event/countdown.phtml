@@ -1,0 +1,71 @@
+<?php $content = json_decode($this->getData('data'), true); ?>
+<?php
+$mobile = Mage::helper('fhsmobiledetect')->isMobile();
+if ($content) {
+    $info = $content[0];
+}
+?>
+<div style="display: inline-block;
+     position: relative;">
+    <div id="clockdiv" style="position: absolute;
+         left: 0;
+         right: 0;
+         color: <?php echo $info["color"]; ?>;
+         ">
+        <div>
+            <div class="smalltext">Ngày</div>
+
+            <span class="days" style=""></span>
+        </div>
+        <div>
+            <span class="">:</span>
+        </div>
+        <div>
+            <div class="smalltext">Giờ</div>
+
+            <span class="hours"></span>
+        </div>
+        <div>
+            <span class="">:</span>
+        </div>
+        <div>
+            <div class="smalltext">Phút</div>
+
+            <span class="minutes"></span>
+        </div>
+        <div style="height: 119;">
+            <span class="">:</span>
+        </div>
+        <div>
+            <div class="smalltext">Giây</div>
+            <span class="seconds"></span>
+        </div>
+    </div>
+    <?php if (!$mobile) : ?>
+    <img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . $info["urlWebImg"]; ?>" style=" max-width: 100%;" />
+    <?php else : ?>
+        <img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . $info["urlMobileImg"]; ?>" style=" max-width: 100%;" />
+    <?php endif;?>
+</div>
+<script>
+    var dateformatter = Date.parse("<?php echo $info["dateend"]; ?>");
+    var curDate = new Date();
+    var offset = curDate.getTimezoneOffset();
+    var countDownDate = dateformatter + offset * 60000;
+    var x = setInterval(function () {
+        var now = new Date().getTime();
+
+        var distance = countDownDate - now;
+
+        var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        jQuery(".days").text(days);
+        jQuery(".hours").text(hours);
+        jQuery(".minutes").text(minutes);
+        jQuery(".seconds").text(seconds);
+    }, 1000);
+</script>
+

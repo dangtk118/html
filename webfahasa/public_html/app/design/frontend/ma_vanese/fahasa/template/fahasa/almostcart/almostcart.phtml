@@ -1,0 +1,62 @@
+<?php
+$collection = $this->obtainAlmostCartCollection();
+$currentDate = date("Y-m-d 00:00:00");
+$cartTotal = Mage::helper('almostcart')->getCartTotal();
+//Detect current active order to determine what is the next order, as we want to display text to encourage customer to shop more
+//assume order is one incremental
+$activeOrder = -1;
+$nextOrder = -1;
+$nextGiftNameToGet = null;
+$activeGift = array();
+foreach ($collection as $item){
+    if($currentDate >= $item['start_date'] && $currentDate <= $item['end_date']){
+        $activeGift[] = $item;
+        if($cartTotal >=  $item['min_cart_value'] && ($cartTotal <=  $item['max_cart_value'] || $item['max_cart_value'] == null) ){
+            $activeOrder = $item['item_order'];
+            $nextOrder = $activeOrder + 1;
+        }
+        if($nextOrder == $item['item_order']){
+            $nextGiftNameToGet = $item['alternate_name'];
+        }
+    }
+}
+?>
+<div class="almostcart_main row hidden-xs">
+    <?php if($nextGiftNameToGet != null): ?>
+        <div class="almostcart-text">
+        <?php 
+            echo Mage::helper('catalog')->__('Just a little bit more, and you will receive gift: ') . $nextGiftNameToGet;
+        ?>
+        </div>  
+    <?php endif; ?>
+    <?php
+    foreach ($activeGift as $item):
+        if($currentDate >= $item['start_date'] && $currentDate <= $item['end_date']):
+    ?>
+        <div class="col-md3 col-xs-12 col-sm-3 cart-gift-almost">
+            <div class="almost-cart-gift <?php if($cartTotal >=  $item['min_cart_value'] && ($cartTotal <=  $item['max_cart_value'] || $item['max_cart_value'] == null) ) { echo 'gift-active';} else {echo 'gift-disabled';} ?>">
+                <div class="gift-product-name">
+                    <span>
+                    <?php 
+                        echo $item['alternate_name'];
+                    ?>
+                    </span>
+                </div>
+                <div class="icon-column">
+                    <img class="gift-icon" src="<?php echo "https://www.fahasa.com/media/catalog/product" .$item['image_url'] ?>" />
+                </div>                
+                <div class="gift-description">
+                    <span class="min_cart_gift">
+                    <?php 
+                        echo $item['description'];
+                    ?>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <?php
+        endif;
+    endforeach
+    ?>          
+</div>
+<div class="clearfix"></div>

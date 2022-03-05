@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Bss_MultiStoreViewPricing>
+      <version>2.3.1</version>
+    </Bss_MultiStoreViewPricing>
+  </modules>
+  <global>
+    <helpers>
+      <multistoreviewpricing>
+        <class>Bss_MultiStoreViewPricing_Helper</class>
+      </multistoreviewpricing>
+    </helpers>
+
+    <models>
+      <multistoreviewpricing>
+        <class>Bss_MultiStoreViewPricing_Model</class>
+      </multistoreviewpricing>
+
+      <adminhtml>
+        <rewrite>
+          <system_config_source_price_scope>Bss_MultiStoreViewPricing_Model_System_Source_Price_Scope</system_config_source_price_scope>
+        </rewrite>
+      </adminhtml>
+
+      <catalog>
+        <rewrite>
+          <product_attribute_backend_price>Bss_MultiStoreViewPricing_Model_Product_Attribute_Backend_Price</product_attribute_backend_price>
+        </rewrite>
+      </catalog>
+
+      <catalog_resource>
+        <rewrite>
+          <product_option>Bss_MultiStoreViewPricing_Model_Resource_Product_Option</product_option>
+          <product_option_value>Bss_MultiStoreViewPricing_Model_Resource_Product_Option_Value</product_option_value>
+        </rewrite>
+      </catalog_resource>
+    </models>
+
+    <events>
+      <catalog_product_collection_apply_limitations_after>
+        <observers>
+          <multistoreviewpricing_catalog_product_collection_apply_limitations_after>
+            <class>multistoreviewpricing/observer</class>
+            <method>applyLimitations</method>
+          </multistoreviewpricing_catalog_product_collection_apply_limitations_after>
+        </observers>
+      </catalog_product_collection_apply_limitations_after>
+    </events>
+  </global>
+</config>

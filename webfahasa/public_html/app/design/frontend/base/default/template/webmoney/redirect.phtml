@@ -1,0 +1,31 @@
+<?php
+
+// Retrieve order
+$_order = new Mage_Sales_Model_Order();
+$orderId = Mage::getSingleton('checkout/session')->getLastRealOrderId();
+$_order->loadByIncrementId($orderId);
+
+if($_POST)
+{
+    $webmoneyPay=new Fahasa_Webmoney_Model_Payment();	
+    $webmoneyPay->createWMOrder();
+}
+?>
+<form onclick name="webmoneypayform" method="post">
+	<input type="hidden" name="orderid" value="<?php echo $orderId; ?>">
+    <input type="hidden" name="grandtotal" value="<?php echo $_order->getBaseGrandTotal(); ?>">
+</form>
+<div class="redirect_payment"><?php echo Mage::helper('checkout')->__("Please wait as we're redirecting you to our payment gateway. Please do not refresh your browser.") ?></div>
+<div class="ma-loading" style="width: 100%; height: 100px;"></div>
+<script type="text/javascript">     
+document.webmoneypayform.submit();
+$jq(".ma-loading").waitMe({
+    effect : 'bounce',
+    text : '',
+    bg : 'rgba(255,255,255,0.7)',
+    color : '#000',
+    sizeW : '',
+    sizeH : '',
+    source : ''
+}); 
+</script>

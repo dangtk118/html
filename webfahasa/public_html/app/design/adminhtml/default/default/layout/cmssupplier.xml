@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+  <cmssupplier_adminhtml_cmssupplierbackend_index>
+	<reference name="content">
+	  <block type="cmssupplier/adminhtml_cmssupplierbackend" name="cmssupplierbackend" template="cmssupplier/cmssupplierbackend.phtml"/>
+	</reference>
+  </cmssupplier_adminhtml_cmssupplierbackend_index>
+  <cmssupplier_adminhtml_cmssupplier_index>
+	<reference name="content">
+	  <block type="cmssupplier/adminhtml_cmssupplier" name="cmssupplier" />
+	</reference>
+  </cmssupplier_adminhtml_cmssupplier_index>
+</layout>

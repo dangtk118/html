@@ -1,0 +1,198 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+/**
+ * Product list toolbar
+ *
+ * @see Mage_Catalog_Block_Product_List_Toolbar
+ */
+?>
+<?php
+//$mobile = Mage::helper('mobiledetect')->isMobile();
+$mobile = Mage::helper('fhsmobiledetect')->isMobile();
+?>
+<?php if($this->getCollection()->getSize()): ?>
+<div class="toolbar  col-sm-12 col-xs-12 col-md-12 ">
+    <?php // if(!$mobile): ?>
+    <?php if( $this->isExpanded() ): ?>
+    <div class="sorter col-sm-4 col-xs-6 col-md-4 ">
+        <?php 
+        if( $this->isEnabledViewSwitcher() ): ?>
+        <p class="view-mode">
+            <?php $_modes = $this->getModes(); ?>
+            <?php if($_modes && count($_modes)>1): ?>
+            <label><?php echo $this->__('View as') ?>:</label>
+            <?php foreach ($this->getModes() as $_code=>$_label): ?>
+                <?php if($this->isModeActive($_code)): ?>
+                    <strong title="<?php echo $_label ?>" class="<?php echo strtolower($_code); ?>"><?php echo $_label ?></strong>&nbsp;
+                <?php else: ?>
+                    <a href="<?php echo $this->getModeUrl($_code) ?>" title="<?php echo $_label ?>" class="<?php echo strtolower($_code); ?>"><?php echo $_label ?></a>&nbsp;
+                <?php endif; ?>
+            <?php endforeach; ?>
+            <?php endif; ?>
+        </p>
+        <?php endif; ?>  
+        <div class="abc-xyz">
+                    <div class="dropdownfhs-text hidden-xs"><p><?php echo $this->__('Sort By') ?> :</p></div>
+                    <div class="sort-by dropdownfhs dropdownfhs-select">
+                        <div class='selectBox selectBox-order'>
+                            <span class='selected selected-order'></span>
+                            <span class='selectArrow selectArrow-order'></span>
+                            <div class="selectOptions selectOptions-order" >
+                                <?php foreach ($this->getAvailableOrders() as $_key => $_order): ?>
+                                            <?php if ($_order != 'Position' && $_key != 'relevance') : // Remove "Position" & "Vui lòng chọn" from the sort option list ?>
+                                                <span  class="selectOption selectOption-order" value="<?php echo $this->getOrderUrl($_key, 'asc') ?>"<?php if ($this->isOrderCurrent($_key)): ?> selected="selected"<?php endif; ?>><?php echo $this->__($order_key); ?> <?php echo $this->__($_order) ?></span>
+                                               
+                                            <?php endif; ?>
+                                        <?php endforeach; ?>
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+    </div>
+    <div class="pager col-sm-8 col-xs-5 col-md-6 hidden-xs">
+        <div class="hidden-sm hidden-xs">
+		    <div class="limiter hidden1-xs">
+			<div class="select-sort-by dropdownfhs">
+                            <div class='selectBox selectBox-limit'>
+                            <span class='selected selected-limit'></span>
+                            <span class='selectArrow selectArrow-limit'></span>
+                            <div class="selectOptions selectOptions-limit">
+                                    <?php foreach ($this->getAvailableLimit() as  $_key=>$_limit): ?>
+                                        <span class="selectOption selectOption-limit" value="<?php echo $this->getLimitUrl($_key) ?>" <?php if($this->isLimitCurrent($_key)): ?> selected="selected"<?php endif ?>><?php echo $_limit ?> <?php echo $this->__('product') ?></span>
+				<?php endforeach; ?>
+                            </div>
+                        </div>
+			</div>
+		    </div>
+		</div>
+    </div>
+    <?php endif; ?>
+    <?php // endif; ?>
+    <div class="pager col-sm-8 col-xs-5 col-md-2">
+            <?php if (strpos((string)$this->getCollection()->getSelect(), "searchindex_result_mage_catalog_product") == true):?>
+        <div class="limiter" style="width: 100%;">
+                        <?php 
+                            $sort = "in stock";
+                            if($_GET['in_stock'] == "1"){
+                                $sort = "in stock";
+                            } else if($_GET['in_stock'] == "0"){
+                                $sort = "show all";
+                            };
+                        ?>
+                <div class="select-sort-by dropdownfhs">
+                            <div class='selectBox selectBox-in-stock'>
+                            <span class='selected selected-in-stock'></span>
+                            <span class='selectArrow selectArrow-in-stock'></span>
+                            <div class="selectOptions selectOptions-in-stock">
+                                    <?php foreach ($this->getSortInStock() as  $_key => $_val): ?>
+                                        <span class="selectOption selectOption-in-stock" value="<?php echo $this->getPagerUrl(array("in_stock" => $_val)) ?>" <?php if($sort == $_key): ?> selected="selected"<?php endif ?>><?php echo $this->__($_key)?></span>
+				<?php endforeach; ?>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        <?php endif;?>
+    </div>
+    <?php endif; ?>
+</div>
+
+<script type="text/javascript">
+$jq(document).ready(function() {
+    enableSelectBoxesList('order');
+    enableSelectBoxesList('limit');
+    enableSelectBoxesList('in-stock');
+    
+    function enableSelectBoxesList(button){
+        $jq('span.selectOption-' + button).each(function (index, value) {
+            var selected = $jq(this).attr('selected');
+            if (selected) {
+                $jq('span.selected-' + button).html($jq(value).text());
+            }
+        });
+
+        $jq('div.selectBox-' + button).each(function () {
+            $jq(this).children('span.selected,span.selectArrow-' + button).click(function () {
+                // remove all class if it still has
+                $jq('span.selectOption-' + button).each(function (index, value) {
+                    $jq(value).removeClass('hightlight');
+                    //hightlight when selected 
+                    if ($jq('span.selected-' + button).text() == $jq(value).text()) {
+                        $jq(value).addClass("hightlight");
+                    }
+                });
+                // show/hide option fields
+                if ($jq(this).parent().children('div.selectOptions-' + button).css('display') == 'none') {
+                    $jq(this).parent().children('div.selectOptions-' + button).css('display', 'block');
+                } else
+                {
+                    $jq(this).parent().children('div.selectOptions-' + button).css('display', 'none');
+                }
+            });
+
+            // action change sort
+            $jq(this).find('span.selectOption-' + button).click(function () {
+                $jq(this).parent().css('display', 'none');
+                $jq(this).closest('div.selectBox-' + button).attr('value', $jq(this).attr('value'));
+                $jq(this).parent().siblings('span.selected-' + button).html($jq(this).html());
+                
+                let queryDict = {};
+                window.location.search.substr(1).split("&").forEach(function(item) {queryDict[item.split("=")[0]] = item.split("=")[1]});
+                
+                let url = $jq(this).attr('value').replace(/.*\?/i, '');
+                let params_dest = new URLSearchParams(url);
+                
+                let more_param = [];
+                for(let key in queryDict){
+                    if (!params_dest.has(key)){
+                        more_param.push(key+ "=" + queryDict[key]);
+                    }   
+                }
+                if (more_param.length > 0){
+                    params_dest += more_param;
+                }
+                
+                if (button == 'order') {
+                    setLocation($jq(this).attr('value'));
+                }
+                if (button == 'limit') {
+                    setLocation($jq(this).attr('value'));
+                }
+                if (button == 'in-stock') {
+                    setLocation($jq(this).attr('value'));
+                }
+
+            });
+            // tat option fields khi re chuot ra ngoai fields 
+            $jq("div.selectOptions-" + button).mouseleave(function () {
+                $jq(this).parent().children('div.selectOptions-' + button).css('display', 'none');
+            });
+
+        });
+    }
+});
+</script>

@@ -1,0 +1,459 @@
+<?php 
+    $canRepayment = false;
+    $isOwnerOrder = false;
+    $canReorder = false;
+    $orderId = $this->getRequest()->getParam('id', null);
+    $product_helper = Mage::helper('fahasa_catalog/product');
+    $languages = $product_helper->getLanguagesList('payment');
+    
+    if(!empty($orderId)){
+	$orderId = Mage::helper("event/data")->encryptor('decrypt',$orderId);
+	$orderDetail = Mage::helper('repayment')->getOrderDetail($orderId, true);
+	$canRepayment = $orderDetail['checkRePayment']['canRepayment'];
+	$isOwnerOrder = $orderDetail['checkRePayment']['isOwnerOrder'];
+	$canReorder = $orderDetail['checkRePayment']['canReorder'];
+	
+	$event_cart_log = $orderDetail['eventCartLog'];
+	$payment_methods = $orderDetail['methodsRePayment'];
+	if(!empty($event_cart_log)){
+	    $event_cart_affect_carts = array(
+		'matched' => $event_cart_log
+	    );
+	    $event_cart = array(
+		'affect_carts' => array(
+		    'matched' => $event_cart_log
+		)
+	    );
+	    $event_cart_affect_carts_html = $product_helper->getPromotonListHtml('affect_carts', $event_cart_affect_carts, $languages, false);
+	}
+    }
+    $isLogin = \Mage::getSingleton('customer/session')->isLoggedIn();
+?>
+<?php if(!$canRepayment):?>
+    <div class="status-order-template">
+	<div class="content-status-order"> 
+	    <div class="image-status-order">
+		<img src="<?php echo $this->getSkinUrl('images/order_status/ico_fail.png', array('_secure' => true)); ?>"  class="center">
+	    </div>
+	    <div class="title-status-order"><h1 class="failure-order">ĐƠN HÀNG KHÔNG THỂ THANH TOÁN LẠI</h1></div>
+	    <div class="text-status-order">
+		<?php if($isOwnerOrder):?>
+		    <p>Đơn hàng đã hết hạn thời gian hiệu lực có thể thanh toán lại</p>
+		    <?php if($canReorder):?> 
+			<p>Quý khách vui lòng đặt hàng lại</p>
+		    <?php endif;?>
+		<?php else:?> 
+		    <p>Đơn hàng không hợp lệ</p>
+		<?php endif;?>
+	    </div>
+	    <div class="button-status-order" style="">
+		<?php if($canReorder) : ?>
+		    <a href="<?php echo Mage::getUrl('sales/order/reorder', array('order_id' => $orderDetail['orderEntityId'])); ?>"><?php echo $this->__('Reorder') ?></a>
+		<?php else:?> 
+		    <a href="/"><?php echo $this->__('Go back home') ?></a>
+		<?php endif;?>
+	    </div>
+	</div>
+	<div class="contact-status-order">
+	    <div><span class="color-fhs-black"><?php echo $this->__('Contact Us') ?>:</span></div>
+	    <div><?php echo $this->__('Please call us at:') ?>  <a href="tel:1900636467"><span class="color-fhs-orange">1900.63.64.67</span></a></div>
+	    <div><?php echo $this->__('Please email us at:') ?> <a href="mailto:info@fahasa.com"><span class="color-fhs-orange">info@fahasa.com</span></a></div>
+	</diV>
+    </div>
+    
+<?php else:?>
+    <?php 
+	$VAT = $orderDetail['VAT'];
+	$shippingAddress = $orderDetail['shippingAddress'];
+	$products = $orderDetail['products'];
+	$total = $orderDetail['total'];
+    
+	$skin_url = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true);
+	$queryfier = Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix');
+	$loading_img = $this->getSkinUrl('images/fpointstore/loading.png');
+
+	$total_html = '';
+	$grandtotal_html = '';
+	$is_freeship_html = '';
+	if(!empty($total)){
+	    if(!empty($total['grandTotal'])){
+		$grandtotal_html = "<div>".$this->__('Grand Total')."</div>"
+			."<div>".number_format(round($total['grandTotal'], 2), 0, ".", ",")." đ</div>";;
+	    }
+	    if(!empty($total['isFreeship']) && $total['isFreeship'] == 1){
+		$is_freeship_html = "<div class='fhs_checkout_total_is_freeship'>"
+			. "<div>".$this->__('Use Freeship')."</div>"
+			. "<div>".$languages['yes']."</div>"
+			."</div>" ;
+	    }
+	    if(!empty($total['subtotal'])){
+		$total_html .= "<div class='fhs_checkout_total_subtotal'>"
+		       ."<div>".$this->__('Subtotal')."</div>"
+		       ."<div>".number_format(round($total['subtotal'], 2), 0, ".", ",")." đ</div>"
+		       ."</div>";
+	    }
+	    
+	    if(!empty($total['shippingAmount'])){
+		$total_html .= "<div class='fhs_checkout_total_shipping'>"
+		       ."<div>".$this->__('Shipping Fee')."</div>"
+		       ."<div>".number_format(round($total['shippingAmount'], 2), 0, ".", ",")." đ</div>"
+		       ."</div>";
+	    }
+	    
+	    if(!empty($total['discountAmount']) && $total['discountAmount'] < 0){
+		$total_html .= "<div class='fhs_checkout_total_discount'>"
+		       ."<div>".$this->__('Discount ').(!empty($total['discountDescription'])?'('.$total['discountDescription'].')':'')."</div>"
+		       ."<div>".number_format(round($total['discountAmount'], 2), 0, ".", ",")." đ</div>"
+		       ."</div>";
+	    }
+	    
+	    if(!empty($total['freeshipDiscount']) && $total['freeshipDiscount'] < 0){
+		$total_html .= "<div class='fhs_checkout_total_freeship_discount'>"
+		       ."<div>".$this->__('Freeship Discount')."</div>"
+		       ."<div>".number_format(round($total['freeshipDiscount'], 2), 0, ".", ",")." đ</div>"
+		       ."</div>";
+	    }
+	    
+	    if(!empty($total['tryoutDiscount']) && $total['tryoutDiscount'] < 0){
+		$total_html .= "<div class='fhs_checkout_total_tryout_discount'>"
+		       ."<div>".$this->__('F-point Discount')."</div>"
+		       ."<div>".number_format(round($total['tryoutDiscount'], 2), 0, ".", ",")." đ</div>"
+		       ."</div>";
+	    }
+	}
+    ?>
+
+
+<!-- Label head start -->
+<div class="fhs_checkout_block fhs_checkout_block_banner_alert">
+    <div><img src="<?php echo $skin_url.'frontend/ma_vanese/fahasa/images/alert-circle.svg?q='.$queryfier;?>"/></div>
+    <div><?php echo $this->__('Please select the payment method again to complete the order');?></div>
+</div>
+<!-- Label head end -->
+    
+<!-- Payment method start -->
+<div id="fhs_checkout_block_paymentmethod" class="fhs_checkout_block">
+    <div class="fhs_checkout_block_title"><?php echo $this->__("Payment Method"); ?></div>
+    <div class="fhs_checkout_block_content">
+	<div class="fhs_checkout_block_radio_list">
+	    <div>
+		<ul id="fhs_checkout_paymentmethod" class="fhs_checkout_block_radio_list_items">
+		    <?php foreach($payment_methods as $payment_method):?>
+                    <?php
+                        $iconPayment = $this->getSkinUrl('images/payment_icon/ico_'. $payment_method['value'].'.svg', array('_secure'=>true)); 
+                    ?>
+			<li class="fhs_checkout_block_radio_list_item <?php echo $payment_method['value'];?>">
+                                <div class="fhs_checkout_paymentmethod_with_tutorial">
+                                <div class="fhs-radio-big-with-icon-container">
+                                    <label class="fhs-radio-big fhs-raido-big-with-icon">
+                                            <div class="fhs-payment-name-with-icon-container">
+                                                <div style="background: url(<?php echo $iconPayment . '?q=' .$queryfier;?>) no-repeat center center;width: 40px;"></div>
+                                                <div class="fhs-payment-name"><?php echo $payment_method['label'];?></div>
+                                                <input type="radio" id="fhs_checkout_paymentmethod_<?php echo $payment_method['value'];?>" name="fhs_checkout_paymentmethod_option" class="fhs_checkout_paymentmethod_option" value="<?php echo $payment_method['value'];?>" <?php if($payment_method['value'] == $orderDetail['paymentMethod']){echo 'checked';}?>>
+                                                <span class="radiomark-big"></span>
+                                            </div>
+                                    </label>
+                                    <?php if(!empty($payment_method['rule_content'])):?>
+                                        <div class="fhs_checkout_paymentmethod_tutorial" onclick="showTutorialDetail('<?php echo $payment_method['value'];?>')">Chi tiết</div>
+                                    <?php endif; ?>
+                                </div>
+                                    <?php if(!empty($payment_method['title'])): ?>
+                                    <div class ="fhs_checkout_paymentmethod_lable" onclick="showTutorialDetail('<?php echo $payment_method['value'];?>')"><?php echo $payment_method['title']; ?></div>
+                                    <?php endif; ?>
+                                </div>
+			</li>
+		    <?php endforeach; ?>
+		</ul>
+	    </div>
+	</div>
+	<div class="fhs_checkout_block_loading"><div><div id="default-icon-loading" style="height: 40px; width: 40px; background: url('<?php echo $loading_img; ?>') no-repeat center center transparent; background-size: 40px;"></div></div></div>
+    </div>
+    <div class="fhs_checkout_block_alert"><?php echo $language['notempty'];?></div>
+</div>
+<!-- Payment method end -->
+
+<!-- Shipping address start -->
+<div class="fhs_checkout_block">
+    <div class="fhs_checkout_block_title"><?php echo $this->__("Shipping Address"); ?></div>
+    <div class="fhs_checkout_block_content">
+	<div class="fhs_checkout_block_content_repayment">
+	    <div><?php echo 
+		    (!empty($shippingAddress['lastName'])?$shippingAddress['lastName']:'')
+		    .(!empty($shippingAddress['firstName'])?(!empty($shippingAddress['lastName'])?' ':'').$shippingAddress['firstName']:'')
+		    .' | '
+		    .$shippingAddress['street']
+		    .(!empty($shippingAddress['ward'])?', '.$shippingAddress['ward']:'')
+		    .(!empty($shippingAddress['city'])?', '.$shippingAddress['city']:'')
+		    .(!empty($shippingAddress['region'])?', '.$shippingAddress['region']:'')
+		    .', '.$shippingAddress['countryId']
+		    .' | '
+		    .$shippingAddress['telephone'];?> 
+	    </div>
+	</div>
+	
+    </div>
+</div>
+<!-- Shipping address end -->
+
+<!-- Shipping Method start -->
+<div class="fhs_checkout_block">
+    <div class="fhs_checkout_block_title"><?php echo $this->__("Shipping Address"); ?></div>
+    <div class="fhs_checkout_block_content">
+	<div class="fhs_checkout_block_content_repayment">
+	    <div>Van chuyen thuong: 30.000</div>
+	    <div>Thoi gian: 2.5 ngay</div>
+	    <div>Van chuyen thuong (mien phi cho don hang tren 140k, HCM, HN vaf 250k cho cac tinh khac)</div>
+	</div>
+    </div>
+</div>
+<!-- Shipping Method end -->
+
+<!-- Other info start -->
+<div class="fhs_checkout_block">
+    <div class="fhs_checkout_block_title"><?php echo $this->__("Other information"); ?></div>
+    <div class="fhs_checkout_block_content">
+	<div class="fhs_checkout_block_content_repayment">
+	    <div class="fhs_checkout_block_content_repayment_title">Ghi Chu</div>
+	    <?php if(!empty($orderDetail['note'])):?>
+		<div><?php echo $orderDetail['note'];?></div>
+	    <?php else:?>
+		<div>(Không có)</div>
+	    <?php endif;?>
+	</div>
+	<div class="fhs_checkout_block_content_repayment">
+	    <div class="fhs_checkout_block_content_repayment_title">Thong tin xuat hoa don GTGT</div>
+	    <?php if(!empty($VAT['name']) || !empty($VAT['company']) || !empty($VAT['address']) || !empty($VAT['taxcode']) || !empty($VAT['email'])):?>
+		<?php echo !empty($VAT['name'])?'<div>'.$VAT['name'].'</div>':'';?>
+		<?php echo !empty($VAT['company'])?'<div>'.$VAT['company'].'</div>':'';?>
+		<?php echo !empty($VAT['address'])?'<div>'.$VAT['address'].'</div>':'';?>
+		<?php echo !empty($VAT['taxcode'])?'<div>'.$VAT['taxcode'].'</div>':'';?>
+		<?php echo !empty($VAT['email'])?'<div>'.$VAT['email'].'</div>':'';?>
+	    <?php else:?>
+		<div>(Không có)</div>
+	    <?php endif;?>
+	</div>
+    </div>
+</div>
+<!-- Other info end -->
+
+<!-- checkout start -->
+<div class="fhs_checkout_block">
+    <div class="fhs_checkout_block_title"><?php echo $this->__("Check order again"); ?></div>
+    <div class="fhs_checkout_block_content">
+	<div id="fhs_checkout_products" class="fhs_checkout_products">
+	    <?php 
+	    foreach($orderDetail['products'] as $product): ?>
+		<div class="fhs_checkout_products_item">
+		    <div class="fhs_checkout_products_item_img">
+			<img src="<?php echo $product->image;?>"/>
+		    </div>
+		    <div class="fhs_checkout_products_item_detail">
+			<div class="fhs_checkout_products_item_name">
+			    <div><?php echo $product->name;?></div>
+			    
+			    <?php if(!empty($product->expectedDateMsg)):?>
+				<?php echo "<div class='notice'>".$product->expectedDateMsg."</div>";?>
+			    <?php endif;?>
+			</div>
+			<div class="fhs_checkout_products_item_price">
+                            <div>
+                                <?php echo number_format(round($product->price, 2), 0, ".", ",");?>đ
+                            </div>
+                            <?php if($product->original_price != 0 && $product->price != 0 && $product->original_price != $product->price ) :?>	
+                            <div class="fhs_checkout_products_item_original_price">
+                                <?php echo number_format(round($product->original_price, 2), 0, ".", ",");?>đ
+                            </div>
+                            <?php endif; ?>
+			</div>
+			<div class="fhs_checkout_products_item_qty">
+			    <span><?php echo $languages['quantity'];?>: </span>
+			    <?php echo $product->quantity;?>
+			</div>
+			<div class="fhs_checkout_products_item_total">
+			    <?php echo number_format(round(($product->price * $product->quantity), 2), 0, ".", ",");?>đ
+			</div>
+		    </div>
+		</div>
+	    <?php endforeach;?>
+	</div>
+	<div class="fhs_checkout_total fhs_checkout_total_mobile">
+	    <?php echo $total_html.$is_freeship_html."<div class='fhs_checkout_total_grand_total'>".$grandtotal_html."</div>";?>
+	</div>
+	<div class="fhs-bsidebar">
+	    <div class="fhs-bsidebar-content">
+		<div class="container">
+		    <div class="fhs_checkout_total fhs_checkout_total_desktop">
+			<?php echo $total_html.$is_freeship_html."<div class='fhs_checkout_total_grand_total'>".$grandtotal_html."</div>";?>
+		    </div>
+		    <div class="fhs_checkout_bottom">
+			<div>
+			    <div class="fhs_checkout_total_grand_total">
+				<?php echo $grandtotal_html;?>
+			    </div>
+			    <div><a href="/checkout/cart/"><span style="padding-right: 8px;"><img src="<?php echo $skin_url.'frontend/ma_vanese/fahasa/images/btn_back.svg?q='.$queryfier;?>"/></span><span><?php echo $this->__('Back to cart'); ?></span></a></div>
+			</div>
+			<div>
+			    <div class="fhs-btn-box">
+				<button type="button" title="<?php echo $this->__('Order Confirmation');?>" class="fhs-btn-confirm fhs-btn-orderconfirm"><span><?php echo $this->__('Order Confirmation');?></span></button>
+			    </div>
+			</div>
+		    </div>
+		</div>
+	    </div>
+	</div>
+	<div class="fhs_checkout_block_loading"><div><div id="default-icon-loading" style="height: 40px; width: 40px; background: url('<?php echo $loading_img; ?>') no-repeat center center transparent; background-size: 40px;"></div></div></div>
+    </div>
+</div>
+<!-- checkout end -->
+
+
+<!-- event cart promotion start -->
+<div id="fhs_checkout_event_promotion_block" class="fhs_checkout_block" <?php echo (empty($event_cart_affect_carts_html))?"style='display:none;'":'';?>>
+    <div class="fhs_checkout_block_title"><div class="fhs-event-promo-title"><div class="fhs-event-promo-title-left"><span><img src="<?php echo $skin_url.'frontend/ma_vanese/fahasa/images/ico_promo_donhang.svg?q='.$queryfier;?>"/></span><span><?php echo $this->__('Promotion for Orders'); ?></span></div></div></div>
+    <div class="fhs_checkout_block_content">
+	<div id="fhs_checkout_event_promotion" class="fhs_checkout_block_address_block">
+	    <?php echo $event_cart_affect_carts_html;?>
+	</div>
+	<div class="fhs_checkout_block_loading"><div><div id="default-icon-loading" style="height: 40px; width: 40px; background: url('<?php echo $loading_img; ?>') no-repeat center center transparent; background-size: 40px;"></div></div></div>
+    </div>
+</div>
+<!-- event cart promotion end -->
+    
+<!-- event cart popup start! -->
+<div id="popup-loading-event-cart">
+    <div class="popup-loading-event-cart-detail">
+	<div class="popup-loading-event-cart-title">
+	    <div class="fhs-event-promo-title">
+		<div class="fhs-event-promo-title-left" onclick="fhs_promotion.closeEventCartDetail();">
+		    <div><img src="<?php echo $skin_url . 'frontend/ma_vanese/fahasa/images/ico_back_blue.svg?q=' . $queryfier; ?>"/></div>
+		</div>
+		<div class="fhs-event-promo-title-center"><?php echo $languages['terms_conditions']; ?></div>
+		<div class="fhs-event-promo-title-right lg-close" onclick="fhs_promotion.closeEventCart();">
+		    <div><img src="<?php echo $skin_url . 'frontend/ma_vanese/fahasa/images/ico_delete_gray.svg?q=' . $queryfier; ?>"/></div>
+		</div>
+	    </div>
+	</div>
+	<div class="popup-loading-event-cart-content">
+	    <div class="fhs-event-promo-list">
+		<div id="fhs-event-promo-list-detail" class="fhs-event-promo-list-item">
+		</div>
+	    </div>
+	    <div id="fhs-event-promo-list-detail-content" class="fhs-event-promo-list-detail-content">
+	    </div>
+	</div>
+    </div>
+    <div class="popup-loading-event-cart-bottom">
+	<div id="popup_event_cart_info_close" class="close-popup-event">
+	    <button type="button" title="<?php echo $this->__("Close"); ?>" class="btn-close-popup-event lg-close"><span><?php echo $this->__("Close"); ?></span></button>
+	</div>
+	<div id="popup_event_cart_detail_close" class="close-popup-event">
+	</div>
+    </div>
+</div>
+<?php if(!empty($event_cart)):?>
+    <script type="text/javascript" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS, true)."lib/promotion.js?q=".$queryfier; ?>"></script>
+    <script type="text/javascript">
+	var fhs_promotion = new Promotion();
+	fhs_promotion.initPromotion(<?php echo !empty($event_cart)?json_encode($event_cart, JSON_UNESCAPED_UNICODE):'{}';?>, <?php echo json_encode($languages, JSON_UNESCAPED_UNICODE);?>, {});
+    </script>
+<?php endif;?>
+
+<!-- Popups start-->
+<div id="popup-default-loading" style="padding-top: 10px;">
+    <div id="popup-default-loading-icon" style="padding: 15px 0;">
+	<center><div id="default-icon-loading" style="height: 128px; width: 128px; background: url('<?php echo $loading_img; ?>') no-repeat center center transparent; background-size: 110px;"></div></center>
+    </div>
+    <div id="popup-default-loading-logo" class="popup-fahasa-alert-logo" style="display: none;">
+	<center><img src="<?php echo $this->getSkinUrl('images/logo-alert-fail.png') ?>"/></center>
+    </div>
+    <div class="popup-default-loading-content">
+	<div id="popup-default-loading-context-text" class="popup-fahasa-default-content-text" style="padding: 15px;">
+	    <?php echo $this->__('Your order has been received and is processing'); ?>...
+	</div>
+    </div>
+    <div class="popup-fahasa-default-footer-small btn-submit col-lg-12 col-md-12 col-sm-12 col-xs-12">
+	<button type="button" onclick="fhs_repayment_order.tryLoadRepaymentOrderStatus();" id="popup-default-loading-confirm" class="popup-fahasa-default-alert-confirm" style="display: none;">
+	    <span>
+		<?php echo $this->__('Try again') ?>                          
+	    </span>
+	</button>
+    </div>
+</div>
+<div id="popup-fahasa-alert">
+    <div class="popup-fahasa-alert-logo">
+	<center><img src="<?php echo $this->getSkinUrl('images/logo-alert-fail.png') ?>"/></center>
+    </div>
+    <div class="popup-fahasa-default-alert-content">
+	<div class="popup-fahasa-default-content-text">
+	    
+	</div>
+    </div>
+    <div class="popup-fahasa-default-footer-small btn-submit col-lg-12 col-md-12 col-sm-12 col-xs-12">
+	<button type="button" onclick="$jq('#popup-fahasa-alert').fadeOut();$jq('.youama-ajaxlogin-cover').fadeOut();" class="popup-fahasa-default-alert-confirm lg-close">
+	    <span>
+		<?php echo $this->__('Ok') ?>                          
+	    </span>
+	</button>
+    </div>
+</div>
+<!-- Popups end-->
+
+<!-- popup tutorial start -->
+<div id="popup-vnpay-tutorial" style="display: none;">
+    <div class="popup-vnpay-tutorial-detail">
+	<div class="popup-vnpay-tutorial-title">
+	    <div class="fhs-vnpay-title">
+		<div class="fhs-vnpay-title-center"><?php echo $this->__('Terms & Conditions'); ?></div>
+		<div class="fhs-vnpay-title-right lg-close" onclick="closePopupTutorial();">
+		    <div><img src="<?php echo $skin_url . 'frontend/ma_vanese/fahasa/images/ico_delete_gray.svg?q=' . $queryfier; ?>"/></div>
+		</div>
+	    </div>
+	</div>
+	<div class="popup-vnpay-tutorial-content">
+	    <div id="fhs-vnpay-detail-content" class="fhs-vnpay-detail-content"><?php // echo $tutorialBlockHtml ?></div>
+	</div>
+    </div>
+    <div class="popup-vnpay-tutorial-bottom">
+	<div id="popup-vnpay-tutorial_info_close" class="close-popup-event" style="display: none;">
+	    <button type="button" title="Đóng" class="btn-close-popup-event"><span><?php echo $this->__('Close');?></span></button>
+	</div>
+    </div>
+</div>
+<!-- popup tutorial end -->
+
+<!-- Script start -->
+<script type="text/javascript">
+    let payment_method_tutorial_data = <?php echo json_encode($payment_methods,JSON_UNESCAPED_UNICODE) ?>;
+    function showTutorialDetail(code){
+	$jq('#fhs-vnpay-detail-content').empty();
+	
+	Object.keys(payment_method_tutorial_data).forEach(function(key){
+	    if(payment_method_tutorial_data[key]['value'] == code){
+		if(!fhs_account.isEmpty(payment_method_tutorial_data[key]['rule_content'])){
+		    $jq('#fhs-vnpay-detail-content').html(payment_method_tutorial_data[key]['rule_content']);
+		}
+	    }
+	});
+	
+	$jq('.popup-vnpay-tutorial-detail').fadeIn(0);
+	$jq('.youama-ajaxlogin-cover').fadeIn();
+	$jq('#popup-vnpay-tutorial').fadeIn(10,function(){$jq("#popup-vnpay-tutorial").focus();});
+    }
+    
+    /// click icon X to close :
+    function closePopupTutorial(){
+        if($jq('#popup-vnpay-tutorial').is(":visible")){
+            $jq('#popup-vnpay-tutorial').fadeOut(0);
+            $jq('.youama-ajaxlogin-cover').fadeOut(0);
+        }
+    }
+</script>
+<script type="text/javascript">
+    var fhs_repayment_order = new RepaymentOrder();
+    fhs_repayment_order.init(
+    <?php echo json_encode($orderId);?>,
+    <?php echo $is_login?'true':'false';?>,
+    <?php echo json_encode($languages, JSON_UNESCAPED_UNICODE);?>);
+</script>
+<!-- Script end -->
+<?php endif;?>

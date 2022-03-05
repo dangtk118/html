@@ -1,0 +1,35 @@
+<?php
+    //---------------
+    //@author: lamhung
+    //--------
+    //@note: cache
+    //---------------
+    $cache_key = 'block_bottom';
+    $core_helper = Mage::helper('core');
+    $cache_helper = Mage::helper('fahasa_catalog/cache');
+    $cache_data = $cache_helper->getData($cache_key);
+    if (empty($cache_data)) {
+	$block_bottom = Mage::getModel('cms/block')->load('block_bottom');
+
+	$cache_data = array(
+	    'data' => $core_helper->jsonEncode($block_bottom),
+	    'model' => 'Mage_Cms_Model_Block',
+	    'cached' => true
+	);
+	$cache_helper->setData($cache_key, $cache_data);
+    } else {
+	$block_bottom = $cache_helper->getCacheResult($cache_data);
+    }
+    
+    if($block_bottom->getIsActive()){
+	echo '<div class="ma-block-bottom">
+	<div class="block-bottom">
+	<div class="container">
+	    <div class="container-inner">';
+	echo $block_bottom->getContent();
+	echo '</div>
+	</div>
+	</div>
+	</div>';
+    }
+?>

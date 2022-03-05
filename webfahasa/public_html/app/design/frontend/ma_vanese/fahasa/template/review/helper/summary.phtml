@@ -1,0 +1,58 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2014 X.commerce, Inc. (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+$ratingCollection = Mage::getModel('amazonrating/amazonrating')->load($this->getData("product")->getData("sku"));
+$rating_count_fahasa = $this->getReviewsCount();
+$rating_count_amazon = $ratingCollection->getData('numericScore');
+$rating_count_average = max($rating_count_fahasa, $rating_count_amazon);
+?>
+<div class="ratings">
+    <table>
+        <?php if ($this->getReviewsCount()) { ?>
+            <tr>
+                <?php if ($this->getRatingSummary()): ?>
+                <div class="rating-box">
+                    <div class="rating" style="width:<?php echo $this->getRatingSummary() ?>%"></div>
+                </div>
+                <div class="amount">(<?php echo $rating_count_average; ?>)</div>
+            <?php endif; ?>
+            <p class="rating-links">
+                <a href="<?php echo $this->getReviewsUrl() ?>"><?php echo $this->__('%d Review(s)', $this->getReviewsCount()) ?></a>
+                <span class="separator">|</span>
+                <a href="<?php echo $this->getReviewsUrl() ?>#review-form"><?php echo $this->__('Add Your Review') ?></a>
+            </p>
+            <tr>
+            <?php } else if ($this->getDisplayIfEmpty()) { ?>
+            <tr><td><p class="no-rating"><a href="<?php echo $this->getReviewsUrl() ?>#review-form"><?php echo $this->__('Be the first to review this product') ?></a></p></td></tr>
+        <?php } else if (count($ratingCollection->getSku()) > 0) { ?>
+            <tr>
+
+                <td class="reviewcout-amazon"><a target="_blank" href="<?php echo $ratingCollection->getData("ratingURL"); ?>"><i class="<?php echo $ratingCollection->getData("cssStarRating") ?>"></i></a></td>
+            </tr>
+        <?php } ?>
+    </table>
+</div>

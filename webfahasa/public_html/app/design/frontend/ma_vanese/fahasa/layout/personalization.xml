@@ -1,0 +1,36 @@
+<?xml version="1.0"?>   
+<layout version="0.0.1">
+    <personalization_index_index>   
+        <reference name="root">   
+            <action method="setTemplate">
+                <template>page/empty.phtml</template>
+            </action>   
+            <remove name="personalization_grid"/>
+        </reference>   
+        <reference name="content">   
+             <block type="core/template" name="personalization_index" template="personalization/index.phtml"></block>
+        </reference>   
+    </personalization_index_index>
+    <likedproducts_index_index>   
+        <reference name="root">   
+            <action method="setTemplate">
+                <template>page/empty.phtml</template>
+            </action>   
+            <remove name="personalization_grid"/>
+        </reference>   
+        <reference name="content">   
+            <block type="core/template" name="personalization_index" template="personalization/index.phtml"></block>
+        </reference> 
+    </likedproducts_index_index>
+    <bestseller_index_index>   
+        <reference name="root">   
+            <action method="setTemplate">
+                <template>page/empty.phtml</template>
+            </action>   
+            <remove name="personalization_grid"/>
+        </reference>   
+        <reference name="content">   
+            <block type="core/template" name="personalization_index" template="personalization/index.phtml"></block>
+        </reference> 
+    </bestseller_index_index>
+</layout>

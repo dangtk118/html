@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Fahasa_Amazonrating>
+            <version>0.1.0</version>
+        </Fahasa_Amazonrating>
+    </modules>
+    <global>
+        <helpers>
+            <amazonrating>
+                <class>Fahasa_Amazonrating_Helper</class>
+            </amazonrating>
+        </helpers>
+        <models>
+            <amazonrating>
+                <class>Fahasa_Amazonrating_Model</class>
+                <resourceModel>Amazonrating_Mysql4</resourceModel>
+            </amazonrating>
+            <Amazonrating_Mysql4>
+                <class>Fahasa_Amazonrating_Model_Mysql4</class>
+                <entities>
+                    <amazonrating>
+                        <table>product_rating</table>
+                    </amazonrating>
+                </entities>
+            </Amazonrating_Mysql4>
+        </models>
+    </global>         
+</config>

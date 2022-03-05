@@ -1,0 +1,248 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2014 X.commerce, Inc. (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+
+?>
+<?php 
+    $_orders = $this->getOrders(); 
+    $isMobile = Mage::helper('fhsmobiledetect')->isMobile();
+    $statuc_current = $this->getCurrentStatus();
+    $dataStatusColor = array('pending'=>'{"color":"orange","number1":"#FCDAB0","number2":"#F7941E"}'
+        ,'pre_pending'=>'{"color":"orange","number1":"#FCDAB0","number2":"#F7941E"}'
+        ,'processing'=>'{"color":"blue","number1" : "#E0ECFD","number2":"#2F80ED"}'
+        ,'complete'=>'{"color" : "green","number1" :"#B6F1B6","number2" : "#2ED62E"}'
+        ,'canceled'=>'{"color":"red","number1" :"#F3B4AF","number2" :"#A90000"}'
+        ,'pending_payment'=>'{"color":"orange","number1":"#FCDAB0","number2":"#F7941E"}'
+        ,'customer_confirmed' =>'{"color":"orange","number1":"#FCDAB0","number2":"#F7941E"}'
+        ,'paid' =>'{"color":"orange","number1":"#FCDAB0","number2":"#F7941E"}'
+        );
+?>
+<?php if($_orders->getSize() || (!$_orders->getSize() && $statuc_current != "All")): ?>
+<style>
+        /* start css for main template*/
+        .col-fhs-main-body{
+            background-color : transparent;
+        }
+        .main{
+            margin-top: 10px;
+        }
+        /*end css for main template*/
+        /*  ****** Responsive Table ***** */
+        .table-order-container {
+            color: #616161;
+            display: table;
+            margin: 0 0 1em 0;
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .table-order-container span.price{
+            font-family: sans-serif;
+        }
+        .table-order-container .table-order-row {
+            display: table-row;
+            border-bottom: 1px solid #E0E0E0;
+        }
+        .table-order-container .table-order-row.table-order-header {
+            font-weight: 700;
+            background: white;
+            font-size: 16px;
+        }
+
+        .table-order-container .table-order-cell {
+            display: table-cell;
+            padding: 15px 5px;
+            font-size: 14px;
+        }
+        .table-order-link-more{
+            color: #F7941E;
+            text-align: center;
+            cursor: pointer;
+        }
+        .table-order-link-id:hover{
+            color: #F7941E;
+            cursor: pointer;
+        }
+        .order-history-date-mobile,.order-history-person-mobile,.order-history-total-mobile,.order-history-status-mobile{
+            display : none;
+        }
+	.order-history-status-warning{
+	    color: #DC3545;
+	}
+        @media screen and (max-width: 992px) {
+             /* start css for main template*/
+            .col-fhs-main-body,.container{
+                padding : 0px;
+            }
+             /* end css for main template*/
+            .table-order-container {
+                display: block;
+            }
+            .table-order-container .table-order-row {
+                display: block;
+                padding: 10px 0px;
+            }
+            .table-order-container .table-order-cell {
+                display: block;
+                padding: 0px 10px;
+            }
+            .table-order-container .table-order-row.table-order-header{
+                display : none;
+            }
+            .tab-history-item-text{
+                font-size: 1em;
+            }
+            .order-history-date-mobile,.order-history-person-mobile,.order-history-total-mobile{
+                display: unset;
+                float: left;
+                margin-right: 5px;
+                font-size: 12px;
+                margin-top: 2px;
+            }
+            .table-order-cell-content-mobile{
+                display: flex;
+            }
+            table-order-cell-content-mobile div:first-child{
+                font-size: 16px;
+                font-weight: bol
+            }
+            .order-history-status-mobile{
+                display: unset;
+                border-radius: 20px;
+                border: 1px solid;
+                padding: 2px 10px 1px 10px;
+                font-size: 12px;
+                margin-left: 5px;
+                font-weight: bold;
+            }
+            .table-order-cell:nth-child(5),.table-order-cell:nth-child(6){
+                display :none;
+            }
+            .order-history-id{
+                font-size: 1.2em;
+                font-weight: bold;
+            }
+            #tab-test{
+                cursor: pointer;
+            }
+            .no-orders-css{
+                padding-left: 10px;
+                height: 30px;
+                padding-top: 7px;
+            }
+        }
+</style>
+    <?php
+    if($this->getLimit() >10 && sizeof($_orders)>10){
+        echo $this->getLimitOrderHistoryHtml();
+    }
+    ?>
+    <div class="table-order-container">
+        <div class="table-order-row table-order-header">
+            <div class="table-order-cell"><?php echo $this->__('Order') ?></div>
+            <div class="table-order-cell"><?php echo $this->__('Date of purchase') ?></div>
+            <div class="table-order-cell"><?php echo $this->__('Ship To') ?></div>
+            <div class="table-order-cell"><?php echo $this->__('Order Money Total')?></div>
+            <div class="table-order-cell"><?php echo $this->__('Status') ?></div>
+            <div class="table-order-cell"></div>
+        </div>
+        <?php if(sizeof($_orders) > 0): ?>
+	<?php 
+	    $order_ids = array();
+	    foreach ($_orders as $item){
+		array_push($order_ids, $item->getIncrementId());
+	    }
+	    $orders_rule = Mage::helper('sales')->getOrdersOptionRule($order_ids);
+	?>
+        <?php foreach ($_orders as $_order): ?>
+        <?php 
+            // get status => change color border :  
+            $colorJson = $dataStatusColor[$_order->getStatus()];
+            $color = json_decode($colorJson);
+	    $hide_total = false;
+	    
+	    if(!empty($orders_rule[$_order->getIncrementId()])){
+		$hide_total = $orders_rule[$_order->getIncrementId()]['hide_total'];
+	    }
+        ?>
+        <div class="table-order-row" data-hrefs="<?php echo $this->getViewUrl($_order)?>">
+            <div class="table-order-cell">
+                <div class="table-order-cell-content table-order-cell-content-mobile">
+                    <div class="order-history-id"><?php echo $_order->getRealOrderId() ?></div>
+                    <div class="order-history-status-mobile" <?php if($color) :?>style="background:<?php echo $color->number1; ?>;color:<?php echo $color->number2; ?>;border-color:<?php echo $color->number1; ?>;"<?php endif; ?>>
+                        <?php echo $this->__($_order->getStatus()); ?>
+                    </div>
+                </div>
+            </div>
+            <div class="table-order-cell">
+                <div class="table-order-cell-content">
+                    <div class="order-history-date-mobile"><?php echo $this->__('Date of purchase') ?>:</div>
+                    <div><?php echo $this->formatDate($_order->getCreatedAtStoreDate()) ?></div>
+                </div>
+            </div>
+            <div class="table-order-cell" style="max-width:250px;">
+                <div class="table-order-cell-content">
+                    <div class="order-history-person-mobile"><?php echo $this->__('Ship To') ?>:</div>
+                    <div><?php echo $_order->getShippingAddress() ? $this->escapeHtml($_order->getShippingAddress()->getName()) : '&nbsp;' ?></div>
+                </div>
+                
+            </div>
+            <div class="table-order-cell">
+                <div class="table-order-cell-content">
+		    <?php if(!$hide_total):?>
+			<div class="order-history-total-mobile"><?php echo $this->__('Order Money Total')?>:</div>
+			<div><?php echo $_order->formatPrice($_order->getGrandTotal()) ?>&nbsp;đ</div>
+		    <?php endif;?>
+                </div>
+            </div>
+            <div class="table-order-cell hidden-max-width-992 <?php echo ($_order->getStatus() == 'pending_payment')?'order-history-status-warning':'';?>"><?php echo $this->__($_order->getStatus()); ?></div>
+            <div class="table-order-cell table-order-link-more hidden-max-width-992" onclick="location.href='<?php echo $this->getViewUrl($_order)?>';">Xem chi tiết</div>
+        </div>
+        <?php endforeach; ?>
+        <?php else: ?>
+            <p class="no-orders-css"><?php echo $this->__('You have placed no orders.'); ?></p>
+        <?php endif ?>
+    </div>
+
+<script type="text/javascript">
+    $jq(window).ready(function() {
+        $jq(".table-order-row.table-order-touch-mobile").on("click",function(event){
+           var item = $jq(".table-order-row.table-order-touch-mobile").index(this);
+           event.preventDefault();
+          $jq(".table-order-row.table-order-touch-mobile").each(function(index){
+            if(item == index){
+                window.location = $jq(this).data("hrefs");
+            }  
+        });
+        });
+    })
+</script>
+<?php
+    if($this->getLimit() >10 && sizeof($_orders)>10){
+        echo $this->getPagerOrderHistoryHtml();
+    }
+?>
+<?php else: ?>
+    <p><?php echo $this->__('You have placed no orders.'); ?></p>
+<?php endif ?>

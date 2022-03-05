@@ -1,0 +1,29 @@
+<?php
+$blocks = explode(",", $this->getData('static_blocks'));
+$buttonsPos = $this->getButtonsPos();
+?>
+<div class="product-tabs-widget <?php if ($buttonsPos == 0) { echo 'top-buttons'; } ?>">
+	<?php 
+		
+		foreach ($blocks as $blockId) {
+			//$block = Mage::getModel('cms/block')->load($blockId);
+			$block = $this->getLayout()->createBlock('cms/block')->setBlockId($blockId)->toHtml();
+			//print_r($block);
+			if($blockId == reset($blocks)){
+				echo '<div class="product-tabs-box visible">' . $block . '</div>';
+			} else {
+				echo '<div class="product-tabs-box">' . $block . '</div>';
+			}
+		}
+		echo '<ul class="product-tabs">';
+			foreach ($blocks as $blockId) {
+				$block = Mage::getModel('cms/block')->load($blockId);
+				if($blockId == reset($blocks)){
+					echo '<li class="current">' . $block->getTitle() . '</li>';
+				} else {
+					echo '<li>' . $block->getTitle() . '</li>';
+				}
+			}
+		echo '</ul>';
+	?>
+</div>

@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Bss_MultiStoreViewPricingCatalogRule>
+      <version>1.0.0</version>
+    </Bss_MultiStoreViewPricingCatalogRule>
+  </modules>
+  <global>
+    <helpers>
+      <multistoreviewpricingcatalogrule>
+        <class>Bss_MultiStoreViewPricingCatalogRule_Helper</class>
+      </multistoreviewpricingcatalogrule>
+    </helpers>
+
+    <models>
+      <multistoreviewpricingcatalogrule>
+        <class>Bss_MultiStoreViewPricingCatalogRule_Model</class>
+        <resourceModel>multistoreviewpricingcatalogrule_resource</resourceModel>
+      </multistoreviewpricingcatalogrule>
+
+      <multistoreviewpricingcatalogrule_resource>
+        <class>Mage_Catalog_Model_Resource</class>
+        <deprecatedNode>catalog_resource_eav_mysql4</deprecatedNode>
+        <entities>
+          <rule_product_price>
+            <table>catalogrule_product_price_store</table>
+          </rule_product_price>
+        </entities>
+      </multistoreviewpricingcatalogrule_resource>
+
+      <catalogrule>
+        <rewrite>
+          <action_index_refresh>Bss_MultiStoreViewPricingCatalogRule_Model_Action_Index_Refresh</action_index_refresh>
+          <action_index_refresh_row>Bss_MultiStoreViewPricingCatalogRule_Model_Action_Index_Refresh_Row</action_index_refresh_row>
+          <observer>Bss_MultiStoreViewPricingCatalogRule_Model_Rule_Observer</observer>
+          <rule_product_price>Bss_MultiStoreViewPricingCatalogRule_Model_Rule_Product_Price</rule_product_price>
+        </rewrite>
+      </catalogrule>
+
+      <catalogrule_resource>
+        <rewrite>
+          <rule>Bss_MultiStoreViewPricingCatalogRule_Model_Resource_Rule</rule>
+          <rule_product_price>Bss_MultiStoreViewPricingCatalogRule_Model_Resource_Rule_Product_Price</rule_product_price>
+        </rewrite>
+      </catalogrule_resource>
+    </models>
+
+    <resources>
+      <bss_multistoreviewpricingcatalogrule_setup>
+        <setup>
+          <module>Bss_MultiStoreViewPricingCatalogRule</module>
+          <class>Mage_Catalog_Model_Resource_Setup</class>
+        </setup>
+      </bss_multistoreviewpricingcatalogrule_setup>
+    </resources>
+  </global>
+</config> 

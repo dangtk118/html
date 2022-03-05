@@ -1,0 +1,93 @@
+<div id="fhs-blog">
+   <?php $posts = $this->getPosts(); $category = $this->getCategory();?>
+    <?php 
+	if (count($posts)): 
+	$is_blog_top = ($category->getIdentifier() == 'bai-viet-moi-nhat' || $category->getIdentifier() == 'bai-viet-xem-nhieu-nhat');
+    ?>
+        <?php foreach ($posts as $post): ?>
+	    <?php if(!$is_blog_top):?>
+		<div class="col-xs-12" style="border-bottom: 1px solid #F0f0f0; padding-top: 10px; padding-bottom: 10px;">
+		    <div class = "col-md-4">
+			<?php if ($post->getThumbnailimage()): ?>
+			<div class="post-image" style="margin-top: -10px;">
+				<a href="<?php echo $post->getAddress(); ?>">
+				    <span class="fa overlay-icon"></span>
+				    <img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . $post->getThumbnailimage(); ?>">
+				</a>
+			    </div>
+			<?php endif; ?>
+		    </div>
+
+		    <div class = "col-md-8">
+			<div class="postTitle">
+			    <h2>
+				<a href="<?php echo $post->getAddress(); ?>" ><?php echo $post->getTitle(); ?></a>
+			    </h2>
+			</div>
+
+			<!--<div class="tags"><?php echo Mage::getBlockSingleton('blog/blog')->getTagsHtml($post) ?></div>-->
+			<div class="postDetails">
+			    <div class="post-date" style="color: #222;"><?php echo 'Ngày viết: ' . $post->getCreatedTime(); ?></div>
+			    <div class="postComment" style="color: #222;">
+				<?php if ($this->getCommentsEnabled()): ?>
+				    <?php echo ($post->getCommentCount() > 0) ? $post->getCommentCount() : 0; ?> <?php echo $this->__("Comments"); ?> 
+				<?php endif; ?>
+			    </div>
+			    <div class="post-category" style="color: #222;">
+				<?php $postCats = $post->getCats(); ?>
+				<?php if (!empty($postCats)): ?>
+				    <?php echo $this->__('Posted in:'); ?>
+				    <?php foreach ($postCats as $k => $data): ?>
+					<a href="<?php echo $data; ?>"><?php echo $k; ?></a>
+				    <?php endforeach; ?>
+				<?php endif; ?>
+			    </div>
+			    <!--<div class="post-by"><?php echo $this->__("Posted By"); ?> <span><?php echo $post->getUser(); ?></span></div>-->
+			</div>
+			<?php echo $this->getBookmarkHtml($post) ?>
+			<div class="catShortContent"><p style=""><?php echo $post->getShortContent(); ?></p></div>
+		    </div>
+		</div>
+	    <?php else: ?>
+		<div class="col-xs-12" style="border-bottom: 1px solid #F0f0f0; padding-top: 10px; padding-bottom: 10px;">
+		    <div class = "col-md-4">
+			<?php if ($post['thumbnailimage']): ?>
+			<div class="post-image" style="margin-top: -10px;">
+				<a href="<?php echo Mage::getBaseUrl().'blog/'.$post['identifier']; ?>">
+				    <span class="fa overlay-icon"></span>
+				    <img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . $post['thumbnailimage']; ?>">
+				</a>
+			    </div>
+			<?php endif; ?>
+		    </div>
+
+		    <div class = "col-md-8">
+			<div class="postTitle">
+			    <h2>
+				<a href="<?php echo Mage::getBaseUrl().'blog/'.$post['identifier']; ?>" ><?php echo $post['title']; ?></a>
+			    </h2>
+			</div>
+
+			<div class="postDetails">
+			    <div class="post-date" style="color: #222;"><?php echo 'Ngày viết: ' . $post['created_time']; ?></div>
+			    <div class="postComment" style="color: #222;">
+				<?php echo ($post['viewed'] > 0) ? $post['viewed'] : 0; ?> <?php echo $this->__("viewed"); ?> 
+			    </div>
+			    <div class="post-category" style="color: #222;">
+				<?php echo $this->__('Posted in:'); ?>
+				<a href="<?php echo Mage::getBaseUrl().'blog/'.$post['cat_identifier']; ?>"><?php echo $post['cat_title']; ?></a>
+			    </div>
+			    <!--<div class="post-by"><?php echo $this->__("Posted By"); ?> <span><?php echo $post['user']; ?></span></div>-->
+			</div>
+			<div class="catShortContent"><p style=""><?php echo $post['short_content']; ?></p></div>
+		    </div>
+		</div>
+    
+	    <?php endif; ?>
+            
+
+        <?php endforeach; ?>
+    <?php else: ?>
+        <?php echo Mage::helper('blog')->__('No Posts in this Category.'); ?>
+    <?php endif; ?>
+</div>

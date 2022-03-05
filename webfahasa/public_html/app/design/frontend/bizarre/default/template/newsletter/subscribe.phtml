@@ -1,0 +1,48 @@
+<?php
+/**
+ * Magento
+ *
+ * @category    design
+ * @package     meigeetheme_default
+ * @copyright   Copyright (c) 2012 MeigeeTeam. (http://www.meigeeteam.com)
+ */
+ $random = rand(5, 1500);
+?>
+<div class="block block-subscribe">
+	<div class="block-title">
+		<strong>
+			<span><?php echo $this->__('Newsletter') ?></span>
+		</strong>
+	</div>
+    <form action="<?php echo $this->getFormActionUrl() ?>" method="post" id="newsletter-validate-detail_<?php echo $random; ?>">
+        <div class="block-content">
+            <div class="form-subscribe-header">
+                <label for="newsletter_<?php echo $random; ?>"><?php echo $this->__('Subscribe to the Bizarre mailing list to receive updates on new arrivals, special offers and other discount information.') ?></label>
+            </div>
+            <div class="input-box">
+               <input type="text" name="email" id="newsletter_<?php echo $random; ?>" title="<?php echo $this->__('Sign up for our newsletter') ?>" class="input-text required-entry validate-email" />
+            </div>
+            <div class="actions">
+                <button type="submit" title="<?php echo $this->__('Subscribe') ?>" class="button"><span><span><?php echo $this->__('Subscribe') ?></span></span></button>
+            </div>
+        </div>
+    </form>
+    <script type="text/javascript">
+    //<![CDATA[
+        var newsletterSubscriberFormDetail = new VarienForm('newsletter-validate-detail_<?php echo $random; ?>');
+    //]]>
+	if(jQuery('.block-subscribe').parents('#popup-block').length) {
+		jQuery('#popup-block .block-subscribe .actions button.button').on('click', function(){
+			console.log('111');
+			var button = jQuery(this);
+			setTimeout(function(){
+				if(!button.parent().find('input#newsletter_<?php echo $random; ?>').hasClass('validation-failed')){
+					jQuery.cookie('bizarrePopupFlag', 'true', {
+						path: '/'
+					});
+				}
+			}, 500);
+		});
+	}
+    </script>
+</div>

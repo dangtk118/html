@@ -1,0 +1,156 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<div id="checkout-shipping-method-load">
+<?php 
+$_shippingRateGroups = $this->getShippingRates();
+if (empty($_shippingRateGroups)): ?>
+    <p><?php echo $this->__('Sorry, no quotes are available for this order at this time.') ?></p>
+<?php else: ?>
+    <?php 
+	$smcode = Mage::getSingleton('checkout/session')->getQuote()->getShippingAddress()->getShippingMethod();
+	if(!empty($_shippingRateGroups['matrixrate'])){
+	    $notification = $this->__('International shipping');
+	}else{
+	    $notification = Mage::getStoreConfig('carriers/vietnamshippingnormal/notification');
+	}
+    ?>
+    <?php $i=0;?>
+    <dl class="sp-methods2" >
+        <span class="fhs-shipping-methods">
+	    <?php if(!empty($notification)):?>
+		<dt><?php echo $notification;?></dt>
+	    <?php endif;?>
+            <dd>
+                <ul>
+        <?php $_sole = count($_shippingRateGroups) == 1;
+	foreach ($_shippingRateGroups as $code => $_rates): ?>
+            <?php $i++;?>
+                    <?php $j=0;?>
+                    <?php $_sole = $_sole && count($_rates) == 1; foreach ($_rates as $_rate): ?>
+                    <?php $j++;?>
+                    <li>
+                        <?php if ($_rate->getErrorMessage()): ?>
+                            <ul class="messages"><li class="error-msg"><ul><li><?php echo $_rate->getErrorMessage() ?></li></ul></li></ul>
+                        <?php else: ?>
+			    <div class="shipping_method_item">
+				<div class="shipping_method_item_checkbox">
+					<?php if($i!=count($_shippingRateGroups) ||$j!=count($_rates)):?>
+					    <style type="text/css">
+						#advice-validate-one-required-by-name-s_method_<?php echo$_rate->getCode()?>{
+						    display: none !important;
+						}
+					    </style>
+					<?php endif;?>                                   
+					<input name="shipping_method" type="radio" value="<?php echo $_rate->getCode() ?>" id="s_method_<?php echo $_rate->getCode() ?>"<?php if(($smcode == null && $j==1 && $code===Mage::getStoreConfig('onestepcheckout/general/default_shipping',Mage::app()->getStore()->getStoreId()))|| ($smcode !=null && $_rate->getCode() == $smcode)) echo ' checked="checked"';  ?> class="radio validate-one-required-by-name with-font" onclick="save_shipping_method(shipping_method_url, update_shipping_payment, update_shipping_review);" />
+					<label for="s_method_<?php echo $_rate->getCode() ?>"></label>
+				</div>
+				<div class="shipping_method_item_content">
+				    <?php 
+					if(strpos($_rate->getCode(), "matrixrate") !== 0){
+					    if($_rate->getCode() === "vietnamshippingexpress_vietnamshippingexpress"){
+						$mess = $this->getCarrierName($code)."<br/>";
+						$mess .= $this->__("3-5 working days");
+					    }else if($_rate->getCode() === "vietnamshippingsameday_vietnamshippingsameday"){
+						$mess = $this->getCarrierName($code);
+						$expected_delivery_datetime = $_rate->getMethodTitle();
+						if(!empty($expected_delivery_datetime)){
+						    $mess .= "<br/>".$this->__('Delivery date: %s', Mage::helper('onestepcheckout')->getDateShippingStr($expected_delivery_datetime));
+						}
+					    }else{
+						$mess = $this->getCarrierName($code);
+						$expected_delivery_datetime = $_rate->getMethodTitle();
+						if(!empty($expected_delivery_datetime)){
+						    $mess .= "<br/>".$this->__('Delivery date: %s', Mage::helper('onestepcheckout')->getDateShippingStr($expected_delivery_datetime));
+						}
+						//$mess =  "<span>" . $this->__("HCM 1 working days <br>other places 2-3 working days") ."</span>";
+					    }
+					}else{
+					    if($_rate->getMethodTitle() == "Normal Shipping" || $_rate->getMethodTitle() == "Vận chuyển thường"){
+						$mess = $_rate->getMethodTitle() . " " . $this->__("(2-4 weeks)");
+					    } else {
+						$mess = $_rate->getMethodTitle() . " " . $this->__("(1-2 weeks)");
+					    }
+					}
+				    ?>
+				    <?php echo $mess;// echo $_rate->getMethodTitle() ?>
+				</div>
+				<div class="shipping_method_item_price">
+				    <?php 
+					$_excl = $this->getShippingPrice($_rate->getPrice(), $this->helper('tax')->displayShippingPriceIncludingTax());
+					$_incl = $this->getShippingPrice($_rate->getPrice(), true);
+					echo $_excl;
+					if ($this->helper('tax')->displayShippingBothPrices() && $_incl != $_excl):
+					    echo $this->__('Incl. Tax'); ?> <?php echo $_incl;
+					endif; 
+				    ?>
+				</div>
+                            </div>
+                       <?php endif ?>
+                    </li>
+                <?php endforeach; ?>
+        <?php endforeach; ?>
+                </ul>
+            </dd>        
+        </span>
+        <p id="freeship" style="color:red"></p>
+         <div class="fme-bottom-sm-box">
+            <ul><?php echo $this->getfieldshtml(2); ?></ul>
+            <ul>
+		<li>
+		    <div>
+			<input class="with-font" type="checkbox" 
+			       id="onestepcheckout_note_checkbox"
+			       onclick="checkNote();" value="0"/>
+			<label for="onestepcheckout_note_checkbox"><?php echo $this->__('Shipping note.'); ?></label>
+		    </div>
+		</li>
+	    </ul>
+            <ul id="shipping_note" style="padding-left: 36px; display: none;"><?php echo $this->getfieldshtml(3); ?></ul>
+        </div>
+    </dl>
+    <script type="text/javascript">
+	if($('fm_vat_company') && $('txt_vat_company'))
+	    $('fm_vat_company').value = $('txt_vat_company').value;
+	if($('fm_vat_address') && $('txt_vat_address'))
+	    $('fm_vat_address').value = $('txt_vat_address').value;
+	if($('fm_vat_taxcode') && $('txt_vat_taxcode'))
+	    $('fm_vat_taxcode').value = $('txt_vat_taxcode').value;
+	function checkNote(){
+	    if($('onestepcheckout_note_checkbox').checked){
+		$('shipping_note').style.display = '';
+	    }
+	    else{
+		$('shipping_note').style.display = 'none';
+		clearNote();
+	    }
+	}
+	function clearNote(){
+	    $('fm_checkout_note').value = '';
+	}
+    </script>
+<?php endif; ?>
+</div>

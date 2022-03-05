@@ -1,0 +1,84 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+ 
+if(Mage::registry('current_product')){
+	$product_url = Mage::getBaseUrl('link').$this->getProduct()->getUrlPath();
+}else{
+	$product_url = $this->getProduct()->getProductUrl();
+}
+ $meigee_bizarre_productpage = MAGE::helper('ThemeOptionsBizarre')->getThemeOptionsBizarre('meigee_bizarre_productpage');
+ $richSnippets = $meigee_bizarre_productpage['rich_snippets'];
+ $meigee_bizarre_general = MAGE::helper('ThemeOptionsBizarre')->getThemeOptionsBizarre('meigee_bizarre_general');
+ $categoryComplete = Mage::getModel('catalog/category')->load(Mage::getModel('catalog/layer')->getCurrentCategory()->getId());
+if($categoryComplete->getRatingStars()) {
+	$rating_stars = $categoryComplete->getRatingStars();
+	if($rating_stars == 2){$rating_stars = 0;}
+} else {
+	$rating_stars = $meigee_bizarre_general['productlisting']['rating_stars'];
+}
+if($categoryComplete->getRatingCustLink()) {
+	$rating_cust_link = $categoryComplete->getRatingCustLink();
+	if($rating_cust_link == 2){$rating_cust_link = 0;}
+} else {
+	$rating_cust_link = $meigee_bizarre_general['productlisting']['rating_cust_link'];
+}
+if($categoryComplete->getRatingAddReviewLink()) {
+	$rating_add_review_link = $categoryComplete->getRatingAddReviewLink();
+	if($rating_add_review_link == 2){$rating_add_review_link = 0;}
+} else {
+	$rating_add_review_link = $meigee_bizarre_general['productlisting']['rating_add_review_link'];
+}
+?>
+<?php if ($this->getReviewsCount()): ?>
+	<?php if ($rating_stars || $rating_cust_link || $rating_add_review_link): ?>
+		<div class="ratings"<?php if(($richSnippets['status'] == 1) and ($richSnippets['product_ratings'] == 1)): ?> itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating"<?php endif; ?>>
+			<?php if ($this->getRatingSummary() and $rating_stars):?>
+				<?php if(($richSnippets['status'] == 1) and ($richSnippets['product_ratings'] == 1)): ?>
+					<meta itemprop="ratingValue" content="<?php echo $this->getRatingSummary(); ?>" />
+					<meta itemprop="reviewCount" content="<?php echo $this->getReviewsCount(); ?>" />
+					<meta itemprop="bestRating" content="100" />
+					<meta itemprop="worstRating" content="0" />
+				<?php endif; ?>
+				<div class="rating-box">
+					<div class="rating" style="width:<?php echo $this->getRatingSummary() ?>%"></div>
+				</div>
+			<?php endif;?>
+			<p class="rating-links">
+				<?php if ($rating_cust_link) : ?>
+					<a href="<?php echo $product_url; ?>#review-point"><?php echo $this->__('%d Review(s)', $this->getReviewsCount()) ?></a>
+				<?php endif; ?>
+				<?php if ($rating_cust_link && $rating_add_review_link) : ?>
+					<span class="separator">|</span>
+				<?php endif; ?>
+				<?php if ($rating_add_review_link) : ?>
+					<a href="<?php echo $product_url; ?>#review-point"><?php echo $this->__('Add Your Review') ?></a>
+				<?php endif; ?>
+			</p>
+		</div>
+	<?php endif; ?>
+<?php elseif ($this->getDisplayIfEmpty()): ?>
+    <p class="no-rating"><a href="#review-point"><?php echo $this->__('Be the first to review this product') ?></a></p>
+<?php endif; ?>

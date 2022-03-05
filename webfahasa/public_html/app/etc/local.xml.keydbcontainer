@@ -1,0 +1,155 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category   Mage
+ * @package    Mage_Core
+ * @copyright  Copyright (c) 2008 Irubin Consulting Inc. DBA Varien (http://www.varien.com)
+ * @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+-->
+<config>
+    <global>
+        <install>
+            <date><![CDATA[Thu, 13 Sep 2012 09:42:04 +0000]]></date>
+        </install>
+        <crypt>
+            <key><![CDATA[9b47115d58d07b958a698fdbe90b4eb7]]></key>
+        </crypt>
+        <disable_local_modules>false</disable_local_modules>
+        <resources>
+            <db>
+                <table_prefix><![CDATA[fhs_]]></table_prefix>
+            </db>
+            <default_setup>
+                <connection>
+                    <host><![CDATA[ecommerce_db]]></host>
+                    <username><![CDATA[fhs_root]]></username>
+                    <password><![CDATA[customer]]></password>
+                    <dbname><![CDATA[fhs_maindb]]></dbname>
+                    <initStatements><![CDATA[SET NAMES utf8]]></initStatements>
+                    <model><![CDATA[mysql4]]></model>
+                    <type><![CDATA[pdo_mysql]]></type>
+                    <pdoType><![CDATA[]]></pdoType>
+                    <active>1</active>
+                </connection>
+            </default_setup>
+        </resources>
+        <session_save><![CDATA[db]]></session_save>
+        <redis_session>
+            <host>ecomKeydbSession</host>
+            <port>6379</port>
+            <password></password>
+            <timeout>5</timeout>
+            <persistent></persistent>
+            <db>0</db>
+            <compression_threshold>2048</compression_threshold>
+            <compression_lib>lzf</compression_lib>
+            <log_level>4</log_level>
+            <max_concurrency>20</max_concurrency>
+            <break_after_frontend>5</break_after_frontend>
+            <break_after_adminhtml>30</break_after_adminhtml>
+            <bot_first_lifetime>120</bot_first_lifetime>
+            <bot_lifetime>0</bot_lifetime>
+            <disable_locking>1</disable_locking>
+        </redis_session>
+        <cache>
+            <backend>Mage_Cache_Backend_Redis</backend>
+            <backend_options>
+                <server>ecomKeydbCache</server>
+                <port>6379</port>
+                <persistent></persistent>
+                <database>0</database>
+                <password></password>
+                <force_standalone>0</force_standalone>
+                <connect_retries>5</connect_retries>
+                <timeout>2</timeout>
+                <read_timeout>10</read_timeout>
+                <automatic_cleaning_factor>0</automatic_cleaning_factor>
+                <compress_data>1</compress_data>
+                <compress_tags>1</compress_tags>
+                <compress_threshold>20480</compress_threshold>
+                <compression_lib>lzf</compression_lib>
+            </backend_options>
+        </cache>
+    </global>
+
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <frontName><![CDATA[admins]]></frontName>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+
+    <frontend>
+        <events>
+            <!-- disble logs -->
+            <controller_action_predispatch>
+                <observers><log><type>disabled</type></log></observers>
+            </controller_action_predispatch>
+            <controller_action_postdispatch>
+                <observers><log><type>disabled</type></log></observers>
+            </controller_action_postdispatch>
+            <customer_login>
+                <observers><log><type>disabled</type></log></observers>
+            </customer_login>
+            <customer_logout>
+                <observers><log><type>disabled</type></log></observers>
+            </customer_logout>
+            <sales_quote_save_after>
+                <observers><log><type>disabled</type></log></observers>
+            </sales_quote_save_after>
+            <checkout_quote_destroy>
+                <observers><log><type>disabled</type></log></observers>
+            </checkout_quote_destroy>
+            <!-- disable reports -->
+            <catalog_controller_product_view>
+                <observers><reports><type>disabled</type></reports></observers>
+            </catalog_controller_product_view>
+            <catalog_product_compare_add_product>
+                <observers><reports><type>disabled</type></reports></observers>
+            </catalog_product_compare_add_product>
+            <catalog_product_compare_item_collection_clear>
+                <observers><reports><type>disabled</type></reports></observers>
+            </catalog_product_compare_item_collection_clear>
+            <catalog_product_compare_remove_product>
+                <observers><reports><type>disabled</type></reports></observers>
+            </catalog_product_compare_remove_product>
+            <customer_logout>
+                <observers><reports><type>disabled</type></reports></observers>
+            </customer_logout>
+            <sales_quote_item_save_before>
+                <observers><reports><type>disabled</type></reports></observers>
+            </sales_quote_item_save_before>
+            <sendfriend_product>
+                <observers><reports><type>disabled</type></reports></observers>
+            </sendfriend_product>
+            <wishlist_add_product>
+                <observers><reports><type>disabled</type></reports></observers>
+            </wishlist_add_product>
+            <wishlist_share>
+                <observers><reports><type>disabled</type></reports></observers>
+            </wishlist_share>
+        </events>
+    </frontend>
+</config>

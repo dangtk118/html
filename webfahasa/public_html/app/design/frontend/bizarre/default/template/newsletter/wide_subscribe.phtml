@@ -1,0 +1,90 @@
+<?php
+/**
+ * Magento
+ *
+ * @category    design
+ * @package     meigeetheme_default
+ * @copyright   Copyright (c) 2012 MeigeeTeam. (http://www.meigeeteam.com)
+ */
+$meigee_bizarre_general = MAGE::helper('ThemeOptionsBizarre')->getThemeOptionsBizarre('meigee_bizarre_general');
+$mediaurl = MAGE::helper('ThemeOptionsBizarre')->getThemeOptionsBizarre('mediaurl');
+$wrapper = '';
+if(isset($meigee_bizarre_general['newsletter']['newsletterbg'])){
+	$bg = $meigee_bizarre_general['newsletter']['newsletterbg'];
+	$wrapper = $mediaurl.$bg;
+}else{
+	$bg = 0;
+}
+$wrapperX2 = '';
+if(isset($meigee_bizarre_general['newsletter']['newsletterbg_retina'])){
+	$bgX2 = $meigee_bizarre_general['newsletter']['newsletterbg_retina'];
+	$wrapperX2 = $mediaurl.$bgX2;
+}else{
+	$bgX2 = 0;
+}
+
+$bgOption = $meigee_bizarre_general['newsletter']['bgoption'];
+switch($bgOption){
+	case 0:
+		$bgOption = "background-position: left bottom";
+	break;
+	case 1:
+		$bgOption = "background-position: right bottom";
+	break;
+	case 2:
+		$bgOption = "background-position: center bottom";
+	break;
+	case 3:
+		$bgOption = "background-size: cover";
+	break;
+}
+ 
+?>
+<div class="newsletter-line">
+	<div class="grid_12" style="<?php echo $bgOption.';'; if($bg){echo ' background-image:url('.$wrapper.');';} ?>"<?php if($bgX2){echo ' datax2="url('.$wrapperX2.')"';} ?>>
+		<div class="grid_5 block-subscribe alpha omega">
+			<div class="indent">
+				<h3><?php echo $this->__('Get in touch') ?></h3> 
+				<form action="<?php echo $this->getFormActionUrl() ?>" method="post" id="wide-newsletter-validate-detail">
+					<div class="block-content">
+						<label for="wide-newsletter"><?php echo $this->__('Subscribe to the Bizarre mailing list to receive updates on new arrivals, special offers and other discount information.') ?></label>
+						<div class="input-box">
+							<input type="text" name="email" id="wide-newsletter" title="<?php echo $this->__('Sign up for our newsletter') ?>" class="input-text required-entry validate-email" value="" />
+						</div>
+						<button type="submit" title="<?php echo $this->__('Subscribe') ?>" class="button"><span><span><?php echo $this->__('Subscribe') ?></span></span></button>
+					</div>
+				</form>
+				<script type="text/javascript">
+				//<![CDATA[
+					var newsletterSubscriberFormDetail = new VarienForm('wide-newsletter-validate-detail');
+				//]]>
+				</script>
+			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+	<div class="clear"></div>
+</div>
+
+<script type="text/javascript">
+	/* Retina wrapper */
+	if (jQuery('body').hasClass('retina-ready')) {
+		if (pixelRatio > 1) {
+			sectionX2 = jQuery('.newsletter-line .grid_12[datax2]');
+			if(sectionX2.length){
+				sectionX2.css({
+					'background-image': sectionX2.attr('datax2'),
+				});
+			}
+			section = jQuery('.newsletter-line .grid_12');
+			if(section.css('background-size').indexOf('cover') == -1){
+				imgUrl = section.css('background-image').replace(/url\(|\)|\"/ig, '');
+				img = new Image;
+				img.src = imgUrl;
+				img.onload = function(){
+					section.css('background-size', img.width/2+'px');
+				}
+			}
+		}
+	}
+</script> 

@@ -1,0 +1,63 @@
+<?php 
+    $is_mobile = Mage::helper('fhsmobiledetect')->isMobile();
+    
+    $FHS_CAMPAIGN = "?fhs_campaign=PERSONALIZE_XEM_THEM";
+    $more_link_data = $this->getData('more-link');
+    $more_link = ($more_link_data?$more_link_data:"/daily-suggestion") . $FHS_CAMPAIGN;
+    
+    $PAGE_SCRIPT = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS)
+            ."lib/personalization.js?q="
+            .Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix');
+    
+?>
+
+<div id="personalization-grid" class="container">
+    <div id="personalization-header">
+        <div id="personalization-header-title"  class="block-header">
+            <img src="https://cdn0.fahasa.com/media/wysiwyg/icon-menu/ico_goiy@3x.png" class="block-header-icon"/>
+            <a class="block-header-title" href="<?php echo $more_link; ?>">Gợi Ý Dành Riêng Cho Bạn</a>
+        </div>
+        <?php if ($is_mobile): ?>
+            <div id="personalization-menu-mobile">
+                <ul class="bxslider swiper-wrapper">
+                </ul>
+            </div>
+
+        <?php else: ?>
+            <ul id="personalization-header-menu">
+            </ul>
+        <?php endif; ?>
+    </div>
+    <div class="header-separator"><div class="line-separator"></div></div>
+    <div id="personalization-grid-loading">
+        <div>Loading...</div>
+    </div>
+    <div id="personalization-grid-container">
+    </div>
+    <?php if ($is_mobile) : ?>
+        <div class="xem-them-item-aaa tabs-xem-them">
+            <a id="personalization-more-link" href-data="<?php echo $more_link; ?>" href="<?php echo $more_link; ?>"><?php echo $this->__('Xem Them'); ?></a>
+        </div>
+    <?php else : ?>
+        <div id="personalization-grid-more" class="tabs-xem-them xem-them-item-aaa">
+            <a id="personalization-more-link" href-data="<?php echo $more_link; ?>" href="<?php echo $more_link; ?>"><?php echo $this->__('Xem Them'); ?></a>
+        </div>
+    <?php endif; ?>
+</div>
+<script type="text/javascript" src="<?php echo $PAGE_SCRIPT; ?>"></script>
+<script type="text/javascript">
+    if(typeof personalization === "undefined"){
+	var personalization = new Personalization();
+
+	let load_grid = true;
+	// CUSTOMER_ID is declare in template: top_notification.phtml
+	// top_notification.phtml is not cached, so this 'CUSTOMER_ID' is not cached
+	if(typeof SESSION_ID !== 'undefined'){
+	    personalization.initGrid(CUSTOMER_ID, "<?php echo $is_mobile; ?>", SESSION_ID,load_grid);
+	    inited_personalization_block = true;            
+	}
+
+    }
+    
+</script>
+

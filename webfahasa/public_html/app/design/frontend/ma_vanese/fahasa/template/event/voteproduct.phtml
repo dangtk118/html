@@ -1,0 +1,139 @@
+<?php
+$productId = $this->getProductId();
+$enable =  Mage::getStoreConfig('game/voteproduct/enable');
+$skin_url = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true);
+$percentVoted = 0;
+$is_voted = false;
+$is_cache = Mage::getStoreConfig('game/voteproduct/cache');
+
+if($enable && $is_cache){
+    $result = $this->checkProductVote($productId);
+    if(!empty($result["showVote"])){
+	$percentVoted = $result["showVote"];
+	if ($result["hadVoted"]) {
+	    $is_voted = true;
+	}
+    }
+}
+
+?>
+<?php if ($enable): ?>
+<div class="product-view-event-vote" <?php echo (!$is_cache)?'style="display:none"':'';?>>
+	<div>
+	    <?php if ($is_cache) :?>
+		<div>
+		    <div id="vote-product" style="font-family: Helvetica, Arial, sans-serif;" >
+			<?php if($percentVoted) : ?>
+			    <?php if($is_voted):?>
+				<div  class="btn-vote-active">
+				    <a id="vote-product-button">
+				    <img src="<?php echo $skin_url."frontend/ma_vanese/fahasa/images/ico_vote.png";?>" />
+				    <span class="btn-vote-title">Đã bình chọn. Sản phẩm đạt <?php echo $percentVoted; ?> điểm</span></a>
+				</div>
+			    <?php else : ?>
+				<div class="btn-vote-inactive">
+				    <a id="vote-product-button">
+				    <img src="<?php echo $skin_url."frontend/ma_vanese/fahasa/images/ico_vote.png";?>" />
+				    <span class="btn-vote-title"><?php echo $percentVoted ?> điểm. Bình chọn ngay!</span></a>
+				</div>
+			    <?php endif; ?>
+			<?php endif; ?>
+		    </div>
+		</div>
+	    <?php else :?>
+	    <div>
+		<div id="vote-product" style="font-family: Helvetica, Arial, sans-serif;" >
+		</div>
+	    </div>
+
+	    <?php endif; ?>
+	</div>
+    </div>
+<?php endif; ?>
+
+<script type="text/javascript">
+    var productId = "<?php echo $productId; ?>";
+    var percentVoted = <?php echo $percentVoted??0;?>;
+    var is_voted = <?php echo $is_voted?'true':'false';?>;
+    jQuery(document).on('click', '#vote-product-button', function () {
+	if(is_voted){return;}
+        new Ajax.Request(
+                "<?php echo $this->getUrl('event/index/postVoteProduct', array('_secure' => true)) ?>", {
+                    method: 'post',
+                    parameters: {productId: productId},
+                    onLoading: function () {
+                        jQuery('.youama-ajaxlogin-loader').fadeIn();
+                    },
+                    onLoaded: function () {
+                        jQuery('.youama-ajaxlogin-loader').fadeOut();
+                    },
+                    onSuccess: function (transport) {
+                        if (transport.status == 200) {
+                            var params = JSON.parse(transport.responseText);
+                            var success = params.success;
+                            var hadVoted = params.hadVoted;
+                            if (params.success) {
+				is_voted = true;
+				$jq('.btn-vote-inactive').addClass('btn-vote-active');
+				$jq('.btn-vote-inactive').removeClass('btn-vote-inactive');
+				let vote_msg = "Đã bình chọn. Sản phẩm đạt "+percentVoted+" điểm";
+				$jq('.btn-vote-title').html(vote_msg);
+                            } else {
+                                if (params.message == "ERR_NEED_LOGIN") {
+                                    jQuery(".youama-login-window").fadeIn();
+                                    jQuery('div.youama-ajaxlogin-cover').fadeIn();
+                                } else {
+                                    var errormess = "<?php echo Mage::getStoreConfig('game/voteproduct/errormess'); ?>";
+                                    jQuery('#alert-vote-product h3.error').html("<div style='text-align:center;'>" + errormess + "</div>");
+                                    jQuery('#alert-vote-product').fadeIn();
+                                }
+                            }
+                        }
+                    }
+                }
+        );
+    });
+    
+  jQuery(document).ready(function() {
+    var enable = <?php echo $enable; ?>;
+    if (enable){
+            new Ajax.Request(
+          "<?php echo $this->getUrl('event/index/checkVote', array('_secure' => true)) ?>", {
+              method: 'post',
+              parameters: {
+                  productId: productId
+              },
+              onSuccess: function(transport) {
+                  if (transport.status == 200) {
+                      var params = JSON.parse(transport.responseText);
+                      var showVote = params.showVote;
+                      var hadVoted = params.hadVoted;
+                      if (showVote) {
+			  let vote_class = "";
+			  let vote_msg = "";
+			  percentVoted = params.percentVoted;
+                          var voteButton;
+                          if (hadVoted) {
+			      is_voted = true;
+			      vote_class = "btn-vote-active";
+			      vote_msg = "Đã bình chọn. Sản phẩm đạt "+percentVoted+" điểm";
+                          } else {
+			      is_voted = false;
+			      vote_class = "btn-vote-inactive";
+			      vote_msg = percentVoted+" điểm. Bình chọn ngay!";
+                          }
+			  voteButton = "<div  class='"+vote_class+"'>"
+				+"<a id='vote-product-button'>"
+				+"<img src='<?php echo $skin_url."frontend/ma_vanese/fahasa/images/ico_vote.png";?>' />"
+				+"<span class='btn-vote-title'>"+vote_msg+"</span></a>"
+			    +"</div>";
+			  jQuery("#vote-product").append(voteButton);
+			    $jq('.product-view-event-vote').fadeIn();
+                      }
+                  }
+              }
+          });
+        }
+    });
+</script>
+

@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+
+<layout version="0.1.0">
+    <productviewed_index_index>
+        <reference name="root">
+            <action method="setTemplate">
+                <template>page/page_fpointstore.phtml</template>
+            </action>
+            <remove name="left" />
+            <remove name="right" />
+        </reference>
+        <reference name="content">
+            <block type="core/template" name="productviewed_page" template="productviewed/page.phtml"></block>
+        </reference>
+    </productviewed_index_index>
+</layout>

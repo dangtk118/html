@@ -1,0 +1,203 @@
+<?php 
+    $is_mobile = Mage::helper('fhsmobiledetect')->isMobile(); 
+    $urlLink = $this->getData('urlLink');
+    
+    $CSS_FILE = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true)
+            ."frontend/ma_vanese/fahasa/css/fpointstore.css?q="
+            .Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix');
+    
+//    $MOMENT_SCRIPT = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS, true)
+//            ."lib/moment.min.js?q="
+//            .Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix');
+    
+    $FS_SCRIPT = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS, true)
+            ."lib/fpointstore.js?q="
+            .Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix');
+    
+?>
+
+<link rel="stylesheet" type="text/css" href="<?php echo $CSS_FILE; ?>" media="all" />
+<script type="text/javascript" src="<?php echo $FS_SCRIPT; ?>"></script>
+
+<div id="fpointstore-slider" class="row" style="margin: 10px 0px;padding: 0px;">
+    <?php if ($is_mobile): ?>
+        <div class="fpointstore-head">
+            <div class="fpointstore-label">
+                <span>
+                    <?php echo $this->__('Fpoint Store');?>
+                </span>
+                <span></span>
+            </div>
+            <span class="fpointstore-countdown-temp"></span>
+            <div class="fpointstore-periods">
+                <div class="fpointstore-countdown" style="width:130px;margin-top: 8px;margin-bottom: 5px;margin-left: 4px;">
+                    <span class="fpointstore-countdown-number">00</span>
+                    <span>:</span>
+                    <span class="fpointstore-countdown-number">00</span>
+                    <span>:</span>
+                    <span class="fpointstore-countdown-number">00</span>
+                </div>
+            </div>
+        </div>
+        <div style="overflow: hidden;" class="swiper-container-fpointstore">
+            <div class="bxslider swiper-wrapper fpointstore-list">
+            </div>
+	    <!-- Add Pagination -->
+	    <div class="swiper-pagination"></div>
+        </div>
+        <div class="tabs-xem-them" style="padding-top: 10px;padding-bottom: 20px;">
+            <a class="fpointstore-link-more" target="_blank" href="/fpointstore">Xem Thêm</a>
+        </div>
+    <?php else: ?>
+        
+        <div class="fpointstore-head">
+            <div class="fpointstore-label">
+                <span>
+                    <?php echo $this->__('Fpoint Store');?>
+                </span>
+                <span></span>
+            </div>
+            <span class="fpointstore-countdown-temp"></span>
+            <div class="fpointstore-periods">
+                <span class="fpointstore-countdown-label"></span>
+                <div class="fpointstore-countdown-icon">
+                    <img width="24" height="24" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true) . "frontend/ma_vanese/fahasa/images/fpointstore/icons8-watch-100-white.png" ?>" alt="Flash Sale Count Down"/>
+                </div>
+                <div class="fpointstore-countdown">
+                    <span class="fpointstore-countdown-number">00</span>
+                    <span>:</span>
+                    <span class="fpointstore-countdown-number">00</span>
+                    <span>:</span>
+                    <span class="fpointstore-countdown-number">00</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-12 col-md-12 col-sm-12 fhs-full-p">
+            <div class="fpointstore-body">
+                <ul class="fpointstore-list">            
+                </ul>
+		<?php if($urlLink):?>
+		    <div class="tabs-xem-them">
+			<a class="fpointstore-link-more" target="_blank" href="/<?php echo $urlLink;?>">Xem Thêm</a>
+		    </div>
+		<?php endif;?>
+            </div>
+        </div>
+    <?php endif; ?>
+</div>
+<div id="popup-fpointstore-cover"></div>
+<div id="popup-fpointstore-detail">
+    <div id='popup-fpointstore-detail-content'>
+    </div>
+</div>
+<div id="popup-fpointstore-alert">
+    <div id="popup-fahasa-alert-logo" class="popup-fahasa-alert-logo">
+	<center><img src="<?php echo $this->getSkinUrl('images/logo-alert-success.png') ?>"></center>
+    </div>
+    <div class="popup-fahasa-default-alert-content">
+	<div id="popup-fahasa-default-content-text" class="popup-fahasa-default-content-text" style="padding: 0 10px;">
+	</div>
+    </div>
+    <div class="popup-fahasa-default-footer-small btn-submit col-lg-12 col-md-12 col-sm-12 col-xs-12">
+	<button type="button" onclick="closeFpointAlert();" class="popup-fahasa-default-alert-confirm">
+	    <span>
+		<?php echo $this->__('Close') ?>                          
+	    </span>
+	</button>
+    </div>
+</div>
+<div id="popup-fpointstore-loading" style="padding: 15px;">
+    <div id="popup-fpointstore-loading-icon" style="padding: 15px 0;">
+	<center><div id="fpointstore-icon-loading" style="height: 128px; width: 128px; background: url('<?php echo $this->getSkinUrl('images/fpointstore/loading.png') ?>') no-repeat center center transparent; background-size: 110px;"></div></center>
+    </div>
+    <div id="popup-fpointstore-loading-logo" class="popup-fahasa-alert-logo" style="display: none;">
+	<center><img src="<?php echo $this->getSkinUrl('images/logo-alert-fail.png') ?>"></center>
+    </div>
+    <div class="popup-fpointstore-loading-content">
+	<div id="popup-fpointstore-loading-context-text" class="popup-fahasa-default-content-text" style="padding: 10px;">
+	    Fahasa đã tiếp nhận và đang xử lý...
+	</div>
+    </div>
+    <div class="popup-fahasa-default-footer-small btn-submit col-lg-12 col-md-12 col-sm-12 col-xs-12">
+	<button type="button" onclick="tryLoadQueue();" id="popup-fpointstore-loading-confirm" class="popup-fahasa-default-alert-confirm" style="display: none;">
+	    <span>
+		<?php echo $this->__('Try again') ?>                          
+	    </span>
+	</button>
+    </div>
+</div>
+
+<script type="text/javascript">
+    const FS_URL = "/node_api/fpointstore/slider";
+    const FS_BASE_SKIN_URL = "<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true); ?>";
+    const FPOINTSTORE_CHANGE_URL = "<?php echo $this->getUrl('fpointstore/index/changeGift') ?>";
+    const FPOINTSTORE_QUEUE_URL = "<?php echo $this->getUrl('fpointstore/index/getResultQueue') ?>";
+    const FS_TEXT_LABELS = {
+        'da_ban': "<?php echo $this->__("Exchanged"); ?>",
+        'dang_ban': "<?php echo $this->__("Opening"); ?>",
+        'sap_ban': "<?php echo $this->__("Opening soon"); ?>",
+        'ngay_mai': "<?php echo $this->__("Tomorow"); ?>",
+        'ket_thuc': "<?php echo $this->__("End in"); ?>",
+        'bat_dau': "<?php echo $this->__("Start in"); ?>",
+        'sap_mo': "<?php echo $this->__("Opening soon for sale"); ?>",
+        'doi_qua': "<?php echo $this->__("Exchange"); ?>",
+        'partner': "<?php echo $this->__("Partner"); ?>",
+        'het_qua': "<?php echo $this->__("Over"); ?>",
+        'cancel': "<?php echo $this->__("Cancel"); ?>",
+        'confirm': "<?php echo $this->__("Confirm"); ?>",
+        'processing': "<?php echo $this->__("Fahasa received and is processing"); ?>",
+        'timeout': "<?php echo $this->__("Timeout, please try again"); ?>",
+    }
+    
+    var popup_open = '';
+    var current_gift_id = 0;;
+    var current_gift_period_id = 0;
+    var fpointstore = new FpointStore();
+    
+    if(IS_MOBILE){
+        fpointstore.initMobileSlider(FS_URL, FS_TEXT_LABELS, FS_BASE_SKIN_URL);
+    }else{
+        fpointstore.initSlider(FS_URL, FS_TEXT_LABELS, FS_BASE_SKIN_URL);
+    }
+    
+    function changeGift(gift_id, period_id){
+	popup_open = "";
+	fpointstore.changeGift(gift_id, period_id, FPOINTSTORE_CHANGE_URL)
+    }
+    function openGiftDetail(gift_id,period_id){
+	if(CUSTOMER_ID == ""){
+	    $jq('.youama-login-window').slideDown(1000);
+	    $jq(".youama-login-window").fadeIn();
+	    $jq('div.youama-ajaxlogin-cover').fadeIn();
+	}
+	else{
+	    current_gift_id = gift_id;
+	    current_gift_period_id = period_id;
+	    if(fpointstore.getItemGiftHtml()){
+		$jq("#popup-fpointstore-cover").fadeIn();
+		$jq('#popup-fpointstore-detail').fadeIn();
+	    }
+	}
+    }
+    function closeGiftDetail(){
+	popup_open = "";
+	$jq("#popup-fpointstore-cover").fadeOut();
+	$jq('#popup-fpointstore-detail').fadeOut();
+    }
+    function closeFpointAlert(){
+	fpointstore.reloadGift()
+	popup_open = "";
+	$jq("#popup-fpointstore-cover").fadeOut();
+	$jq('#popup-fpointstore-detail').fadeOut();
+	$jq('#popup-fpointstore-alert').fadeOut();
+    }
+    function tryLoadQueue(){
+	$jq('#popup-fpointstore-loading-context-text').html(FS_TEXT_LABELS['processing']+"...");
+	$jq('#popup-fpointstore-loading-logo').hide();
+	$jq('#popup-fpointstore-loading-icon').show();
+	$jq('#popup-fpointstore-loading-confirm').hide();
+	fpointstore.getResultQueue();
+    }
+</script>
+

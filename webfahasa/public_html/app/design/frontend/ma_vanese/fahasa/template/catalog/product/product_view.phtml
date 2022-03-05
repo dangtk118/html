@@ -1,0 +1,1486 @@
+<?php
+    $product = Mage::registry('current_product_redis');
+    $product_helper = Mage::helper('fahasa_catalog/product');
+    $output_helper = $this->helper('catalog/output'); 
+    $marketing_helper = Mage::helper('fhsmarketing');
+    $vietnamshipping_helper = Mage::helper('vietnamshipping');
+    $cache_helper = Mage::helper('fahasa_catalog/cache');
+
+    //$_product = $this->getProduct();
+    
+    $queryfier = Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix');
+    $media_url = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA, true);
+    $skin_url = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true);
+    $languages = $product_helper->getLanguagesList('product_view');
+    
+    $symbolCurrency = Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol();
+    $CSS_FILE = $skin_url."frontend/ma_vanese/fahasa/css/product_view.css?q=".$queryfier;
+    $EXPECTED_ADDRESS_FILE = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS)."lib/expected-delivery.js?q=".$queryfier;
+        
+    $product_id = $product['entity_id'];
+    $sku = $product['sku'];
+    $product_childs = null;
+    $product_child = null;
+    $products_colors = null;
+    $min_qty = round($product['min_qty']); if($min_qty<1){$min_qty=1;}
+    $product_attributes = $product["attributes"];
+    $store_id = Mage::app()->getStore()->getStoreId();
+    $is_active_flashsale = $product['enableFlashsale'];
+    $is_active_netcore = Mage::getStoreConfig('netcore/general/enable');
+    $is_active_suggestion = Mage::getStoreConfig('suggestion/general/enable');
+    $is_active_enhanced_ecom = Mage::getStoreConfig('enhanced_ecom/general/enable');
+    $attCodeArr = array("supplier"=>"supplier", "book_layout"=>"book_layout", "manufacturer"=>"manufacturer", "origin"=>"origin", "author"=>"author", "noi_san_xuat"=>"noi_san_xuat", "publisher"=>"publisher");
+    $series_data = $cache_helper->getSeriesDataExtra('product_id', array($product_id));
+    $regions = $vietnamshipping_helper->getRegionsJson();
+    $city_json = $vietnamshipping_helper->getCityJson();
+    $ward_json = $vietnamshipping_helper->getWard2Json();
+    $is_show_recommended_mini = false;
+    $is_product_avalible = true;
+    $img = $product['image'];
+    $name = $this->escapeHtml($product['name']);
+    $msg_html = '';
+    $btn_qty_html = '';
+    $btn_addtocart_bsidebar_html = '';
+    $btn_addtocart_html = '';
+    $rating_html = $product['rating_fhs_html'];
+    
+    //$action_form = $this->getSubmitUrl($product['entity_id']);
+    $action_form = $product_helper->getSubmitUrl($product['entity_id']);
+    $price_html = $product_helper->getPriceHtml($product['price'], $product['final_price'], $product['discount_percent'], $product['entity_id']);
+    $bundled_items = array();
+    if($product['type_id'] == Mage_Catalog_Model_Product_Type::TYPE_BUNDLE){
+	foreach ($product['list_bundled'] as $item){
+	    if(!empty($item['selections'])){
+		foreach ($item['selections'] as $selection_item){
+		    $bundled_items[] = $selection_item;
+		}
+	    }
+	}
+    }
+    
+    if($product['type_id'] == Mage_Catalog_Model_Product_Type::TYPE_CONFIGURABLE && !empty($product['childs'])){
+	$products_colors = array();
+	$product_childs = $product['childs'];
+	
+	foreach($product_childs as $key=>$item){
+	    $color = $item['att_value'];
+	    $item['color'] = $color;
+	    $product_childs[$key] = $item;
+	    $products_colors[$key] = $color;
+	}
+	
+	foreach($product_childs as $key=>$item){
+	    $item['price_html'] = $product_helper->getPriceHtml($item['price'], $item['final_price'], $item['discount_percent'], $item['entity_id']);
+	    $item['action'] = $product_helper->getSubmitUrl($item['entity_id']);
+	    $item['image_html'] = '<img id="image" class="fhs-p-img" src="' . $item['img_src'] . '" alt="' . $this->escapeHtml($item['name']) . '" title="' . $this->escapeHtml($item['name']) . '" />';;
+	    
+	    $item['msg_html'] = '';
+
+	    if(!$item['is_available']){
+		$item['msg_html'] .= '<p>'.$this->__('Product temporarily out of stock').'</p>';
+		$item['btn_qty_html'] = '';
+		$item['btn_addtocart_bsidebar_html'] = '<li class="fhs-bsidebar-tab-items-noti"><button type="button" title="'.$this->__("View related product").'" class="btn-nostock" onclick="fhs_account.goto(\'#fhs_tabslider3_tabs_content_recommendatedApi\'); return false;"><span>'.$this->__("View related product").'</span></button></li>';
+		$item['btn_addtocart_html'] = '<button type="button" title="'.$this->__("View related product").'" onclick="fhs_account.goto(\'#fhs_tabslider3_tabs_content_recommendatedApi\'); return false;" class="btn-nostock"><span>'.$this->__("View related product").'</span></button>';
+	    }else{
+		if(!$item['has_stock'] || $item['qty'] <= 0){$item['msg_html'] .= '<p>'.$this->__("Temporarily out of stock.<br/> Please pre-order this item so Fahasa can contact you when it is available.").'</p>';}
+		$btn_label = $this->__('Buy now'); if($item['qty'] <= 0 || $item['soon_release']){$btn_label = $this->__('Pre-Order');}
+
+		$item['btn_addtocart_bsidebar_html'] = 
+			'<li class="fhs-bsidebar-tab-items-qty">
+			    <div class="product-view-quantity-box">
+				<div class="product-view-quantity-box-block">
+				    <a class="btn-subtract-qty" onclick="subtractQty();"><img style="width: 12px; height: auto;" src="'.$skin_url."frontend/ma_vanese/fahasa/images/ico_minus2x.png".'"/></a>
+				    <input type="text" name="qty" id="qty_mobile" maxValue="999" minValue="'.$min_qty.'" align="center" value="'.$min_qty.'" onkeypress=\'validateNumber(event)\' onBlur="validateQty();" title="'.$this->__('Qty').'" class="input-text qty" />
+				    <a class="btn-add-qty" onclick="addQty();"><img style="width: 12px; height: auto;" src="'.$skin_url."frontend/ma_vanese/fahasa/images/ico_plus2x.png".'"/></a>
+				</div>
+			    </div>
+			</li>'
+			.'<li class="fhs-bsidebar-tab-items-addcart"><button type="button" title="'.$this->__("Add to Cart").'" class="btn-cart-to-cart" onclick="productAddToCartForm.submit(this); return false;"><span>'.$this->__("<span>Add</span><span>to Cart</span>").'</span></button></li>'
+			.'<li class="fhs-bsidebar-tab-items-buynow"><button type="button" title="'.$btn_label.'" is_buyNow="true" class="btn-buy-now" onclick="productAddToCartForm.submit(this); return false;"><span>'.$btn_label.'</span></button></li>';
+
+		$item['btn_addtocart_html'] = 
+			'<button type="button" title="'.$this->__("Add to Cart").'" class="btn-cart-to-cart" onclick="productAddToCartForm.submit(this); return false;"><span class="fhs_icon_cart"></span><span>'.$this->__("Add to Cart").'</span></button>'
+			.'<button type="button" title="'.$btn_label.'" is_buyNow="true" class="btn-buy-now" onclick="productAddToCartForm.submit(this); return false;"><span>'.$btn_label.'</span></button>';
+		
+		if(!empty($item['expectedDateMsg'])){
+		    if($store_id != 1){$item['msg_html'] .= $item['expectedDateMsg'][1];}
+		    else{$item['msg_html'] .= $item['expectedDateMsg'][0];}
+		}
+	    }
+	    
+	    
+	    if($item['is_default']){
+		$product_child = $item;
+		Mage::register('product_default', $product_child);
+	    }
+	    $product_childs[$key] = $item;
+	}
+	
+	if(empty($product_child)){
+	    $product_child = array_shift(array_values($product_childs));
+	    Mage::register('product_default', $product_child);
+	}
+    }
+    
+    //format attribute data
+    if(!empty($product_attributes)){
+	foreach ($attCodeArr as $key=>$item){
+	    $prod_attr = $product_attributes[$key];
+	    if (!empty($prod_attr)){
+		$attr = array();
+		$attr['label'] = $product_helper->getAttributeTranslate($store_id, $key);
+		if(is_array($prod_attr)){
+		    if(!empty($prod_attr[0])){
+			if(!empty($prod_attr[0]['url'])){
+			    $attr['pageUrl'] = $prod_attr[0]['url'];
+			}
+			if(!empty($prod_attr[0]['value'])){
+			    $value = $product_helper->getAttributeTranslate($store_id, '', $prod_attr[0]['value']);
+			}else if(!empty($prod_attr[0]['key'])){
+			    $value = $product_helper->getAttributeTranslate($store_id, '', $prod_attr[0]['key']);
+			}
+			$attr['name'] = $value;
+			$attr['value'] = $value;
+			$attCodeArr[$key] = $attr;
+		    }
+		}else{
+		    $attr['name'] = $prod_attr;
+		    $attr['value'] = $prod_attr;
+		    $attCodeArr[$key] = $attr;
+		}
+	    }
+	}
+    }
+    
+    //set series attribute
+    $attCodeArr['series'] = (!empty($series_data[$product_id]))?$series_data[$product_id]:null;
+    
+    //get addition html
+    $addition_html = $output_helper->getAdditionHtml($attCodeArr);
+    
+    
+    
+    if(!empty($product_child)){
+	if(!$product_child['is_available']){
+	    $is_product_avalible = false;
+	    $is_show_recommended_mini = true;
+	}
+	$sku = $product_child['sku'];		
+	$action_form = $product_child['action'];
+	$price_html = $product_child['price_html'];
+	$btn_qty_html = $product_child['btn_qty_html'];
+	$img = $product_child['img_src'];
+	$btn_addtocart_html = $product_child['btn_addtocart_html'];
+	$btn_addtocart_bsidebar_html = $product_child['btn_addtocart_bsidebar_html'];
+	$msg_html = $product_child['msg_html'];
+    }else{
+	if(!$product['is_available']){
+	    $is_product_avalible = false;
+	    $is_show_recommended_mini = true;
+	    $msg_html .= '<p>'.$this->__('Product temporarily out of stock').'</p>';
+	    $btn_addtocart_html = '<button type="button" title="'.$this->__("View related product").'" onclick="fhs_account.goto(\'#fhs_tabslider3_tabs_content_recommendatedApi\'); return false;"  class="btn-nostock"><span>'.$this->__("View related product").'</span></button>';
+	    $btn_addtocart_bsidebar_html = '<li class="fhs-bsidebar-tab-items-noti">
+							<button type="button" title="'.$this->__("View related product").'" class="btn-nostock " onclick="fhs_account.goto(\'#fhs_tabslider3_tabs_content_recommendatedApi\'); return false;">
+							    <span>'.$this->__("View related product").'</span>
+							</button>
+						    </li>';
+	}else{
+	    if(!$product['has_stock'] || $product['qty'] <= 0){$msg_html .= '<p>'.$this->__("Temporarily out of stock.<br/> Please pre-order this item so Fahasa can contact you when it is available.").'</p>';}
+	    $btn_label = $this->__('Buy now');
+	    if(!$product['has_stock'] || $product['soon_release']){$btn_label = $this->__('Pre-Order');}
+	    
+	    $btn_addtocart_bsidebar_html = 
+				'<li class="fhs-bsidebar-tab-items-qty">
+				    <div class="product-view-quantity-box">
+					<div class="product-view-quantity-box-block">
+					    <a class="btn-subtract-qty" onclick="subtractQty();"><img style="width: 12px; height: auto;" src="'.$skin_url."frontend/ma_vanese/fahasa/images/ico_minus2x.png".'"/></a>
+					    <input type="text" name="qty" id="qty_mobile" maxValue="999" minValue="'.$min_qty.'" align="center" value="'.$min_qty.'" onkeypress=\'validateNumber(event)\' onBlur="validateQty();" title="'.$this->__('Qty').'" class="input-text qty" />
+					    <a class="btn-add-qty" onclick="addQty();"><img style="width: 12px; height: auto;" src="'.$skin_url."frontend/ma_vanese/fahasa/images/ico_plus2x.png".'"/></a>
+					</div>
+				    </div>
+				</li>'
+				.'<li class="fhs-bsidebar-tab-items-addcart"><button type="button" title="'.$this->__("Add to Cart").'" class="btn-cart-to-cart" onclick="productAddToCartForm.submit(this); return false;"><span>'.$this->__("<span>Add</span><span>to Cart</span>").'</span></button></li>'
+				.'<li class="fhs-bsidebar-tab-items-buynow"><button type="button" title="'.$btn_label.'" is_buyNow="true" class="btn-buy-now" onclick="productAddToCartForm.submit(this); return false;"><span>'.$btn_label.'</span></button></li>';
+
+	    $btn_addtocart_html = 
+			'<button type="button" title="'.$this->__("Add to Cart").'" class="btn-cart-to-cart" onclick="productAddToCartForm.submit(this); return false;"><span class="fhs_icon_cart"></span><span>'.$this->__("Add to Cart").'</span></button>'
+			.'<button type="button" title="'.$btn_label.'" is_buyNow="true" class="btn-buy-now" onclick="productAddToCartForm.submit(this); return false;"><span>'.$btn_label.'</span></button>';
+	    
+	    $btn_qty_html = '<li class="fhs-bsidebar-tab-items-qty">
+				<div class="product-view-quantity-box">
+				    <div class="product-view-quantity-box-block">
+					<a class="btn-subtract-qty" onclick="subtractQty();"><img style="width: 12px; height: auto;" src="'.$skin_url."frontend/ma_vanese/fahasa/images/ico_minus2x.png".'"/></a>
+					<input type="text" name="qty" id="qty_mobile" maxValue="999" minValue="'.$min_qty.'" align="center" value="'.$min_qty.'" onkeypress=\'validateNumber(event)\' onBlur="validateQty();" title="'.$this->__('Qty').'" class="input-text qty" />
+					<a class="btn-add-qty" onclick="addQty();"><img style="width: 12px; height: auto;" src="'.$skin_url."frontend/ma_vanese/fahasa/images/ico_plus2x.png".'"/></a>
+				    </div>
+				</div>
+			    </li>';
+	    if(!empty($product['expectedDateMsg'])){
+		if($store_id != 1){$msg_html .= $product['expectedDateMsg'][1];}
+		else{$msg_html .= $product['expectedDateMsg'][0];}
+	    }
+	}
+	
+	
+    }
+
+    if ($is_active_netcore){
+	$netcoreParams = $marketing_helper->getProductViewNetcore($product);
+	$netcoreItemToCartParams = $marketing_helper->getProductToCartNetcore($product);
+    }
+    if ($is_active_suggestion){
+	if(!empty($netcoreItemToCartParams)){
+	     $suggestionItemToCartParams = $netcoreItemToCartParams;
+	}else{
+	    $suggestionItemToCartParams = $marketing_helper->getProductToCartNetcore($product);
+	}
+    }
+    if ($is_active_enhanced_ecom){
+        $enhancedEcomParams = $marketing_helper->getEnhancedEcomAddToCart($product);
+    }
+    
+    $PRODUCT_POPUP_FILE = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS)
+        . "lib/policy_popup.js?q="
+        . Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix');
+    
+    $is_turnoff_options = Mage::getStoreConfig('fahasa_sales/cart/is_turnoff_productview_options');
+?>
+
+<link rel="stylesheet" type="text/css" href="<?php echo $CSS_FILE; ?>" media="all" />
+
+
+<div id="messages_product_view"><?php echo $this->getMessagesBlock()->getGroupedHtml() ?></div>
+
+<form action="<?php echo $action_form; ?>" method="post" id="product_addtocart_form">
+        <!--begin web product view UI-->
+        <div class="product-view kasitoo">        
+            <!--begin web UI-->
+            <div class="product-essential">
+                <div  class="product-essential-media">
+                    <?php echo $this->getChildHtml('media') ?>
+		    <div class="product_view_add_box">
+			<?php echo $btn_addtocart_html; ?>
+		    </div>
+		   
+                </div>
+                <div  class="product-essential-detail">
+		    <?php if($is_active_flashsale): ?>
+                    <div class="flashsale-product-info flashsale-product-info-mobile" class="col-md-12" style="display:none">
+			<div class="flashsale-product">
+			    <div class="flashsale-product-banner">
+				<img src="<?php echo $skin_url . "frontend/ma_vanese/fahasa/images/flashsale/label-flashsale.svg?q=".$queryfier;?>" />
+				<div class="flashsale-product-price product_price">
+				    <?php echo $price_html; ?>
+				</div>
+			    </div>
+			    <div class="flashsale-product-last">
+				<div class="flashsale-progress">
+				    <div class="flashsale-progress-bar" style="width: 50%;"></div>
+				    <div class="flashsale-progress-value"><?php echo $this->__('Sold');?>: <span class="flashsale_sold_number"></span></div>
+				</div>
+				<div class="flashsale-countdown">
+                                    <span class="flashsale-countdown-temp"></span>
+                                    <span class="flashsale-countdown-number">01</span>
+                                    <span>:</span>
+                                    <span class="flashsale-countdown-number">16</span>
+                                    <span>:</span>
+                                    <span class="flashsale-countdown-number">09</span>
+                                </div>
+			    </div>
+			</div>
+                    </div>
+                    <?php endif; ?>
+                    <h1>
+			<div class="fhs_event_delivery_label_icon" style="display:none;"></div>
+                        <?php echo $name; ?> 
+                    </h1>
+		    
+		    <?php if(!empty($addition_html)){echo $addition_html;} ?>
+
+                    <div class="view-rate" style="">
+                        <div class="view-rate-left"  style="padding: 0px;">
+                            <?php
+				if(!empty($rating_html)){
+				    echo $rating_html;
+				}
+			    ?>
+                        </div>
+                        <div class="view-rate-right"  style="padding: 0px;">
+			    <ui class="fhs_addon fhs_addon_mobile">
+				<li class='fhs_addon_topvote' style="display:none;"></li>
+				<li class='fhs_addon_wishlist' style="display:none;"></li>
+				<li class='fhs_addon_share' onclick="fhs_account.shareFB('product_share', '<?php echo $product['url']."?fhs_campaign=PRODUCT_SHARE";?>');"></li>
+			    </ui>
+                        </div>
+                    </div>
+		    
+		    <?php if($is_active_flashsale): ?>
+                    <div class="flashsale-product-info flashsale-product-info-desktop"  class="col-md-12" style="display:none">
+			<div class="flashsale-product">
+			    <div class="flashsale-product-banner">
+				<img src="<?php echo $skin_url . "frontend/ma_vanese/fahasa/images/flashsale/label-flashsale.svg?q=".$queryfier;?>" />
+				
+                                <div class="flashsale-countdown">
+                                    <span class="flashsale-countdown-temp"></span>
+                                    <span class="flashsale-countdown-number">01</span>
+                                    <span>:</span>
+                                    <span class="flashsale-countdown-number">16</span>
+                                    <span>:</span>
+                                    <span class="flashsale-countdown-number">09</span>
+                                </div>
+			    </div>
+			    <div class="flashsale-product-last">
+				<div class="flashsale-progress">
+				    <div class="flashsale-progress-bar" style="width: 30%;"></div>
+				    <div class="flashsale-progress-value"><?php echo $this->__('Sold');?>: <span class="flashsale_sold_number"></span></div>
+				</div>
+			    </div>
+			</div>
+                    </div>
+                    <?php endif; ?>
+		    
+                    <div class="col-md-12 price-block">
+                        <div id="catalog-product-details-price" class="product_price price-block-left " <?php if($is_active_flashsale): ?>style="display:none"<?php endif; ?>>
+			    <?php if ($min_qty > 1): ?>
+				<div style="margin-top: 8px;"><span style="font-size: 1.1em;"><?php echo 'Giá tiền dành cho 1 sản phẩm'; ?></span></div>
+			    <?php endif; ?>
+                            <?php echo $price_html; ?>
+                        </div>
+			<div class="clear"></div>
+                        <div class="price-block-right">
+			    <ui class="fhs_addon fhs_addon_desktop">
+				<li class='fhs_addon_topvote' style="display:none;">
+				    <span class="fhs_addon_topvote_icon"></span>
+				    <span class="fhs_addon_topvote_text fhs_nowrap_one">Bình chọn</span>
+				</li>
+				<li class='fhs_addon_wishlist' style="display:none;"></li>
+				<li class='fhs_addon_share' onclick="fhs_account.shareFB('product_share', '<?php echo $product['url']."?fhs_campaign=PRODUCT_SHARE";?>');"></li>
+			    </ui>
+                        </div>
+                    </div>
+		    
+		    
+		    <?php if(!empty($product_childs)):?>
+			<div class="clear"></div>
+			<div class="product-view-configuable-mobile">
+			    <div class="product-view-configuable-mobile-select">
+				<div>
+				    <span><?php echo $this->__('Color');?>:</span>
+				    <span class="product-view-configuable-mobile-choose">
+					<?php echo $product_child['color']; ?>
+				    </span>
+				</div>
+				<div><span><?php echo $this->__('Choose');?></span><span class="product-view-configuable-mobile-select-icon"></span></div>
+			    </div>
+			</div>
+		    <?php endif;?>
+		    
+		    <div class="clear"></div>
+		    <div id="expected_delivery">
+			<?php if($is_product_avalible && !$is_turnoff_options):?>
+			<div id="expected_delivery_fpoint" style='display:none;'>
+			    <div>
+				F-Point
+			    </div>
+			    <div>
+				<?php echo $this->__("You'll get");?><a href="/thanh-vien"> <span id="expected_delivery_fpoint_content"></span> </a>
+				<span>
+				    <i class="fa fa-question-circle">
+					<div id="expected_delivery_fpoint_description"><?php echo $this->__('1 F-Points can be exchanged for 1 VND and can be used to make purchases on Fahasa.com');?></div>
+				    </i>
+				</span>
+			    </div>
+			</div>
+			<div id="expected_delivery_address" style='display:none;'>
+			    <div>
+				<?php echo $this->__('Delivery time');?>
+			    </div>
+			    <div>
+				<div onclick="expected_delivery.openExpectedAddress();">
+				    <div>
+					<span>
+					    <span class="icon_delivery mobile_only"></span> 
+					    <span><?php echo $this->__("Delivery to");?></span> 
+					</span> 
+					<span id="expected_delivery_address_content"></span>
+				    </div>
+				    <div id="expected_delivery_address_change">
+					<?php echo $this->__(' Change '); ?>
+				    </div>
+				</div>
+				<div id="expected_delivery_fpoint_time" style='display:none;'>
+				    <?php echo $this->__("Expected delivery");?>
+				    <span id="expected_delivery_fpoint_time_content"></span>
+				</div>
+			    </div>
+			</div>
+			<?php endif;?>
+			<div id="expected_return_product_policy">
+			    <div>
+				<?php echo $this->__('Return-exchange policy');?>&nbsp;
+			    </div>
+			    <div>
+				<div>
+				    <div style="cursor: text;user-select: text;">
+					<?php echo $this->__("Return and exchange product in");?>&nbsp;30&nbsp;<?php echo $this->__('day');?>
+				    </div>
+                                    <div id="expected_return_product_policy_info" onclick="policy_popup.showPopUp('chinh-sach-doi-tra', 'Chính sách đổi trả');">
+					<?php echo $this->__('View more'); ?>
+				    </div>
+				</div>
+			    </div>
+			</div>
+		    </div>
+                    
+		    <?php if(!empty($product_childs)):?>
+			<div class="clear"></div>
+			<style>
+			    .product-view-configuable-list > li > .product-view-configuable-list-item-choose{
+				display: none;
+			    }
+			</style>
+			<div class="product-view-configuable-desktop">
+			    <div>
+				<?php echo $this->__('Choose color');?>:
+			    </div>
+			    <div>
+				<ul class="product-view-configuable-list">
+				    <?php foreach($product_childs as $key=>$item):?>
+					<li <?php 
+						if($item['is_disable']){ echo 'class="disabled"';}
+						elseif($item['is_default']){echo 'class="active"';}
+					    ?> 
+					    data_id='<?php echo $key;?>' 
+					    >
+						<?php echo $item['color'];?>
+					    <div class="product-view-configuable-list-item-choose"></div>
+					</li>
+				    <?php endforeach;?>
+				</ul>
+			    </div>
+			</div>
+			<div id="product-view-configuable-mobile-popup-cover"></div>
+			<div id="product-view-configuable-mobile-popup">
+			    <div class="product-view-configuable-mobile-popup-header"><div class="product-view-configuable-mobile-popup-header-title"><?php echo $this->__('Select Color');?></div><div class="product-view-configuable-mobile-popup-header-close"><img src=" <?php echo $skin_url.'frontend/ma_vanese/fahasa/images/ico_close_white.svg';?>"></div></div>
+			    <div class="product-view-configuable-mobile-popup-content">
+				<div>
+				    <div class="product-view-configuable-mobile-popup-content-img">
+					<p class="product-image">
+					    <img id="image" class="fhs-p-img" src="<?php echo $img;?>" alt="<?php echo $name;?>" title="<?php echo $name;?>">
+					</p>
+				    </div>
+				    <div class="product-view-configuable-mobile-popup-content-detail">
+					<div class="product-view-configuable-mobile-popup-content-name">
+					    <?php echo $name;?>
+					</div>
+					<div class="product-view-configuable-mobile-popup-content-price">
+					    <?php echo $price_html; ?>
+					</div>
+				    </div>
+				</div>
+				<div>
+				    <div><?php echo $this->__('Color');?>:</div>
+				    <div>
+					<ul class="product-view-configuable-list">
+					    <?php foreach($product_childs as $key=>$item):?>
+						<li 
+						    <?php
+							if($item['is_disable']){echo 'class="disabled"';}
+							elseif($item['is_default']){echo 'class="active"';}
+						    ?> 
+						    data_id='<?php echo $key;?>' 
+						    >
+						    <?php echo $item['color'];?>
+						    <div class="product-view-configuable-list-item-choose"></div>
+						</li>
+					    <?php endforeach;?>
+					</ul>
+				    </div>
+				</div>
+			    </div>
+			    <div class="product-view-configuable-mobile-popup-bottom">
+				<button type="button" class="product-view-configuable-mobile-popup-bottom-close"><span><?php echo $this->__('Done');?></span></button>
+			    </div>
+			</div>
+			<script type="text/javascript">
+			    var product_id_default = <?php echo $product_child['entity_id'];?>;
+			    var product_childs = <?php echo json_encode($product_childs, JSON_UNESCAPED_UNICODE);?>;
+			    
+			    $jq('.product-view-configuable-list li').hover(
+				function(){
+				    let item_product_id = $jq(this).attr('data_id');
+				    if(item_product_id != product_id_default){
+					if(product_childs[item_product_id]){
+					    let prod_img = product_childs[item_product_id]['image_html'];
+					    $jq('.product-view-image-product').html(prod_img);
+					}
+				    }
+				},
+				function(){
+				    let item_product_id = $jq(this).attr('data_id');
+				    if(item_product_id != product_id_default){
+					if(product_childs[item_product_id]){
+					    let prod_img = product_childs[product_id_default]['image_html'];
+					    $jq('.product-view-image-product').html(prod_img);
+					}
+				    }
+				}
+			    );
+			    $jq('.product-view-configuable-list li').click(function(){
+				if($jq(this).hasClass('disabled')){
+				   return; 
+				}
+				changeProductColor($jq(this).attr('data_id'));
+			    });
+			    function changeProductColor(product_id){
+				product_id_default = product_id;
+				if(typeof products_slider !== 'undefined'){
+				    let slider_index = products_slider[product_id_default];
+				    $jq('.product-view-image-product').attr("img_index",slider_index);
+				    product_image_swiper.slideTo(slider_index,0,false );
+				}
+				let prod_img = product_childs[product_id_default]['image_html'];
+				$jq('.product-view-image-product').html(prod_img);
+				$jq('.product-view-configuable-mobile-popup-content-img').html(prod_img);
+				
+				let btn_addtocart = product_childs[product_id_default]['btn_addtocart_html'];
+				$jq('.product_view_add_box').html(btn_addtocart);
+				
+				if(product_childs[product_id_default]['is_available']){
+				    setTimeout(function(){$jq('#qty_mobile').val($jq('#qty').val());},50);
+				    $jq('#catalog-product-details-discount').fadeIn(0);
+				}else{
+				    $jq('#catalog-product-details-discount').fadeOut(0);
+				}
+				
+				let prod_sku = product_childs[product_id_default]['sku'];
+				$jq('.data_sku').text(prod_sku);
+				
+				let btn_addtocart_bsidebar = product_childs[product_id_default]['btn_addtocart_bsidebar_html'];
+				$jq('.fhs-bsidebar-tab-items').html(btn_addtocart_bsidebar);
+				
+				let prod_color = product_childs[product_id_default]['color'];
+				$jq('.product-view-configuable-mobile-choose').text(prod_color);
+				
+				let prod_action = product_childs[product_id_default]['action'];
+				$jq('#product_addtocart_form').attr('action',prod_action);
+				
+				$jq('.product-view-configuable-list li').each(function(){
+				    if($jq(this).attr('data_id') == product_id_default){
+					$jq(this).addClass('active');
+				    }else{
+					$jq(this).removeClass('active');
+				    }
+				});
+				
+				
+				let prod_name = product_childs[product_id_default]['product_name'];
+				$jq('.product-view-configuable-mobile-popup-content-name').text(prod_name);
+				
+				let price_html = product_childs[product_id_default]['price_html'];
+				getChildPrice(price_html, product_id_default);
+				
+				let prod_msg_html = product_childs[product_id_default]['msg_html'];
+				if(!fhs_account.isEmpty(prod_msg_html)){
+				    $jq('.product_view_msg').html(prod_msg_html);
+				    $jq('.product_view_msg').fadeIn(0);
+				}else{
+				    $jq('.product_view_msg').html("");
+				    $jq('.product_view_msg').fadeOut(0);
+				}
+				<?php if($is_product_avalible && !$is_turnoff_options):?>
+				    let sku = product_childs[product_id_default]['sku'];
+				    expected_delivery.getExpectedDeliveryBySku(sku);
+				<?php endif;?>
+				//change url path
+				//let child_url = product_childs[product_id_default]['url'];
+				//history.replaceState(null, null, child_url);
+			    }
+			    $jq('.product-view-configuable-mobile-select').click(function(){
+				$jq('#product-view-configuable-mobile-popup-cover').fadeIn();
+				$jq('#product-view-configuable-mobile-popup').fadeIn();
+			    });
+			    $jq('#product-view-configuable-mobile-popup-cover').click(function(){
+				closeConfiguablePopup();
+			    });
+			    $jq('.product-view-configuable-mobile-popup-header-close').click(function(){
+				closeConfiguablePopup();
+			    });
+			    $jq('.product-view-configuable-mobile-popup-bottom-close').click(function(){
+				
+				closeConfiguablePopup();
+			    });
+			    
+			    function getChildPrice(price_html, product_id){
+				<?php if(!$is_active_flashsale): ?>
+				    let price_html = product_childs[product_id]['price_html'];
+				    $jq(".product_price").html(price_html);
+				    $jq(".product-view-configuable-mobile-popup-content-price").html(price_html);
+				<?php else:?> 
+				    $jq(".product_price").html(price_html);
+				    $jq(".product-view-configuable-mobile-popup-content-price").html(price_html);
+				    let product_ids = '';
+				    Object.keys(product_childs).forEach(function(key){
+					if(!fhs_account.isEmpty(product_ids)){product_ids += ",";}
+					product_ids += product_childs[key]['product_id'];
+				    });
+				    getPrice(product_id, product_ids);   
+				<?php endif;?>
+			    }
+			    
+			    function closeConfiguablePopup(){
+				$jq('#product-view-configuable-mobile-popup').fadeOut();
+				$jq('#product-view-configuable-mobile-popup-cover').fadeOut();
+			    }
+			</script>
+		    <?php endif;?>
+		    
+		    <div class="clear"></div>
+                    <div id="catalog-product-details-discount"  <?php !$is_product_avalible?"style='display:none;'":"";?>>
+			<div class="product-view-quantity-box">
+			    <label for="qty"><?php echo $this->__('Quantity:') ?></label>
+			    <div class="product-view-quantity-box-block">
+				<a class="btn-subtract-qty" onclick="subtractQty();"><img style="width: 12px; height: auto;" src="<?php echo $skin_url."frontend/ma_vanese/fahasa/images/ico_minus2x.png"?>"/></a>
+				<input type="text" name="qty" id="qty" maxValue="999" minValue="<?php echo $min_qty;?>" align="center" value="<?php echo $min_qty; ?>" onkeypress='validateNumber(event)' onBlur="validateQty();" title="<?php echo $this->__('Qty') ?>" class="input-text qty" />
+				<a class="btn-add-qty" onclick="addQty();"><img style="width: 12px; height: auto;" src="<?php echo $skin_url."frontend/ma_vanese/fahasa/images/ico_plus2x.png"?>"/></a>
+			    </div>
+			</div>
+		    </div>
+		    <div class="clear"></div>
+
+		    <?php // -------begin popup of policy rule ----- ?>
+                        <div class='policy-popup-background' id="policy-popup-background"  >
+                            <div class="policy-popup-content" >
+                            </div>
+                        </div>
+		    <?php // --------end popup of policy rule-------- ?>
+
+		    <div class="clear"></div>
+		    <div class="product_view_msg <?php echo !$is_product_avalible?'error':'';?>" <?php echo empty($msg_html)?"style='display:none;'":"";?> >
+			<?php echo $msg_html;?>
+		    </div>
+		    
+		    <?php
+		    if($is_show_recommended_mini): ?>
+		    <?php $recommended_products = Mage::helper('tabslider/data')->getRecommendedProducts($product_id); ?>
+			<?php if(sizeof($recommended_products) > 0): ?>
+			    <div class="product-view-recommended-desktop">
+				<div>Xem thêm các sản phẩm tương tự</div>
+				<div>
+				    <?php foreach($recommended_products as $item):?>
+					<a href="<?php echo $item['product_url'];?>" title="<?php echo $item['product_name'];?>">
+					    <div>
+						<img src="<?php echo $item['image_src']; ?>" alt="<?php echo $item['product_name']; ?>"/>
+						<div class="product-view-recommended-desktop-item">
+						    <div><img src="<?php echo $item['image_src']; ?>" alt="<?php echo $item['product_name']; ?>"/></div>
+						    <div><?php echo $item['product_name']; ?> </div>
+						    <?php if ($item['final_price'] > 0): ?>
+							<div>
+							    <span class="final_price"><?php echo $item['product_finalprice']." đ"; ?></span>
+							    <?php if ($item['discount'] > 0): ?>
+								<span class="discount-percent">-<?php echo $item['discount'] ?>%</span>
+							    <?php endif; ?>
+							</div>
+							<div>
+							    <?php if ($item['discount'] > 0): ?>
+								<span class="price" id="old-price-21976"><?php echo $item['product_price']; ?>&nbsp;đ</span>
+							    <?php endif; ?>
+							</div>
+						    <?php endif; ?>
+						</div>
+					    </div>
+					</a>
+				    <?php endforeach;?>
+				</div>
+			    </div>
+			    <div class="clear"></div>
+			<?php endif;?>
+		    <?php endif;?>
+		    
+		    <div class="clear"></div>
+		    <div class="fhs-bsidebar">
+			<div class="fhs-bsidebar-tab">
+			    <ul class="fhs-bsidebar-tab-items">
+				<?php echo $btn_addtocart_bsidebar_html; ?>
+			    </ul>
+			</div>
+		    </div>
+                </div>
+            </div>
+	    <div class="clear"></div>
+
+        </div>
+	
+	
+	
+	
+	<?php if($is_show_recommended_mini):?> 
+	    <div class="clear"></div>
+	    <div class="product-view-recommended-mobile-two"></div>
+	    <div class="clear"></div>
+	    <script type="text/javascript">
+		$jq(document).ready(function(){
+		    moveRecommendedBlock();
+		});
+		$jq(document).on('scroll', function() {
+		    moveRecommendedBlock();
+		});
+		function moveRecommendedBlock(){
+		    if($jq(window).width() > 992){
+			if(!fhs_account.isEmpty($jq('.product-view-recommended-mobile-two').html())){
+			    $jq('.product-view-recommended-desktop-two').html($jq('.product-view-recommended-mobile-two').html());
+			    $jq('.product-view-recommended-mobile-two').html('');
+			}
+		    }else{
+			if(!fhs_account.isEmpty($jq('.product-view-recommended-desktop-two').html())){
+			    $jq('.product-view-recommended-mobile-two').html($jq('.product-view-recommended-desktop-two').html());
+			    $jq('.product-view-recommended-desktop-two').html('');
+			}
+		    }
+		}
+	    </script>
+	<?php endif;?>
+	
+        <!--end web product view UI-->
+	
+<?php //$product =  Mage::registry('product');var_dump($product);?>
+   
+</form>
+
+
+<div><?php echo $this->getChildHtml('product_info_event_cart') ?></div>
+
+<?php if (!empty($bundled_items)): ?>
+    <div class="product_view_bundle">
+	<div><?php echo $this->__("Item in combo") ?>:</div>
+	<div>
+		<div class="product_view_bundle_list_item_show"></div>
+
+	    <div class="swiper-container product_view_bundle_list_swiper">
+		<div class="swiper-wrapper product_view_bundle_list">
+		    <?php foreach ($bundled_items as $item): ?>
+			<?php
+			    $price = round($item['price']);
+			    $specialprice = round($item['final_price']);
+			    $discount = $item['discount_percent'];
+			?>
+			<div class="swiper-slide">
+			    <div class="product_view_bundle_list_img">
+				<img src="<?php echo $item['small_image']; ?>" alt="<?php echo $item['name'];; ?>"/>
+				<div class="product_view_bundle_list_item_temp">
+				<?php if ($item['visibility'] == 4): ?>
+				    <a href="<?php echo $item['url']; ?>" target="_blank">
+				<?php endif;?>
+					<div class="product_view_bundle_list_item">
+					    <div><img src="<?php echo $item['small_image']; ?>"/></div>
+					    <div><?php echo $item['name']; ?> </div>
+					    <div><?php echo $this->__('Quantity:');?> <?php echo round($item['selection_qty']); ?></div>
+					    <?php if ($specialprice > 0): ?>
+					    <div>
+						<span class="final_price"><?php echo Mage::app()->getStore()->formatPrice($specialprice); ?></span>
+						<?php if ($discount > 0): ?>
+						    <span class="discount-percent">-<?php echo $discount ?>%</span>
+						<?php endif; ?>
+					    </div>
+						<div>
+						    <?php if ($discount > 0): ?>
+							<span class="price"><?php echo Mage::app()->getStore()->formatPrice($price); ?></span>
+						    <?php endif; ?>
+						</div>
+					    <?php endif; ?>
+					</div>
+				<?php if ($item['visibility'] == 4): ?>
+				    </a>
+				<?php endif;?>
+				</div>
+			    </div>
+			</div>
+		    <?php endforeach; ?>
+		</div>
+		<script type="text/javascript">
+		    var is_over_item = true;
+		    var is_over_show = true;
+		    $jq('.product_view_bundle_list_img').hover(
+			function(){
+			    let content = $jq(this).children('.product_view_bundle_list_item_temp').html();
+			    let $bundle_list_item_show = $jq('.product_view_bundle_list_item_show');
+			    if(typeof content !== "undefined"){
+				$bundle_list_item_show.html(content);
+				let parent_position = $jq(this).parents('.swiper-wrapper').position();
+				let child_position = $jq(this).parents('.swiper-slide').position();
+				let my_position_left = child_position.left + parent_position.left;
+				if(my_position_left < 0){
+				    my_position_left = 0;
+				}
+				$bundle_list_item_show.css({left: my_position_left});
+				is_over_item = false;
+				$bundle_list_item_show.fadeIn();
+			    }
+			},
+			function(){
+			    is_over_item = true;
+			    setTimeout(function(){
+				if(is_over_item && is_over_show){
+				    $jq('.product_view_bundle_list_item_show').fadeOut();
+				}
+			    },100);
+			}
+		    );
+		    $jq('.product_view_bundle_list_item_show').hover(
+			function(){
+			    is_over_show = false;
+			    $jq(this).fadeIn();
+			},
+			function(){
+			    is_over_show = true;
+			    setTimeout(function(){
+				if(is_over_item && is_over_show){
+				    $jq('.product_view_bundle_list_item_show').fadeOut();
+				}
+			    },100);
+			}
+		    );
+		</script>
+	      <!-- Add Arrows -->
+	      <div class="swiper-button swiper-button-prev <?php echo (sizeof($bundled_items) <= 6)?'swiper-button-hidden':''; ?>">
+		  <img src="<?php echo $skin_url."frontend/ma_vanese/fahasa/images/fpointstore/ico_slide_left.png?q=".$queryfier; ?>" width="44px"/>
+	      </div>
+	      <div class="swiper-button swiper-button-next <?php echo (sizeof($bundled_items) <= 6)?'swiper-button-hidden':''; ?>">
+		  <img src="<?php echo $skin_url."frontend/ma_vanese/fahasa/images/fpointstore/ico_slide_right.png?q=".$queryfier; ?>" width="44px"/>
+	      </div>
+	    </div>
+
+	    <!-- Initialize Swiper -->
+
+
+	    <script type="text/javascript">
+	    $jq(document).ready(function(){
+		let wwidth = $jq(window).width();
+		let slidesPerView = 9;
+
+		if(wwidth >= 1200){
+		    slidesPerView = 9;
+		}else if(wwidth >= 1000){
+		    slidesPerView = 7;
+		}else if(wwidth >= 650){
+		    slidesPerView = 6;
+		}else if(wwidth >= 550){
+		    slidesPerView = 5;
+		}else if(wwidth >= 450){
+		    slidesPerView = 4;
+		}else if(wwidth >= 350){
+		    slidesPerView = 3;
+		}else{
+		    slidesPerView = 2;
+		}
+		var swiper_bundle = new Swiper('.product_view_bundle_list_swiper', {
+		    slidesPerView: slidesPerView,
+		    spaceBetween: 8,
+		    freeMode: true,
+		    preloadImages: false,
+		    lazy: true,
+		    navigation: {
+		      nextEl: '.swiper-button-next',
+		      prevEl: '.swiper-button-prev',
+		    }
+		});
+		$jq(document).on('scroll', function() {
+		    sizeSwiper();
+		});
+		function sizeSwiper(){
+		    let wwidth = $jq(window).width();
+		    let slidesPerView = 9;
+
+		    if(wwidth >= 1200){
+			slidesPerView = 9;
+		    }else if(wwidth >= 1000){
+			slidesPerView = 7;
+		    }else if(wwidth >= 700){
+			slidesPerView = 6;
+		    }else if(wwidth >= 650){
+			slidesPerView = 5;
+		    }else if(wwidth >= 550){
+			slidesPerView = 4;
+		    }else if(wwidth >= 450){
+			slidesPerView = 3;
+		    }else if(wwidth >= 350){
+			slidesPerView = 2;
+		    }else{
+			slidesPerView = 1;
+		    }
+		    swiper_bundle.params.slidesPerView = slidesPerView;
+		}
+	    });  
+	    </script>
+	</div>
+    </div>
+<?php endif; ?>
+
+<div class="product-collateral">
+    <div class="fhs_tabslider_recommended <?php echo $is_show_recommended_mini?'product-view-recommended-desktop-two':'';?>">
+        <?php // echo $this->getChildHtml('tabslider_recommended') ?>
+    </div>
+    
+    <?php 
+    echo $this->getChildHtml('tabslider_recommendedapi') ?> 
+    <?php 
+        $prodCat2Id = $product['category_mid_id'];
+        $prodCatMainId = $product['category_main_id'];
+        $arraySplit = Mage::helper('tabslider/data')->getArrayTabSlider3($prodCat2Id,$prodCatMainId);
+    foreach ($arraySplit as $item) {
+        $renderHtml = $this->getLayout()->createBlock('tabslider/recommendedapi')->setTemplate('tabslider/tabslider3.phtml');
+        $renderHtml->setData('identify', $item['identify']);
+        $renderHtml->setData('title', $item['title']);
+        $renderHtml->setData('number_of_row', '1');
+        $renderHtml->setData('number_of_display_item', '30');
+        $renderHtml->setData('n_display_on_mobile', '30');
+        $renderHtml->setData('only_type_id', $item['only_type_id']);
+        echo $renderHtml->toHtml();
+    }
+    ?>
+    <?php 
+//        if($prodCat2Id == 15 || $prodCatMainId == 86 ){
+//        $renderHtml = $this->getLayout()->createBlock('tabslider/recommendedapi')->setTemplate('tabslider/tabslider3.phtml');
+//        $renderHtml->setData('identify', 'seriesSGK');
+//        $renderHtml->setData('title', 'Các Bộ SGK');
+//        $renderHtml->setData('number_of_row', '1');
+//        $renderHtml->setData('number_of_display_item', '30');
+//        $renderHtml->setData('n_display_on_mobile', '30');
+//        $renderHtml->setData('only_type_id', '4');
+//        echo $renderHtml->toHtml();
+//        }
+        ?>
+    <?php //if($prodCat2Id == 6718){echo $this->getChildHtml('tabslider_mangaseries'); }?>
+    <?php //if($prodCat2Id == 15){echo $this->getChildHtml('tabslider_vppdchs'); }?>
+    <?php //if($prodCat2Id == 15 || $prodCat2Id == 6718 ){echo $this->getChildHtml('tabslider_boughttogheter'); }?>
+    <?php echo $this->getChildHtml('add_desc') ?>
+    <?php //echo $this->getChildHtml('upsell_products')  ?>
+    <?php //echo $this->getChildHtml('product_additional_data') ?>
+    <div class="clear">
+    <div class="product_view_policy">
+	<!--show static block: block-note-product-->
+	<?php echo $cache_helper->getBlockId('block-note-product-2020'); ?>
+    </div>
+    <div class="clear">
+    <?php // echo $this->getChildHtml('tabslider_related') ?> 
+    <?php echo $this->getChildHtml('personalization_grid_product_view') ?>    
+    </div> 
+</div>
+
+<?php // ---block_aside--- : su dung javascipt o ben asiderbar.phtml render ?>
+    <?php $productviewed_enable = Mage::getStoreConfig('productviewed_config/config/is_active'); ?>
+    <?php if($productviewed_enable): ?> 
+    <?php $page_size = Mage::getStoreConfig('productviewed_config/config/page_size');?>
+    <div id="productviewed_viewpoint"></div>
+    <div class="fhs-asidebar-block fhs-asidebar-content-productviewed" style="display:none;">
+        <div class="fhs-asidebar-header-block"><?php echo $this->__('Product viewed');?></div>
+        <div id="fhs-asidebar-product-block-content">
+            <ul id="products_viewed_aside_block" class="swiper-wrapper"></ul>
+        </div>
+        <div class="fhs_bar_bottom mobile_link">
+                <a href="/productviewed">
+		    <?php echo $this->__('View more'); ?>
+		    <span class="icon_seemore_blue mobile_only" style="margin-left:4px;"></span>
+                </a>
+            </div>
+        <div class="fhs-asidebar-block-prev fhs-asidebar-tab-slider-prev asidebar-position-tab-prev swiper-button-prev" style="display:none;"></div>
+        <div class="fhs-asidebar-block-next fhs-asidebar-tab-slider-next asidebar-position-tab-next swiper-button-next" style="display:none;"></div>
+    </div>
+    <script type="text/javascript">
+	var product_detail_viewed_page = new ProductViewed();
+	<?php if(!empty($product_id)):?>
+	    product_detail_viewed_page.addProduct('<?php echo $product_id;?>');
+	<?php endif;?>
+	setTimeout(function(){product_detail_viewed_page.checkBlockInViewport(<?php echo $page_size;?>);},1000);
+	$jq(window).on('resize scroll', function () {
+	    product_detail_viewed_page.checkBlockInViewport(<?php echo $page_size;?>);
+	});
+    </script>
+    <?php endif; ?> 
+    <?php // ---end block_aside--- ?>
+
+
+<?php if ($is_active_netcore == 1): ?>
+<!-- Begin Netcore-->
+<script type="text/javascript">
+//<!-- Begin Netcore Add To Cart-->
+    $jq(window).on('netcore_event_add_to_cart', function(){
+	setTimeout(function(){
+	    try{
+		var qty = parseInt($jq('.qty').val());
+		if(Number.isInteger(qty)){
+		    if(qty <= 0){
+			qty = 1;
+		    }
+		}else{
+		    qty = 1;
+		}
+		var netcoreParam = <?php echo $netcoreItemToCartParams; ?>;
+		netcoreParam["prqt"] = qty;
+		smartech('dispatch', "Add To Cart", {"items": [netcoreParam]}); 
+	    }catch(err){
+		console.log("netcore_event_add_to_cart: "+err.message);
+	    }
+	},100);
+    });
+//<!-- End Netcore Add To Cart Code -->
+    
+//<!-- Begin Netcore Add wishlist-->
+    $jq(window).on('netcore_event_add_to_wishlist', function(){
+        smartech('dispatch', "Add to Wishlist", {"items": [<?php echo $netcoreParams; ?>]}); 
+    });
+//<!-- End Netcore Add wishlist Code -->
+//
+//<!-- Begin Netcore remove wishlist-->
+    $jq(window).on('netcore_event_remove_wishlist', function(){
+        smartech('dispatch', "Remove from Wishlist", {"items": [<?php echo $netcoreParams; ?>]}); 
+    });
+//<!-- End Netcore remove wishlist Code -->
+</script>
+
+<!-- End Netcore Code -->
+    <?php 
+    //<!-- Netcore Action Begin --> 
+	$netcore = Mage::getSingleton('customer/session')->getNetcore();
+	if($netcore){
+	    echo "<script> window.onload = function() {".$netcore."}"."</script>";
+	    Mage::getSingleton('customer/session')->unsNetcore("");
+	}
+    //<!-- Netcore Action End --> 
+    ?>
+<?php endif; ?>
+
+<?php if ($is_active_suggestion): ?>
+<!-- Begin Suggestion-->
+<script type="text/javascript">
+//<!-- Begin Suggestion Add To Cart-->
+    $jq(window).on('suggestion_event_add_to_cart', function(){
+	setTimeout(function(){
+	    try{
+		var qty = parseInt($jq('.qty').val());
+		     if(Number.isInteger(qty)){
+			 if(qty <= 0){
+			     qty = 1;
+			 }
+		     }else{
+			 qty = 1;
+		     }
+		var suggestionParam = <?php echo $suggestionItemToCartParams; ?>;
+		    suggestionParam["prqt"] = qty;
+		Suggestion(SESSION_ID, "Add To Cart", {"items": [suggestionParam]}); 
+	    }catch(err){
+		console.log("suggestion_event_add_to_cart: "+err.message);
+	    }
+	},100);
+    });
+//<!-- End Suggestion Add To Cart Code -->
+</script>
+<!-- End Suggestion Code -->
+<?php endif; ?>
+
+
+<script type="text/javascript">
+    //<![CDATA[
+    const PRODUCT_ID = "<?php echo $product_id; ?>";
+    var productAddToCartForm = new VarienForm('product_addtocart_form');
+    productAddToCartForm.submit = function (button, url) {
+        if (this.validator.validate()) {
+            var form = this.form;
+            var oldUrl = form.action;
+
+            if (url) {
+                form.action = url;
+            }
+            var e = null;
+            try {
+                this.form.submit();
+            } catch (e) {
+            }
+            this.form.action = oldUrl;
+            if (e) {
+                throw e;
+            }
+
+            if (button && button != 'undefined') {
+                button.disabled = true;
+            }
+        }
+    }.bind(productAddToCartForm);
+
+    productAddToCartForm.submitLight = function (button, url) {
+        if (this.validator) {
+            var nv = Validation.methods;
+            delete Validation.methods['required-entry'];
+            delete Validation.methods['validate-one-required'];
+            delete Validation.methods['validate-one-required-by-name'];
+            // Remove custom datetime validators
+            for (var methodName in Validation.methods) {
+                if (methodName.match(/^validate-datetime-.*/i)) {
+                    delete Validation.methods[methodName];
+                }
+            }
+
+            if (this.validator.validate()) {
+                if (url) {
+                    this.form.action = url;
+                }
+                this.form.submit();
+            }
+            Object.extend(Validation.methods, nv);
+        }
+    }.bind(productAddToCartForm);
+    //]]>
+    
+    $jq('.qty').change(function(e){
+	let qty = $jq(this).val();
+	let maxValue = parseInt($jq(this).attr('maxValue'));
+	if(!fhs_account.isEmpty(qty)){
+	    if(parseInt(qty) > maxValue){
+		$jq('.qty').val(maxValue);
+	    }else{
+		$jq('.qty').val(qty);
+	    }
+	}else{
+	    $jq('.qty').val(1);
+	}
+    });
+    function subtractQty(){
+	let qty = parseInt($jq('.qty').val());
+	if(qty > 1){
+	    $jq('.qty').val(qty - 1);
+	}else{
+	    $jq('.qty').val(1);
+	}
+    }
+    function addQty(){
+	let qty = parseInt($jq('.qty').val());
+	let maxValue = parseInt($jq('.qty').attr('maxValue'));
+	if(qty < maxValue){
+	    $jq('.qty').val(qty + 1);
+	}else{
+	    $jq('.qty').val(maxValue);
+	}
+    }
+    function validateNumber(evt) {
+      var theEvent = evt || window.event;
+
+      // Handle paste
+      if (theEvent.type === 'paste') {
+	  key = event.clipboardData.getData('text/plain');
+      } else {
+      // Handle key press
+	  var key = theEvent.keyCode || theEvent.which;
+	  key = String.fromCharCode(key);
+      }
+      var regex = /[0-9]|\./;
+      if( !regex.test(key) ) {
+	theEvent.returnValue = false;
+	if(theEvent.preventDefault) theEvent.preventDefault();
+      }
+    }
+    function validateQty(){
+	if(fhs_account.isEmpty($jq('.qty').val())){
+	    $jq('.qty').val(1);
+	}
+	else{
+	    let qty = parseInt($jq('.qty').val());
+	    let maxValue = parseInt($jq('.qty').attr('maxValue'));
+	    if(qty < 1){
+		$jq('.qty').val(1);
+	    }else if(qty > maxValue){
+		$jq('.qty').val(maxValue);
+	    }
+	}
+    }
+</script>
+
+<script type="text/javascript">
+    function openTab(evt, cityName) {
+        // Declare all variables
+        var i, tabcontent, tablinks;
+
+        // Get all elements with class="tabcontent" and hide them
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+
+        // Get all elements with class="tablinks" and remove the class "active"
+        tablinks = document.getElementsByClassName("tab-combo-item");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+
+        // Show the current tab, and add an "active" class to the link that opened the tab
+        document.getElementById(cityName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+</script>
+
+
+<!---- FLASH SALE ---->
+<?php if($is_active_flashsale): ?>
+<link rel="stylesheet" type="text/css" href="/skin/frontend/ma_vanese/fahasa/css/flashsale.css?q=<?php echo Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix'); ?>" media="all" />
+<script type="text/javascript" src="/js/lib/flashsale.js?q=<?php echo Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix'); ?>"></script>
+<script type="text/javascript">
+    /*
+     *  Get product data
+     */
+    jQuery(document).ready(function () {
+        getPrice(<?php echo !empty($product_child)?$product_child['entity_id']:$product_id;?>);
+    });
+    const FLASHSALE_URL = "/node_api/flashsale/product";
+    const FLASHSALES_URL = "/node_api/flashsale/products";
+    const TEXT_LABELS = {
+	'ket_thuc': "<?php echo $this->__("Ket thuc trong"); ?>",
+    }
+    var is_loaded_all_price = false;
+    function getPrice(product_id, product_ids){
+	<?php if(!empty($product_child)):?>
+	    if(product_childs[product_id]){
+		if(!fhs_account.isEmpty(product_childs[product_id]['flashsale'])){
+		    let data = product_childs[product_id]['flashsale'];
+		    if (!data.result) {
+			let price_html = product_childs[product_id]['price_html'];
+			$jq(".product_price").html(price_html);
+			$jq(".product-view-configuable-mobile-popup-content-price").html(price_html);
+
+			$jq(".product_price").show();
+			$jq("#catalog-product-details-discount").show();
+			return;
+		    }
+
+		    var flashsale = new FlashSale();
+		    flashsale.initProductPage(data.product, data.period, IS_MOBILE, TEXT_LABELS);
+		    return;
+		}
+	    }
+	<?php endif;?>
+	if(!fhs_account.isEmpty(product_ids)){
+	    if(is_loaded_all_price){return;}
+	    $jq.ajax({
+		url: FLASHSALES_URL,
+		method: 'post',
+		data: {
+		    product_ids: product_ids
+		},
+		error: function (XMLHttpRequest, textStatus, errorThrown) {
+		    $jq(".product_price").show();
+		    $jq("#catalog-product-details-discount").show();
+		},
+		success: function (data) {
+		    <?php if(!empty($product_child)):?>
+			if(data['products']){
+				Object.keys(data['products']).forEach(function(key){
+				    if(data['products'][key]){
+					product_childs[key]['flashsale'] = data['products'][key];
+				    }
+				});
+			}
+		    <?php endif;?>
+		    is_loaded_all_price = true;
+		    
+		    if (!data.result) {
+			<?php if(!empty($product_child)):?>
+			    let price_html = product_childs[product_id]['price_html'];
+			    $jq(".product_price").html(price_html);
+			    $jq(".product-view-configuable-mobile-popup-content-price").html(price_html);
+			<?php endif;?>
+			$jq(".product_price").show();
+			$jq("#catalog-product-details-discount").show();
+			return;
+		    }
+		    if(data['products']){
+			if(data['products'][product_id]){
+			    var flashsale = new FlashSale();
+			    flashsale.initProductPage(data['products'][product_id].product, data.period, IS_MOBILE, TEXT_LABELS);
+			}
+		    }
+		}
+	    });
+	}else{
+	    $jq.ajax({
+		url: FLASHSALE_URL,
+		method: 'post',
+		data: {
+		    product_id: PRODUCT_ID
+		},
+		error: function (XMLHttpRequest, textStatus, errorThrown) {
+		    $jq(".product_price").show();
+		    $jq("#catalog-product-details-discount").show();
+		},
+		success: function (data) {
+		    <?php if(!empty($product_child)):?>
+			product_childs[product_id]['flashsale'] = data
+		    <?php endif;?>
+		    if (!data.result) {
+			<?php if(!empty($product_child)):?>
+			    let price_html = product_childs[product_id]['price_html'];
+			    $jq(".product_price").html(price_html);
+			    $jq(".product-view-configuable-mobile-popup-content-price").html(price_html);
+			<?php endif;?>
+			$jq(".product_price").show();
+			$jq("#catalog-product-details-discount").show();
+			return;
+		    }
+
+		    var flashsale = new FlashSale();
+		    flashsale.initProductPage(data.product, data.period, IS_MOBILE, TEXT_LABELS);
+		}
+	    });
+	}
+    }
+</script>
+<?php endif; ?>
+
+<?php if($is_product_avalible && !$is_turnoff_options):?>
+<div id="popup-expected-address-cover" onclick="expected_delivery.closeExpectedAddress();"></div>
+<div id="popup-expected-address">
+    <div class="popup-fahasa-default-alert-content-title"><?php echo $this->__('Choice your shipping address');?></div>
+    <div class="popup-fahasa-default-alert-content">
+	<div id="expected_address_default" class="popup-fahasa-default-alert-content-option" style='display:none;'>
+	    <div>
+		<label class="fhs-radio-big" style="margin-top: 2px;"><?php echo $this->__('Delivery to');?>&nbsp;<span id="expected_address_default_content"></span>
+		    <input type="radio" id="expected_address_option_item_0" class="expected_address_option_item" name="expected-address-option-item" value="0">
+		    <span class="radiomark-big"></span>
+		</label>
+		<div class="clear"></div>
+	    </div>
+	</div>
+	<div id="expected_address_other" class="popup-fahasa-default-alert-content-option">
+	    <div>
+		<label class="fhs-radio-big" style="margin-top: 2px;"> <?php echo $this->__('Ship to another address'); ?>
+		    <input type="radio" id="expected_address_option_item_1" class="expected_address_option_item" name="expected-address-option-item" value="1" checked='checked'>
+		    <span class="radiomark-big"></span>
+		</label>
+		<div class="clear"></div>
+	    </div>
+	    <div class="popup-fahasa-default-alert-content-select">
+		<span><?php echo $this->__('Province/City');?></span>
+		<select id="expected-address-select-region" class="form-control expected-address-select">
+		    <option value=""><?php echo $this->__('Choose province/City') ?></option>
+		    <?php 
+		    foreach ($region_vn as $index=>$region):?>
+			<option value="<?php echo $index; ?>"><?php echo $region['name']; ?></option>
+		    <?php endforeach;?>
+		</select>
+		<div class="clear"></div>
+	    </div>
+	    <div class="popup-fahasa-default-alert-content-select">
+		<span><?php echo $this->__('District');?></span>
+		<select id="expected-address-select-city" class="form-control expected-address-select">
+		    <option value=""><?php echo $languages['choose_district']; ?></option>
+		</select>
+		<div class="clear"></div>
+	    </div>
+	    <div class="popup-fahasa-default-alert-content-select">
+		<span><?php echo $this->__('Wards');?></span>
+		<select id="expected-address-select-ward" class="form-control expected-address-select">
+		    <option value=""><?php echo $languages['choose_wards']; ?></option>
+		</select>
+		<div class="clear"></div>
+	    </div>
+	</div>
+    </div>
+    
+    <div class="popup-expected-address-confirm-btn">
+	<button type="button" class="popup-expected-address-confirm-btn-confirm">
+	    <span>
+		<?php echo $this->__('Confirm');?>
+	    </span>
+	</button>
+	<button type="button" class="popup-expected-address-confirm-btn-back lg-close">
+	    <span>
+		<?php echo $this->__('Cancel');?>
+	    </span>
+	</button>
+    </div>
+</div>
+
+<script type="text/javascript" src="<?php echo $EXPECTED_ADDRESS_FILE; ?>"></script>
+
+<script type="text/javascript">
+    $jq("#expected-address-select-region").select2({
+	    placeholder: "<?php echo $this->__('Choose province/City'); ?>",
+	    allowClear: true
+	    });
+    $jq("#expected-address-select-city").select2({
+	    placeholder: "<?php echo $languages['choose_district']; ?>",
+	    allowClear: true
+	    });
+    $jq("#expected-address-select-ward").select2({
+	    placeholder: "<?php echo $languages['choose_wards']; ?>",
+	    allowClear: true
+	    });
+</script>
+<script type="text/javascript">
+    var expected_delivery = new ExpectedDelivery();
+    expected_delivery.initExpectedDelivery("<?php echo $sku; ?>", <?php echo $city_json; ?>, <?php echo $ward_json; ?>, <?php echo json_encode($languages, JSON_UNESCAPED_UNICODE);?>);
+    expected_delivery.disableSelectbox(false,false,false);
+</script>
+<?php endif;?>
+
+
+<?php if($is_active_enhanced_ecom): ?>
+<!-- Begin Enhanced Ecom Add To Cart Code -->
+<script type="text/javascript">
+$jq(window).on('enhanced_ecom_add_to_cart', function() {
+    setTimeout(function() {
+        try {
+            var qty = parseInt($jq('.qty').val());
+            var enhanced_param = <?php echo json_encode($enhancedEcomParams, JSON_UNESCAPED_UNICODE); ?>;
+            if (Number.isInteger(qty)) {
+            if (qty <= 0) {
+                qty = 1;
+            }
+            } else {
+                qty = 1;
+            }
+            let enhanced_data = {
+                'event': 'addToCart',
+                'ecommerce': {
+                    'currencyCode': enhanced_param.currency,
+                    'add': {
+                        'products': [{
+                                'name': enhanced_param.name,
+                                'id': enhanced_param.id,
+                                'price': enhanced_param.price,
+                                'category': enhanced_param.category,
+                                'brand': enhanced_param.supplier,
+                                'quantity': qty
+                      }]
+                    }
+                }
+            };
+            dataLayer.push(enhanced_data);
+        } catch (err) {
+            console.log("enhanced_ecom_add_to_cart: " + err.message);
+        }
+    }, 100);
+});
+</script>
+<!-- End Enhanced Ecom Code -->
+<?php endif; ?>
+
+<?php if(!$is_turnoff_options):?>
+    <script type="text/javascript" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS)."lib/wishlist.js?q=".$queryfier; ?>"></script>
+    <script type="text/javascript">
+	var fhs_wishlist = new Wishlist();
+	fhs_wishlist.product_init(<?php echo $product_id;?>);
+    </script>
+<?php endif; ?>
+
+<?php if($product['enableVoteProduct'] && !$is_turnoff_options):?>
+<script type="text/javascript" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS)."lib/topvote.js?q=".$queryfier; ?>"></script>
+<script type="text/javascript">
+    var fhs_topvote = new TopVote();
+    fhs_topvote.product_init(<?php echo $product_id;?>);
+</script>
+<?php endif; ?>
+
+
+<script type="text/javascript" src="<?php echo $PRODUCT_POPUP_FILE; ?>"></script>
+<script>
+    var policy_popup = new PolicyPopUp();
+    policy_popup.init("<?php echo $skin_url; ?>");
+</script>

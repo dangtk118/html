@@ -1,0 +1,51 @@
+<html>
+    <head>
+        <title>Fahasa - FAHASA.com</title>
+    </head>
+    <body>
+        <div>
+            <div style="width: 512px;
+                 margin: auto;
+                 margin-top: 100px;
+                 text-align: center;
+                 -webkit-box-shadow: 3px 3px 3px 0 #b7b7b7, 0 0 0 1px #d4d4d5;
+                 box-shadow: 3px 3px 3px 0 #b7b7b7, 0 0 0 1px #d4d4d5;">
+                <div style="padding: 30px;"><img src="https://www.fahasa.com/skin/frontend/ma_vanese/fahasa/images/logo.png"/></div>
+                <div style="border: 1px solid #b91100;
+                     padding: 10px;
+                     margin: 0px;
+                     border-bottom: none;
+                     background-color: #b91100;
+                     color: #fff;">
+                    <h2>Server is busy !</h2>
+                </div>
+                <div id="page-refresh" style="padding: 20px;font-size: 14px;">
+                    Refresh page in 5s...
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            const TIME_OUT = 5000;
+            var time = parseInt(TIME_OUT / 1000);
+            setText(time);
+
+            setTimeout(function () {
+                console.log("REFRESH");
+                window.location.reload(true);
+            }, TIME_OUT);
+
+            function setText(_time) {
+                var el = document.getElementById("page-refresh");
+                el.innerHTML = "Refresh page in " + _time + "s";
+                
+                if(_time <= 0){
+                    return;
+                }
+                setTimeout(function () {
+                    time -= 1;
+                    setText(time);
+                }, 1000);
+            }
+        </script>
+    </body>
+</html>

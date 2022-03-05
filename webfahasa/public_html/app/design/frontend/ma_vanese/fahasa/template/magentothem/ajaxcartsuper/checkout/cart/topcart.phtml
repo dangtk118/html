@@ -1,0 +1,129 @@
+<script type="text/javascript">
+    $jq(document).ready(function () {
+        var enable_module = $jq('#enable_module').val();
+        if (enable_module == 0)
+            return false;
+    });
+</script>
+<?php
+$is_show_mini_cart = Mage::getStoreConfig('fahasa_sales/cart/is_show_mini_cart');
+
+if ($is_show_mini_cart)
+{
+    $_cartQty = $this->getSummaryCount();
+    $totals = $this->getTotals();
+    $_items = $this->getRecentItems();
+    if ($_cartQty > 99){
+        $cartQty = "99+";
+    }else{
+        $cartQty = $_cartQty;
+    }
+}
+
+$style = "style=\"margin-left: -15px;margin-top: 2px;\"";
+$skin_url = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true);
+?>
+<style type="text/css">
+    .heading-custom{
+        display:flex;
+        flex-direction: column;
+    }
+    .cart-number{
+        margin-top: -54px;
+        margin-left: 30px;
+        width: 20px;
+        height: 20px;
+        background: #C92127;
+        -webkit-border-radius: 10px;
+        -moz-border-radius: 10px;
+        border-radius: 13px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .cart-number span{
+        font-size: 11px;
+        color: #fff;
+        font-family: 'Nunito Sans' !important;
+        font-weight: bold;
+    }
+    .heading-custom div{
+        text-align: center;
+    }
+    .top-cart-content .icon-empty-cart{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 15px;
+    }
+    .top-cart-content .icon-empty-cart > img{
+        width: 90px;
+    }
+    .top-cart-content .empty{
+        text-align: center;
+        font-size: 1.2em;
+    }
+
+</style>
+<div id="mini_cart_block" class="cart-top pull-left">
+    <div id="cart" class="clearfix">
+        <a href="<?php echo $this->getUrl('checkout/cart') ?>" >
+            <div class="heading heading-custom">            
+                <div> 
+                    <div>
+                        <div class="shopping-cart-icon" >
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h3><?php echo $this->__('My Cart ') ?> </h3>
+                     <div class="cart-number" <?php echo !$is_show_mini_cart?'style="visibility: hidden;;"':'';?>>
+			<?php if($is_show_mini_cart):?>
+			    <span><?php echo $cartQty; ?></span>
+			<?php endif ?>
+		     </div>
+                </div>
+            </div>
+        </a>
+        <?php if($is_show_mini_cart):?>
+        <div class="top-cart-content">
+            <div style="display: flex; flex-direction: column;">
+                <div style="display: flex; align-items: center; padding: 10px 16px;border-bottom: 1px solid #ededed;">
+                    <img src="<?php echo $skin_url . "/frontend/base/default/images/ico_shopping_cart_orange.svg"; ?>" style="width: 18px; height: 20px;">
+                    <span style="margin-left: 6px;font-weight: bold;font-size: 1.2em;">Giỏ hàng <?php echo "(" . $_cartQty . ")"; ?></span>
+                </div>
+                <?php if (count($_items)): ?>
+                    <div id="cart-sidebar" class="mini-products-list">
+                        <?php foreach ($_items as $_item): ?>
+                            <?php echo Mage::app()->getLayout()->createBlock('rediscart/block')->setData('item', $_item)->setTemplate('rediscart/sidebar_item.phtml')->toHtml(); ?>
+                        <?php endforeach; ?>
+                    </div>
+                    <div style="display: flex; padding: 12px 16px;">
+                        <div class="top-subtotal">
+                            <div><?php echo $this->__('Subtotal') ?></div>
+                            <div><?php echo Mage::helper('core')->currency($this->getVirtualSubTotal(), true, false) ?></div>
+                        </div>
+                        <a href="/checkout/cart"  style="flex: 1;">
+                            <button  
+                                type="button" title="<?php echo $this->__('Proceed to Checkout') ?>" 
+                                class="button  btn-checkout"
+                                style="width: 100%;"
+                                >
+                                <span><span style="color: #ffffff;text-transform: initial;">Xem giỏ hàng</span></span>
+                            </button>
+                        </a>
+                    </div>
+                    <script type="text/javascript">decorateList('cart-sidebar', 'none-recursive')</script>
+                <?php else: ?>
+                    <div class="icon-empty-cart">
+                        <img src="<?php echo $skin_url . "/frontend/ma_vanese/fahasa/images/checkout_cart/ico_emptycart.svg" ?>" class="center"/>
+                    </div>
+                    <p class="empty"><?php echo $this->__('You have no items in your shopping cart.') ?></p>
+                <?php endif ?>
+
+            </div>           
+        </div>
+        <?php endif ?>
+    </div>      
+</div>

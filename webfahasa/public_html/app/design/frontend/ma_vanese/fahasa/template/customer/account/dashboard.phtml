@@ -1,0 +1,37 @@
+<?php $mobile = Mage::helper('fhsmobiledetect')->isMobile();?>
+<?php 
+echo $this->getChildHtml('notification') ?>
+<div class="dashboard">
+    <?php if (!$mobile): ?>
+    <div class="page-title">
+        <h1><?php echo $this->__('My Dashboard') ?></h1>
+    </div>
+    <?php endif;?>
+    <?php echo $this->getMessagesBlock()->toHtml() ?>
+    <!--show member ship-->
+    <?php echo $this->getChildHtml('hello') ?>
+    <?php if (!$mobile): ?>
+    <?php echo $this->getChildHtml('top') ?>
+    <div class="box-account box-info">
+        <div class="box-head">
+            <h2><a href="<?php echo Mage::getUrl('customer/account/edit'); ?>"><?php echo $this->__('Account Information') ?></a></h2>
+        </div>
+        <?php /* Extensions placeholder */ ?>
+        <?php echo $this->getChildHtml('customer.account.dashboard.extra') ?>
+        <?php echo $this->getChildHtml('info') ?>
+        <?php echo $this->getChildHtml('address') ?>
+    </div>
+    <?php endif;?>
+    <?php echo $this->getChildHtml('info1') ?>
+    <?php echo $this->getChildHtml('info2') ?>
+</div>
+<?php
+$netcore_contact = Mage::getSingleton('customer/session')->getNetcoreContact();
+if(!empty($netcore_contact)):?>
+<script type="text/javascript">
+    $jq(document).ready(function(){
+	<?php echo $netcore_contact; ?>
+    });
+</script>
+<?php Mage::getSingleton('customer/session')->unsNetcoreContact();?>
+<?php endif; ?>

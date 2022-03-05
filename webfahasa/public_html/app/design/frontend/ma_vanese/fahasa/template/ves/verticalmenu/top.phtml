@@ -1,0 +1,35 @@
+<?php
+    $enable_sidebar_logo = Mage::getStoreConfig("ves_verticalmenu/ves_verticalmenu/enable_sidebar_logo");
+    $enable_sidebar_search = Mage::getStoreConfig("ves_verticalmenu/ves_verticalmenu/enable_sidebar_search");
+
+    $enable_sidebar_logo = $enable_sidebar_logo == ""?1:$enable_sidebar_logo;
+    $enable_sidebar_search = $enable_sidebar_search == ""?1:$enable_sidebar_search;
+
+    $title = Mage::getStoreConfig("ves_verticalmenu/ves_verticalmenu/title");
+    $title = $title?$title:$this->__("Navigation");
+?>
+<div class="menu-navigation"><?php echo $title; ?> <i class="button-close-menu fa fa-times"></i></div>
+<div class="sidebar-logo-search clr">
+<?php if($enable_sidebar_logo && $header_block = Mage::app()->getLayout()->getBlock('header') ): ?>
+<!-- Show Site Logo at here -->
+<p><a href="<?php echo $header_block->getUrl('') ?>" title="<?php echo $header_block->getLogoAlt() ?>" class="logo"><img src="<?php echo $header_block->getLogoSrc() ?>" alt="<?php echo $header_block->getLogoAlt() ?>" /></a></p>
+<?php endif; ?>
+<!-- Show Custom Search Form -->
+<?php if($enable_sidebar_search): ?>
+<?php $catalogSearchHelper =  Mage::helper('catalogsearch'); ?>
+<form id="search_vertical_offsidebar_mini_form" action="<?php echo $catalogSearchHelper->getResultUrl() ?>" method="get">
+    <div class="input-box">
+        <input id="vertical_offsidebar_search" type="search" name="<?php echo $catalogSearchHelper->getQueryParamName() ?>" value="<?php echo $catalogSearchHelper->getEscapedQueryText() ?>" class="input-text required-entry" maxlength="<?php echo $catalogSearchHelper->getMaxQueryLength();?>" placeholder="<?php echo $this->__('Search entire store here...') ?>" />
+        <button type="submit" title="<?php echo $this->__('Search') ?>" class="button search-button"><span><span><?php echo $this->__('Search') ?></span></span></button>
+    </div>
+
+    <div id="vertical_offslidebar_search_autocomplete" class="search-autocomplete"></div>
+    <script type="text/javascript">
+    //<![CDATA[
+        var searchForm = new Varien.searchForm('search_vertical_offsidebar_mini_form', 'vertical_offsidebar_search', '');
+        searchForm.initAutocomplete('<?php echo $catalogSearchHelper->getSuggestUrl() ?>', 'vertical_offslidebar_search_autocomplete');
+    //]]>
+    </script>
+</form>
+<?php endif; ?>
+</div>

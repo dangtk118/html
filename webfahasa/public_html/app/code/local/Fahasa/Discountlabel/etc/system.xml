@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <tabs>
+        <discountlabel_max_discount translate="label" module="discountlabel">
+            <label>Max Discount Cutoff</label>
+            <sort>30</sort>
+        </discountlabel_max_discount>
+    </tabs>
+    <sections>
+        <discountlabel>
+            <label>Max Discount Cutoff</label>
+            <tab>discountlabel_max_discount</tab>             
+            <frontend_type>text</frontend_type>
+            <sort_order>150</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+		<groups>
+                    <general translate="label">
+                        <label>General</label>
+                        <frontend_type>text</frontend_type>
+                        <sort_order>0</sort_order>
+                        <show_in_default>1</show_in_default>
+                        <show_in_website>1</show_in_website>
+                        <show_in_store>1</show_in_store>
+                        <fields>			    
+                            <maxdiscount translate="label">
+                                <label>Max Discount Cutoff</label>
+                                <frontend_type>text</frontend_type>                                
+                                <sort_order>20</sort_order>
+                                <show_in_default>1</show_in_default>
+                                <show_in_website>1</show_in_website>
+                                <show_in_store>1</show_in_store>
+                            </maxdiscount>
+                        </fields>
+                    </general>
+                </groups>
+        </discountlabel>
+    </sections>
+</config>

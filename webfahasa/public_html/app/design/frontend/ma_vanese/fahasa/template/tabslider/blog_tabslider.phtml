@@ -1,0 +1,365 @@
+<?php
+
+$TABSLIDER_SCRIPT = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS, true)
+        ."lib/tabslider.js?q="
+        .Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix');
+
+$identify = $this->getIdentify();
+$layout = $this->getLayoutId();
+$tabslider_title = $this->getTitle();
+
+$block_content_left = json_decode($this->getData('block_content_left_data'), true);
+$block_content_top = json_decode($this->getData('block_content_top_data'), true);
+$block_banner = ""; // define bxslider $block_content_top slider
+
+$_helper = $this->helper('catalog/output');
+$productsOnRow = $this->getProductsOnRow();
+if (!$productsOnRow) {
+    $productsOnRow = 3;
+}
+$rows = $this->getData('number_of_row');
+if (!$rows) {
+    $rows = 2;
+}
+
+$tsData = $this->getData('data');
+$parsedData = json_decode($tsData, true);
+
+/* for Analytics */
+$relatedProductCampaignStr = '';
+try {
+    if ($this->getRelatedProductCampaignStr()) {
+        $relatedProductCampaignStr = '?fhs_campaign=' . $this->getRelatedProductCampaignStr();
+    }
+} catch (\Throwable $t){}
+
+$loading_icon_url = $this->getSkinUrl('images/ring_loader.gif');
+
+$is_grid_slider = false;
+if ($layout != "grid" || ($layout == "grid" && !$block_content_left)) {
+    if ($layout == "grid" && !$block_content_left) {
+        $rows = 1;
+    }
+    $is_grid_slider = false;
+}else {
+    $is_grid_slider = true;
+}
+
+//// only_mobile property means only to show tabslider on mobile app
+$only_mobile = $this->getData('only_mobile') == "1" ? true : false;
+
+?>
+
+<?php
+//$mobile = Mage::helper('mobiledetect')->isMobile();        
+$mobile = Mage::helper('fhsmobiledetect')->isMobile();
+$item_width = Mage::getStoreConfig('categorytabsliders/categorytabsliders_config/item_width');
+$renderCriteoList = $this->getData('render_criteo_list');
+$criteoList = array();
+?>
+<?php if ($mobile || (isset($_REQUEST['appMobile']) && $_REQUEST['appMobile'] == 1)): ?>
+    <?php if ($this->getNDisplayOnMobile() !== "0" || (isset($_REQUEST['appMobile']) && $_REQUEST['appMobile'] == 1)) { ?>
+        <?php $rows = 1; ?>    
+        <?php
+        // loop tab
+        foreach ($parsedData as $key => $value) {
+            foreach ($value as $k => $v) {
+                ?>
+                <div class="categorytab-slider m-ts-con-margin" style="<?php if ($only_mobile){echo "display: none;";}?>">
+                <div id="container">	
+                <div class="tab_container">
+                <div class="cd-label">
+                    <?php if($v['seeAllLink']){ echo '<a href="' . $v['seeAllLink'] . '">' ; } ?>
+                    <?php
+                    if($v["mobile_label"]){
+                        echo $v["mobile_label"];
+                    }else if($v["label"]){
+                        echo $v["label"];
+                    }else{
+                        echo $this->__($k);
+                    }                    
+                    ?>
+                    <?php if($v['seeAllLink']){ echo '</a>' ; } ?>
+                </div>
+                <div id="tab<?php echo $k . '-' . $identify; ?>" class="tab_content_<?php echo $identify; ?> swiper-container-<?php echo $identify . "-" . $k; ?>" style="overflow: hidden;"> 
+                    <?php $_productCollection = $this->getTabSliderProductCollection($k, $v, 1); ?>                                
+                    <?php $_columnCount = $productsOnRow; ?>
+                    <div class="bxslider swiper-wrapper" >	
+                        <?php
+                        $i = 0;
+                        foreach ($_productCollection as $_product):
+                            $criteoList[] = $_product->getId();
+                            ?>                                
+                            <?php if ($i % $rows == 0): ?>
+                        <div class="swiper-slide item<?php if (($i - 1) % $_columnCount == 0): ?> first<?php elseif ($i % $_columnCount == 0): ?> last<?php endif; ?>">
+                                <?php endif; ?>                                    
+                                <div class="item-inner" style="position: relative">
+                                    <?php
+                                    // Get the Special Price
+                                    $specialprice = $_product->getFinalPrice();
+                                    $price = $_product->getPrice();
+                                    $discountLabel = Mage::helper('discountlabel')->handleDisplayDiscountLabel($_product, true, false);
+                                    echo $discountLabel;
+                                    ?>
+                                    <div class="ma-box-content" style="padding-left: 0px">
+                                        <div class="products clearfix">
+                                            <div class="product images-container">
+                                                <a href="<?php echo $_product->getProductUrl().$relatedProductCampaignStr ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" class="product-image">
+                                                    <span class="product-image">
+                                                        <img style="padding-bottom:0" src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(150, 250); ?>" width="270" height="364" class="flazy" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" />
+                                                    </span>									    
+                                                </a>
+                                            </div>
+                                            <h2 class="product-name m-product-name"><a href="<?php echo $_product->getProductUrl().$relatedProductCampaignStr ?>" title="<?php echo $this->stripTags($_product->getName(), null, true) ?>"><?php echo $_helper->productAttribute($_product, $_product->getName(), 'name') ?></a></h2>							
+                                            <div class="price-label">
+                                                <div class="price-box"><div style="margin-top: 20px;" class="price-box">
+                                                        <?php
+                                                        $sym = Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol();
+                                                        if ($price != $specialprice) {
+
+                                                            if ($specialprice != '') {
+                                                                echo '<p class="special-price">
+                                                                    <span class="price-label">Special Price</span>
+                                                                    <span id="product-price-384' . $_product->getId() . '" class="price m-price-font">' . '' . number_format($specialprice, 0, ",", ".") . $sym . '</span>
+                                                                    </p> ';
+                                                            }
+                                                            if ($price != '') {
+                                                                echo '<p class="old-price bg-white"><span class="price-label">';
+                                                                echo $this->__('Regular Price') . ': </span>';
+                                                                echo '<span id="old-price-' . $_product->getId() . '" class="price m-price-font">' . '' . number_format($price, 0, ",", ".") . $sym . '</span></p>';
+                                                            }
+                                                        } else {
+                                                            echo '<span id="product-price-a' . $_product->getId() . '" class="regular-price" style="background-color: transparent !important;">
+                                                                    <span class="price m-price-font">' . '' . $this->getPriceHtml($_product, true) . '</span>                                    
+                                                                    </span>';
+                                                        }
+                                                        ?>
+                                                    </div></div>
+                                            </div>
+                                        </div>							
+                                    </div>	
+                                </div>                                
+                                <?php $i++ ?>
+                                <?php if ($i % $rows == 0): ?>        
+                                </div>
+                            <?php endif;  ?>                                        
+                        <?php endforeach ?>
+                    </div>
+
+                </div><!-- #tab1 -->
+                <?php
+                if ($v['seeAllLink']) { 
+                   $aTagLink = $v['seeAllLink'];
+                    ?>
+                    <div class="tabs-xem-them">
+                        <a target="_blank" href="<?php echo $this->removeSlashTrailingUrl(Mage::getBaseUrl() . $aTagLink); ?>"><img style="float: right;padding-right: 10px;margin-bottom: 15px;" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA)."/wysiwyg/xemthem-button1.png"; ?>" alt="" /></a>
+                    </div>
+                <?php } ?>
+                </div> <!-- .tab_container --> 
+                </div> <!-- #container -->
+                </div>
+                <script type="text/javascript">
+                    $jq(window).load(function () {                        
+                        var swiper = new Swiper('.swiper-container-<?php echo $identify . "-" . $k; ?>', {
+                            slidesPerView: 'auto',
+                            freeMode: true,
+                            longSwipesMs: 800
+                        });
+                    });
+                </script>
+                <?php
+            }
+        }                    
+        ?>
+        <script type="text/javascript">
+            $jq(window).load(function () {
+                var sliderH = $jq(".tab_content_<?php echo $identify; ?> .bxslider").height();
+                $jq(".tab_content_<?php echo $identify; ?> .bx-viewport").attr("style", function (i, s) {
+                    sliderH = parseInt(sliderH) + 10;
+                    return s + "min-height: 240px !important; height: inherit;"
+                });                
+            });
+        </script>
+    <?php } ?>
+<?php elseif (!$only_mobile): ?>
+    <div id="categorytab-<?php echo $identify; ?>" class="categorytab-slider">
+        <div>
+            <div class="tabslider-header">
+                <div class="tab-title ma-title">
+                    <div class="tabslider-title"><?php
+                        if ($tabslider_title) {
+                            echo $tabslider_title;
+                        } else {
+                            echo " ";
+                        }
+                        ?>
+                    </div>
+                    <div class="tabslider-tabs">
+                        <ul class="tabs tabs<?php echo '-' . $identify; ?>  tab_categorys">
+                            <div class="ts-header" style="float: right;">
+                                <?php
+                                $i = 0;
+                                // loop label tab
+                                foreach ($parsedData as $key => $value) {
+                                    foreach ($value as $k => $v) {
+                                        ?>
+                                        <li class="<?php
+                                        if ($v['active']) {
+                                            echo "active";
+                                        }
+                                        ?>" rel="<?php echo $k; ?>">
+                                                <?php
+                                                    echo $v['label'];
+                                                ?>
+                                        </li>
+                                        <?php
+                                        $i++;
+                                    }
+                                }
+                                ?>
+                            </div>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="tabslider-top-content" style="margin-bottom: 10px; display: inline-block">
+                <?php if ($block_content_top) { ?>
+                    <?php
+                    foreach ($block_content_top as $block_content_item) {
+                        if ($block_content_item["type"] == "slider") {
+                            $block_banner = $identify . "-slider"; //$block_content_item["bxsliderClass"];
+                            ?>
+                            <div class = "<?php echo $block_content_item["webClass"] ?>">
+                                <ul class="bxslider-<?php echo $block_banner; ?>">
+                                    <?php foreach ($block_content_item["data"] as $block_content_item_data) { ?>
+                                        <li>
+                                            <a href="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB) . $block_content_item_data["urlLink"] ?>">
+                                                <img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . $block_content_item_data["urlWebImg"] ?>" alt="" />
+                                            </a>
+                                        </li>
+                                    <?php } ?>
+                                </ul>
+                            </div>
+                        <?php } else if ($block_content_item["type"] == "grid") { ?>
+                            <div class = "<?php echo $block_content_item["webClass"] ?>">
+                                <?php foreach ($block_content_item["data"] as $block_content_item_data) { ?>
+                                    <div class="wrapperImage col-sm-6 col-md-6 col-xs-6 fhs-no-mobile-block tabsliderImg">
+                                        <div class="imageNXB tabsliderNXB">
+                                            <a href="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB) . $block_content_item_data["urlLink"] ?>">
+                                                <img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . $block_content_item_data["urlWebImg"] ?>" alt="" />
+                                            </a>
+                                        </div>
+                                    </div>
+                                <?php } ?>
+                            </div>
+                        <?php } ?>
+                    <?php } ?>
+                <?php } ?>
+            </div>
+            
+            <?php if (!$is_grid_slider) { ?>
+                <div class="tabslider-loading-icon" style="margin: 0px 0px -350px 0px; padding-top: 100px"><img src="<?php echo $loading_icon_url; ?>" class="img-responsive center-block"/></div>
+            <?php } ?>
+            
+            <div class="tab_container">
+                <?php if ($block_content_left) { ?>
+                    <div class="col-lg-4 col-md-4 col-sm-0 hidden-sm" style="<?php
+                    if ($block_content_left[0]['position'] == "right") {
+                        echo "float:right;";
+                    }
+                    ?>">
+                        <p class="<?php if ($block_content_left[0]['position'] == "right"){ echo 'f-grid-split-right';}else{ echo 'f-grid-split-left';} ?>"><a href="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB) . $block_content_left[0]['pageUrl']; ?>"><img class="lazyload" data-src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . $block_content_left[0]['urlWebImg']; ?>" alt="" /></a></p>
+                        <?php // echo $block_content;       ?>
+                    </div>
+                    <div class="col-lg-8 col-md-8 col-sm-12 fhs-partial-p" style="<?php
+                    if ($block_content_left[0]['position'] !== "right") {
+                        echo "float:right;";
+                    }
+                    ?>">
+                         <?php } else { ?>
+                        <div class="col-lg-12 col-md-12 col-sm-12 fhs-full-p">
+                        <?php } ?>
+                            
+                        <?php if ($is_grid_slider) { ?>
+                            <div class="tabslider-loading-icon" style="position: relative; top: 100px;"><img src="<?php echo $loading_icon_url; ?>" class="img-responsive center-block"/></div>
+                        <?php } ?>
+                        
+                        <?php
+                        // loop product tab
+                        foreach ($parsedData as $key => $value) {
+                            foreach ($value as $k => $v) {
+                                ?>
+                                <div id="tab<?php echo $k . '-' . $identify; ?>" class="tab_content_<?php echo $identify; ?>" style="display:none; min-height: 400px;"> 
+                                    <?php if (!$is_grid_slider) { ?>
+                                        <ul class="bxslider">                                            
+                                        </ul>
+                                    <?php }else { ?>
+                                        <ul class="carousel-inner bxslider bxslider-grid" style="display: block;">
+                                        </ul>
+                                    <?php } ?>
+                                    
+                                    <?php
+                                    if ($v['seeAllLink']) {
+                                        $aTagLink = $v['seeAllLink'];
+                                        ?>
+                                        <div class="tabs-xem-them" style="display:none">
+                                            <a style="float: right;color: #FF9800;font-size: 14px;margin-bottom: 10px;" target="_blank" href="<?php echo $this->removeSlashTrailingUrl(Mage::getBaseUrl() . $aTagLink); ?>">Xem Thêm</a>
+                                        </div>
+                                    <?php } ?>
+                                </div><!-- #tab1 -->
+                                <?php
+                            }
+                        }
+                        ?>
+                    </div>
+                </div> <!-- .tab_container --> 
+            </div> 
+    </div> <!-- end div -->
+    
+    <script type="text/javascript" src="<?php echo $TABSLIDER_SCRIPT; ?>"></script>
+    <script type="text/javascript">
+        /*
+         *  Tabslider
+         */
+        var TABSLIDER_GET_URL = "<?php echo $this->getUrl('tabslider/index/getdata', array('_secure' => true)) ?>";
+        var block_limit = "<?php echo $this->getData('number_of_display_item'); ?>";
+        var current_block_id = "<?php echo $identify; ?>";
+        var current_block_data_str = <?php echo json_encode($tsData); ?>;
+        var is_grid_slider = "<?php echo $is_grid_slider; ?>"=="1";
+        var block_item_width = parseInt("<?php echo $item_width ?>");
+        var loading_icon_url = "<?php echo $loading_icon_url; ?>";
+        var number_of_rows = parseInt("<?php echo $rows; ?>");
+        var fhs_campaign_str = "<?php echo $relatedProductCampaignStr; ?>";
+        
+        var tabslider = new Tabslider();
+	tabslider.setBlog(true);
+        tabslider.init(TABSLIDER_GET_URL, block_limit, current_block_id, current_block_data_str, is_grid_slider
+        , block_item_width, loading_icon_url, number_of_rows, fhs_campaign_str);
+        
+        $jq(document).ready(function () {
+            $jq(".hethang").unbind('click');
+            <?php if ($block_banner): ?>
+            $jq(".bxslider-<?php echo $block_banner; ?>").bxSlider({
+                //onSliderLoad: function(){ 
+                //$jq(".bxslider-<?php echo $block_banner; ?>-container").css("height", "auto");
+                //$jq(".bxslider-<?php echo $block_banner; ?>-container .bx-viewport").css("height", "inherit");
+                //}
+            });
+            
+            $jq(".bxslider-<?php echo $block_banner; ?>-container").css("visibility", "visible");
+            <?php endif; ?>
+        });
+    </script>
+    <?php if (false): ?>
+        <script type="text/javascript" src="//static.criteo.net/js/ld/ld.js" async="true"></script>
+        <script type="text/javascript">
+            window.criteo_q = window.criteo_q || [];
+            window.criteo_q.push(
+                    {event: "setAccount", account: 34556},
+                    {event: "setEmail", email: ""},
+                    {event: "setSiteType", type: "<?php echo Mage::helper("fhsmarketing")->getSiteType(); ?>"},
+                    {event: "viewList", item: ["<?php echo implode(",", $criteoList) ?>"]}
+            );
+        </script>    
+    <?php endif; ?>
+    <?php endif; ?>

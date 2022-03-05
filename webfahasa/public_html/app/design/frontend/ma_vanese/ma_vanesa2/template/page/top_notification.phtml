@@ -1,0 +1,298 @@
+<?php
+
+$BASE_SKIN_URL = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true);
+$MEDIA_URL = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);
+$SKIN_URL = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true);
+
+$customer_id = null;
+$customer_helper = Mage::helper('customer');
+$is_login = $customer_helper->isLoggedIn();
+if($is_login) {
+    $customer_data = Mage::getSingleton('customer/session')->getCustomer();
+    $customer_id = $customer_data->getId();
+}
+
+$last_session_id = Mage::helper('productviewed')->getCustomerLastSessionId($customer_id);
+?>
+<script type="text/javascript">
+    const IS_REQUIRE_LOGIN = "<?php echo Mage::getStoreConfig("customer/startup/require_login")?1:'';?>";
+    const CUSTOMER_ID = "<?php echo $customer_id; ?>";
+    const CUSTOMER_ID_SECRET = "<?php echo $customer_id?Mage::helper("event/data")->encryptor('encrypt',$customer_id):''; ?>";
+    const SESSION_ID = "<?php echo  Mage::getSingleton("core/session")->getEncryptedSessionId();?>";
+</script>
+    
+<?php if(!empty($last_session_id)):?>
+    <?php Mage::helper('productviewed')->setCustomerLastSessionId($customer_id, '');?>
+    <script>
+	$jq.ajax({
+	url: "/personal/api/customers/login",
+	method: 'post',
+	dataType: "json",
+	contentType: "application/json; charset=utf-8",
+	data: JSON.stringify({
+	    old_session: "<?php echo $last_session_id;?>",
+	    new_session: SESSION_ID,
+	    customer_id: CUSTOMER_ID,
+	}),
+//            success: function(data)
+//            {}
+	timeout: 2000
+    });
+    </script>
+<?php endif;?>
+    
+<style>
+    .top-notification-button{
+        margin: 5px 10px 5px 5px;
+        user-select: none;
+    }
+
+    .top-notification-button .top-notification-button-label{
+        line-height: 18px;
+        text-transform: uppercase;
+        color: #F7941E;
+        font-size: 12px;
+    }
+    
+    .top-notification-button .img-load{
+        height: 24px;
+        float: right;
+    }
+    
+    .top-notification-button-unseen{
+        display: none;
+    }
+    
+    .fhs-header_mobile.top-notification-menu{
+        position: absolute;
+        z-index: 999999;
+        background-color: #fff;
+        border: 1px solid #e4e4e4;
+        width: 400px;
+	-webkit-box-shadow: 0 3px 8px rgba(0, 0, 0, .25);
+	-moz-box-shadow: 0 3px 8px rgba(0, 0, 0, .25);
+	box-shadow: 0 3px 8px rgba(0, 0, 0, .25);
+        display: none;
+    }
+    .fhs-header_desktop .top-notification-menu{
+        position: absolute;
+        z-index: 1000;
+	bottom: 0;
+	right: 0;
+	-webkit-transform: translate(0, 100%);
+	-ms-transform: translate(0, 100%);
+	-moz-transform: translate(0, 100%);
+        background-color: #fff;
+        border: 1px solid #e4e4e4;
+        width: 400px;
+	-webkit-box-shadow: 0 3px 8px rgba(0, 0, 0, .25);
+	-moz-box-shadow: 0 3px 8px rgba(0, 0, 0, .25);
+	box-shadow: 0 3px 8px rgba(0, 0, 0, .25);
+        display: none;
+	border-radius: 8px;
+	-moz-border-radius: 8px;
+	 -webkit-border-radius: 8px;
+    }
+
+    .top-notification-menu .top-notification-menu-arrow{
+        border: 9px solid #98989800;
+        border-bottom: 9px solid #e4e4e4;
+        margin-left: 20px;
+        width: 0;
+        position: absolute;
+        margin-top: -18px;
+    }
+
+    .top-notification-list{
+        display: none;
+    }
+    
+    .top-notification-item-header{
+        margin-bottom: 5px;
+    }
+
+    .top-notification-item-title{
+        font-size: 13px;
+        font-weight: bold;
+        padding-right: 5px;
+    }
+
+    .top-notification-item-icon{
+        float: left;
+        width: 24px;
+        margin-right: 8px;
+        margin-top: 4px;
+    }
+
+    .top-notification-item-text{
+    }
+
+    #top-notification-menu .top-notification-loading{
+        margin: 5px auto;
+        padding: 30px;
+        text-align: center;
+    }
+
+    .top-notification-menu .top-notification-item{
+        padding: 7px 10px;
+        border-bottom: 1px solid #e8e8e8;
+        cursor: pointer;
+        text-align: left;
+    }
+
+    .top-notification-menu .top-notification-item:hover{
+        background-color: #f9ffd6;
+    }
+    
+    .top-notification-no-messages{
+        padding: 20px;
+        text-align: center;
+        font-style: italic;
+        display: none;
+    }
+    
+    .top-notification-view-all{
+        padding: 10px;
+        text-align: center;
+    }
+    
+    .notification-item-unseen{
+        background-color: #fff4cc;
+    }
+    
+    .notification-item-msg-cutoff{
+        max-height: 34px;
+        overflow: hidden;
+    }
+    #icon-nofi {
+            background: url(<?php echo $SKIN_URL . "frontend/base/default/images/ico_notif.png"; ?>) no-repeat center center;
+            height:30px;
+        }
+    #top-notification-button-unseen {
+        margin-top: -48px;
+        margin-left: 30px;
+        width: 25px;
+        background: #2ED62E;
+        border-radius: 10px;
+        font-size: 12px;
+        color: #fff;
+    }
+    .noti-top > .top-notification-login{
+        position: absolute;
+        z-index: 999;
+	bottom: 0;
+	right: 0;
+	-webkit-transform: translate(0, 100%);
+	-ms-transform: translate(0, 100%);
+	-moz-transform: translate(0, 100%);
+        background-color: #fff;
+        border: 1px solid #e4e4e4;
+        width: 300px;
+	-webkit-box-shadow: 0 3px 8px rgba(0, 0, 0, .25);
+	-moz-box-shadow: 0 3px 8px rgba(0, 0, 0, .25);
+	box-shadow: 0 3px 8px rgba(0, 0, 0, .25);
+        display: none;
+	border-radius: 8px;
+	-moz-border-radius: 8px;
+	 -webkit-border-radius: 8px;
+	padding: 8px 0;
+    }
+    
+    .noti-top > .top-notification-login > div{
+	width: 100%;
+	display: flex;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	flex-direction:column;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+	-webkit-align-items: center;
+	-webkit-justify-content: flex-start;
+	justify-content: flex-start;
+	padding: 16px 0;
+    }
+    .noti-top > .top-notification-login > div > div:first-of-type{
+	padding: 8px 0;
+    }
+    .noti-top > .top-notification-login > div > div:first-of-type > img{
+	height: 75px;
+	width: 75px;
+    }
+    .noti-top > .top-notification-login > div > div:nth-of-type(2){
+	padding: 8px 0 0 0;
+	font-size: 1.2em;
+    }
+    .noti-top > .top-notification-login > div > div:nth-of-type(3){
+	padding: 0 0 8px 0;
+	font-size: 1.2em;
+    }
+    .noti-top > .top-notification-login .fhs-btn-box > button{
+	margin: 4px 0;
+    }
+    .top-notification-button-unseen{
+        background: #2ED62E;
+        -webkit-border-radius: 10px;
+        -moz-border-radius: 10px;
+        border-radius: 10px;
+        vertical-align: top;
+        position: absolute;
+        top: 6px;
+        right: 26px;
+        width: 25px;
+        color: white;
+    }
+</style>
+<div class="top-notification-button" onclick="<?php echo !$is_login?"fhs_account.showLoginPopup('login');\$jq('#login_username').focus();":"location.href='/customer/notification'"; ?>">
+    <a style="cursor:pointer;display:flex;flex-direction: column;">
+        <div style="text-align:center;">
+            <div id="icon-nofi"></div>
+        </div>
+        <div style="text-align:center;">
+            <div>
+                <div class="top-notification-button-label"><?php echo $customer_helper->__('Notifications'); ?></div>
+                <div class="top-notification-button-unseen"></div>
+            </div>
+        </div>
+    </a>
+    <div style="clear: both;"></div>
+</div>
+<?php if($is_login):?>
+<div class="top-notification-menu">
+	<div class="top-notification-loading">
+	    <img class="img-load" width="50px" src="<?php echo $BASE_SKIN_URL . "frontend/ma_vanese/fahasa/images/ring_loader.gif"; ?>"/>
+	</div>
+	<div class="top-notification-list">
+	</div>
+	<div class="top-notification-no-messages">Không có thông báo.</div>
+	<div class="top-notification-view-all">
+	    <a href="/customer/notification">Xem Tất Cả Thông Báo</a>
+	</div>
+</div>
+<?php else:?>
+<div class="top-notification-login">
+    <div>
+	<div><img class="img-load" width="50px" src="<?php echo $BASE_SKIN_URL . "frontend/ma_vanese/fahasa/images/ico_notiflogin.svg"; ?>"/></div>
+	<div><?php echo $this->__('Please login for');?></div>
+	<div><?php echo $this->__('view notification');?></div>
+	<div class="fhs-btn-box">
+	    <button type="button" title="<?php echo $this->__('Login');?>" onclick="fhs_account.showLoginPopup('login');$jq('#login_username').focus();" class="fhs-btn-login-link"><span><?php echo $this->__('Login');?></span></button>
+	    <button type="button" title="<?php echo $this->__('Register');?>" onclick="fhs_account.showLoginPopup('register');$jq('#register_phone').focus();" class="fhs-btn-register-link"><span><?php echo $this->__('Register');?></span></button>
+	</div>
+    </div>
+</div>
+	
+	<script type="text/javascript">
+	$jq('.fhs-header_desktop .noti-top').hover(
+	    function(){
+		$jq(".top-notification-login").show();
+	    },
+	    function(){
+		$jq(".top-notification-login").hide();
+	    }
+	);
+	</script>
+<?php endif;?>

@@ -1,0 +1,90 @@
+<?php
+$MEDIA_URL = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);
+$data = json_decode($this->getData('data'), true);
+//padding-Top : 34.11% /* (img-height / img-width * container-width) */
+//                /* (250 / 733 * 100) */
+?>
+<style>
+    .image-countdowntime{
+        width: 100%;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: contain;
+        position: relative;
+        height: 0;
+        padding-top: 34.11%; /* notice */
+    }
+</style>
+<?php if(!empty($data) && count($data) > 0) : 
+        $dataImage = $data[0]; 
+        $timezone = new DateTimeZone('Asia/Bangkok');
+        $seconds_remaining = new DateTime($dataImage['timeStart']);
+        $nowDate = new DateTime();
+        $nowDate->setTimezone($timezone);
+        $dataFormat = $nowDate->format('Y/m/d h:i:s');
+    if( $dataFormat >= $dataImage['timeStart'] ){
+      $dataImageLink = $MEDIA_URL . $dataImage['linkImageRun']; 
+      $flag = 'run';
+    }else{
+       $flag = 'start';
+       $dataImageLink = $MEDIA_URL . $dataImage['linkImageStart'];
+    }
+?>
+    <div class="image-countdowntime-container">
+        <div class="image-countdowntime" style="background-image:  url('<?php echo $dataImageLink; ?>');">
+            <div class="text-image-countdowntime fhs-text-countdowntime">
+                <div style="margin:0 0.4em 0 0; display:  flex; flex-direction: column">
+                    <div class='item-text-countdowntime-box'>
+                        <div class="item-countdowntime item-countdowntime-day" style="color: <?php echo $dataImage['colorNum'];?>">00</div>
+                    </div>
+                    <div class="item-text-countdowntime" style="color :<?php echo $dataImage['colorText'];?>">Ngày</div>
+                </div>
+                <div style="display:flex; flex-direction: column">
+                    <div class='item-text-countdowntime-box'>
+                        <div class="item-countdowntime item-countdowntime-hour" style="color: <?php echo $dataImage['colorNum']; ?>">00</div>
+                    </div>
+                    <div class="item-text-countdowntime" style="color :<?php echo $dataImage['colorText'];?>">Giờ</div>
+                    
+                </div>
+                <div style="margin:0 0.4em 0 0.4em; display:  flex; flex-direction: column">
+                    <div class='item-text-countdowntime-box'>
+                        <div class="item-countdowntime item-countdowntime-min" style="color: <?php echo $dataImage['colorNum']; ?>">00</div>
+                    </div>
+                    <div class="item-text-countdowntime" style="color :<?php echo $dataImage['colorText'];?>">Phút</div>
+                </div>
+                <div style="display:flex; flex-direction: column">
+                    <div class='item-text-countdowntime-box'>
+                        <div class="item-countdowntime item-countdowntime-sec" style="color: <?php echo $dataImage['colorNum']; ?>">00</div>
+                    </div>
+                    <div class="item-text-countdowntime" style="color :<?php echo $dataImage['colorText'];?>">Giây</div>
+                </div>
+            </div>
+        </div>
+       
+    </div>
+
+<script type="text/javascript" src="/js/lib/countdowntime.js?q=<?php echo Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix'); ?>"></script>
+<script type="text/javascript">
+    flexFont = function () {
+        var divs = document.getElementsByClassName("fhs-text-countdowntime");
+        for(var i = 0; i < divs.length; i++) {
+            let relFontsize = divs[i].offsetWidth*0.055;
+            divs[i].style.fontSize = relFontsize+'px';
+        }
+    };
+    window.onload = function(event) {
+        flexFont();
+        var dateBegin = '<?php echo $dataImage['timeStart'] ?>';
+        var dateEnd = '<?php echo $dataImage['timeEnd'] ?>';
+        var linkImageBegin = '<?php echo $MEDIA_URL . $dataImage['linkImageStart']?>';
+        var linkImageRun = '<?php echo $MEDIA_URL . $dataImage['linkImageRun']?>';
+        var flag = '<?php echo $flag; ?>';
+        var countdowntime = new CountDownTime();
+        countdowntime.startCountDownTimeBlock(dateBegin,dateEnd,linkImageBegin,linkImageRun,flag);
+    };
+    window.onresize = function(event) {
+        flexFont();
+    };
+</script>
+<?php  endif;?>
+

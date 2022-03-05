@@ -1,0 +1,206 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Fahasa_Event>
+            <version>0.4.4</version>
+        </Fahasa_Event>
+    </modules>
+    <frontend>
+        <routers>
+            <event>
+                <use>standard</use>
+                <args>
+                    <module>Fahasa_Event</module>
+                    <frontName>event</frontName>
+                </args>
+            </event>
+        </routers>
+        <layout>
+            <updates>
+                <event>
+                    <file>event.xml</file>
+                </event>
+            </updates>
+        </layout>
+        <translate>
+            <modules>
+                <Fahasa_Event>
+                    <files>
+                        <default>Fahasa_Event.csv</default>
+                    </files>
+                </Fahasa_Event>
+            </modules>
+        </translate>
+    </frontend>
+    <global>
+        <helpers>
+            <event>
+                <class>Fahasa_Event_Helper</class>
+            </event>
+        </helpers>
+        <blocks>
+            <event>
+                <class>Fahasa_Event_Block</class>
+            </event>
+        </blocks>
+        <models>
+            <event>
+                <class>Fahasa_Event_Model</class>
+            </event>
+        </models>
+        <resources>
+            <event_setup>
+                <setup>
+                    <module>Fahasa_Event</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </event_setup>
+            <event_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </event_write>
+            <event_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </event_read>
+        </resources>
+        <events>
+            <cataloginventory_resource_stock_correctitemqty>
+                <observers>
+                    <event_buffetcombo_outofstock>
+                        <class>Fahasa_Event_Model_Observer</class>
+                        <method>eventCorrectItemQty</method>
+                    </event_buffetcombo_outofstock>
+                </observers>
+            </cataloginventory_resource_stock_correctitemqty>
+            <sales_quote_collect_totals_after>
+                <observers>
+                    <event_buy_more_discount_more_calculate>
+                        <class>Fahasa_Event_Model_Observer</class>
+                        <method>applyEventBuyMoreDiscountMore</method>
+                    </event_buy_more_discount_more_calculate>
+                </observers>
+            </sales_quote_collect_totals_after>
+	    <share_screen_image>
+                <observers>
+                    <render_image_share>
+                        <class>Fahasa_Event_Model_Observer</class>
+                        <method>renderImageShare</method>
+                    </render_image_share>
+                </observers>
+	    </share_screen_image>
+        </events>
+    </global>
+    <default>
+        <event_buffetcombo>
+            <config>
+                <is_active>0</is_active>
+                <active_buffetcombo_id>0</active_buffetcombo_id>
+                <slider_limit>12</slider_limit>
+                <products_per_page>12</products_per_page>
+                <combo_list>[{"price": 149000, "count": 3, "gift_id": 187635 }, { "price": 249000, "count": 5, "gift_id": 157902 }]</combo_list>
+                <use_gift>false</use_gift>
+                <gift_delivery>false</gift_delivery>
+                <gift_delivery_message>Đơn hàng của bạn có thể bị giao sau ngày 8/3 . Bạn có chắc chắn muốn đặt hàng hay không ?</gift_delivery_message>
+                <gift_delivery_no_suburban>false</gift_delivery_no_suburban>
+            </config>
+        </event_buffetcombo>
+        <event_marathon>
+            <config>
+                <from_date>2019-03-05 00:00:00</from_date>
+                <to_date>2019-03-11 00:00:00</to_date>
+                <complete_date>2019-03-24 00:00:00</complete_date>
+            </config>
+        </event_marathon>
+        <event_marathon_2>
+            <config>
+                <is_active_type>order</is_active_type>
+                <ranks>Cuộc Đua Chạm Mốc</ranks>
+                <ranks>["3000000","5000000","10000000"]</ranks>
+                <ranks_limit>["500","10","3"]</ranks_limit>
+                <max_ordertotal>10000000</max_ordertotal>
+                <gifts>["200.000 F-points","500.000 F-points","1.000.000 F-points"]</gifts>
+                <from_date>2019-05-04 00:00:00</from_date>
+                <to_date>2019-05-09 00:00:00</to_date>
+                <exlude></exlude>
+            </config>
+        </event_marathon_2>
+        <event_sharefacebook>
+            <config>
+                <buffed_share_facebook>0</buffed_share_facebook>
+            </config>
+            <share_render_image>
+                <is_active>0</is_active>
+                <event_name></event_name>
+                <title>Sinh Nhật Fahasa.com</title>
+                <image_default>wysiwyg/</image_default>
+                <image_default_width>500</image_default_width>
+                <image_default_height>260</image_default_height>
+                <is_render_file>0</is_render_file>
+                <site>Sinh nhật Fahasa.com</site>
+                <description>Sinh nhật Fahasa.com cơ hội nhận voucher giảm giá 80%</description>
+                <font_regular></font_regular>
+                <font_bold></font_bold>
+                <is_active_gift>0</is_active_gift>
+                <from_date>2020-08-01 00:00:00</from_date>
+                <to_date>2020-08-01 00:00:00</to_date>
+                <ruleid></ruleid>
+                <limit_share>3</limit_share>
+                <turn_have_gift>44,68,144,168</turn_have_gift>
+                <image_background_alert>/wysiwyg/xyz.png</image_background_alert>
+                <msg_has_gift>Chúc mừng bạn đã trúng mã giảm giá 50% tại lượt chia sẻ thứ %s. Chi tiết mã giảm giá vui lòng xem ở phần thông báo.</msg_has_gift>
+		<msg_no_gift>Cảm ơn bạn đến dự tiệc sinh nhật 44 của Fahasa, hiện tại đã có %s lượt chia sẻ.</msg_no_gift>
+		<msg_has_gift_noti_title>Chúc mừng bạn đã trúng quà</msg_has_gift_noti_title>
+		<msg_has_gift_noti_content>MÃ GIẢM GIÁ 50% (đơn hàng tối đa 500K) của bạn là %s</msg_has_gift_noti_content>
+            </share_render_image>
+        </event_sharefacebook>
+        <event_discountoriginal>
+            <config>
+                <is_active>0</is_active>
+                <active_campaign_id>0</active_campaign_id>
+            </config>
+        </event_discountoriginal>
+        <event_discountoriginal_v2_nofee>
+            <config>
+                <is_active>0</is_active>
+                <active_campaign_id>0</active_campaign_id>
+            </config>
+        </event_discountoriginal_v2_nofee>
+        <book_festival>
+            <config>
+                <store_code>5</store_code>
+                <expired_time>3600</expired_time>
+            </config>
+        </book_festival>
+        <event_buy_more_discount_more>
+            <config>
+                <is_active>0</is_active>
+                <valid_from>2019-04-16 00:00:00</valid_from>
+                <valid_to>2019-04-22 23:59:59</valid_to>
+                <rule_json>[{"qty_step": 4, "discount": 50},{"qty_step": 5, "discount": 70},{"qty_step": 6, "discount": 99}]</rule_json>
+                <product_category>4</product_category>
+                <product_category_exclude></product_category_exclude>
+                <customer_groups>0,1,3</customer_groups>
+                <max_subtotal>5000000</max_subtotal>
+                <discount_label>Càng Mua Càng Giảm</discount_label>
+                <discount_item_message>Sản phẩm giảm giá theo nội dung ưu đãi “Càng Mua Càng Giảm”</discount_item_message>
+            </config>
+        </event_buy_more_discount_more>
+        <event_delivery>
+            <config>
+                <is_active>0</is_active>
+		<time_to_nextday>12</time_to_nextday>
+		<qty_min_stock>3</qty_min_stock>
+            </config>
+        </event_delivery>
+        <vip>
+            <config>
+                <is_active>0</is_active>
+            </config>
+        </vip>
+    </default>
+</config> 

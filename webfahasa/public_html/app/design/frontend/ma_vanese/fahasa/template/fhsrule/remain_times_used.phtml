@@ -1,0 +1,91 @@
+<?php
+$block_data = json_decode($this->getData('data'), true);
+?>
+<div class="remain-rule">
+    <?php foreach ($block_data as $block): ?>
+        <?php ?>
+        <div class="remain-rule-item col-sm-4 col-md-4 col-xs-6">
+            <div class="img-remain col-sm-12 col-md-12 col-xs-12 remain-rule-<?php echo $block["ruleId"]; ?>" id="<?php echo $block["ruleId"]; ?>">
+                <?php $mobile = Mage::helper('fhsmobiledetect')->isMobile(); ?>
+                <?php if (!$mobile) : ?>
+                    <img class="active" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . $block["urlWebImg"]; ?>" alt="">
+                    <img class="expires" style="display: none;" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . $block["urlWebExpiresImg"]; ?>" alt="">
+                <?php else: ?>
+                    <img class="active mobile" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . $block["urlMobileImg"]; ?>" alt="">
+                    <img class="expires mobile" style="display: none;" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . $block["urlMobileExpiresImg"]; ?>" alt="">
+                <?php endif; ?>
+            </div>
+            <div class="cleaner"></div>
+            <div class="progress-bar-remain col-sm-12 col-md-12 col-xs-12">
+                <div class="col-sm-12 col-md-12 col-xs-12 progress-bar-timeuse-<?php echo $block["ruleId"]; ?> title-color-remain">Còn ... mã</div>
+                <div class="progress col-sm-12 col-md-12 col-xs-12" style="padding: 0px;">
+                    <div class="progress-bar bg-danger progress-bar-<?php echo $block["ruleId"]; ?>" style="width:50%; "></div>
+                </div> 
+            </div>
+        </div>
+    <?php endforeach; ?>
+</div>
+<script type="text/javascript">
+    $jq(document).ready(function () {
+        var ruleIds = $jq(".img-remain").map(function () {
+            return this.id;
+        });
+        new Ajax.Request(
+                '<?php echo $this->getUrl('fhsrule/index/postRemain', array('_secure' => true)) ?>', {
+                    method: 'post',
+                    parameters: {
+                        ruleIds: ruleIds.toArray().toString()
+                    },
+                    onLoading: function () {
+                        jQuery('.youama-ajaxlogin-loader').fadeIn();
+                    },
+                    onLoaded: function () {
+                        jQuery('.youama-ajaxlogin-loader').fadeOut();
+                    },
+                    onSuccess: function (transport) {
+                        if (200 == transport.status) {
+                            var rules = JSON.parse(transport.responseText);
+                            for (i = 0; i < rules.length; i++) {
+                                // data
+                                var timesUsed = rules[i].timesUsed;
+                                var usesPerCoupon = rules[i].usesPerCoupon;
+                                var finaluse = usesPerCoupon - timesUsed;
+                                var width = Math.round((100 / usesPerCoupon) * timesUsed);
+                                var finalwidth = 100 - width;
+
+                                // handle inactive rule/ out of use per
+                                if (rules[i].isActive != 1 || finaluse < 0) {
+                                    finalwidth = 0;
+                                    finaluse = 0;
+                                }
+
+                                // handle progress-bar
+                                if (finalwidth < 60 && finalwidth >= 30) {
+                                    // 30-59
+                                    jQuery(".progress-bar-" + rules[i].ruleId).css("background-image", "none");
+                                    jQuery(".progress-bar-" + rules[i].ruleId).css("background-color", "#ffc107");
+                                } else if (finalwidth < 30) {
+                                    // duoi 30
+                                    jQuery(".progress-bar-" + rules[i].ruleId).css("background-image", "none");
+                                    jQuery(".progress-bar-" + rules[i].ruleId).css("background-color", "red");
+                                }
+                                
+                                // progress-bar-timeuse
+                                jQuery(".progress-bar-" + rules[i].ruleId).width(finalwidth + "%");
+                                jQuery(".progress-bar-timeuse-" + rules[i].ruleId).html("Còn " + finaluse + " mã Coupon");
+                               
+                                // handle img expires
+                                if (finalwidth == 0) {
+                                    jQuery("#" + rules[i].ruleId + " .active").hide();
+                                    jQuery("#" + rules[i].ruleId + " .expires").show();
+                                }
+
+                                
+                            }
+
+                        }
+                    }
+                }
+        );
+    });
+</script>

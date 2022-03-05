@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <system>
+                        <children>                            
+                            <phanloaivct_options translate="title" module="phanloaivct">
+                                <title>Normal Shipping</title>
+                            </phanloaivct_options>                               
+                        </children>
+                    </system>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</config>

@@ -1,0 +1,34 @@
+<?php
+$content = json_decode($this->getData('data'), true);
+?>
+<?php if ($content) : ?>
+<div class="fhs-top-block row">
+    <div class="col-xs-12 top">
+        <div class = "col-md-8">
+                <a href="<?php echo $this->handleURLLink($content[0]["urlLink"]); ?>">
+                    <img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).$content[0]["urlWebImg"]; ?>"/></a>
+        </div>
+        <div class ="col-md-4">
+            <div class="fhs-top-block-right top">
+                <a href="<?php echo $this->handleURLLink($content[1]["urlLink"]); ?>">
+                    <img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).$content[1]["urlWebImg"]; ?>" /></a>
+            </div>
+            <div class="fhs-top-block-right bottom" >
+                <a href="<?php echo $this->handleURLLink($content[2]["urlLink"]); ?>">
+                <img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).$content[2]["urlWebImg"]; ?>" /></a>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 bottom">
+        <div class = "col-md-6 left">
+                <a href="<?php echo $this->handleURLLink($content[3]["urlLink"]); ?>">
+                    <img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).$content[3]["urlWebImg"]; ?>" /></a>
+        </div>
+        <div class = "col-md-6 right">
+                <a href="<?php echo $this->handleURLLink($content[4]["urlLink"]); ?>">
+                    <img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).$content[4]["urlWebImg"]; ?>" /></a>
+        </div>
+    </div>
+</div>
+
+<?php endif; ?>

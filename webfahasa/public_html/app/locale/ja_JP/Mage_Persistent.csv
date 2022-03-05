@@ -1,0 +1,64 @@
+"""Remember Me"" Default Value",
+"(Not %s?)",
+"* Required Fields","＊必須"
+"Address","住所"
+"Address Information","住所情報"
+"Already registered?","会員登録しましたか？"
+"Back","戻る"
+"By creating an account with our store, you will be able to move through the checkout process faster, store multiple shipping addresses, view and track your orders in your account and more.",
+"Cannot load configuration from file %s.",
+"Checkout as Guest","ゲストとして会計する"
+"Checkout as a Guest or Register",
+"City","市"
+"Clear Persistence on Log Out",
+"Close","閉じる"
+"Company","会社"
+"Confirm Password","パスワードを確認してください"
+"Continue","続ける"
+"Country","国"
+"Create an Account","アカウントを作成する"
+"Easy access to your order history and status","注文履歴と注文状況に簡単にアクセスできます"
+"Email Address","メールアドレス"
+"Enable ""Remember Me""","「このアカウントを覚える」を有効する"
+"Enable Persistence",
+"Fast and easy check out","簡単に早く会計できます"
+"Fax","ファックス"
+"Forgot Your Password?","パスワードを忘れましたか？"
+"Forgot your password?",
+"General Options","基本設定"
+"If you have an account with us, please log in.","アカウントをお持ちの方は、ログインしてください"
+"Loading next step...","次のステップをロード中です…"
+"Login","ログイン"
+"Login Information","ログイン情報"
+"Login or Create an Account","ログイン、もしくはアカウントを作成する"
+"New Customers",
+"Password","パスワード"
+"Persist Shopping Cart",
+"Persistence Lifetime (seconds)",
+"Persistent Shopping Cart",
+"Personal Information","個人情報"
+"Please log in below:",
+"Please select region, state or province","住所を選んでください"
+"Register","登録する"
+"Register and save time!","登録して、時間を節約しましょう！"
+"Register to Create an Account","登録してアカウントを作成する"
+"Register with us for future convenience:","登録して、便利に利用しましょう"
+"Registered Customers",
+"Remember Me","アカウントを覚える"
+"Save in address book","アドレスブックに保存する"
+"Select State/Province...","州を選択してください"
+"Select a billing address from your address book or enter a new address.","アドレスブックから請求先住所を選択してください。もしくは新しい住所を入力してください。"
+"Ship to different address","他の住所に届ける"
+"Ship to this address","この住所に届ける"
+"Shopping cart has been updated with appropriate prices","カートの金額が更新されました"
+"Sign Up for Newsletter","メールマガジンに申し込む"
+"State/Province","州　"
+"Street Address","番地"
+"Street Address %s","番地の住所%s"
+"Submit","送る"
+"Telephone","電話番号"
+"To proceed to Checkout, please log in using your email address.","お会計に進むには、ログインしてください。"
+"VAT Number","税金コード"
+"Welcome, %s!","こんにちは、%s様"
+"What\'s this?","これは何ですか？"
+"Zip/Postal Code","郵便コード"

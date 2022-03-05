@@ -1,0 +1,151 @@
+<?php if($this->getItems()->getSize()): ?>
+    <?php
+        $auto = Mage::getStoreConfig('relatedslider/relatedslider_config/auto');
+        $width_thumbnail = Mage::getStoreConfig('relatedslider/relatedslider_config/width_thumbnail');
+        $height_thumbnail = Mage::getStoreConfig('relatedslider/relatedslider_config/height_thumbnail');
+        $item_width = Mage::getStoreConfig('relatedslider/relatedslider_config/item_width');
+        $items_show = Mage::getStoreConfig('relatedslider/relatedslider_config/items_show');
+        $speed = Mage::getStoreConfig('relatedslider/relatedslider_config/speed');
+        $interval = Mage::getStoreConfig('relatedslider/relatedslider_config/interval');
+        $nav_ctrl = Mage::getStoreConfig('relatedslider/relatedslider_config/nav_ctrl');
+        $next_back = Mage::getStoreConfig('relatedslider/relatedslider_config/next_back');
+        $show_price = Mage::getStoreConfig('relatedslider/relatedslider_config/show_price');
+        $show_wishlist = Mage::getStoreConfig('relatedslider/relatedslider_config/show_wishlist');
+		$title = Mage::getStoreConfig('relatedslider/relatedslider_config/title');
+    ?>
+<div class="ma-relatedslider-container">
+    <div class="related-product-title">
+        <h2><?php echo $this->__('Related Products') ?></h2>
+    </div>
+    <div class="bxslider carousel">
+        <div class="related-subtitle">
+            <?php echo $this->__('Check items to add to the cart or') ?>&nbsp;<a href="#" onclick="selectAllRelated(this); return false;"><?php echo $this->__('select all') ?></a>
+        </div>
+		<?php $rows = Mage::getStoreConfig('relatedslider/relatedslider_config/row_show');$i=0; ?>
+        <ul class="slides" id="block-related">
+        <?php foreach($this->getItems() as $_item): ?>
+			<?php if($i % $rows == 0) echo '<li class="relatedslider-item item">'; ?>
+				<?php
+						$newFromDate = Mage::getModel('catalog/product')->load($_item->getID())->getNewsFromDate();
+						$newToDate = Mage::getModel('catalog/product')->load($_item->getID())->getNewsToDate();                 
+						$now = date("Y-m-d H:m:S");
+						// Get the Special Price
+						$specialprice = Mage::getModel('catalog/product')->load($_item->getId())->getSpecialPrice(); 
+						// Get the Special Price FROM date
+						$specialPriceFromDate = Mage::getModel('catalog/product')->load($_item->getId())->getSpecialFromDate();
+						// Get the Special Price TO date
+						$specialPriceToDate = Mage::getModel('catalog/product')->load($_item->getId())->getSpecialToDate();
+						// Get Current date
+						if ($specialprice&&($specialPriceFromDate <= $now && $specialPriceToDate >= $now)&& Mage::getStoreConfig('themeoptions/themeoptions_config/sale_label')){
+						 echo '<div class="label-pro-sale">sale</div>';
+						}else{
+						 if($newFromDate <= $now && $newToDate >= $now && Mage::getStoreConfig('themeoptions/themeoptions_config/new_label') ) {
+							   echo '<div class="label-pro-new">new</div>';
+						 }
+						}
+			   ?>
+				<div class="item-inner">
+                <?php if(!$_item->isComposite() && $_item->isSaleable()): ?>
+                    <?php if (!$_item->getRequiredOptions()): ?>
+                        <input type="checkbox" class="checkbox related-checkbox" id="related-checkbox<?php echo $_item->getId() ?>" name="related_items[]" value="<?php echo $_item->getId() ?>" />
+                    <?php endif; ?>
+                <?php endif; ?>
+				<div class="ma-box-content">
+				<div class="products clearfix">
+                <div class="product images-container">
+					<a href="<?php echo $_item->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_item, 'small_image'), null, true) ?>" class="product-image">
+					  <span class="product-image">
+					   <img src="<?php echo $this->helper('catalog/image')->init($_item, 'small_image')->resize(270,364); ?>" width="270" height="364" alt="<?php echo $this->stripTags($this->getImageLabel($_item, 'small_image'), null, true) ?>" />
+					  </span>
+					  <span class="product-image image-rotator images-hover">
+					   <?php 
+					   $product = Mage::getModel('catalog/product')->load($_item->getId());
+					   if ($product->getRotatorImage() && $product->getRotatorImage() !='no_selection') {
+						//$imageTooltipResize = $this->getResizedUrl($imagetTooltip,600,400);
+						$image = Mage::helper('catalog/image')->init($product, 'rotator_image')->resize(270, 364);
+					   } else {
+						$image = Mage::helper('catalog/image')->init($_item, 'small_image')->resize(270, 364);
+					   }
+					   ?>
+					   <img src="<?php echo $image ?>" width="270" height="364" alt="<?php echo $this->stripTags($this->getImageLabel($_item, 'small_image'), null, true) ?>" />
+					   </span>   
+					</a>
+				</div>
+					<?php if( $show_price ): ?>
+						<?php echo $this->getPriceHtml($_item, true, '-related') ?>
+					<?php endif; ?>
+                </div>
+				<h2 class="product-name"><a href="<?php echo $_item->getProductUrl() ?>" title="<?php echo $this->htmlEscape($_item->getName()) ?>"><?php echo $this->htmlEscape($_item->getName()) ?></a></h2>
+				<?php echo $this->getReviewsSummaryHtml($_item) ?>
+				<?php if ($this->helper('wishlist')->isAllow() && $show_wishlist ) : ?>
+                            <a href="<?php echo $this->getAddToWishlistUrl($_item) ?>" class="link-wishlist"><?php echo $this->__('Add to Wishlist') ?></a>
+                        <?php endif; ?>
+				</div>
+			<?php $i++;?>
+			<?php if($i % $rows == 0) echo "</li>"; ?>   
+        <?php endforeach ?>
+			<?php if($i % $rows != 0) echo "</li>"; ?>
+        </ul>
+        <script type="text/javascript">decorateList('block-related', 'none-recursive')</script>
+    </div>
+    <script type="text/javascript">
+    //<![CDATA[
+    $$('.related-checkbox').each(function(elem){
+        Event.observe(elem, 'click', addRelatedToProduct)
+    });
+
+    var relatedProductsCheckFlag = false;
+    function selectAllRelated(txt){
+        if (relatedProductsCheckFlag == false) {
+            $$('.related-checkbox').each(function(elem){
+                elem.checked = true;
+            });
+            relatedProductsCheckFlag = true;
+            txt.innerHTML="<?php echo $this->__('unselect all') ?>";
+        } else {
+            $$('.related-checkbox').each(function(elem){
+                elem.checked = false;
+            });
+            relatedProductsCheckFlag = false;
+            txt.innerHTML="<?php echo $this->__('select all') ?>";
+        }
+        addRelatedToProduct();
+    }
+
+    function addRelatedToProduct(){
+        var checkboxes = $$('.related-checkbox');
+        var values = [];
+        for(var i=0;i<checkboxes.length;i++){
+            if(checkboxes[i].checked) values.push(checkboxes[i].value);
+        }
+        if($('related-products-field')){
+            $('related-products-field').value = values.join(',');
+        }
+    }
+        $jq(document).ready(function() {
+            $jq('.ma-relatedslider-container .slides').bxSlider({
+				<?php if($auto) { ?>
+				  auto: true,
+				<?php } ?>
+				speed: <?php echo $speed ?>,
+				pause: <?php echo $interval ?>,
+				minSlides: 1,
+				maxSlides: <?php echo $items_show ?>,
+				slideWidth: <?php echo $item_width ?>,
+                slideMargin: 30,
+				<?php if ($nav_ctrl) { ?>
+				  pager: true,
+				<?php } else { ?> 
+				  pager:false, 
+				<?php } ?>
+				<?php if ($next_back) { ?>
+					controls: true,
+				<?php } else { ?>
+					controls:false,
+				<?php } ?>
+            });
+        });
+    //]]>
+    </script>
+</div>
+<?php endif ?>

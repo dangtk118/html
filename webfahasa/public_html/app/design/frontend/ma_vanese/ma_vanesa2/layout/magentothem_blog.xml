@@ -1,0 +1,244 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <default>
+        <reference name="top.links">
+            <block type="blog/blog" name="add.blog.link">
+                <action method="addBlogLink" ifconfig="blog/menu/top"><param>top</param></action>
+            </block>
+        </reference>
+    </default>
+    <cms_index_index>
+	<!--
+        <reference name="footer_links">
+            <block type="blog/blog" name="add.blog.footer">
+                <action method="addBlogLink" ifconfig="blog/menu/footer"><param>footer</param></action>
+            </block>
+        </reference>
+        <reference name="right">
+            <block type="blog/menu_sidebar" name="right.blog.menu" before="-">
+                <action method="setTemplate" ifconfig="blog/menu/right" ifvalue="1">
+                    <template>magentothem_blog/menu.phtml</template>
+                </action>
+                <block type="blog/tags" name="blog_tags" />
+            </block>
+        </reference>
+        <reference name="left">
+            <block type="blog/menu_sidebar" name="left.blog.menu"  before="-">
+                <action method="setTemplate" ifconfig="blog/menu/left">
+                    <template>magentothem_blog/menu.phtml</template>
+                </action>
+                <block type="blog/tags" name="blog_tags" />
+            </block>
+        </reference> 
+        <reference name="head">
+            <action method="addItem">
+                <type>skin_css</type>
+                <name>magentothem_blog/css/style.css</name>
+            </action>
+			
+            <action method="addJs" ifconfig="blog/slide/includejs"><script>magentothem/blog/ma.jq.slide.js</script></action>
+            <action method="addJs" ifconfig="blog/blog/enabled"><script>magentothem/blog/ma.bxslider.min.js</script></action>
+        </reference>
+        <reference name="left">
+                        <block type="blog/menu_sidebar" after="bestseller.vert.scroller.left" name="blog.slider">
+                <action method="setTemplate"><template>magentothem_blog/blog_slide.phtml</template></action>
+            </block>
+        </reference>
+	-->
+    </cms_index_index>
+
+    <blog_index_index>
+        <reference name="head">
+            <action method="addItem">
+                <type>skin_css</type>
+                <name>magentothem_blog/css/style.css</name>
+            </action>
+        </reference>
+        <reference name="left">
+            <block type="blog/lastcomment" before="left.blog.menu" name="blog.socialnetwork">
+                <action method="setTemplate">
+                    <template>magentothem_blog/social_network.phtml</template>
+                </action>
+            </block>
+            <block type="blog/menu_sidebar" name="left.blog.menu"  before="-">
+                <action method="setTemplate" ifconfig="blog/menu/left">
+                    <template>magentothem_blog/menu.phtml</template>
+                </action>
+                <block type="blog/tags" name="blog_tags" />
+            </block>
+            <block type="blog/menu_sidebar" after="bestseller.vert.scroller.left" name="blog.slider">
+                <action method="setTemplate">
+                    <template>magentothem_blog/blog_slide.phtml</template>
+                </action>
+            </block>
+            <block type="blog/lastcomment" after="blog.slider" name="blog.lastcomment">
+                <action method="setTemplate">
+                    <template>magentothem_blog/lastcomment.phtml</template>
+                </action>
+            </block>
+        </reference>
+        <reference name="content">
+            <block type="blog/blog" name="blog" template="magentothem_blog/blog.phtml"/>
+        </reference>
+        <reference name="footer" >
+            <block type="blog/blog" name="copyright.blog.footer" template="magentothem_blog/copyright.phtml"/>
+        </reference>
+    </blog_index_index>
+
+    <blog_index_list>
+        <reference name="head">
+            <action method="addItem">
+                <type>skin_css</type>
+                <name>magentothem_blog/css/style.css</name>
+            </action>
+        </reference>
+        <reference name="left">
+            <block type="blog/lastcomment" before="left.blog.menu" name="blog.socialnetwork">
+                <action method="setTemplate">
+                    <template>magentothem_blog/social_network.phtml</template>
+                </action>
+            </block>
+            <block type="blog/menu_sidebar" name="left.blog.menu"  before="-">
+                <action method="setTemplate" ifconfig="blog/menu/left">
+                    <template>magentothem_blog/menu.phtml</template>
+                </action>
+                <block type="blog/tags" name="blog_tags" />
+            </block>
+            <block type="blog/menu_sidebar" after="bestseller.vert.scroller.left" name="blog.slider">
+                <action method="setTemplate">
+                    <template>magentothem_blog/blog_slide.phtml</template>
+                </action>
+            </block>
+            <block type="blog/lastcomment" after="blog.slider" name="blog.lastcomment">
+                <action method="setTemplate">
+                    <template>magentothem_blog/lastcomment.phtml</template>
+                </action>
+            </block>
+        </reference>
+        <reference name="content">
+            <block type="blog/blog" name="slider" template="magentothem_blog/slider.phtml">
+                
+            </block>
+            <block type="blog/blog" name="blog" template="magentothem_blog/blog.phtml">
+                <block type="blog/product_toolbar" name="magentothem_blog_list_toolbar" template="catalog/product/list/toolbar.phtml">
+                    <block type="page/html_pager" name="product_list_toolbar_pager"/>
+            </block>
+            </block>
+        </reference>
+        <reference name="footer" >
+            <block type="blog/blog" name="copyright.blog.footer" template="magentothem_blog/copyright.phtml"/>
+        </reference>
+    </blog_index_list>
+    <blog_post_view>
+        <reference name="head">
+            <action method="addItem">
+                <type>skin_css</type>
+                <name>magentothem_blog/css/style.css</name>
+            </action>
+        </reference>
+        <reference name="left" >
+            <block type="blog/menu_sidebar" after="blog.top_newest" name="blog.top_newest">
+                <action method="setTemplate">
+                    <template>magentothem_blog/blog_top_newest.phtml</template>
+                </action>
+            </block>
+            <block type="blog/menu_sidebar" after="blog.top_viewed" name="blog.top_viewed">
+                <action method="setTemplate">
+                    <template>magentothem_blog/blog_top_viewed.phtml</template>
+                </action>
+            </block>
+        </reference>
+        <reference name="content">
+            <block type="blog/post" name="post" template="magentothem_blog/post.phtml">
+                <block type="blog/product_toolbar" name="magentothem_blog_list_toolbar" template="catalog/product/list/toolbar.phtml">
+                    <block type="page/html_pager" name="product_list_toolbar_pager"/>
+		</block>
+            </block>
+	    <block type="cms/block" name="link_main">
+		<action method="setBlockId">
+		    <block_id>link_main</block_id>
+		</action>
+	    </block>
+        </reference>
+        <reference name="footer" >
+            <block type="blog/blog" name="copyright.blog.footer" template="magentothem_blog/copyright.phtml"/>
+        </reference>
+    </blog_post_view>
+    <blog_cat_view>
+        <reference name="head">
+            <action method="addItem">
+                <type>skin_css</type>
+                <name>magentothem_blog/css/style.css</name>
+            </action>
+        </reference>
+        <reference name="left">
+            <block type="blog/lastcomment" before="left.blog.menu" name="blog.socialnetwork">
+                <action method="setTemplate">
+                    <template>magentothem_blog/social_network.phtml</template>
+                </action>
+            </block>
+            <block type="blog/menu_sidebar" name="left.blog.menu"  before="-">
+                <action method="setTemplate" ifconfig="blog/menu/left">
+                    <template>magentothem_blog/menu.phtml</template>
+                </action>
+                <block type="blog/tags" name="blog_tags" />
+            </block>
+            <block type="blog/menu_sidebar" after="bestseller.vert.scroller.left" name="blog.slider">
+                <action method="setTemplate">
+                    <template>magentothem_blog/blog_slide.phtml</template>
+                </action>
+            </block>
+            <block type="blog/lastcomment" after="blog.slider" name="blog.lastcomment">
+                <action method="setTemplate">
+                    <template>magentothem_blog/lastcomment.phtml</template>
+                </action>
+            </block>
+        </reference>
+        <reference name="content">
+            <block type="blog/cat" name="cat" template="magentothem_blog/cat.phtml">
+                 <block type="blog/product_toolbar" name="magentothem_blog_list_toolbar" template="catalog/product/list/toolbar.phtml">
+                    <block type="page/html_pager" name="product_list_toolbar_pager"/>
+		</block>
+            </block>
+        </reference>
+        <reference name="footer" >
+            <block type="blog/blog" name="copyright.blog.footer" template="magentothem_blog/copyright.phtml"/>
+        </reference>
+    </blog_cat_view>
+
+    <blog_rss_index>
+        <reference name="head">
+            <action method="addItem">
+                <type>skin_css</type>
+                <name>magentothem_blog/css/style.css</name>
+            </action>
+        </reference>
+        <reference name="left">
+            <block type="blog/lastcomment" before="left.blog.menu" name="blog.socialnetwork">
+                <action method="setTemplate">
+                    <template>magentothem_blog/social_network.phtml</template>
+                </action>
+            </block>
+            <block type="blog/menu_sidebar" name="left.blog.menu"  before="-">
+                <action method="setTemplate" ifconfig="blog/menu/left">
+                    <template>magentothem_blog/menu.phtml</template>
+                </action>
+                <block type="blog/tags" name="blog_tags" />
+            </block>
+            <block type="blog/menu_sidebar" after="bestseller.vert.scroller.left" name="blog.slider">
+                <action method="setTemplate">
+                    <template>magentothem_blog/blog_slide.phtml</template>
+                </action>
+            </block>
+            <block type="blog/lastcomment" after="blog.slider" name="blog.lastcomment">
+                <action method="setTemplate">
+                    <template>magentothem_blog/lastcomment.phtml</template>
+                </action>
+            </block>
+        </reference>
+        <reference name="footer" >
+            <block type="blog/blog" name="copyright.blog.footer" template="magentothem_blog/copyright.phtml"/>
+        </reference>
+        <block type="blog/rss" output="toHtml" name="rss.blog.new"/>
+    </blog_rss_index>
+</layout>

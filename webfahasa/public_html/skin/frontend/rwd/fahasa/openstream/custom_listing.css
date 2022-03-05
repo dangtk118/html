@@ -1,0 +1,8 @@
+ul.products-grid, ul.products-grid ul{ 
+    list-style: none !important; 
+    padding: 0; 
+}
+.std ol{
+    /* Fix UI numbering pagination on homepage */
+    list-style: none !important;
+}

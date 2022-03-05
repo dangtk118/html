@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <Fahasa_Salecustomfield>
+            <version>0.1.0</version>
+        </Fahasa_Salecustomfield>
+    </modules>
+    <global>
+        <helpers>
+            <Fahasa_Salecustomfield>
+                <class>Fahasa_Salecustomfield_Helper</class>
+            </Fahasa_Salecustomfield>
+        </helpers>
+        <blocks>
+            <Fahasa_Salecustomfield>
+                <class>Fahasa_Salecustomfield_Block</class>
+            </Fahasa_Salecustomfield>            
+        </blocks>        
+        <resources>
+            <fahasa_salecustomfield_setup>
+                <setup>
+                    <module>Fahasa_Salecustomfield</module>
+                    <class>Mage_Sales_Model_Mysql4_Setup</class>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </fahasa_salecustomfield_setup>
+            <fahasa_salecustomfield_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </fahasa_salecustomfield_write>
+            <fahasa_salecustomfield_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </fahasa_salecustomfield_read>
+        </resources>
+    </global>
+    <admin>
+        <routers>
+            <adminhtml>
+                <use>admin</use>
+                <args>
+                    <modules>
+                        <Fahasa_Salecustomfield after="Mage_Adminhtml_Sales">Fahasa_Salecustomfield_Adminhtml</Fahasa_Salecustomfield>
+                    </modules>
+                </args>
+            </adminhtml>    
+        </routers>        
+    </admin>
+</config>

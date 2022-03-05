@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Fahasa_Coupon>
+            <version>0.1</version>
+        </Fahasa_Coupon>
+    </modules>
+    <frontend>
+        <routers>
+            <coupon>
+                <use>standard</use>
+                <args>
+                    <module>Fahasa_Coupon</module>
+                    <frontName>coupon</frontName>
+                </args>
+            </coupon>
+            <checkout><!-- Override code starts-->
+                <args>
+                    <modules>
+                        <Fahasa_Coupon before="Mage_Checkout">Fahasa_Coupon</Fahasa_Coupon>
+                    </modules>
+                </args>
+            </checkout><!-- Override code ends-->
+        </routers>
+    </frontend>
+ 
+    <global>
+        <rewrite>
+            <fahasa_coupon>
+                <from><![CDATA[#^/checkout/cart/#]]></from>
+                <to>/coupon/cart/</to>
+            </fahasa_coupon>
+        </rewrite>
+    </global>
+</config>

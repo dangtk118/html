@@ -1,0 +1,103 @@
+<?php
+$productIds = $this->getData('productIds');
+$products = $this->getTopVotedStaticAction($productIds);
+if (count($products) > 0){
+    $previewProduct = $products[0];
+    $description = $previewProduct['description'];
+    if ($description && strlen($description) > 500)
+    {
+        $description = substr($description, 0, 500);
+    }
+}
+?>
+
+<div>
+    <div id="top-voted">
+        <div id="preview-product" class="col-lg-12 col-sm-12 col-md-12 col-xs-12">
+            <div class="col-lg-4 col-sm-4 col-md-4 col-xs-12 image-container">
+                <a href="" class="product-link">
+                    <img src="<?php echo $previewProduct["image"] ?>" class="image"  />
+                </a>
+            </div>
+            <div class="col-lg-7 col-sm-7 col-md-7 col-xs-12">
+                <a href="" class="product-link">
+                    <div class="col-xs-12 name"><?php echo $previewProduct["name"]; ?></div>
+                </a>
+                <div class="col-md-12 col-lg-12 col-sm-6 col-xs-12" style="padding: 0px;margin-top: 20px;">
+                    <div class="col-lg-6 col-sm-6 col-md-6 col-xs-6" style="">
+                        <div   class="final-price"><?php echo number_format($previewProduct["finalPrice"]) . " đ"; ?></div>
+                        <div   class="price"><?php echo number_format($previewProduct["price"]) . " đ"; ?></div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6 col-md-6 col-xs-6" style="float: right;">
+                        <div  class="discount-percent">-<?php $previewProduct["discountPercent"]; ?>%</div>
+                        <div id="vote-product" style="font-family: Helvetica, Arial, sans-serif;text-align: right; margin-top: 5px;" >
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 description" style="margin-top: 30px; line-height:1.2em;" ><?php echo $description; ?></div>
+            </div>
+        </div>
+    </div>
+    <div id="top-voted-content" class="col-xs-12 " style=" background-color: #ffffff;  display: flex;  flex-direction: row; flex-wrap: wrap; ">
+        <?php foreach ($products as $index => $item) : ?>
+            <div class="product-item2-container" >
+                <a  class="product-item2" id="id-<?php echo $item["productId"]; ?>" onclick="onClickShowProduct(<?php echo $item["productId"]; ?>)">
+                    <img style=""
+                         class="small-image" src="<?php echo $item["image"]; ?>"/>
+                    </img>
+                    <div class="index-number"><?php echo $index + 1; ?></div>
+                </a>
+            </div>
+        <?php endforeach; ?>
+    </div>
+</div>
+<script type="text/javascript">
+    var listProduct = <?php echo json_encode($products); ?>;
+    var previewProduct = {};
+
+    function setPreviewProduct(previewProduct) {
+        if (previewProduct) {
+            var priceText = 0;
+            var finalPrice = 0;
+            if (previewProduct.typeId == "bundle") {
+                priceText = Math.round(previewProduct.minPrice).toLocaleString('en-US');
+                finalPrice = Math.round(previewProduct.maxPrice).toLocaleString('en-US');
+            } else {
+                priceText = Math.round(previewProduct.price).toLocaleString('en-US');
+                finalPrice = Math.round(previewProduct.finalPrice).toLocaleString('en-US');
+            }
+            jQuery("#preview-product .image").attr("src", previewProduct.image);
+            jQuery("#preview-product .name").text(previewProduct.name);
+            jQuery("#preview-product .final-price").text(finalPrice + " đ");
+            jQuery("#preview-product .price").text(priceText + " đ");
+            jQuery("#preview-product .discount-percent").text("-" + previewProduct.discountPercent + "%");
+            let description = previewProduct.description;
+            if (description && description.length > 500) {
+                description = description.substring(0, 500);
+            }
+            jQuery("#preview-product .description").html(description + "...");
+            jQuery("#preview-product .product-link").attr("href", previewProduct.productUrl);
+        }
+    }
+
+    function onClickShowProduct(productId) {
+        jQuery("#top-voted-content .small-image-active").removeClass("small-image-active").addClass("small-image");
+        jQuery("#top-voted-content .index-number-active").removeClass("index-number-active").addClass("index-number");
+        previewProduct = listProduct.find(x => x.productId == productId);
+        setPreviewProduct(previewProduct);
+        let element = jQuery("#id-" + productId + " .small-image");
+        let elementIndex = jQuery("#id-" + productId + " .index-number");
+        elementIndex.removeClass("index-number").addClass("index-number-active");
+        element.removeClass("small-image").addClass("small-image-active");
+    }
+
+
+    jQuery(document).ready(function () {
+        jQuery(".product-item2").hover(function () {
+            var productId = this.id.replace("id-", "");
+            previewProduct = listProduct.find(x => x.productId == productId);
+            setPreviewProduct(previewProduct);
+        }, function () {});
+    });
+
+</script>

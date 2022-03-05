@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <vietnamshipping_adminhtml_province_index>
+        <reference name="content">
+            <block type="vietnamshipping/adminhtml_province" name="province" />
+        </reference>
+    </vietnamshipping_adminhtml_province_index>
+    <vietnamshipping_adminhtml_district_index>
+        <reference name="content">
+            <block type="vietnamshipping/adminhtml_district" name="district" />
+        </reference>
+    </vietnamshipping_adminhtml_district_index>
+    <vietnamshipping_adminhtml_area_index>
+        <reference name="content">
+            <block type="vietnamshipping/adminhtml_area" name="area" />
+        </reference>
+    </vietnamshipping_adminhtml_area_index>
+    <vietnamshipping_adminhtml_area_edit>
+        <reference name="head">
+          <action method="addJs"><script>magebuzz/vietnamshipping/adminhtml/area.js</script></action>
+        </reference>
+    </vietnamshipping_adminhtml_area_edit>
+    
+    <vietnamshipping_adminhtml_rule_index>
+        <reference name="content">
+            <block type="vietnamshipping/adminhtml_rule" name="rule" />
+        </reference>
+    </vietnamshipping_adminhtml_rule_index>
+    <vietnamshipping_adminhtml_rule_edit>
+        <reference name="head">
+          <action method="addJs"><script>mage/adminhtml/rules.js</script></action>
+        </reference>
+    </vietnamshipping_adminhtml_rule_edit>
+    <vietnamshipping_adminhtml_shippingweight_index>
+        <reference name="content">
+            <block type="vietnamshipping/adminhtml_shippingweight" name="shippingweight" />
+        </reference>
+    </vietnamshipping_adminhtml_shippingweight_index>
+    <adminhtml_sales_order_create_index>
+        <reference name="head">
+    			<action method="addJs"><script>magebuzz/vietnamshipping/cityupdater.js</script></action>
+    		</reference>
+        <reference name="shipping_address">
+        	<action method='setTemplate'><template>vietnamshipping/sales/order/create/form/address.phtml</template></action>            
+        </reference>
+        <reference name="billing_address">
+        	<action method='setTemplate'><template>vietnamshipping/sales/order/create/form/address.phtml</template></action>            
+        </reference>
+    </adminhtml_sales_order_create_index>
+    <vietnamshipping_adminhtml_area_districtlist>
+			<block type="core/text_list" name="root" output="toHtml">
+				<block type="vietnamshipping/adminhtml_area_edit_tab_district" name="area.edit.tab.district"/>
+				<block type="adminhtml/widget_grid_serializer" name="related_grid_serializer">
+						<action method="initSerializerBlock">
+							<grid_block_name>area.edit.tab.district</grid_block_name>
+							<data_callback>getSelectedDistricts</data_callback>
+							<hidden_input_name>selected_districts</hidden_input_name>
+							<reload_param_name>odistrict</reload_param_name>
+						</action>
+						<action method="addColumnInputName">
+							<input_name>position</input_name>
+						</action>
+				</block>
+			</block>
+		</vietnamshipping_adminhtml_area_districtlist>
+		
+		<vietnamshipping_adminhtml_area_districtlistgrid>
+			<block type="core/text_list" name="root" output="toHtml">
+				<block type="vietnamshipping/adminhtml_area_edit_tab_district" name="area.edit.tab.district"/>
+			</block>
+		</vietnamshipping_adminhtml_area_districtlistgrid>
+		
+		<vietnamshipping_adminhtml_area_provincelist>
+			<block type="core/text_list" name="root" output="toHtml">
+				<block type="vietnamshipping/adminhtml_area_edit_tab_province" name="area.edit.tab.province"/>
+				<block type="adminhtml/widget_grid_serializer" name="related_grid_serializer">
+						<action method="initSerializerBlock">
+							<grid_block_name>area.edit.tab.province</grid_block_name>
+							<data_callback>getSelectedProvinces</data_callback>
+							<hidden_input_name>selected_provinces</hidden_input_name>
+							<reload_param_name>oprovince</reload_param_name>
+						</action>
+						<action method="addColumnInputName">
+							<input_name>position</input_name>
+						</action>
+				</block>
+			</block>
+		</vietnamshipping_adminhtml_area_provincelist>
+		
+		<vietnamshipping_adminhtml_area_provincelistgrid>
+			<block type="core/text_list" name="root" output="toHtml">
+				<block type="vietnamshipping/adminhtml_area_edit_tab_province" name="area.edit.tab.province"/>
+			</block>
+		</vietnamshipping_adminhtml_area_provincelistgrid>
+</layout>

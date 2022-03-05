@@ -1,0 +1,62 @@
+<!--@subject Hủy nhận tin điện tử thành công @-->
+<!--@vars
+"store url=\"\"":"Store Url",
+"var logo_url":"Email Logo Image Url",
+"htmlescape var=$unsubscriber.name":"Unsubscriber Name",
+"store url=\"customer/account/\"":"Customer Account Url",
+"var unsubscriber.email":"Unsubscriber Email",
+@-->
+
+<!--@styles
+body,td { color:#2f2f2f; font:11px/1.35em Verdana, Arial, Helvetica, sans-serif; }
+@-->
+
+<body style="background:#F6F6F6; font-family:Verdana, Arial, Helvetica, sans-serif; font-size:12px; margin:0; padding:0;">
+<div style="background:#F6F6F6; font-family:Verdana, Arial, Helvetica, sans-serif; font-size:12px; margin:0; padding:0;">
+<table cellspacing="0" cellpadding="0" border="0" height="100%" width="100%">
+        <tr>
+            <td align="center" valign="top" style="padding:20px 0 20px 0">
+                <!-- [ header starts here] -->
+                <table bgcolor="FFFFFF" cellspacing="0" cellpadding="10" border="0" width="650" style="border:1px solid #F45DAB;">
+                    <tr>
+                        <td valign="top">
+                            <a href="{{store url=""}}"><img src="{{var logo_url}}" alt="{{var logo_alt}}" style="margin-bottom:10px;" border="0"/></a></td>
+                    </tr>
+                <!-- [ middle starts here] -->
+                    <tr>
+                        <td valign="top">
+                            <p style="font-size:12px; line-height:22px; margin:0 0 11px 0;">
+                            	<strong>Xin chào {{var subscriber.email}},</strong>
+                            </p>
+                            <p style="font-size:12px; line-height:16px; margin:0 0 16px 0;">
+                            	Bạn đã hủy nhận tin điện tử thành công.<br>
+                            	Cảm ơn bạn đã quan tâm đến sản phẩm và dịch vụ của <strong>FahasaOnline</strong>!
+                            </p>
+                            <p style="font-size:12px; line-height:16px; margin:0;">
+                            	Trân trọng!
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td bgcolor="F45DAB" align="center" style="background:#F45DAB; text-align:center;">
+                        	<center>
+                        		<p style="font-size:12px; margin:0;">
+                        			<strong>{{config path='trans_email/ident_sales/name'}}</strong><br>
+                        			Điện thoại hỗ trợ: {{config path='general/store_information/phone'}} &nbsp; - &nbsp; Email: <a href="mailto:{{config path='trans_email/ident_sales/email'}}">{{config path='trans_email/ident_sales/email'}}</a>
+                        		</p>
+                        	</center>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td align="center" style="text-align:center; padding-bottom: 20px">
+            	<center>
+            		<p style="font-size:12px; margin:0;">Chúng tôi thành thật xin lỗi nếu email này làm phiền bạn!</p>
+        		</center>
+        	</td>
+        </tr>
+    </table>
+</div>
+</body>

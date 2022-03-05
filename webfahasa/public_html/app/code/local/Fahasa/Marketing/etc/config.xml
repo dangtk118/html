@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <Fahasa_Marketing>
+            <version>0.1.0</version>
+        </Fahasa_Marketing>
+    </modules>
+    <frontend>
+        <layout>
+            <updates>
+                <fahasamarketing>
+                    <file>fahasamarketing.xml</file>
+                </fahasamarketing>
+            </updates>
+        </layout>
+    </frontend>
+    <global>
+        <blocks>
+            <fhsmarketing>
+                <class>Fahasa_Marketing_Block</class>
+            </fhsmarketing>
+        </blocks>
+        <helpers>
+            <fhsmarketing>
+                <class>Fahasa_Marketing_Helper</class>
+            </fhsmarketing>
+        </helpers>
+    </global>
+</config>

@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<config>
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <fahasa_sales translate="title" module="sales">
+                                        <title>Order config</title>
+                                    </fahasa_sales>
+                                </children>
+                            </config>
+                        </children>
+                    </system>                    
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</config>

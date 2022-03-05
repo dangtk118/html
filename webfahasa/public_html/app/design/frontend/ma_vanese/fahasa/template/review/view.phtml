@@ -1,0 +1,195 @@
+<?php if ($this->getProductData()->getId()): ?>
+    <div class="product-review">
+        <div class="page-title">
+            <h1><?php echo $this->__('Review Details') ?></h1>
+        </div>
+        <?php $_review = $this->getReviewData(); ?>
+        <div class="product-details">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding: 0px;">
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 review-detail-img">
+                    <a href="<?php echo $this->getProductData()->getProductUrl() ?>">
+                        <img src="<?php echo $this->helper('catalog/image')->init($this->getProductData(), 'image'); ?>"  alt="<?php echo $this->escapeHtml($this->getProductData()->getName()) ?>" />
+                    </a>
+                </div>
+                <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                    <h2 class="product-name">
+                        <a href="<?php echo $this->getProductData()->getProductUrl() ?>"><?php echo $this->getProductData()->getName(); ?></a>
+                    </h2>
+                </div>
+            </div>
+            
+            <div class="clearer"></div>
+            <?php if ($_review->getRating() && $this->getRating()->getSize()): ?>
+                <h3><?php echo $this->__('Product Rating:') ?></h3>
+                <table class="ratings-table">
+                    <?php foreach ($this->getRating() as $_rating): ?>
+                        <?php if ($_rating->getPercent()): ?>
+                            <tr>
+                                <th><?php echo $this->__($this->escapeHtml($_rating->getRatingCode())) ?></th>
+                                <td>
+                                    <div class="rating-box">
+                                        <div class="rating" style="width:<?php echo ceil($_rating->getPercent()) ?>%;"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </table>
+            <?php endif; ?>
+            <dl>
+                <dt>
+                    <div class="fhs-review-by-block">
+                        <?php echo $this->__('Review by <span class="fhs-review-by">%s</span>', $this->htmlEscape($this->getReviewData()->getNickname())) ?>,
+                        <small class="date"><?php echo $this->__('Posted on %s', $this->formatDate($this->getReviewData()->getCreatedAt()), 'long') ?></small>
+                    </div>
+                    <h4><?php echo $_review->getTitle(); ?></h4>
+                </dt>
+                <dd>
+                    <?php echo nl2br($this->escapeHtml($this->getReviewData()->getDetail())) ?>
+                </dd>
+            </dl>
+        </div>
+        <div>
+            <?php
+            $_votes = Mage::getModel('rating/rating_option_vote')
+                    ->getResourceCollection()
+                    ->setReviewFilter($_review->getId())
+                    ->setStoreFilter(Mage::app()->getStore()->getId())
+                    ->load();
+            ?>
+            <?php if (count($_votes)): ?>
+                <table class="ratings-table">
+                    <col />
+                    <col />
+                    <tbody>
+                        <?php foreach ($_votes->getItems() as $_vote): ?>
+                            <tr>                                
+                                <td>
+                                    <div class="rating-box">
+                                        <div class="rating" style="width:<?php echo $_vote->getPercent() ?>%;"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <?php endif; ?>
+            <span id="review-fhs-<?php echo $_review->getId(); ?>" class="fhs-review-like-abuse"> &nbsp;
+                <span class="fhs_review-count-like">
+                    <?php $numLike = Mage::getModel('reviewsaction/reviewsaction')->getCountLike($_review->getId()); ?>
+                    <?php echo ($numLike > 0) ? $numLike : "0"; ?> <?php echo $this->__('person liked this comment.') ?>
+                </span>
+                <span>
+                    <?php
+                    $reviewsreport = Mage::getModel('reviewsaction/reviewsaction')
+                            ->getCustomerLiked(
+                                    $_review->getId(), Mage::getSingleton('customer/session')
+                                    ->getCustomer()
+                                    ->getEmail()
+                            )
+                            ->getData();
+                    // customer like or abuse this review
+                    $message = null;
+                    if (count($reviewsreport) > 0) {
+                        if (count($reviewsreport) == 1) {
+                            foreach ($reviewsreport as $value) {
+                                if ($value['type'] === 'like') {
+                                    $message = 'like';
+                                }
+                                if ($value['type'] === 'abuse') {
+                                    $message = 'abuse';
+                                }
+                            }
+                        } else {
+                            $message = 'both';
+                        }
+                        if ($message == 'abuse') {
+                            ?>
+                            <a id="reviewhelpful-<?php echo $_review->getId(); ?>" onclick="reviewaction('<?php echo $_review->getId(); ?>', 'like')" 
+                               style="cursor: pointer">
+                                   <?php echo $this->__('like this'); ?>
+                            </a>
+                            <?php
+                        }
+                        if ($message == 'like') {
+                            ?>
+                            <a id="reviewabuse-<?php echo $_review->getId(); ?>" onclick="reviewaction('<?php echo $_review->getId(); ?>', 'abuse')"
+                               style="cursor: pointer">
+                                   <?php echo $this->__('abuse'); ?>
+                            </a>
+                            <?php
+                        }
+                    } else {
+                        ?>
+                        <a id="reviewhelpful-<?php echo $_review->getId(); ?>" onclick="reviewaction('<?php echo $_review->getId(); ?>', 'like')"
+                           style="cursor: pointer">
+                               <?php echo $this->__('like this'); ?>
+                        </a> 
+                        <?php echo $this->__('or'); ?> 
+                        <a id="reviewabuse-<?php echo $_review->getId(); ?>" onclick="reviewaction('<?php echo $_review->getId(); ?>', 'abuse')"
+                           style="cursor: pointer">
+                               <?php echo $this->__('abuse'); ?>
+                        </a>
+                        <?php
+                    }
+                    ?>
+                </span>
+                <div class="fhs_review-message">
+                    <?php
+                    switch ($message) {
+                        case 'like':
+                            ?>
+                            <div><span class="fhs_review-like customer_liked"><i class="fa fa-check" aria-hidden="true"></i> <?php echo $this->__('Thank you for liking this comment.') ?></span></div>
+                            <?php
+                            break;
+                        case 'abuse':
+                            ?>
+                            <div><span class="fhs_review-like customer_abuse"><i class="fa fa-check" aria-hidden="true"></i> <?php echo $this->__('Thank you for your feedback.') ?></span></div>
+                            <?php
+                            break;
+                        case 'both':
+                            ?>
+                            <div><span class="fhs_review-like customer_liked"><i class="fa fa-check" aria-hidden="true"></i> <?php echo $this->__('Thank you for liking this comment.') ?></span></div>
+                            <div><span class="fhs_review-like customer_abuse"><i class="fa fa-check" aria-hidden="true"></i> <?php echo $this->__('Thank you for your feedback.') ?></span></div>
+                            <?php
+                            break;
+                        default :
+                            break;
+                    }
+                    ?>
+                </div>
+            </span>
+
+        </div>
+        <div class="buttons-set">
+            <p class="back-link"><a href="<?php echo $this->getProductData()->getProductUrl() ?>"><small>&laquo; </small><?php echo $this->__('Back to Product Reviews') ?></a></p>
+        </div>
+    </div>
+<?php endif; ?>
+<script type="text/javascript">
+    function reviewaction(review_id, type) {
+        var parameters = {
+            "review_id": review_id,
+            "type": type
+        };
+        $jq.ajax({
+            url: "<?php echo $this->getUrl('reviewsaction/index/insert') ?>",
+            type: 'post',
+            data: parameters,
+            beforeSend: function () {
+                showLoadingAnimation();
+            },
+            success: function (data) {
+                if(data.length <= 0){
+                    $jq('.youama-ajaxlogin-cover').fadeIn();
+                    $jq('.youama-login-window').slideDown(1000);
+                    $jq('.fhs-l-email').focus();
+                }else{
+                    document.location.reload();
+                }
+                hideLoadingAnimation();
+                return;
+            }
+        });
+    }
+</script>

@@ -1,0 +1,25 @@
+<?php
+$enabled_top_viewed = Mage::getStoreConfig('blog/menu_left_setting/enabled_top_viewed');
+$number_item_top_viewed = Mage::getStoreConfig('blog/menu_left_setting/number_item_top_viewed');
+if($enabled_top_viewed){
+?>
+    <?php if ($posts = Mage::helper('blog')->getTopViewed(0,$number_item_top_viewed)): $i = 1; ?>
+        <div class="menu-recent">
+		<div style="border-bottom: 1px solid #f0f0f0; padding: 10px 20px 10px 20px; color: #c00; margin-right: -15px;">
+		    <center><h2 style="font-size: 18px; text-transform: uppercase; font-weight: bold; margin-bottom: 20px"><?php echo $this->__('Top Viewed Post'); ?></h2></center>
+		</div>
+		<?php foreach ($posts as $post): ?>
+		    <div class="menu-recent-item">
+			<div class="blog-image" style="text-align: center; macol-xs-12rgin-bottom: 10px; height: 180px; width: auto;">
+			    <a href="<?php echo Mage::getBaseUrl().'blog/'.$post['identifier']; ?>"><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA). $post['thumbnailimage']; ?>" style=" height: 180px; width: auto;"></a>
+			</div>
+			<div class="blog-title">
+			    <a href="<?php echo Mage::getBaseUrl().'blog/'.$post['identifier']; ?>"><?php echo $post['title']; ?></a>
+			</div>
+		    </div>
+        <?php endforeach; ?>
+        </div>
+    <?php
+    endif;
+}
+?>

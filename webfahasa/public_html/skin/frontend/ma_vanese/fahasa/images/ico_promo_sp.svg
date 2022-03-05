@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="19" height="19" viewBox="0 0 19 19">
+  <defs>
+    <linearGradient id="linear-gradient" x1="0.164" y1="0.855" x2="0.855" y2="0.158" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#2f80ed"/>
+      <stop offset="1" stop-color="#56ccf2"/>
+    </linearGradient>
+  </defs>
+  <g id="ico_dacquyen_24x24" transform="translate(-9144 1360)">
+    <circle id="Ellipse_32" data-name="Ellipse 32" cx="9.5" cy="9.5" r="9.5" transform="translate(9144 -1360)" fill="url(#linear-gradient)"/>
+    <g id="Group_495" data-name="Group 495" transform="translate(9147.96 -1356.041)">
+      <path id="Path_258" data-name="Path 258" d="M188.764,52.616l1.336,2.835a.488.488,0,0,0,.365.278l2.988.454a.514.514,0,0,1,.269.867l-2.162,2.206a.523.523,0,0,0-.14.45l.51,3.115a.49.49,0,0,1-.7.536l-2.673-1.471a.466.466,0,0,0-.452,0l-2.673,1.471a.49.49,0,0,1-.7-.536l.51-3.115a.523.523,0,0,0-.14-.45l-2.162-2.206a.514.514,0,0,1,.269-.867l2.988-.454a.489.489,0,0,0,.365-.278l1.336-2.835A.476.476,0,0,1,188.764,52.616Z" transform="translate(-182.787 -52.333)" fill="#fff"/>
+    </g>
+  </g>
+</svg>

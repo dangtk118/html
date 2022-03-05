@@ -1,0 +1,72 @@
+<?php
+$enabled_slide = Mage::getStoreConfig('blog/slide/enabled');
+$des = Mage::getStoreConfig('blog/slide/des');
+$width_slide = Mage::getStoreConfig('blog/slide/width');
+$numbercolumn_slide = Mage::getStoreConfig('blog/slide/numbercolumn');
+$numberrow = Mage::getStoreConfig('blog/slide/numberrow');
+$speed_slide = Mage::getStoreConfig('blog/slide/speed');
+$auto_slide = Mage::getStoreConfig('blog/slide/auto');
+$show_image = Mage::getStoreConfig('blog/slide/showimage');
+$image_width = Mage::getStoreConfig('blog/slide/widthimage');
+$image_height = Mage::getStoreConfig('blog/slide/heightimage');
+$show_title = Mage::getStoreConfig('blog/slide/showtitle');
+$show_author = Mage::getStoreConfig('blog/slide/showauthor');
+$show_time = Mage::getStoreConfig('blog/slide/showtime');
+$show_shortcontent = Mage::getStoreConfig('blog/slide/showshortcontent');
+$show_readmore = Mage::getStoreConfig('blog/slide/showreadmore');
+if($enabled_slide){
+?>
+<script type="text/javascript">
+	$jq(document).ready(function(){
+		$jq('.menu-recent .bxslider').bxSlider({
+			minSlides: <?php if($numbercolumn_slide) echo $numbercolumn_slide; else echo '1'; ?>,
+			maxSlides: <?php if($numbercolumn_slide) echo $numbercolumn_slide; else echo '1'; ?>,
+			slideWidth: <?php if($width_slide) echo $width_slide; else  echo '900'; ?>,
+			slideMargin: 30,
+			auto: <?php if($auto_slide) echo 'true'; else echo 'false'; ?>,
+			autoControls: false,
+			pager: false,
+			mode: 'horizontal',
+			speed: <?php if($speed_slide) echo $speed_slide; else echo '100'; ?>,
+			prevText: '<',
+			nextText: '>',
+			pause: 4000,
+			easing: 'jswing',
+			autoHover: true,
+                        touchEnabled : (navigator.maxTouchPoints > 0)
+		});
+	});
+</script>
+    <?php if ($posts = $this->getLeftPostSlider()): $i = 1; ?>
+        <div class="menu-recent hidden-xs">
+            <div style="border-bottom: 1px solid #f0f0f0; padding: 10px 20px 10px 20px; color: #c00; margin-right: -15px;">
+                <center><h2 style="font-size: 18px; text-transform: uppercase; font-weight: bold; margin-bottom: 20px"><?php echo $this->__('Latest Post'); ?></h2></center>
+            </div>
+            <ul class="bxslider" style="padding-bottom: 20px">
+                <?php foreach ($posts as $post): ?>
+                    <li>
+                        <?php if ($show_image) echo '<img  width="' . $image_width . 'px" height="' . $image_height . 'px" alt=""  src="' . Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA). $post['imageUrl'] . '"/>'; ?>
+                        <div class="blog-content" style="padding: 10px 0px 10px 0px;">
+                            <?php if ($show_title): ?> <a href="<?php echo Mage::getBaseUrl().'blog/'.$post['url']; ?>" ><?php echo '<span class="blog-title" style="margin-top:20px;">' . $post['blogTitle'] . '</span>' ?></a> <?php endif; ?>
+                            <?php $s = array_key_exists('createdTime', $post) ? $post['createdTime'] : null;
+                            $date = strtotime($s);
+                            ?>
+                            <p class="author"><?php
+                                if ($show_author)
+                                    echo 'By ' . $post['user'];
+                                if ($show_author && $show_time)
+                                    echo ' - ';
+                                if ($show_time)
+                                    echo '<span class="date-time">' . date("d M Y", $date) . ' ( ' . $this->getcountcomment($post->getPostId()) . '</span>';
+                                ?></p>
+                        <?php if ($show_shortcontent) echo '<p>' . strip_tags($this->getContentBlogSidebar($post['shortContent'], 150)) . '</p>'; ?>
+                        <?php if ($show_readmore): ?> <a class="readmore" href="<?php echo Mage::getBaseUrl().'blog/'.$post['url']; ?>"><?php echo $this->__('Read More'); ?></a> <?php endif; ?>
+                        </div>
+                    </li>
+        <?php endforeach; ?>
+            </ul>
+        </div>
+    <?php
+    endif;
+}
+?>

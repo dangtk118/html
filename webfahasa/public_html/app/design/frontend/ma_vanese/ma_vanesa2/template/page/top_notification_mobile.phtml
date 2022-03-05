@@ -1,0 +1,239 @@
+
+<?php if(Mage::helper('customer')->isLoggedIn()): ?>
+<?php
+    $BASE_SKIN_URL = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true);
+    $MEDIA_URL = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);
+    $SKIN_URL = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true);
+?>
+<style>
+    .fhs-header_mobile .top-notification-button {
+        margin-top : 0px;
+        margin-left: 5px!important;
+        margin-right: 0px!important;
+        margin-bottom : 0px;
+    }
+    .fhs-header_mobile .top-notification-menu{
+        position: absolute;
+        z-index: 999999;
+        background-color: #fff;
+        border: 1px solid #e4e4e4;
+        -webkit-box-shadow: 0 12px 12px 0 rgba(0,0,0,0.3);
+        box-shadow: 0 12px 12px 0 rgba(0,0,0,0.3);
+        display: none;
+        margin-top: 10px;
+        right: 0px;
+        width : auto;
+    }
+    .fhs-header_mobile .top-notification-menu .top-notification-menu-arrow{
+        border: 9px solid #98989800;
+        border-bottom: 9px solid #e4e4e4;
+        margin-left: calc(100% - 132px);
+        width: 0;
+        position: absolute;
+        margin-top: -18px;
+        top: 0;
+    }
+    .fhs-header_mobile .top-notification-list{
+        max-height : 400px;
+        overflow: scroll;
+    }
+    .fhs-header_mobile .notification-item-msg-cutoff{
+       max-height : none; 
+    }
+    @media (max-width: 1279px) and (min-width: 1024px){
+        .cms-icon-menu-item-name{
+            padding : 0px;
+            margin-top: 4px;
+            margin-bottom: 4px;
+        }
+    }
+    @media (min-width: 768px) and (max-width: 991px) {
+        .fhs-header_mobile .top-notification-button .top-notification-button-label{
+            display : none;
+        }
+       .fhs-header_mobile #icon-nofi {
+            background: url(<?php echo $SKIN_URL . "frontend/base/default/images/ico_notif.svg"; ?>) no-repeat center center;
+            
+        }
+    }
+    @media (max-width: 992px) {
+        .fhs-header_mobile .top-notification-button-unseen{
+            background: #2ED62E;
+            -webkit-border-radius: 10px;
+            -moz-border-radius: 10px;
+            border-radius: 10px;
+            vertical-align: top;
+            position: absolute;
+            top: -2px;
+            left: 8px;
+            width: 25px;
+            color : white;
+        }
+    }
+</style>
+
+<div class="top-notification-button">
+    <a style="cursor:pointer;display:flex;flex-direction: column;position: relative;">
+        <div style="text-align:center;">
+            <div id="icon-nofi"></div>
+        </div>
+        <div style="text-align:center;">
+            <div>
+                <div class="top-notification-button-unseen"></div>
+            </div>
+        </div>
+    </a>
+    <div style="clear: both;"></div>
+<div class="top-notification-menu">
+    <div class="top-notification-loading">
+        <img width="50px" src="<?php echo $BASE_SKIN_URL . "frontend/ma_vanese/fahasa/images/ring_loader.gif"; ?>"/>
+    </div>
+    <div class="top-notification-list">
+    </div>
+    <div class="top-notification-no-messages">Không có thông báo.</div>
+    <div class="top-notification-view-all">
+        <a href="/customer/notification">Xem Tất Cả Thông Báo</a>
+    </div>
+</div>
+</div>
+
+<script type="text/javascript">
+    
+    const CUSTOMER_NOTIFICATION_URL = "<?php echo Mage::getBaseUrl() . "customer/notification"; ?>" ;
+    const TOP_NOTIFICATION_URL = "/node_api/user/top_notifications";
+    
+    const NOTIFICATION_URL = "<?php echo $BASE_SKIN_URL . "frontend/ma_vanese/fahasa/images/customer/"; ?>";
+    
+    const NOTIFICATION_ICONS = {
+        'order': 'notification_order.png',
+        'event': 'notification_event.png',
+        'coupon': 'notification_coupon.png',
+        'action': 'notification_action.png'
+    }
+    
+    $top_notification_menu = $jq(".top-notification-menu");
+    $top_notification_loading = $jq(".top-notification-menu .top-notification-loading");
+    $top_notification_view_all = $jq(".top-notification-menu .top-notification-view-all");
+    $top_notification_no_msgs = $jq(".top-notification-menu .top-notification-no-messages");
+    $top_notification_list = $jq(".top-notification-menu .top-notification-list");
+    $top_notification_list.empty();
+    
+    $jq(".fhs-header_mobile .top-notification-button").click(function () {
+	if(!$top_notification_menu.is(":visible")){
+            $top_notification_menu.show();
+        }else{
+            $top_notification_menu.hide();
+        }
+    });
+    
+    $jq(window).click(function(e) {
+	$target = $jq(e.target);
+	if($target.parents('.noti-top').length == 0 && $target.parents('.top-notification-button').length == 0){
+	    $top_notification_menu.hide();
+	}
+    });
+    
+    $jq('.fhs-header_desktop .noti-top').hover(
+	function(){
+            $top_notification_menu.show();
+	},
+	function(){
+            $top_notification_menu.hide();
+	}
+    );
+    
+    function loadNoticationTop(){
+	$jq.ajax({
+	    url: TOP_NOTIFICATION_URL,
+	    method: 'post',
+	    data: {
+		session_id: SESSION_ID,
+	    },
+	    success: function (result) {
+		$top_notification_loading.hide();
+		// ket qua result tra ve true nhung data null 
+		if (!result.success || result.data.length <= 0) {
+		    $top_notification_no_msgs.show();
+		    return;
+		}
+
+		$unseen_number = $jq(".top-notification-button-unseen");
+
+		if(result['unseen_cnt'] > 0){
+		    $unseen_number.text(result['unseen_cnt']);
+		    $unseen_number.show();
+		}
+		$top_notification_list.empty();
+		for(let i=0; i < result['data'].length; i ++){
+		    $msg = addTopNotification(result['data'][i]);
+		    $top_notification_list.append($msg);
+		}
+		
+		$top_notification_list.show();
+	    }
+	});
+    }
+    
+    function addTopNotification(item){
+        
+        let item_icon_html = "";
+        if(item['page_type']){
+            item_icon_html = "<div class='top-notification-item-icon'><img src='" + NOTIFICATION_URL + NOTIFICATION_ICONS[item['page_type']] + "'></div>";
+        }
+        
+        let $item_html =  $jq("<div class='top-notification-item'><div class='top-notification-item-header'>"
+                    + item_icon_html
+                    + "<div class='top-notification-item-title'>" + item['title'] 
+                    + "</div><div style='font-style: italic;font-size: 11px;'>" + item['created_at'] + "</div>"
+                    + "<div style='clear:both'></div>"
+                    + "</div><div><div class='top-notification-item-text notification-item-msg-cutoff'>" + item['content'] + "</div>"
+                    + "<div style='clear:both;'></div></div></div>");
+        
+        if(item['seen_status'] == "0"){
+            $item_html.addClass('notification-item-unseen');
+        }
+        
+        $item_html.attr('data-id', item['id']);
+        $item_html.attr('data-url', item['url']);
+        
+        $item_html.click(function(){
+            let _id = $jq(this).attr('data-id');
+	    if($jq.isNumeric(_id)){
+		setSeenNoti($jq(this), _id);
+	    }
+	    
+            let _url = $jq(this).attr('data-url');
+            if(_url){
+                window.location.href = _url;
+            }else{
+                window.location.href = CUSTOMER_NOTIFICATION_URL;
+            }
+        });
+        
+        return $item_html;
+    }
+    
+    function setSeenNoti($item, id){
+        $jq.ajax({
+            url: "/customer/notification/clearunseen",
+            method: 'post',
+            data: {
+                type: 'seen',
+                msg_id: id,
+            },
+            success: function (data) {
+                $item.removeClass('notification-item-unseen');
+		let unseen = $unseen_number.text();
+		if(unseen > 0){
+		    unseen = unseen -1;
+		    $unseen_number.text(unseen);
+		}
+		if(unseen <= 0 ){
+		    $unseen_number.hide();
+		}
+            }
+        });
+    }
+    loadNoticationTop();
+</script>
+<?php endif; ?>

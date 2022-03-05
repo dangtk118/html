@@ -1,0 +1,31 @@
+<?xml version="1.0"?>   
+<layout version="0.1.0">   
+    <tryout_history_index> <!-- module here matches node directly beneath <routers> in config.xml -->
+        <update handle="customer_account"/> <!-- include existing customer account layout -->
+        <reference name="my.account.wrapper"> <!-- target parent block -->
+            <block type="core/template" name="redeem" template="redeem/index.phtml"/>
+            <block type="core/template" name="tryout_history_index" template="tryout/history.phtml"/>
+<!--        <block type="customer/account_dashboard" name="customer.account.link.back" template="customer/account/link/back.phtml" />-->-- add a back link -->
+        </reference>
+    </tryout_history_index>    
+    <tryout_voucher_index> 
+        <update handle="customer_account"/>
+        <reference name="my.account.wrapper"> 
+            <block type="core/template" name="tryout_voucher_index" template="tryout/voucher.phtml"/>
+        </reference>
+    </tryout_voucher_index>
+    <tryout_refer_index>
+        <update handle="customer_account"/>
+        <reference name="my.account.wrapper">
+            <block type="core/template" name="tryout_refer_index" template="tryout/refer.phtml"/>
+            <block type="customer/account_dashboard" name="customer.account.link.back" template="customer/account/link/back.phtml" />
+        </reference>
+    </tryout_refer_index>
+    <tryout_seriesbook_index> 
+        <update handle="customer_account"/>
+        <reference name="my.account.wrapper"> 
+            <block type="core/template" name="tryout_seriesbook_index" template="tryout/seriesbook.phtml"/>
+        </reference>
+    </tryout_seriesbook_index>
+</layout>   
+	

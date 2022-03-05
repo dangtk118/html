@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<config>
+    <menu>
+        <codfee module="codfee">
+            <title>Vietnam COD</title>
+            <sort_order>71</sort_order>
+<!--            <depends>
+                <config>codfee/general/enable_module</config>
+            </depends>               -->
+            <children>
+                <location module="codfee">
+                    <title>Location</title>
+                    <children>
+                        <province>
+                            <title>Manage Province</title>
+                            <action>codfee/adminhtml_province</action>
+                        </province>
+                        <district>
+                            <title>Manage District</title>
+                            <action>codfee/adminhtml_district</action>
+                        </district>
+                        <area>
+                            <title>Manage Area</title>
+                            <action>codfee/adminhtml_area</action>
+                        </area>
+                    </children>
+                    <sort_order>10</sort_order>
+                </location>
+                <shipping_rule module="codfee">
+                    <title>Shipping Rules</title>
+                    <sort_order>20</sort_order>
+                    <action>codfee/adminhtml_rule</action>
+                </shipping_rule>
+                <setting module="codfee">
+                    <title>Setting</title>
+                    <sort_order>40</sort_order>
+                    <action>adminhtml/system_config/edit/section/codfee</action>
+                </setting>
+            </children>
+        </codfee>
+    </menu>	
+    <acl>
+        <resources>
+            <all>
+                <title>Allow Everything</title>
+            </all>
+            <admin>
+                <children>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <codfee translate="title">
+                                        <title>Vietnamshipping Permission Setting</title>
+                                        <sort_order>50</sort_order>
+                                    </codfee>								
+                                </children>
+                            </config>
+                        </children>
+                    </system>
+                    <codfee>
+                        <title>Vietnamshipping Method</title>
+                        <sort_order>50</sort_order>
+                        <children>
+                            <location module="codfee">
+                                <title>Location</title>
+                                <sort_order>10</sort_order>
+                                <children>
+                                    <province>
+                                        <title>Manage Province</title>
+                                        <action>codfee/adminhtml_codfee</action>
+                                    </province>
+                                    <district>
+                                        <title>Manage District</title>
+                                        <action>codfee/adminhtml_district</action>
+                                    </district>
+                                    <area>
+                                        <title>Manage Area</title>
+                                        <action>codfee/adminhtml_area</action>
+                                    </area>
+                                </children>
+                            </location>
+                            <shipping_rule module="codfee">
+                                <title>Shipping Rules</title>
+                                <sort_order>20</sort_order>
+                                <action>codfee/adminhtml_rule</action>
+                            </shipping_rule>                            
+                            <setting module="codfee">
+                                <title>Setting</title>
+                                <sort_order>40</sort_order>
+                                <action>adminhtml/system_config/edit/section/codfee</action>
+                            </setting>
+                        </children>
+                    </codfee>
+                </children>
+            </admin>
+        </resources>
+    </acl>	
+</config>

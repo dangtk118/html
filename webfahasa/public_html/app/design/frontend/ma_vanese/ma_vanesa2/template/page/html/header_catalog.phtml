@@ -1,0 +1,774 @@
+<?php
+/**
+ * Magento
+ <?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+/**
+ * @var Mage_Page_Block_Html_Header $this
+ */
+?>
+<?php
+$mobile = Mage::helper('fhsmobiledetect')->isMobile();
+$cache_helper = Mage::helper('fahasa_catalog/cache');
+
+//$this->getChildHtml('topLinks');
+$SKIN_URL = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN);
+$queryfier = Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix');
+
+$noti_html = $this->getChildHtml('top_notification');
+$noti_mobile_html = $this->getChildHtml('top_notification_mobile');
+
+$product_helper = Mage::helper('fahasa_catalog/product');
+$catalogSearchHelper =  Mage::helper('catalogsearch');
+
+$params = $this->getRequest()->getParams();
+$limit = $product_helper->getLimit();
+$order = $product_helper->getOrder();
+if(!empty($params['limit'])){
+    $limit = $params['limit'];
+}
+if(!empty($params['order'])){
+    $order = $params['order'];
+}
+
+// data cua sort 
+$order_by_list = [
+    "Weekly BestSeller"=>"num_orders",
+    "Monthly BestSeller"=>"num_orders_month",
+    "Yearly BestSeller"=>"num_orders_year",
+    "Weekly Trending"=>"product_view",
+    "Monthly Trending"=>"product_view_month",
+    "Yearly Trending"=>"product_view_year",
+    "Discount"=>"discount_percent",
+    "Sale Price"=>"min_price",
+    "Created At"=>"created_at",
+    ];
+$limit_list = ["12","24","48"];
+
+$ACCOUNT_SCRIPT = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS, true)."lib/account.js?q=".$queryfier;
+
+$top_menu_html = $this->getTopMenu();
+$vmegamenu_html = $cache_helper->getBlockId('vmegamenu');
+$top_banner_html = $cache_helper->getBlockId('header-top-banner');
+
+if(!empty($catalogSearchHelper->getEscapedQueryText())){
+    Mage::helper('productviewed')->addSearchHistory($catalogSearchHelper->getEscapedQueryText());
+}
+?>
+
+<script type="text/javascript" src="<?php echo $ACCOUNT_SCRIPT; ?>"></script>
+<script type="text/javascript">var fhs_account = new FhsAccount();</script>
+<style type="text/css">
+    #ves-verticalmenu{
+        right: 0px;
+    }
+    #header .header1 #ves-mainnav .navbar-toggle{
+        left: 0px;
+    }
+    .custom-menu-homepage .col-md-3{
+        padding-right :0px;
+    }
+    .custom-menu-none-homepage .col-md-3{
+        padding-right :15px;
+        padding-left :0px;
+    }
+    .custom-menu-homepage2 .col-md-3{
+        <?php if($top_menu_html): ?>background-color: white;<?php endif; ?>
+        padding-left: 0px;
+    }
+    .header-link-left-custom{
+        margin-top: 5px;
+    }
+    .custom-menu-none-homepage{
+        display: flex;
+        background-color: white;
+    }
+    .background-menu-homepage{
+        background-color: #F0F0F0;
+    }
+    .fhs-header_mobile{
+	display: none;
+    }
+    .fhs-header_desktop .fhs-header-top-bar{
+	display: flex;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	flex-direction:row;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+	-webkit-align-items: center;
+	-webkit-justify-content: flex-start;
+	justify-content: flex-start;
+	padding: 0 0 5px 0;
+	background-color: white;
+    }
+    .fhs-header_desktop .fhs-header-top-bar > div:first-of-type{
+	width: 40%;
+    }
+    .fhs-header_desktop > .container{
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+    }
+    .fhs-header_desktop .fhs-header-top-bar > div:last-of-type{
+	width: 60%;
+	display: flex;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	flex-direction:row;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+	-webkit-align-items: center;
+	-webkit-justify-content: flex-end;
+	justify-content: flex-end;
+    }
+    .fhs-header_desktop .fhs-header-top-second-bar{
+	display: flex;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	flex-direction:row;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+	-webkit-align-items: center;
+	-webkit-justify-content: flex-start;
+	justify-content: flex-start;
+	padding: 0 0 5px 0;
+	background-color: white;
+    }
+    .fhs-header_desktop .fhs-header-top-second-bar > div:first-of-type{
+	width: 209px;
+    }
+    .fhs-header_desktop .fhs-header-top-second-bar > div:first-of-type a.logo{
+	width: 104% !important;
+	margin-top: 3px;
+    }
+    .fhs-header_desktop .fhs-header-top-second-bar > div:nth-of-type(2){
+	width: calc(100% - 500px);
+	margin: 6px 0 0 30px;
+    }
+    .fhs-header_desktop .fhs-header-top-second-bar > div:nth-of-type(3){
+	width: 325px;
+	display: flex;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	flex-direction:row;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+	-webkit-align-items: center;
+	-webkit-justify-content: space-between;
+	justify-content: space-between;
+    }
+    .fhs-header_desktop .fhs-header-top-second-bar > div:nth-of-type(2) .form-search{
+	position: relative;
+    }
+    .fhs-header_desktop .fhs-header-top-second-bar > div:nth-of-type(2) .form-search > input{
+	height: 43px;
+	border: 2px solid #F7941E;
+    }
+    .fhs-header_desktop .fhs-header-top-second-bar > div:nth-of-type(2) .form-search > span{
+	position: absolute;
+	top: calc(50% - 2px);
+	right: 0;
+	-webkit-transform: translate(0, -50%);
+	-ms-transform: translate(0, -50%);
+	-moz-transform: translate(0, -50%);
+	transform: translate(0, -50%);
+	color: #F7941E;
+	border: 0;
+	font-size: 21px;
+	text-align: center;
+	z-index: 3;
+	cursor: pointer;
+	width: 50px;
+	height: 50px;
+	text-align: center;
+	display: flex;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	flex-direction:row;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+	-webkit-align-items: center;
+	-webkit-justify-content: center;
+	justify-content: center;
+    }
+    .fhs-header_desktop .fhs-header-top-second-bar > div:nth-of-type(2) .search_box .input-search {
+	font-size: 1.1em;
+	border: 2px solid #F7941E;
+	-webkit-appearance: none;
+    }
+    .fhs-header_desktop .fhs-header-top-second-bar > div:nth-of-type(2) .search{
+	width: 100%;
+	padding-right: 16px;
+    }
+    .fhs-header_desktop .fhs-header-top-second-bar > div:nth-of-type(3) .noti-top{
+	margin-top: 8px;
+	position: relative;
+    }
+    .fhs-header_desktop .fhs-header-top-second-bar > div:nth-of-type(3) > .cart-top{
+	padding-left: 5px;
+	position: relative;
+	margin-top: -10px;
+    }
+    .fhs-header_mobile{
+	background-color: #F7941E;
+	height: 93.4px;
+    }
+    .fhs-header_mobile > .fhs-logo img{
+	max-width: 130px;
+	max-height: 30px;
+	margin-top: 5px;
+    }
+    .fhs-header_mobile .fhs-header-top-bar{
+	display: flex;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	flex-direction:row;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+	-webkit-align-items: center;
+	-webkit-justify-content: flex-start;
+	justify-content: flex-start;
+	padding: 5px 4px 5px 4px;
+    }
+    #ves-mainnav{
+	margin-top: 0;
+    }
+    .fhs-header_mobile .fhs-header-top-bar >div:first-of-type{
+	text-align: center;
+	width: 40px;
+    }
+    .fhs-header_mobile .fhs-header-top-bar > div:nth-of-type(2){
+	width: calc(100% - 104px);
+    }
+    .fhs-header_mobile .fhs-header-top-bar > div:last-of-type{
+	width: 58px;
+	display: flex;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	flex-direction:row;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+	-webkit-align-items: center;
+	-webkit-justify-content: flex-start;
+	justify-content: flex-start;
+    }
+    .fhs-header_mobile.holded{
+	position: fixed;
+	top: 0;
+	width: 100%;
+	height: 92px;
+	background-color: #F7941E;
+	z-index: 999;
+    }
+    .fhs-header_mobile.holded > .fhs-logo{
+	display: none;
+    }
+    .fhs-header_mobile .fhs-header-top-bar.logined > div:nth-of-type(2){
+	width: calc(100% - 156px);
+    }
+    .fhs-header_mobile .fhs-header-top-bar.logined > div:last-of-type{
+	width: 108px;
+    }
+    
+    .fhs-header_mobile .fhs-header-top-bar > div:last-of-type > div{
+	padding: 0 3px;
+    }
+   .fhs-header_mobile .ves-verticalmenu.offcanvas-actived > .block-content{
+	display: block !important;
+	visibility: visible !important;
+    }
+    .fhs-header_mobile #ves-mainnav .navbar{
+	display: flex;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	flex-direction:row;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+	-webkit-align-items: center;
+	-webkit-justify-content: center;
+	justify-content: center;
+    }
+    .fhs-header_mobile #ves-mainnav .navbar-toggle{
+	border: 0;
+	margin: 0;
+	background: none!important;
+    }
+    .fhs-header_mobile #ves-mainnav .navbar-toggle .icon-bar{
+	height: 3px;
+	width: 18px;
+    }
+    .fhs-header_mobile .fhs-header-top-bar > div:nth-of-type(2) .ves-autosearch{
+	margin-left: 0;
+    }
+    .fhs-header_mobile .fhs-header-top-bar > div:nth-of-type(2) input{
+	height: 33px;
+	border: 1px solid #F7941E;
+    }
+    .fhs-header_mobile .fhs-header-top-bar > div:nth-of-type(2) .form-search{
+	padding: 8px 0;
+    }
+    .fhs-header_mobile .fhs-header-top-bar > div:nth-of-type(2) .form-search > span{
+	display: none;
+    }
+    .fhs-header_mobile .fhs-header-top-bar > div:last-of-type .top-notification-button #icon-nofi {
+        background: url(<?php echo $SKIN_URL . "frontend/base/default/images/ico_notif.svg"; ?>) no-repeat center center;
+        background-size : 20px;
+        width : 30px;
+        height: 35px;
+    }
+    .fhs-header_mobile .fhs-header-top-bar > div:last-of-type .login-cutomer-icon{
+        background: url(<?php echo $SKIN_URL."frontend/base/default/images/ico_thongtintk.svg";?>) no-repeat center center;
+    }
+    .fhs-header_mobile .fhs-header-top-bar > div:last-of-type .cart-top .shopping-cart-icon{
+        background: url(<?php echo $SKIN_URL."frontend/base/default/images/ico_shopping_cart_white.svg";?>) no-repeat center center;
+        background-size: 25px;
+    }
+    .cart-number-mobile {
+        width: 25px;
+        background: #2ED62E;
+        -webkit-border-radius: 10px;
+        -moz-border-radius: 10px;
+        border-radius: 10px;
+        vertical-align: top;
+        position: absolute;
+        top: -2px;
+        left: 16px;
+    }
+    @media screen and (max-width: 1024px) and (min-width: 992px) {
+        .fhs-header_desktop .fhs-header-top-second-bar > div:nth-of-type(2){
+	    width: calc(100% - 530px);
+	}
+    }
+    @media screen and (min-width: 992px) {
+        .custom-menu-homepage{
+            padding-top: 15px;
+        }
+       .custom-menu-homepage2{
+        padding-top: 15px;
+        display : block;
+        } 
+    }
+    @media screen and (max-width: 992px){
+	.fhs-header_desktop{
+	    display: none;
+	}
+	.fhs-header_mobile{
+	    display: block;
+	}
+    }
+    @media screen and (max-width: 775px){
+	.container{
+	    padding-left: 5px;
+	    padding-right: 5px;
+	}
+    }
+</style>
+<div>
+<div class="fhs-header_desktop">
+    <div class="fhs-header-top-banner" style="<?php echo "background-color:" . Mage::getStoreConfig('tab1/general/text_field'); ?>">
+        <div class="top-banner-block">
+            <?php echo $top_banner_html; ?>
+        </div>
+    </div>
+    <div class="container">
+	<div class="fhs-header-top-second-bar">
+	    <div>
+		<a href="<?php echo $this->getUrl('') ?>" title="<?php echo $this->getLogoAlt() ?>" class="logo"><strong class="logo-title"><?php echo $this->getLogoAlt() ?></strong><img src="<?php echo $this->getLogoSrcSecond() ?>" alt="<?php echo $this->getLogoAlt() ?>" /></a>
+	    </div>
+	    <div>
+		<div class="box search_box ">
+		<form id="search_mini_form_desktop" action="<?php echo $catalogSearchHelper->getResultUrl() ?>" method="get">
+		    <div class="search pull-left">
+		    <div class="form-search">
+			<input id="search_desktop" type="text" name="<?php echo $catalogSearchHelper->getQueryParamName() ?>" autocomplete="off" placeholder="<?php echo $this->__('Search entire store here...');?>" value="<?php echo $catalogSearchHelper->getEscapedQueryText() ?>" class="input-search ">
+			<span class="button-search fa fa-search"></span>
+			<!--<button type="submit" title="<?php echo $this->__('Search') ?>" class="ves-button-search"></button>-->
+			<div class="form-search-form"></div>      
+		    </div>
+		    </div>
+		</form>
+		</div>
+	    </div>
+	    <div>
+		<?php if ($noti_html) : ?>
+		    <div class="noti-top">
+			<?php echo $noti_html; ?>
+		    </div>
+		<?php endif;?>
+		<div class="cart-top">
+		    <div class="top-cart-contain">
+			<?php echo $this->getChildHtml('top_cart_mini') ?>
+		    </div> 
+		</div>
+		<?php echo $this->getChildHtml('top_account') ?>
+		<?php echo $this->getChildHtml('languages_dropdown') ?>
+	    </div>
+	</div>
+    </div>
+</div>
+<div class="fhs-header_mobile">
+    <div class="fhs-logo">
+	    <a href="<?php echo $this->getUrl('') ?>" title="<?php echo $this->getLogoAlt() ?>" class="logo"><strong class="logo-title"><?php echo $this->getLogoAlt() ?></strong><img src="<?php echo $this->getLogoSrcSecond() ?>" alt="<?php echo $this->getLogoAlt() ?>" /></a>
+    </div>
+    <div class="fhs-header-top-bar">
+	<div id="ves-mainnav">				    
+	    <?php echo $vmegamenu_html; ?>  
+	</div>
+	<div class="search-mobile-header">
+	    <div class="ves-autosearch">
+		<?php echo $this->getChildHtml('topSearch') ?>
+	    </div> 
+	</div>
+	<div class="icons-mobile-header">
+	    <?php if ($noti_mobile_html) : ?>
+		<?php echo $noti_mobile_html; ?>
+	    <?php endif;?>
+            <?php echo $this->getChildHtml('top_cart_mini_mobile') ?>
+	    <?php echo $this->getChildHtml('top_customer') ?>
+	</div>
+    </div>
+    <style>
+    /* HEADER FILTER MOBILE*/
+    @media(max-width: 992px){
+        .sorter-header span.selected{
+            font-size:11px;
+            color : #333;
+        }
+	.limiter span.selected-limit{
+	    width : calc(90% - 10px);
+	    padding-right: 10px;
+	}
+	.toolbar-header span.selectArrow{
+	    width : 20px;
+	}
+	.span.selectArrow, span.selected{
+	    float :none;
+	}
+	.selectBox-limit{
+	    padding-left:20px;
+	}
+	/* filter */
+	.content-filter-mobile{
+	    height : 40px;
+	}
+	.content-filter-mobile .icon-filter-mobile{
+	    margin-top : 0px!important;
+	}
+	.content-filter-mobile .text-filter-mobile{
+	    margin-top: 13px!important;
+	}
+	div.selectOptions{
+	    top : 40px;
+	    left : unset;
+
+	}
+	.div.selectOptions-limit{
+	    width: calc(100% - 20px);
+	}
+	/* toolbar */
+	.toolbar-header{
+	    background : white;
+	    height : 40px;
+	}
+	.toolbar-box-shadow{
+	    box-shadow: 0 4px 6px 0 hsl(0, 0%, 90%);
+	}
+	.toolbar-header .button-open-category-mobile{
+	    border : none;
+	    border-radius : none;
+	}
+	.toolbar-header span.selectArrow{
+	    float : right;
+	}
+	/* sorter header */
+	.sorter-header .dropdownfhs-text{
+	    margin-right: 0px;
+	}
+	.sorter-header div.selectOptions{
+	    float:none;
+	}
+	.sorter-header span.selected{
+	    float:none;
+	    padding-left: 10px;
+	    padding-right: 10px;
+	}
+	.toolbar-header span.selected,span.selectArrow{
+	    border:none;
+	}
+	.item-inner .ratings{
+	    display: unset !important;
+	}
+	.navbar{
+	    min-height : 35px; 
+	}
+    }    
+    @media(max-width: 320px){
+        .sorter-header span.selected{
+            font-size:11px;
+            color : #333;
+        }
+    }
+    @media(min-width: 321px){
+        .sorter-header span.selected{
+            font-size:13px;
+            color : #333;
+        }
+    }
+   
+</style>
+    <div class="toolbar-header col-sm-12 col-xs-12 col-md-12 no-padding">
+                <div class="sorter" style="padding-left:none!important;">
+		<p class="view-mode"></p>
+                <div class="abc-xyz sorter-header">
+                    <div class="dropdownfhs-text hidden-xs"><p style="font-size: 13px;"><?php echo $this->__('Sort By') ?> :</p></div>
+                    <div class="sort-by dropdownfhs dropdownfhs-select">
+                        <div class='selectBox selectBox-order'>
+                            <span class='selected selected-order'></span>
+                            <span class='selectArrow selectArrow-order'></span>
+                            <div class="selectOptions selectOptions-order" >
+                                <?php foreach ($order_by_list as $order_key => $order_by): ?>
+                                    <span  class="selectOption selectOption-order" value="<?php echo $order_by; ?>" <?php echo ($order_by == $order) ? 'selected=\"selected\"' : ''; ?>><?php echo $this->__($order_key); ?></span>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+	    </div>
+                <div style="float: left;">
+                        <div class="limiter">
+                            <div class="select-sort-by dropdownfhs">
+                                <div class='selectBox selectBox-limit'>
+                                    <span class='selected selected-limit'></span>
+                                    <span class='selectArrow selectArrow-limit'></span>
+                                    <div class="selectOptions selectOptions-limit">
+                                        <?php foreach ($limit_list as $_limit): ?>
+                                            <span class="selectOption selectOption-limit" value="<?php echo $_limit; ?>" <?php echo ($_limit == $limit) ? 'selected=\"selected\"' : ''; ?>><?php echo $_limit . " " . $this->__('product'); ?></span>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            <div class="button-open-category-mobile">
+                <div class="content-filter-mobile" onclick="catalog_ajax.displayModalFilter()"><span class ="text-filter-mobile"><?php echo $this->__('Filter');?></span><div class='icon-filter-mobile'>&nbsp;</div></div>
+            </div>
+	</div>
+    </div>
+</div>
+<div class="header-breadcrumbs background-menu-none-homepage">
+    <div class="container">
+        <div class="custom-menu-none-homepage no-padding-left">
+             <div class="col-md-3 hidden-max-width-992">
+                <?php if(!$mobile) :// echo $this->getChildHtml('verticalMenu') ?>
+		    <?php echo $vmegamenu_html; ?>
+		<?php endif; ?>
+            </div>
+            <?php if ($ma_banner = $this->getChildHtml('ma_banner')) : ?>
+                <div class="col-md-9">
+                    <?php echo $ma_banner; ?>
+                </div>
+            <?php elseif(!$mobile) : ?>
+                <div class="col-md-9 hidden-max-width-992">
+                    <?php echo $top_menu_html; ?>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
+<script  type="text/javascript">
+	if(CUSTOMER_ID != ""){
+	    $jq('.fhs-header-top-bar').addClass('logined');
+	}
+	$jq(document).on('scroll',function () {
+	    calHeader();
+	});
+	function calHeader(){
+	    var point = getCurrentScroll();
+	    if(point >= 28){
+		$jq(".fhs-header_mobile").addClass('holded');
+		let logo_height = $jq('.fhs-logo').height();
+		let top_bar_height = $jq('.fhs-header-top-bar').height();
+		let toolbar_height = $jq('.fhs-header-top-bar').height();
+		let height_total = logo_height + top_bar_height + toolbar_height;
+		$jq('body').css('margin-top', (height_total)+"px");
+		$jq(".toolbar-header").addClass('toolbar-box-shadow');
+	    }else{
+		$jq(".fhs-header_mobile").removeClass('holded');
+		$jq('body').css('margin-top', "0");
+		$jq(".toolbar-header").removeClass('toolbar-box-shadow');
+	    }
+	}
+	function getCurrentScroll() {
+	    return window.pageYOffset || document.documentElement.scrollTop;
+	}
+	    
+	calHeader();
+    <?php if(Mage::getStoreConfig('search_history_config/config/is_active') || Mage::getStoreConfig('search_history_config/keyword_hot/is_active')):?>
+	var is_in_search_form = false;
+	var is_focus_search_form = false;
+	var is_search_loaded = false;
+	
+	$jq('.input-search').focus(function() {
+	    if(!is_search_loaded){
+		getKeywords();
+	    }
+	    if(!fhs_account.isEmpty($jq('.form-search-form').html())){
+		$jq('.form-search-form').fadeIn(0);
+	    }
+	    is_focus_search_form = true;
+	  }).blur(function(){
+	    if(!is_in_search_form){
+		$jq('.form-search-form').fadeOut(0);
+	    }else{
+		$jq(this).focus();
+	    }
+	    is_focus_search_form = true;
+	  });
+	$jq('.form-search').hover(
+	    function(){
+		is_in_search_form = true;
+	    },
+	    function(){
+		is_in_search_form = false;
+	    }
+	);
+	function removeSearchHistory(){
+	    $jq('.form_search_history').remove();
+	    if($jq('.form-search-form .fhs_top_account_line').length >0){
+		$jq('.form-search-form .fhs_top_account_line').fadeOut(0);
+	    }
+	    
+	    if(fhs_account.isEmpty($jq('.form-search-form').html())){
+		$jq('.form-search-form').fadeOut(0);
+	    }
+	    $jq.ajax({
+		url: '/productviewed/index/removeSeachHistory',
+		method: 'post',
+		dataType : "json",
+		contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+		success: function (data) {
+		    if(data['success']){
+		    }
+		}
+	    });
+	}
+	function getKeywords(){
+	    is_search_loaded = true;
+	    $jq.ajax({
+		url: '/productviewed/index/getKeyword',
+		method: 'post',
+		dataType : "json",
+		contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+		success: function (data) {
+		    if(data['success']){
+			let data_form = '';
+			let history = '';
+			let keyword = '';
+			Object.keys(data['history']).forEach(function(key){
+			    history += "<span>"+data['history'][key]+"</span>";
+			});
+			if(!fhs_account.isEmpty(history)){
+			    let history_title = '<div class="form-search-form-title form_search_history"><div><span><img src="<?php echo $SKIN_URL."frontend/ma_vanese/fahasa/images/ico-searchhistory.svg";?>"/></span><span><?php echo $this->__("Search history");?></span></div><div onclick="removeSearchHistory();"><?php echo $this->__('Clear');?></div></div>';
+			    let history_content = '<div class="form-search-form-content form_search_history">'+history+'</div>';
+			    history = history_title+history_content;
+			}
+			
+			Object.keys(data['keyword']).forEach(function(key){
+			    let mark = '?';
+			    if(data['keyword'][key]['url'].indexOf("?") != -1){
+				mark = "&";
+			    }
+			    keyword += "<span><a href='"+data['keyword'][key]['url']+mark+"fhs_campaign=POPULAR_SEARCH'>"+data['keyword'][key]['value']+"</a></span>";
+			});
+			if(!fhs_account.isEmpty(keyword)){
+			    let keyword_title = '<div class="form-search-form-title"><span><img src="<?php echo $SKIN_URL."frontend/ma_vanese/fahasa/images/ico-searchtrending.svg";?>"/></span><span><?php echo $this->__("Keyword hot");?></span></div>';
+			    let keyword_content = '<div class="form-search-form-content">'+keyword+'</div>';
+			    keyword = keyword_title+keyword_content;
+			}
+			
+			if(!fhs_account.isEmpty(history) && !fhs_account.isEmpty(keyword)){
+			    data_form = history + "<div class='fhs_top_account_line'></div>" + keyword;
+			}else{
+			    data_form = history + keyword;
+			}
+			
+			
+			if(!fhs_account.isEmpty(data_form)){
+			    $jq('.form-search-form').html(data_form);
+			    $jq('.form-search-form-content.form_search_history span').click(function(){
+				let keyw = $jq(this).text();
+				$jq('.input-search').val(keyw);
+				$jq('.form-search').append('<input type="hidden" name="fhs_campaign" value="SEARCH_HISTORY">');
+				$jq(".button-search").click();
+			    });
+			    if(is_focus_search_form){
+				$jq('.form-search-form').fadeIn(0);
+			    }
+			}
+		    }
+		}
+	    });
+	}
+    <?php endif;?>
+</script>
+
+
+
+<?php if(Mage::getStoreConfig('productviewed_config/config/is_active')):?>
+    <script type="text/javascript" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS, true)."lib/product_viewed.js?q=".$queryfier; ?>"></script>
+<?php endif;?>

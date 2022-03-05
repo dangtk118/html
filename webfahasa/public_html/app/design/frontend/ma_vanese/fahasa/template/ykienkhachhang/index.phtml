@@ -1,0 +1,288 @@
+<?php
+$orderId = $_GET['order-id'];
+$customerEmail = $_GET['customer-email'];
+$surveyComplete = Mage::helper('ykienkhachhang')->checkSurveyComplete($orderId);
+?>
+<div id="ykienkhachhang"class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <div class="ykienkhachhang-title">Ý kiến khách hàng</div>
+    <form class="form-horizontal" id="ykienkhachhang_form" method="post" action="<?php echo Mage::getUrl('ykienkhachhang/index/post'); ?>" enctype="multipart/form-data">
+        <div class="row">
+            <div class="input-text col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style=" padding: 20px;">
+                    <label><?php echo $this->__("Order Id");?></label>
+                    <input type="text" class="form-control" id="order_id" name="order_id" readonly value="<?php
+                        if ($_GET['order-id']) {
+                            echo $orderId;
+                        }
+                        ?>">
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style=" padding: 20px;">
+                    <label><?php echo $this->__("Customer Email");?></label>
+                    <input type="email" class="form-control" id="email" readonly name="email" value="<?php
+                        if ($_GET['customer-email']) {
+                            echo $customerEmail;
+                        }
+                        ?>">
+                </div>
+            </div>
+        </div>
+        <?php 
+        //check if customer Survey complete
+        if($surveyComplete == 1){?>
+        <div class="row">
+            <div class="survey_success col-lg-12 col-md-12 col-sm-12 col-xs-12 bg-success">
+                <i class="fa fa-check-circle fa-3x" aria-hidden="true"></i>
+                <span>Bạn đã hoàn thành đánh giá cho đơn hàng này.</span>
+            </div>
+        </div>
+        <?php }  else {
+        ?>
+        <div class="row err_message">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <i class="fa fa-exclamation" aria-hidden="true"></i>
+                <span></span>
+            </div>
+        </div>
+        <div class="phan1 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="row">
+                    <div class="row-eq-height">
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 content-left"><h1>I<br>Chất lượng sản phẩm</h1></div>
+                        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 content-middle"><image src="<?php echo Mage::getDesign()->getSkinUrl() . 'images/ykienkhachhang/Book-icon.png'; ?>" /></div>
+                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 content-right">
+                            <h2>1. Chất lượng sản phẩm</h2>
+                            <div class="container">
+                                <div>
+                                    <input required id="sanpham1-5" name="sanpham1" type="radio" class="with-font" value="5" />
+                                    <label for="sanpham1-5">Rất tốt</label>
+                                </div>
+                                <div>
+                                    <input id="sanpham1-4" name="sanpham1"type="radio" class="with-font" value="4"/>
+                                    <label for="sanpham1-4">Tốt</label>
+                                </div>
+                                <div>
+                                    <input id="sanpham1-3" name="sanpham1" type="radio" class="with-font" value="3"/>
+                                    <label for="sanpham1-3">Trung bình</label>
+                                </div>
+                                <div>
+                                    <input id="sanpham1-2" name="sanpham1"type="radio" class="with-font" value="2"/>
+                                    <label for="sanpham1-2">Kém</label>
+                                </div>
+                                <div>
+                                    <input id="sanpham1-1" name="sanpham1" type="radio" class="with-font" value="1"/>
+                                    <label for="sanpham1-1">Rất kém</label>
+                                </div>
+                                <div>
+                                    <div class="sanpham1-note input-note">
+                                        <label for="sanpham1-note">Fahasa.com chân thành xin lỗi vì những trải nghiệm không tốt của quý khách. Quý khách vui lòng chia sẻ những trải nghiệm không tốt về chất lượng sản phẩm trong đơn hàng vừa qua, để Fahasa.com có thể cải thiện chất lượng sản phẩm lần sau.</label>
+                                        <textarea cols="4" id="sanpham1-note" name="sanpham1-note" class="form-control"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="phan2 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="row">
+                    <div class="row-eq-height">
+                        <div class="col-lg-3 col-md-3  col-sm-3 col-xs-3 content-left"><h1>II<br>Chất lượng giao hàng</h1></div>
+                        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 content-middle"><image src="<?php echo Mage::getDesign()->getSkinUrl() . 'images/ykienkhachhang/Shipping-icon.png'; ?>" /></div>
+                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 content-right">
+                            <div  class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <h2>1. Thời gian giao hàng</h2>
+                                <div class="container">
+                                    <div>
+                                        <input required  id="giaohang1-5" name="giaohang1" type="radio" class="with-font" value="5" />
+                                        <label for="giaohang1-5">Rất nhanh</label>
+                                    </div>
+                                    <div>
+                                        <input id="giaohang1-4" name="giaohang1"type="radio" class="with-font" value="4"/>
+                                        <label for="giaohang1-4">Nhanh</label>
+                                    </div>
+                                    <div>
+                                        <input id="giaohang1-3" name="giaohang1" type="radio" class="with-font" value="3"/>
+                                        <label for="giaohang1-3">Bình Thường</label>
+                                    </div>
+                                    <div>
+                                        <input id="giaohang1-2" name="giaohang1"type="radio" class="with-font" value="2"/>
+                                        <label for="giaohang1-2">Chậm</label>
+                                    </div>
+                                    <div>
+                                        <input id="giaohang1-1" name="giaohang1" type="radio" class="with-font" value="1"/>
+                                        <label for="giaohang1-1">Rất chậm</label>
+                                    </div>
+                                    <div>
+                                        <div class="giaohang1-note input-note">
+                                            <textarea id="giaohang1-note" name="giaohang1-note" class="form-control" rows="2"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div  class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <h2>2. Thái độ nhân viên giao hàng</h2>
+                                <div class="container">
+                                    <div>
+                                        <input required  id="giaohang2-3" name="giaohang2" type="radio" class="with-font" value="3" />
+                                        <label for="giaohang2-3">Vui vẻ, dễ chịu</label>
+                                    </div>
+                                    <div>
+                                        <input id="giaohang2-2" name="giaohang2"type="radio" class="with-font" value="2"/>
+                                        <label for="giaohang2-2">Bình Thường</label>
+                                    </div>
+                                    <div>
+                                        <input id="giaohang2-1" name="giaohang2" type="radio" class="with-font" value="1"/>
+                                        <label for="giaohang2-1">Khó chịu, cáu gắt</label>
+                                    </div>
+                                    <div>
+                                        <div class="giaohang2-note input-note">
+                                            <textarea id="giaohang2-note" name="giaohang2-note" class="form-control" rows="2"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div  class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <h2>3. Nhân viên giao hàng liên hệ trước khi giao</h2>
+                                <div class="container">
+                                    <div>
+                                        <input required  id="giaohang3-2" name="giaohang3" type="radio" class="with-font" value="2" />
+                                        <label for="giaohang3-2">Có</label>
+                                    </div>
+                                    <div>
+                                        <input id="giaohang3-1" name="giaohang3"type="radio" class="with-font" value="1"/>
+                                        <label for="giaohang3-1">Không</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="phan3 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="row">
+                    <div class="row-eq-height">
+                        <div class="col-lg-3 col-md-3  col-sm-3 col-xs-3 content-left"><h1><p>III</p><p>Chăm sóc khách hàng</p></h1></div>
+                        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 content-middle"><image src="<?php echo Mage::getDesign()->getSkinUrl() . 'images/ykienkhachhang/Call-icon.png'; ?>" /></div>
+                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 content-right">
+                            <h2>1. Đánh giá chất lượng chăm sóc khách hàng Fahasa.com trong trường hợp quý khách liên lạc với tổng đài Fahasa.com</h2>
+                            <div class="container">
+                                <div>
+                                    <input required  id="cskh1-4" name="cskh1" type="radio" class="with-font" value="3" />
+                                    <label for="cskh1-4">Rất hài lòng</label>
+                                </div>
+                                <div>
+                                    <input id="cskh1-3" name="cskh1"type="radio" class="with-font" value="2"/>
+                                    <label for="cskh1-3">Hài lòng</label>
+                                </div>
+                                <div>
+                                    <input id="cskh1-2" name="cskh1" type="radio" class="with-font" value="1"/>
+                                    <label for="cskh1-2">Không hài lòng, nhân viên Fahasa.com không chuyên nghiệp</label>
+                                </div>
+                                <div>
+                                    <input id="cskh1-1" name="cskh1" type="radio" class="with-font" value="0"/>
+                                    <label for="cskh1-1">Tôi không liên lạc với tổng đài Fahasa.com</label>
+                                </div>
+                                <div>
+                                    <div class="cskh1-note input-note">
+                                        <label for="cskh1-note">Fahasa.com chân thành xin lỗi vì những trải nghiệm không tốt của quý khách. Quý khách vui lòng đóng góp ý kiến để Fahasa.com hoàn  thiện hơn.</label>
+                                        <textarea id="cskh1-note" name="cskh1-note" class="form-control"></textarea>
+                                    </div>
+                                </div>
+                                <div>
+
+                                </div>
+                            </div>
+                        </div>       
+                    </div>
+                </div>
+            </div>
+            <div class="btn-submit col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <button id="singlebutton" type="submit"  name="singlebutton" class="btn btn-success">Đánh giá</button>
+            </div>
+        <?php }?>
+    </form>
+</div>
+<script type="text/javascript">
+    $jq("input:radio[name=sanpham1]").click(function () {
+        var check = $jq("input:radio[name=sanpham1]:checked").val();
+        if (check == 1 || check == 2 || check == 3) {
+            $jq(".sanpham1-note").show();
+            $jq("#sanpham1-note").focus();
+        } else {
+            $jq(".sanpham1-note").hide();
+        }
+    });
+    $jq("input:radio[name=giaohang1]").click(function () {
+        var check = $jq("input:radio[name=giaohang1]:checked").val();
+        if (check == 1 || check == 2) {
+            $jq(".giaohang1-note").show();
+            $jq("#giaohang1-note").focus();
+        } else {
+            $jq(".giaohang1-note").hide();
+        }
+    });
+    $jq("input:radio[name=giaohang2]").click(function () {
+        var check = $jq("input:radio[name=giaohang2]:checked").val();
+        if (check == 1) {
+            $jq(".giaohang2-note").show();
+            $jq("#giaohang2-note").focus();
+        } else {
+            $jq(".giaohang2-note").hide();
+        }
+    });
+    $jq("input:radio[name=cskh1]").click(function () {
+        var check = $jq("input:radio[name=cskh1]:checked").val();
+        if (check == 1) {
+            $jq(".cskh1-note").show();
+            $jq("#cskh1-note").focus();
+        } else {
+            $jq(".cskh1-note").hide();
+        }
+    });
+    
+    $jq("#ykienkhachhang_form").submit(function( event ) {
+        var mess = "<?php echo $this->__('Vui lòng chọn 1 lựa chọn.'); ?>";
+        var sanpham1 = $jq("input:radio[name=sanpham1]:checked").val();
+        var giaohang1 = $jq("input:radio[name=giaohang1]:checked").val();
+        var giaohang2 = $jq("input:radio[name=giaohang2]:checked").val();
+        var giaohang3 = $jq("input:radio[name=giaohang3]:checked").val();
+        var cskh1 = $jq("input:radio[name=cskh1]:checked").val();
+        if(!sanpham1){
+            showAlert(mess, ".phan1");
+            return false;
+        }else if(!giaohang1 || !giaohang2 || !giaohang3){
+            showAlert(mess, ".phan2");
+            return false;
+        }else if(!cskh1){
+            showAlert(mess, ".phan3");
+            return false;
+        }
+    });
+    
+    function showAlert(mess, elememt){
+        $jq('html, body').animate({
+            scrollTop: $jq(elememt).offset().top
+        }, 2000);
+        alert(mess);
+    }
+    
+    $jq( document ).ready(function() {
+        
+        new Ajax.Request(
+            '<?php echo $this->getUrl('ykienkhachhang/index/checkExistOrder/', 
+            array('_secure' => true)); ?>',{
+            method:'post',
+            parameters:{
+                  customerEmail : "<?php echo $customerEmail; ?>",
+                    orderId : "<?php echo $orderId; ?>"
+            },
+            onSuccess:function(transport){
+                var response=transport.responseText.evalJSON(true);
+                if(response.message == 0){
+                    $jq(".err_message span").html("<?php echo $this->__('Thông tin đơn hàng không chính xác.');?>");
+                    $jq(".err_message").show();
+                    $jq(".btn-submit").html("");
+                }
+            }
+        });
+    });
+</script>

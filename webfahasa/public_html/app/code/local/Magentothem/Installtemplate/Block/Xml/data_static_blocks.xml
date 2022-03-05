@@ -1,0 +1,364 @@
+<?xml version="1.0"?>
+<ma_vanesa2>
+    <blocks>
+
+        <block>
+            <title>Footer Link payment</title>
+            <identifier>footer_payment</identifier>
+            <content>
+			<![CDATA[
+				<ul class="payment">
+					<li><a href="#"><img src="{{media url="wysiwyg/payment.png"}}" alt="" /></a></li>
+				</ul>
+		    ]]>
+            </content>
+            <is_active>1</is_active>
+        </block>
+
+        <block>
+            <title>Static Sub Menu Right</title>
+            <identifier>pt_menu_idcat_3_right</identifier>
+            <content>
+                <![CDATA[
+					<div class="sub-menu-inner"><a href="{{store direct_url="camera.html"}}"><img src="{{media url="wysiwyg/block_menu.png"}}" alt="" /></a></div>
+                ]]>
+            </content>
+            <is_active>1</is_active>
+        </block>
+		
+		<block>
+            <title>Footer Static</title>
+            <identifier>footer_static</identifier>
+            <content>
+                   <![CDATA[
+						<div class="f-col f-col-1 col-sm-6 col-md-3 col-sms-6 col-smb-12">
+						<div class="footer-static-title">
+						<h3>OUR SERVICES</h3>
+						</div>
+						<div class="footer-static-content">
+						<ul>
+						<li class="first"><a href="{{store direct_url="about-magento-demo-store"}}">About us</a></li>
+						<li><a href="#">Order History</a></li>
+						<li><a href="{{store direct_url="privacy-policy-cookie-restriction-mode"}}">Returns</a></li>
+						<li><a href="{{store direct_url="customer-service"}}">Custom Service</a></li>
+						<li class="last"><a href="{{store direct_url="catalogsearch/term/popular"}}">Terms &amp; Condition</a></li>
+						</ul>
+						</div>
+						</div>
+						<div class="f-col f-col-5 col-sm-6 col-md-3 col-sms-6 col-smb-12">
+						<div class="footer-static-title">
+						<h3>our support</h3>
+						</div>
+						<div class="footer-static-content ">
+						<ul>
+						<li class="first"><a href="{{store direct_url="catalog/seo_sitemap/category"}}">Sitemap</a></li>
+						<li><a href="{{store direct_url="privacy-policy-cookie-restriction-mode"}}">Privacy Policy</a></li>
+						<li><a href="{{store direct_url="customer/account/index"}}">Your Account</a></li>
+						<li><a href="{{store direct_url="catalogsearch/advanced"}}">Advanced Search</a></li>
+						<li class="last"><a href="{{store direct_url="contacts"}}">Contact Us</a></li>
+						</ul>
+						</div>
+						</div>
+						<div class="f-col f-col-6 col-sm-6 col-md-3 col-sms-6 col-smb-12">
+						<div class="footer-static-title">
+						<h3>MY ACCOUNT</h3>
+						</div>
+						<div class="footer-static-content">
+						<ul>
+						<li class="first"><a href="{{store direct_url="customer/account/index"}}">My Account</a></li>
+						<li><a href="#">Order History</a></li>
+						<li><a href="#">Returns</a></li>
+						<li><a href="#">Specials</a></li>
+						<li class="last"><a href="{{store direct_url="catalog/seo_sitemap/category"}}">Site Map</a></li>
+						</ul>
+						</div>
+						</div>
+						<div class="f-col f-col-7 col-sm-6 col-md-3 col-sms-6 col-smb-12">
+						<div class="footer-static-title">
+						<h3>Contact us</h3>
+						</div>
+						<div class="footer-static-content">
+						<ul>
+						<li class="first"><em class="fa fa-map-marker">&nbsp;</em><span>Addresss:</span>Lorem ipsum dolor sit amet, consectetuer adipiscing elit</li>
+						<li><em class="fa fa-envelope">&nbsp;</em><span>Email:</span>info@plazathemes.com</li>
+						<li class="last"><em class="fa fa-phone">&nbsp;</em><span>Phone:</span>+123.456.789</li>
+						</ul>
+						</div>
+						</div>
+					]]>
+            </content>
+            <is_active>1</is_active>
+        </block>
+			
+		<block>
+            <title>Block Link Follow</title>
+            <identifier>block_link_follow</identifier>
+            <content>
+                   <![CDATA[
+							<div class="f-col f-col-2 col-sm-8 col-md-8 col-sms-12">{{block type="newsletter/subscribe" name="left.newsletter" template="newsletter/subscribe.phtml"}}</div>
+							<div class="f-col f-col-1 col-sm-4 col-md-4 col-sms-12">
+							<ul class="link-follow">
+							<li class="first"><a class="facebook fa fa-facebook" href="https://www.facebook.com/plazathemes"><span>facebook</span></a></li>
+							<li><a class="google fa fa-google-plus" href="#"><span>google </span></a></li>
+							<li><a class="twitter fa fa-twitter" href="https://twitter.com/plazathemes"><span>twitter</span></a></li>
+							<li><a class="youtube fa fa-youtube" href="https://www.youtube.com/user/plazathemes"><span>youtube </span></a></li>
+							</ul>
+							</div>
+						]]>
+            </content>
+            <is_active>1</is_active>
+        </block>
+
+		<block>
+            <title>Contact Us</title>
+            <identifier>pt_menu_links</identifier>
+            <content>
+			   <![CDATA[
+					<ul>
+					<li><a href="{{store url="blog"}}">Blog</a></li>
+					<li><a href="{{store url="contacts"}}">Contact Us</a></li>
+					<li><a href="{{store direct_url="about-magento-demo-store"}}">About us</a></li>
+					<li><a href="{{store url="privacy-policy-cookie-restriction-mode"}}">Privacy Policy</a></li>
+					<li><a href="{{store direct_url="catalogsearch/advanced"}}">Advanced Search</a></li>
+					<li><a href="http://www.plazathemes.com/">View all themes</a></li>
+					</ul>
+				]]>
+            </content>
+            <is_active>1</is_active>
+        </block>
+
+		<block>
+            <title>Toplink Static</title>
+            <identifier>toplink_static</identifier>
+            <content>
+			   <![CDATA[
+					<div class="toplink-static clearfix">
+					<div class="tell-phone pull-left">Call us 24/7: (+66) 123-456-789</div>
+					</div>
+				]]>
+            </content>
+            <is_active>1</is_active>
+        </block>
+
+		<block>
+            <title>Ma Block Static 3</title>
+            <identifier>ma_block_static_3</identifier>
+            <content>
+			   <![CDATA[
+					<div class="ma-block-static-3">
+					<div class="row">
+					<div class="col-sm-6 col-md-6 col-xs-12">
+					<div class="banner-home-inner"><a href="{{store direct_url="footwear.html"}}"><img src="{{media url="wysiwyg/banner_block1.jpg"}}" alt="" /></a></div>
+					</div>
+					<div class="col-sm-3 col-md-3 col-xs-12">
+					<div class="banner-home-inner"><a href="{{store direct_url="accessories.html"}}"><img src="{{media url="wysiwyg/banner_block2.jpg"}}" alt="" /></a></div>
+					</div>
+					<div class="col-sm-3 col-md-3 col-xs-12">
+					<div class="banner-home-inner"><a href="{{store direct_url="jewellery.html"}}"><img src="{{media url="wysiwyg/banner_block3.jpg"}}" alt="" /></a></div>
+					</div>
+					</div>
+					</div>
+				]]>
+            </content>
+            <is_active>1</is_active>
+        </block>
+
+		<block>
+            <title>Banner Home Content 2</title>
+            <identifier>banner_home_content_2</identifier>
+            <content>
+			   <![CDATA[
+					<div class="banner-content-2">
+					<div class="row">
+					<div class="col-sm-8 col-md-8 col-sms-12">
+					<div class="banner-home-inner"><a href="{{store direct_url="ankle-boots.html"}}"><img src="{{media url="wysiwyg/banner_block5.jpg"}}" alt="" /></a></div>
+					</div>
+					<div class="col-sm-4 col-md-4 col-sms-12">
+					<div class="banner-home-inner"><a href="{{store direct_url="camera-photo.html"}}"><img src="{{media url="wysiwyg/banner_block4.jpg"}}" alt="" /></a></div>
+					</div>
+					</div>
+					</div>
+				]]>
+            </content>
+            <is_active>1</is_active>
+        </block>
+
+		<block>
+            <title>MA Top Content</title>
+            <identifier>ma_top_content</identifier>
+            <content>
+			   <![CDATA[
+					<div class="row">
+					<div class="col-sms12 col-md-3 col-sm-12">&nbsp;</div>
+					<div class="col-sms12 col-md-9 col-sm-12">{{block type="banner7/banner7" before="-" name="banner7" template="magentothem/banner7/banner7.phtml" }}</div>
+					</div>
+				]]>
+            </content>
+            <is_active>1</is_active>
+        </block>	
+
+		<block>
+            <title>Block Bottom</title>
+            <identifier>block_bottom</identifier>
+            <content>
+			   <![CDATA[
+					<div class="row">
+					<div class="col-xs-12 col-md-6 col-ms-6">{{block type="blog/menu_sidebar" name="blog.slider" template="magentothem_blog/blog_slide.phtml"}}</div>
+					<div class="col-xs-12 col-md-6 col-ms-6">{{block type="testimonial/sidebar" name="testimonial.sidebar" before="-"}}</div>
+					</div>
+				]]>
+            </content>
+            <is_active>1</is_active>
+        </block>
+		
+		<block>
+            <title>Block End Bottom</title>
+            <identifier>block_end_bottom</identifier>
+            <content>
+			   <![CDATA[
+					<div class="block_end_bottom">
+					<div class="box-col1 box-col">
+					<div class="pull-left"><em class="fa fa-truck">&nbsp;</em></div>
+					<div class="media-body">
+					<h3>FREE SHIPPING</h3>
+					One order over $99</div>
+					</div>
+					<div class="box-col2 box-col">
+					<div class="pull-left"><em class="fa fa-dropbox">&nbsp;</em></div>
+					<div class="media-body">
+					<h3>Special gift cards</h3>
+					Give the perfect gift</div>
+					</div>
+					<div class="box-col3 box-col">
+					<div class="pull-left"><em class="fa fa-calendar-o">&nbsp;</em></div>
+					<div class="media-body">
+					<h3>Daily promotion</h3>
+					Set up perspiciatis unde</div>
+					</div>
+					<div class="box-col4 box-col">
+					<div class="pull-left"><em class="fa fa-comments-o">&nbsp;</em></div>
+					<div class="media-body">
+					<h3>24/7 customer care</h3>
+					Hours: 04.0987 654 321</div>
+					</div>
+					</div>
+				]]>
+            </content>
+            <is_active>1</is_active>
+        </block>
+		
+		<block>
+            <title>Header Infor</title>
+            <identifier>header_infor</identifier>
+            <content>
+			   <![CDATA[
+					<div class="email infor"><em class="fa fa-envelope">&nbsp;</em><span>Email: </span>info@plazathemes.com</div>
+					<div class="phone infor"><em class="fa fa-phone">&nbsp;</em><span>Phone: </span>+123.456.789</div>
+				]]>
+            </content>
+            <is_active>1</is_active>
+        </block>
+		
+		<block>
+            <title>Vmegamenu</title>
+            <identifier>vmegamenu</identifier>
+            <content>
+			   <![CDATA[
+					<div class="vmegamenu">{{block type="vmegamenu/vmegamenu" name="catalog.leftvmegamenu" before="catalog.leftnav" template="magentothem/vmegamenu/vmegamenu.phtml"}}</div>
+				]]>
+            </content>
+            <is_active>1</is_active>
+        </block>
+		
+		<block>
+            <title>Banner Left 1</title>
+            <identifier>banner_left1</identifier>
+            <content>
+			   <![CDATA[
+					<div class="banner-left1 hidden-xs">
+					<div class="ma-block-static-inner"><a href="{{store direct_url="holiday-supplies-gifts.html"}}"><img src="{{media url="wysiwyg/banner_left1.jpg"}}" alt="" /></a></div>
+					</div>
+				]]>
+            </content>
+            <is_active>1</is_active>
+        </block>
+		
+		<block>
+            <title>Banner Left2</title>
+            <identifier>banner_left2</identifier>
+            <content>
+			   <![CDATA[
+					<div class="banner-left2 hidden-xs">
+					<div class="ma-block-static-inner"><a href="{{store direct_url="camera-photo.html"}}"><img src="{{media url="wysiwyg/banner_left2.jpg"}}" alt="" /></a></div>
+					</div>
+				]]>
+            </content>
+            <is_active>1</is_active>
+        </block>
+		
+		<block>
+            <title>MA Top Content Vanesa3</title>
+            <identifier>ma_top_content</identifier>
+            <content>
+			   <![CDATA[
+					<div class="row">
+					<div class="col-sms12 col-md-3 col-sm-12">&nbsp;</div>
+					<div class="col-sms12 col-md-6 col-sm-12">{{block type="banner7/banner7" before="-" name="banner7" template="magentothem/banner7/banner7.phtml" }}</div>
+					<div class="col-sms12 col-md-3 col-sm-12">
+					<div class="banner-right-top"><a class="right-home3" href="{{store direct_url="men.html"}}"><img src="{{media url="wysiwyg/banner-right3.jpg"}}" alt="" /></a><a class="right-home3-1" href="{{store direct_url="men.html"}}"><img src="{{media url="wysiwyg/banner-right3-1.jpg"}}" alt="" /></a></div>
+					</div>
+					</div>
+				]]>
+            </content>
+            <is_active>1</is_active>
+        </block>
+		
+		<block>
+            <title>Banner Left Vanes3</title>
+            <identifier>banner_left_vanesa3</identifier>
+            <content>
+			   <![CDATA[
+					<div class="banner-left3 hidden-xs">
+					<div class="ma-block-static-inner"><a href="{{store direct_url="camera-photo.html"}}"><img src="{{media url="wysiwyg/banner-left3.jpg"}}" alt="" /></a></div>
+					</div>
+				]]>
+            </content>
+            <is_active>1</is_active>
+        </block>
+		
+		<block>
+            <title>Banner Home Content 3</title>
+            <identifier>banner_home_content_3</identifier>
+            <content>
+			   <![CDATA[
+					<div class="banner-home-inner"><a href="{{store direct_url="ankle-boots.html"}}"><img src="{{media url="wysiwyg/banner_content3.jpg"}}" alt="" /></a></div>
+				]]>
+            </content>
+            <is_active>1</is_active>
+        </block>
+		
+		<block>
+            <title>MA Top Content  Vanesa4</title>
+            <identifier>ma_top_content</identifier>
+            <content>
+			   <![CDATA[
+					<div class="banner7">{{block type="banner7/banner7" before="-" name="banner7" template="magentothem/banner7/banner7.phtml" }}</div>
+				]]>
+            </content>
+            <is_active>1</is_active>
+        </block>
+		
+		<block>
+            <title>Static Sub Menu Right</title>
+            <identifier>pt_menu_idcat_86_right</identifier>
+            <content>
+			   <![CDATA[
+					<div class="sub-menu-inner"><a href="{{store direct_url="camera.html"}}"><img src="{{media url="wysiwyg/block_menu.png"}}" alt="" /></a></div>
+				]]>
+            </content>
+            <is_active>1</is_active>
+        </block>
+		
+    </blocks>
+</ma_vanesa2>
+

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <Fahasa_Review>
+            <version>0.1.0</version>
+        </Fahasa_Review>
+    </modules>
+    <global>
+        <blocks>
+            <review>
+                <rewrite>
+                    <product_view>Fahasa_Review_Block_Product_View</product_view>
+                    <product_view_list>Fahasa_Review_Block_Product_View_List</product_view_list>
+                </rewrite>
+            </review>
+        </blocks>
+        <models>
+            <review_resource>
+                <rewrite>  
+                    <review_collection>Fahasa_Review_Model_Resource_Review_Collection</review_collection>
+                </rewrite>
+            </review_resource>
+            <review>
+                <rewrite>
+                    <review>Fahasa_Review_Model_Review</review>
+                </rewrite>
+            </review>
+        </models>
+    </global>
+    <frontend>
+        <routers>
+            <review>
+                <args>
+                    <modules>
+                        <fahasa_review before="Mage_Review">Fahasa_Review</fahasa_review>
+                    </modules>
+                </args>
+            </review>
+        </routers>
+    </frontend>
+</config>

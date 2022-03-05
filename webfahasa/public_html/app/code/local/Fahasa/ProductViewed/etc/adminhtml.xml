@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<config>
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <productviewed_config translate="title" module="productviewed">
+                                        <title>Customer Product Viewed Config</title>
+                                    </productviewed_config>
+                                    <search_history_config translate="title" module="productviewed">
+                                        <title>Customer Search History</title>
+                                    </search_history_config>
+                                </children>
+                            </config>
+                        </children>
+                    </system>                    
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</config>

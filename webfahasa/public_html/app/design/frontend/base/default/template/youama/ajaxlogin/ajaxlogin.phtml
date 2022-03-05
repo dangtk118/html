@@ -1,0 +1,266 @@
+<?php
+/**
+ * YouAMA.com
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA that is bundled with this package
+ * on http://youama.com/freemodule-license.txt.
+ *
+ *******************************************************************************
+ *                          MAGENTO EDITION USAGE NOTICE
+ *******************************************************************************
+ * This package designed for Magento Community edition. Developer(s) of
+ * YouAMA.com does not guarantee correct work of this extension on any other
+ * Magento edition except Magento Community edition. YouAMA.com does not
+ * provide extension support in case of incorrect edition usage.
+ *******************************************************************************
+ *                                  DISCLAIMER
+ *******************************************************************************
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future.
+ *******************************************************************************
+ * @category   Youama
+ * @package    Youama_Ajaxlogin
+ * @copyright  Copyright (c) 2012-2014 YouAMA.com (http://www.youama.com)
+ * @license    http://youama.com/freemodule-license.txt
+ */
+
+/**
+ * @author doveid
+ * @see Youama_Ajaxlogin_Block_Ajaxlogin
+ */
+?>
+<?php 
+    $skin_url = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true);
+    $queryfier = Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix');
+    //$ACCOUNT_SCRIPT = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS, true)."lib/account.js?q=".$queryfier;
+    $FACEBOOK_SCRIPT = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS, true)."lib/facebook.js?q=".$queryfier;
+    $minLength = (int)Mage::getStoreConfig('customer/password/min_password_length');
+    $languages = Mage::helper('fahasa_catalog/product')->getLanguagesList('login');
+    $languages['minLength'] = $this->__('Password must be %s characters or more!', $minLength);
+    $languages['minLength_address'] = $this->__('Address must be %s characters or more!', $minLength);
+    
+    
+    $is_redirect = $this->isRedirectToProfile();
+    $redirect_url = Mage::getBaseUrl();
+    
+    $goback = $this->getRequest()->getParam('goback', '');
+    switch ($goback){
+	case "home":
+	    $is_redirect = 1;
+	    $redirect_url = "/";
+	    break;
+	case "account":
+	    $is_redirect = 1;
+	    $redirect_url = "/checkout/cart/";
+	    break;
+	case "order":
+	    $is_redirect = 1;
+	    $redirect_url = "/sales/order/history/";
+	    break;
+	case "cart":
+	    $is_redirect = 1;
+	    $redirect_url = "/checkout/cart/";
+	    break;
+	case "payment":
+	    $is_redirect = 1;
+	    $redirect_url = "/onestepcheckout/index/";
+	    break;
+    }
+?>
+<?php // If user is not logged in ?>
+<?php //remove check user is logged in. Because of cache, some cms pages showing login popup does not working ?>
+<?php // if (Mage::helper('customer')->isLoggedIn() != true) : ?>
+<style>
+    .fhs-input-box .fhs-input-group.checked-error .fhs-textbox-alert,
+    .fhs-input-box.checked-error .fhs-input-group .fhs-textbox-alert{
+	background: url(<?php echo $skin_url . "frontend/ma_vanese/fahasa/images/ico_fail.png"; ?>) no-repeat center center;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	height: 20px;
+	width: 20px;
+	display: inline-block;
+    }
+    .fhs-input-box.checked-pass .fhs-input-group .fhs-textbox-alert{
+	background: url(<?php echo $skin_url . "frontend/ma_vanese/fahasa/images/ico_success.png"; ?>) no-repeat center center;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	height: 20px;
+	width: 20px;
+	display: inline-block;
+    }
+</style>
+    <div class="youama-ajaxlogin-cover"></div>
+
+    <?php // Loader animation ?>
+    <div class="youama-ajaxlogin-loader"></div>
+
+    <?php // Login window ?>
+    <div class="youama-login-window fhs_popup_show">
+<!--	<div class="popup-btn-close-bottom"><img id="NC_IMAGE" src="<?php echo $skin_url.'frontend/ma_vanese/fahasa/images/x-circle.png'?>"/></div>-->
+	<div>
+	    <ul id="popup-login-tab_list" class="popup-login-tab">
+		<li class="popup-login-tab-item popup-login-tab-login active"><a><?php echo $languages['login'] ?></a><hr></li>
+		<li class="popup-login-tab-item popup-login-tab-register "><a><?php echo $this->__('Sign Up') ?></a><hr></li>
+	    </ul>
+	    <div class="popup-change-title popup-login-title" style="display:none;">
+		<?php echo $this->__('Recovery password');?>
+	    </div>
+	</div>
+	<div class="popup-login-content">
+	    <form>
+	    <div class="fhs-input-box">
+		<label><?php echo $this->__('Phone number/Email');?></label>
+		<div class="fhs-input-group">
+		    <input class="fhs-textbox" type="text" placeholder="<?php echo $this->__('Enter phone number or email') ?>" id="login_username" maxlength="200" name="youama-email" value=""/>
+		    <span class="fhs-input-icon fhs-textbox-alert"></span>
+		</div>
+		<div class="fhs-input-alert"></div>
+	    </div>
+	    <div class="fhs-input-box fhs-input-display">
+		<div class="clear space"></div>
+		<label><?php echo $this->__('Password');?></label>
+		<div class="fhs-input-group">
+		    <input class="fhs-textbox" type="password" placeholder="<?php echo $this->__('Enter password') ?>" id="login_password" name="youama-password" maxlength="30" value=""/>
+		    <span class="fhs-input-icon fhs-textbox-showtext"><?php echo $languages['show'];?></span>
+		</div>
+		<div class="fhs-input-alert"></div>
+	    </div>
+	    <div class="fhs-input-box">
+		<div class="fhs-forget-pass"><span><?php echo $this->__('Forgot Your Password?') ?></span></div>
+	    </div>
+	    
+	    <div class="fhs-input-box">
+		<div class="fhs-btn-box">
+		    <button type="button" title="<?php echo $languages['login'] ?>" class="fhs-btn-login" disabled><span><?php echo $languages['login'] ?></span></button>
+		    <button type="button" title="<?php echo $this->__('Cancel ')?>" class="fhs-btn-cancel lg-close"><span><?php echo $this->__('Cancel ') ?></span></button>
+		    <button type="button" title="<?php echo $this->__('Login with facebook')?>" class="fhs-btn-fb"><span class="fa fa-facebook"></span><span><?php echo $this->__('Login with facebook')?></span></button>
+		</div>
+	    </div>
+	    <div class="fhs-popup-msg fhs-login-msg"></div>
+	    </form>
+	</div>
+	<div class="popup-register-content">
+	    <form>
+	    <div class="fhs-input-box fhs-input-send">
+		<label><?php echo $this->__('Phone number');?></label>
+		<div class="fhs-input-group">
+		    <input class="fhs-textbox" type="text" placeholder="<?php echo $this->__('Enter phone number') ?>" id="register_phone" name="youama-email" value="" maxlength="11" autocomplete="off"/>
+		    <span class="fhs-input-icon fhs-textbox-send"><?php echo $this->__('Send OTP code');?></span>
+		</div>
+		<div class="fhs-input-alert"></div>
+	    </div>
+	    <div class="fhs-input-box">
+		<label><?php echo $this->__('Confirm OTP code');?></label>
+		<div class="fhs-input-group">
+		    <input class="fhs-textbox" type="text" placeholder="<?php echo $this->__('6 characters') ?>" id="register_phone_otp" name="otpvalue" value="" maxlength="6" autocomplete="off" disabled="disabled"/>
+		    <span class="fhs-input-icon fhs-textbox-alert"></span>
+		</div>
+		<div class="fhs-input-alert"></div>
+	    </div>
+	    <div class="fhs-input-box fhs-input-display">
+		<div class="clear space"></div>
+		<label><?php echo $this->__('Password');?></label>
+		<div class="fhs-input-group">
+		    <input class="fhs-textbox" type="password" placeholder="<?php echo $this->__('Enter password') ?>" id="register_password" name="youama-password" maxlength="30" value="" autocomplete="off" disabled="disabled"/>
+		    <span class="fhs-input-icon fhs-textbox-showtext"><?php echo $languages['show'];?></span>
+		</div>
+		<div class="fhs-input-alert"></div>
+	    </div>
+	    <div class="fhs-input-box">
+		<div class="fhs-btn-box">
+		    <button type="button" title="<?php echo $this->__('Sign Up') ?>" class="fhs-btn-register" disabled><span><?php echo $this->__('Sign Up') ?></span></button>
+		    <button type="button" title="<?php echo $this->__('Cancel ')?>" class="fhs-btn-cancel lg-close"><span><?php echo $this->__('Cancel ') ?></span></button>
+		</div>
+	    </div>
+	    <div class="fhs-popup-msg fhs-register-msg"></div>
+	    <div class="fhs-register-term">
+		<?php echo $this->__('By Sign Up, you argree to Fahasa.com about');?><br/>
+		<a href="/dieu-khoan-su-dung" target="_blank" style=""><?php echo $this->__('Terms of service');?></a>
+		&nbsp;&&nbsp;
+		<a href="/chinh-sach-bao-mat" target="_blank" style=""><?php echo $this->__('Privacy Policy');?></a>
+	    </div>
+	    </form>
+	</div>
+	<div class="popup-recovery-content">
+	    <form>
+	    <div class="fhs-input-box fhs-input-send">
+		<label><?php echo $this->__('Phone number/Email');?></label>
+		<div class="fhs-input-group">
+		    <input class="fhs-textbox" type="text" placeholder="<?php echo $this->__('Enter phone number or email') ?>" id="recovery_phone" name="youama-email" value="" maxlength="200" autocomplete="off"/>
+		    <span class="fhs-input-icon fhs-textbox-recoverysend"><?php echo $this->__('Send OTP code');?></span>
+		</div>
+		<div class="fhs-input-alert"></div>
+	    </div>
+	    <div class="fhs-input-box">
+		<label><?php echo $this->__('Confirm OTP code');?></label>
+		<div class="fhs-input-group">
+		    <input class="fhs-textbox" type="text" placeholder="<?php echo $this->__('6 characters') ?>" id="recovery_phone_otp" name="otpvalue" value="" maxlength="6" autocomplete="off" disabled="disabled"/>
+		    <span class="fhs-input-icon fhs-textbox-alert"></span>
+		</div>
+		<div class="fhs-input-alert"></div>
+	    </div>
+	    <div class="fhs-input-box fhs-input-display">
+		<div class="clear space"></div>
+		<label><?php echo $this->__('Password');?></label>
+		<div class="fhs-input-group">
+		    <input class="fhs-textbox" type="password" placeholder="<?php echo $this->__('Enter password') ?>" id="recovery_password" name="youama-password" maxlength="30" value="" autocomplete="off" disabled="disabled"/>
+		    <span class="fhs-input-icon fhs-textbox-showtext"><?php echo $languages['show'];?></span>
+		</div>
+		<div class="fhs-input-alert"></div>
+	    </div>
+	    <div class="fhs-input-box">
+		<div class="fhs-btn-box">
+		    <button type="button" title="<?php echo $this->__('Confirm') ?>" class="fhs-btn-recovery" disabled><span><?php echo $this->__('Confirm') ?></span></button>
+		    <button type="button" title="<?php echo $this->__('Go back')?>" class="fhs-btn-backlogin lg-close"><span><?php echo $this->__('Go back') ?></span></button>
+		</div>
+	    </div>
+	    <div class="fhs-popup-msg fhs-recovery-msg"></div>
+	    </form>
+	</div>
+    </div>    
+    <div class="youama-change-window youama-confirm-window">
+	<div class="popup-change-title">
+	    <?php echo $this->__('Confirm phone number');?>
+	</div>
+	<div class="popup-change-content">
+	    <form>
+	    <div class="fhs-input-box fhs-input-send">
+		<label><?php echo $this->__('Phone number');?></label>
+		<div class="fhs-input-group">
+		    <input class="fhs-textbox" type="text" placeholder="<?php echo $this->__('Enter phone number') ?>" id="confirm_phone" name="phone" value="" maxlength="11" autocomplete="off" />
+		    <span class="fhs-input-icon fhs-textbox-confirmsend"><?php echo $this->__('Send OTP code');?></span>
+		</div>
+		<div class="fhs-input-alert"></div>
+	    </div>
+	    <div class="fhs-input-box">
+		<label><?php echo $this->__('Confirm OTP code');?></label>
+		<div class="fhs-input-group">
+		    <input class="fhs-textbox" type="text" placeholder="<?php echo $this->__('6 characters') ?>" id="confirm_phone_otp" name="otpvalue" value="" maxlength="6" autocomplete="off" disabled="disabled"/>
+		    <span class="fhs-input-icon fhs-textbox-alert"></span>
+		</div>
+		<div class="fhs-input-alert"></div>
+	    </div>
+	    <div class="fhs-input-box">
+		<div class="fhs-btn-box">
+		    <button type="button" title="<?php echo $this->__('Confirm') ?>" class="fhs-btn-confirm fhs-btn-confirmphone" disabled><span><?php echo $this->__('Confirm') ?></span></button>
+		</div>
+	    </div>
+	    <div class="fhs-popup-msg fhs-confirmphone-msg"></div>
+	    </form>
+	</div>
+    </div>  
+<script type="text/javascript" src="<?php echo $FACEBOOK_SCRIPT; ?>"></script>
+<script>
+    const IS_MOBILE = "<?php echo Mage::helper('fhsmobiledetect')->isMobile(); ?>";
+    fhs_account.initAccount('<?php echo $is_redirect; ?>', '<?php echo $redirect_url; ?>', <?php echo json_encode($languages, JSON_UNESCAPED_UNICODE);?>, <?php echo $minLength;?>);
+    
+    $jq(document).ready(function(){
+	fhs_account.removeOriginalJsLocations();
+    });
+</script>

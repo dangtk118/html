@@ -1,0 +1,122 @@
+<?php
+    $_productCollection = $this->getMyCollection();
+    $category = $this->catName();
+    $_helper = $this->helper('catalog/output');
+    $_collectionSize = $this->getProductsAmount();
+    $_columnCount = 4; //$this->getColumnCount();
+    $meigee_bizarre_general = MAGE::helper('ThemeOptionsBizarre')->getThemeOptionsBizarre('meigee_bizarre_general');
+	$fancybox = $meigee_bizarre_general['fancybox'];
+    $helpImg = $this->helper('ThemeOptionsBizarre/images');
+	$labelsoptions = $meigee_bizarre_general['productlabels'];
+	$productOnlyXleft = $meigee_bizarre_general['productlabels']['labelonlyxleft'];
+	$labelsType = $meigee_bizarre_general['productlabels']['labelview'];
+	$labelsPosition = $meigee_bizarre_general['productlabels']['labelsposition'];
+	$grid2description = $this->getGrid2Description();
+?>
+<?php // Grid Mode ?>
+<div class="home-container grid-2">
+    <div class="meigee-widget">
+        <ul class="products-grid<?php echo ' '.$labelsType.' '.$labelsPosition; ?> widget-grid">
+        <?php $i=0; foreach ($_productCollection as $_product): ?>
+			<?php $_productNameStripped = $this->stripTags($_product->getName(), null, true); ?>
+            <li class="grid_3 item<?php if($labelsoptions['labelsorder'] == 'new_sale'):?> labels-new-sale<?php endif; ?>">
+                <div class="product-container">
+					<div class="product-info-top">
+						<h2 class="product-name"><a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($_product->getName(), null, true) ?>"><?php echo $_helper->productAttribute($_product, $_product->getName(), 'name') ?></a></h2>
+						<?php if ($grid2description != 0) : ?>
+							<?php 
+								$short_description = $_helper->productAttribute($_product, $_product->getShortDescription(), 'short_description');
+								$description = '<div class="desc std">'. Mage::helper('core/string')->truncate($short_description, '113') .'</div>';
+								if ($grid2description == 1) : 
+									echo $description;
+								elseif ($grid2description == 2 && (($i+1) % 2 == 0 )) :
+									echo $description;
+								elseif ($grid2description == 3 && (($i+1) % 2 != 0 )) :
+									echo $description;
+								endif;
+							?>
+						<?php endif; ?>
+						<a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $_productNameStripped ?>" class="link-shop"><?php echo $this->__('Shop Now') ?><i class="fa fa-angle-right"></i></a>
+					</div>
+					<div class="product-img-box">
+						<?php echo MAGE::helper('ThemeOptionsBizarre')->getProductLabels($_product, 'new'); ?>
+						<?php if($productOnlyXleft and MAGE::helper('ThemeOptionsBizarre')->getProductOnlyXleft($_product)): ?>
+							<?php echo MAGE::helper('ThemeOptionsBizarre')->getProductOnlyXleft($_product); ?>
+						<?php else: ?>
+							<?php echo MAGE::helper('ThemeOptionsBizarre')->getProductLabels($_product, 'sale'); ?>
+						<?php endif; ?>
+						<a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" class="product-image"><?php /* Hover Image */ echo $helpImg->getHoverImage($_product, 'small_image', 420, null); ?><img <?php echo $helpImg->getImgSources($_product, 'small_image', 420, null); ?> alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" /></a>
+						<?php  // Fancybox
+						if ($fancybox['fancybox_status'] && $fancybox['fancybox_home'] == 1): ?>
+								<a class="fancybox category-gallery" title="<?php echo $_productNameStripped; ?>" href="<?php echo $this->helper('catalog/image')->init($_product, 'small_image'); ?>"><?php echo MAGE::helper('ThemeOptionsBizarre')->getIcon('fancybox'); ?></a>
+							<?php endif; 
+						// End Fancybox ?>
+					</div>
+				</div>
+            </li>
+        <?php if ($i+1 == $_collectionSize ) break; $i++; endforeach ?>        
+        </ul> 
+		<?php
+			if(get_class($this) == "Meigee_MeigeewidgetsBizarre_Block_Featuredcategory"):
+			$cat = $_product->getCategoryIds();
+			$cat_name = Mage::getModel('catalog/category')->load($cat[0])->getName();
+			$cat_url = Mage::getModel('catalog/category')->load($cat[0])->getUrl();
+		?>
+		<div class="category-button"><a href="<?php echo $cat_url; ?>" title="<?php echo $cat_name; ?>"><i class="fa fa-eye"></i><?php echo $this->__('View Category'); ?></a></div>
+		<?php endif; ?>
+    </div>
+	<script type="text/javascript">
+		jQuery(document).ready(function(){
+			jQuery('.ajax-fancybox').fancybox(
+				{
+				   hideOnContentClick : true,
+				   width:600,
+				   autoDimensions: true,
+				   type : 'iframe',
+				   showTitle: false,
+				   scrolling: 'no',
+				   afterLoad: function(){
+						setTimeout(function(){
+							var frameBodyHeight = jQuery('.fancybox-iframe').contents().find('body').height();
+							if(jQuery(window).height() > frameBodyHeight+30){
+								jQuery('.fancybox-inner').css('height', frameBodyHeight);
+							}
+						}, 1500);
+					}
+				}
+			);
+			
+		});
+		function showOptions(id){
+			jQuery('#fancybox'+id).trigger('click');
+		}
+		if(navigator.userAgent.indexOf('IE 8')==-1){
+			jQuery(window).load(function() {
+				function grid3Isotope() {
+					var $container = jQuery('.grid-2 .products-grid');
+					if(!jQuery('body').hasClass('rtl')){
+						$container.isotope({
+							itemSelector: '.item',
+							resizable: true,
+							layoutMode : 'masonry',
+							 masonry: {
+								columnWidth: 1
+							} 
+						});
+					} else {
+						$container.isotope({
+							itemSelector: '.item',
+							resizable: true,
+							transformsEnabled: false,
+							layoutMode : 'masonry',
+							 masonry: {
+								columnWidth: 1
+							} 
+						});
+					}
+				}
+				grid3Isotope();
+			});
+		}
+	</script>
+</div>

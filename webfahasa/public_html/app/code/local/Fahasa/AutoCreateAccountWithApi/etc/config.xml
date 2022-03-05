@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Fahasa_AutoCreateAccountWithApi>
+            <version>0.1.0</version>
+        </Fahasa_AutoCreateAccountWithApi>
+    </modules>
+</config>

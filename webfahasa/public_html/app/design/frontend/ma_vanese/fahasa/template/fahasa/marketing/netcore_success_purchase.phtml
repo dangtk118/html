@@ -1,0 +1,24 @@
+<?php
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+?>
+
+<?php if (Mage::getStoreConfig('netcore/general/enable') == 1): ?>
+<?php $data =  $this->getSuccessPurchaseForNetcore();?>
+<!-- Netcore Product purchase Begin-->
+<script>
+    window.onload = function() {
+        smartech('dispatch', 'Product Purchase', <?php echo json_encode($data['order'], JSON_UNESCAPED_UNICODE);?>);
+    }
+</script>
+<script>var BOXX_PURCHASED_PRODUCT_IDS=[<?php echo implode(",", $data['product_ids']);?>];</script>
+<!-- End Netcore Product purchase -->
+<?php endif; ?>
+<?php if (Mage::getStoreConfig('enhanced_ecom/general/enable') == 1): ?>
+<script>
+    dataLayer.push(<?php echo $this->getSuccessPurchaseUA();?>);
+</script>
+<?php endif; ?>

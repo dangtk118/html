@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <Fahasa_Formaturl>
+            <version>0.1.0</version>
+        </Fahasa_Formaturl>
+    </modules>    
+    <global>
+        <models>
+            <catalog>
+                <rewrite>
+                    <product_url>Fahasa_Formaturl_Model_Formaturl</product_url>
+                </rewrite>
+            </catalog>            
+        </models>
+    </global>
+</config>
+

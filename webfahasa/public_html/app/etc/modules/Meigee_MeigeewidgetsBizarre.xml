@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<config>
+   <modules>
+	  <Meigee_MeigeewidgetsBizarre>
+		 <active>false</active>
+		 <codePool>local</codePool>
+		 <depends>
+            <Mage_Cms />
+            <Meigee_ThemeOptionsBizarre />
+         </depends>
+	  </Meigee_MeigeewidgetsBizarre>
+   </modules>
+</config>

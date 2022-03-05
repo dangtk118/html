@@ -1,0 +1,207 @@
+<?php $mobile = Mage::helper('fhsmobiledetect')->isMobile(); ?>
+<?php $content = json_decode($this->getData('data'), true); ?>
+<?php if ($content) : ?>
+<?php $isHover = $this->getData("isHover");
+$vertical = $this->getData("vertical");
+$style = $this->getData("style");
+$blockId = $this->getData("blockId");
+$length = count($content);
+$noLinkArr = array("", "#", "##");
+
+
+?>
+<div <?php if(!is_null($blockId)) : echo 'id="' . $blockId . '"' ; endif; ?> >
+<div class="<?php if(!$mobile) : ?> fhs-banner-image-block <?php else : ?> row <?php endif;?>" style="<?php echo $style?>">
+        <?php foreach ($content as $data) : ?>
+	<?php 
+	    $sku = '';
+	    $can_buy = false;
+	    $form_id = rand(100000,999999);
+	    $is_add_to_cart = true;
+	    if(!empty($data['add_to_cart_sku'])){
+		$sku = $data['add_to_cart_sku'];
+	    }elseif(!empty($data['buy_now_sku'])){
+		$sku = $data['buy_now_sku'];
+		$is_add_to_cart = false;
+	    }
+	    if(!empty($sku)){
+		$is_netcore_enable = Mage::getStoreConfig('netcore/general/enable');
+		if (Mage::registry('product_'.$sku)) {
+		    $product_array = Mage::registry('product_'.$sku);
+		    $product = $product_array['product'];
+		    if(!empty($product)){
+			$action_form = $product_array['action_form'];
+			$can_buy = $product_array['can_buy'];
+			$msg_alert = $product_array['msg_alert'];
+			$action_script = $product_array['action_script'];
+		    }else{
+			$can_buy = $product_array['can_buy'];
+			$msg_alert = $product_array['msg_alert'];
+		    }
+		}else{
+		    $product = Mage::getModel('catalog/product')->loadByAttribute('sku',$sku);
+		    if(!empty($product)){
+			$action_form = Mage::helper('checkout/cart')->getAddUrl($product);
+			$action_form = str_replace(strstr($action_form, "/form_key" ), '', $action_form);
+			$qty = (int)Mage::getModel('cataloginventory/stock_item')->loadByProduct($product)->getQty();
+			if(!$product->isAvailable() || $qty <= 0){
+			    //$msg_alert = $this->__('Product temporarily out of stock');
+			}else{
+			    $can_buy = true;
+			    
+			    if(Mage::helper('discountlabel')->getBundlePrice($product)){
+				$price = $product->getData('price');
+				$final_price = $product->getFinalPrice();
+			    }
+			    else{
+				if($product->getFinalPrice()) {
+				    $final_price = $product->getFinalPrice();
+				} elseif ($product->getTypeId() == Mage_Catalog_Model_Product_Type::TYPE_BUNDLE){
+				    $final_price = Mage::getModel('bundle/product_price')->getTotalPrices($product,'min',1);
+				}
+				$price = $product->getPrice();
+			    }
+			    $brand = 'Fahasa';
+			    if($product->getPublisher() != null){
+				$brand = $product->getPublisher();
+			    }else if($product->getSupplier() != null){
+				$brand = $product->getSupplier();
+			    }
+			    $netcoreProductCotent = array();
+			    $netcoreProductCotent['prid'] = (int)($product->getId());
+			    $netcoreProductCotent['name'] = $product->getName();
+			    $netcoreProductCotent['price'] = round($price, 2);
+			    $netcoreProductCotent['final_price'] = round($final_price, 2);
+			    $netcoreProductCotent['price_text'] = number_format(round($price, 2), 0, ",", ".");
+			    $netcoreProductCotent['final_price_text'] = number_format(round($final_price, 2), 0, ",", ".");
+			    $netcoreProductCotent['category_main'] = $product->getCategoryMain();
+			    $netcoreProductCotent['category_mid'] = $product->getCategoryMid();
+			    $netcoreProductCotent['image'] = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA)."/catalog/product".$product->getImage();
+			    $netcoreProductCotent['url'] = Mage::getBaseUrl().$product->getUrlPath();
+			    $netcoreProductCotent['discount'] = Mage::helper('discountlabel')->handleDiscountPercent($product);
+			    $netcoreProductCotent['category_3'] = $product->getData('category_1');
+			    $netcoreProductCotent['category_4'] = $product->getData('cat4');
+
+			    $action_script = "smartech('dispatch', 'Add To Cart', {'items': ".json_encode($netcoreProductCotent, JSON_UNESCAPED_UNICODE)."});";
+			}
+
+			$product_array = [];
+			$product_array['product'] = $product;
+			$product_array['action_form'] = $action_form;
+			$product_array['can_buy'] = empty($can_buy)?'':$can_buy;
+			//$product_array['msg_alert'] = empty($msg_alert)?'':$msg_alert;
+			$product_array['action_script'] = $action_script;
+		    }else{
+			//$msg_alert = $this->__("Product isn't exist");
+			$product_array = [];
+			$product_array['product'] = null;
+			$product_array['action_form'] = null;
+			$product_array['can_buy'] = $can_buy;
+			//$product_array['msg_alert'] = $msg_alert;
+			$product_array['action_script'] = null;
+		    }
+		    Mage::register('product_'.$sku, $product_array);
+		}
+	    }
+	?>
+    <?php if(!empty($sku) && $can_buy):?>
+    <form class="<?php if(!$mobile && $vertical) : echo "col-xs-12"; else: echo $data['webClass']; endif;?>" action="<?php echo $action_form; ?>" method="post" id="product_addtocart_form_<?php echo $form_id;?>">
+    <?php endif;?>
+    <div 
+	<?php if(!(!empty($sku) && $can_buy)):?> 
+	    class="<?php if(!$mobile && $vertical) : echo "col-xs-12"; else: echo $data['webClass']; endif;?>"
+	<?php endif;?>
+	    >
+                <div class="banner-home-inner <?php if ($isHover) : echo "banner-hover"; endif;?>">
+                    <a class="<?php if($data["urlLink"] && !in_array($data["urlLink"], $noLinkArr)): ?> cursor-pointer <?php endif;?>"
+			<?php if(!empty($data['thele'])) : ?> 
+			    name="<?php echo $data['thele'] ?>" 
+			<?php endif; ?> 
+			<?php if(!empty($sku) && !$can_buy):?>
+			    onclick="(function(){
+				fhs_account.showAlertMsg('',350,275,'<?php echo $msg_alert;?>', 'white','<?php echo $this->getSkinUrl('images/logo-alert-fail.png');?>');
+			    })()"
+			<?php elseif(!empty($sku) && $can_buy):?>
+			    <?php if(!$is_add_to_cart):?>
+				 is_buynow="true" 
+			    <?php endif;?>
+			    onclick="productAddToCartForm<?php echo $form_id;?>.submit(this);<?php echo Mage::helper('catalogsearch')->escapeHtml($action_script);?> return false;"
+			<?php elseif(!empty($data["shareurlLink"]) && !empty($data["event_name"])):?>
+			    onclick="(function(){
+				fhs_account.shareFB('<?php echo $data["event_name"];?>','<?php echo $data["shareurlLink"];?>'+'?event='+'<?php echo $data["event_name"];?>'+'&id='+CUSTOMER_ID_SECRET,<?php echo $data["shareloginrequire"]?'true':'false';?>);
+			    })()"
+			<?php else:?>
+			    <?php if($data["urlLink"] && !in_array($data["urlLink"], $noLinkArr)):?> 
+				href="<?php echo $this->handleURLLink($data["urlLink"]); ?>"  
+				    <?php if (isset($data["target"])) : echo "target=\"" . $data['target'] . "\""; endif;?> 
+			    <?php endif;?>
+			<?php endif;?>
+			
+		    >
+                        <?php if (!$mobile) : ?>
+                           <img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . $data["urlWebImg"] ?>" alt="" />
+                        <?php else: ?>
+                            <img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . $data["urlMobileImg"] ?>" alt="" />
+                        <?php endif; ?>
+                    </a>
+                </div>
+            </div>
+    <?php if(!empty($sku) && $can_buy):?>
+	</form>
+	<script type="text/javascript">
+		var productAddToCartForm<?php echo $form_id;?> = new VarienForm('product_addtocart_form_<?php echo $form_id;?>');
+		productAddToCartForm<?php echo $form_id;?>.submit = function(button) {
+		    if(this.validator && this.validator.validate()){
+			let is_buyNow = "open_box";
+			let this_button = $jq(button);
+			if(this_button.attr('is_buyNow')){
+			    is_buyNow = this_button.attr('is_buyNow');
+			}
+			try {
+			    ajaxToCart(this.form.action,$jq(this.form).serialize(),'view',is_buyNow);
+			} catch (e) {
+			    this.form.submit();
+			}
+		    }
+		    return false;
+		}.bind(productAddToCartForm<?php echo $form_id;?>);
+	</script>
+    <?php endif;?>
+        <?php  endforeach; ?>
+</div>
+</div>
+<?php if($blockId == "fhs-homebanner") : ?>
+<?php 
+$skin_url = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true);
+$loading_icon_url = $skin_url.'frontend/ma_vanese/fahasa/images/ring_loader.gif';
+$path = Mage::getBaseUrl('media');
+?>
+<script type="text/javascript">
+    $jq(document).ready(function(){
+                let ww = window.innerWidth;
+                var dataBanner = <?php echo json_encode($content); ?>;
+                let urlLoadingIcon = "<?php echo $loading_icon_url; ?>";
+                let path = "<?php echo $path; ?>";
+                if (typeof inivoslider !== 'undefined' && ww <= 992) {
+                    // the variable is defined
+                    dataBanner.forEach(addSliderOneBaner);
+                    inivoslider.update();
+                }
+                
+                  function addSliderOneBaner(item){
+                      let count = inivoslider.slides.length + 1;
+                      let string = "<div class='swiper-slide'>"
+                                      + "<a href='"+item.urlLink+"'>"
+                                        + "<img class='swiper-lazy' src='" + path + item.urlMobileImg + "' title='#banner7-caption"+ count +"'/>"
+                                        + "<div class='swiper-lazy-preloader'><img style='padding-bottom:0' src='" + urlLoadingIcon + "'/></div>"
+                                        + "</a>"
+                                      + "</div>"; 
+                      inivoslider.appendSlide(string)
+                    }
+            })
+    
+  
+    
+</script>
+<?php endif; ?>
+<?php endif; ?>

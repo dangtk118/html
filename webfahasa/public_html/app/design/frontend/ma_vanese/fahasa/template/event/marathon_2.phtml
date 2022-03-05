@@ -1,0 +1,377 @@
+<?php
+
+$xem_them_link = $this->getData('xem-them');
+$the_le_link = $this->getData('the-le');
+$marathon_title = Mage::getStoreConfig('event_marathon_2/config/title');
+
+?>
+
+<style type="text/css">
+    
+    #event-marathon-2{
+        border: 1px solid #e6e6e6;
+        background-color: #fff;
+        margin-top: 15px;
+    }
+    
+    #event-marathon-loading{
+        display: none;
+    }
+    
+    #event-marathon-loading div{
+        margin: 50px;
+        text-align: center;
+        min-height: 100px;
+    }
+    
+    .event-marathon-header-tab{
+        float: left;
+        padding: 10px;
+        font-size: 14px;
+    }
+    
+    .event-marathon-header-tab.active{
+        color: #F7931E;
+    }
+    
+    .event-marathon-header-tab:hover{
+        color: #F7931E;
+        cursor: pointer;
+    }
+    
+    .event-marathon-header h1{
+        margin-left: 20px;
+        font-weight: bold;
+        color: #f90;
+        margin-top: 5px;
+    }
+    
+    #event-marathon-ranking{
+        margin: 0px;
+        display : flex;
+        justify-content: center;
+    }
+    
+    .event-marathon-ranking-column{
+        padding: 0px;
+    }
+    
+    .event-marathon-ranking-header{
+        text-align: center;
+        background-color: #FF9800;
+        color: #fff;
+        padding: 4px;
+    }
+    
+    .event-marathon-ranking-header h3{
+        font-size: 18px;
+        font-weight: bold;
+    }
+    
+    .event-marathon-ranking-table{
+        margin: 0px;
+        border: 1px solid #FF9800;
+    }
+    
+    #event-marathon-personal{
+        margin: 0px;
+        padding: 15px;
+        padding-top: 0px;
+    }
+    
+    #event-marathon-personal table{
+        border: none;
+        margin: 0px;
+    }
+    
+    .event-marathon-ranking-body{
+        padding: 0px 20px 15px 20px;
+    }
+    
+    .event-marathon-ranking-table tbody{
+        display:block;
+        overflow:auto;
+        height:200px;
+        width:100%;
+    }
+    
+    .event-marathon-ranking-table tr{
+        display: table;
+        width: 100%;
+    }
+    
+    .event-marathon-ranking-table thead{
+        display: table;
+        width: calc(100% - 25px);
+        border-bottom: 1px solid #333;
+        margin: 0px 10px;
+        margin-top: 5px;
+    }
+    
+    .event-marathon-ranking-table tbody th, table tbody td{
+        border-bottom: none;
+        border-left: none;
+        border-right: none;
+    }
+    
+    .event-marathon-ranking-table thead th{
+        border-right: none;
+    }
+    
+    .event-marathon-ranking-table thead th:first-child{
+        width: 75%;
+        padding-left: 0px;
+    }
+    
+    .event-marathon-ranking-table tbody td:first-child{
+        width: 70%;     
+    }
+    
+    .event-marathon-ranking-table tbody td:nth-child(2){
+        text-align: right;   
+    }
+    
+    #event-marathon-personal-loaded{
+        display: none;
+        text-align: center;
+    }
+    
+    #event-marathon-personal-guest, #event-marathon-personal-nodata{
+        display: none;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+    
+    #event-marathon-personal-name{
+        font-size: 14px;
+        font-weight: bold;
+        color: #FF9800;
+        margin-bottom: 5px;
+    }
+</style>
+
+<div id="event-marathon-2">
+    <div class="event-marathon-header">
+        <h1><a href="<?php echo $xem_them_link; ?>" style="color:#FF9800"><?php echo $marathon_title; ?></a> 
+            <span style="float: right;padding-right: 20px;font-size: 13px;">
+                <a href="<?php echo $the_le_link; ?>" style="color:#ef0000">Chi Tiết Thể Lệ</a>
+            </span>
+        </h1>
+        <!--
+        <div style="float: right;">
+            <div class="event-marathon-header-tab" data-tab="event-marathon-ranking">Bảng Xếp Hạng</div>
+            <div class="event-marathon-header-tab" data-tab="event-marathon-personal">Cá Nhân</div>
+        </div>
+        -->
+        <div style="clear:both"></div>
+    </div>
+    <div class="event-marathon-body">
+        <div id="event-marathon-ranking" class="row event-marathon-ranking">
+            <!--
+            <div class="col-md-4 event-marathon-ranking-column">
+                <div class="event-marathon-ranking-body">
+                    <div class="event-marathon-ranking-header"><h3>Moc #1</h3></div>
+                    <table class="event-marathon-ranking-table">
+                        <thead>
+                            <tr>
+                              <th>Ten</th>
+                              <th>So Tien</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Trung T. Lam</td>
+                                <td>100000</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            -->
+        </div>
+        <div id="event-marathon-personal">
+            <div id="event-marathon-personal-loaded">
+                <h4 style="font-weight: bold;">Thông tin tài khoản cá nhân của bạn</h4>
+                <div style="width: 100%;margin: 0 auto;max-width: 350px;padding: 10px;border: 1px solid #ccc;">
+                    <div id="event-marathon-personal-name">Lam Thanh Trung</div>
+                    <table>
+                      <tr>
+                        <td>Mốc quà hiện tại:</td>
+                        <td id="event-marathon-personal-rank"></td>
+                      </tr>
+                      <tr>
+                        <td>Số đơn hàng đã thực hiện:</td>
+                        <td id="event-marathon-personal-order"></td>
+                      </tr>
+                      <tr>
+                        <td>Số tiền đã mua:</td>
+                        <td id="event-marathon-personal-total"></td>
+                      </tr>
+                    </table>
+                </div>
+            </div>
+            <div id="event-marathon-personal-nodata">
+                <div>Bạn không có trong danh sách cuộc đua.</div>
+            </div>
+            <div id="event-marathon-personal-guest">
+                <div>Xin vui lòng <a href="/customer/account/login/"><b>đăng nhập</b></a> để xem thông tin cá nhân.</div>
+            </div>
+        </div>
+        <div id="event-marathon-loading">
+            <div>Đang tải...</div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    const MARATHON_2_RANK_MAX_LIST = 100;
+    let MARATHON_2_GIFTS = '<?php echo Mage::getStoreConfig('event_marathon_2/config/gifts'); ?>';
+    var exlusive_list = [];
+    
+    try{
+        MARATHON_2_GIFTS = JSON.parse(MARATHON_2_GIFTS);
+    }catch(e){
+        MARATHON_2_GIFTS = [];
+    }
+    
+    let $marathon_tab_ranking = $jq("#event-marathon-ranking");
+    let $marathon_tab_personal = $jq("#event-marathon-personal");
+    let $marathon_current_tab = $jq("#event-marathon-ranking");
+    let $marathon_loading = $jq("#event-marathon-loading");
+    
+    let $marathon_current_tab_link = $jq(".event-marathon-header-tab:first-child");
+    $marathon_current_tab_link.addClass('active');
+    
+    /*
+    $jq(".event-marathon-header-tab").click(function(){
+        if($marathon_current_tab_link && $marathon_current_tab_link.hasClass('active')){
+            $marathon_current_tab_link.removeClass('active');
+        }
+        
+        $marathon_current_tab_link = $jq(this);
+        
+        if($marathon_current_tab){
+            $marathon_current_tab.hide();
+        }
+        
+        $marathon_current_tab_link.addClass('active');
+        $marathon_current_tab = $jq("#" + $marathon_current_tab_link.attr('data-tab'));
+        $marathon_current_tab.show();
+        
+        switch($marathon_current_tab_link.attr('data-tab')){
+            case 'event-marathon-personal':
+                getMarathon2Personal();
+                break;
+            default:
+                getMarathon2Ranking();
+        }
+    });
+    */
+    
+    getMarathon2Ranking();
+    getMarathon2Personal();
+    
+    function getMarathon2Ranking(){
+        $marathon_loading.show();
+        $marathon_tab_ranking.hide();
+        
+        $jq.ajax({
+            url: "/node_api/event/marathon2/ranking",
+            method: 'post',
+            success: function (data) {
+                $marathon_loading.hide();
+                $marathon_tab_ranking.empty();
+                
+                if(!data.result || !data.rank_table){
+                    return;
+                }
+                
+                for(let i=0;i<data.rank_table.length;i++){
+                    let $table_html = addMarathonTable(i, data.rank_table[i]);
+                    $marathon_tab_ranking.append($table_html);
+                }
+                
+                $marathon_tab_ranking.show();
+            }
+        });
+    }
+    
+    function getMarathon2Personal(){
+        $marathon_loading.show();
+        $marathon_tab_personal.hide();
+        
+        $jq.ajax({
+            url: "/event/index/marathon2personaldata",
+            method: 'post',
+            success: function (data) {
+                $marathon_loading.hide();
+                if(data.result){
+                    $jq("#event-marathon-personal-guest").hide();
+                    
+                    try{
+                        data.customer = JSON.parse(data.customer);
+                        data.customer['rank'] = parseInt(data.customer['rank']);
+                    }catch(e){
+                        data.customer = null;
+                    }
+                    
+                    if(data.customer){
+                        $jq("#event-marathon-personal-loaded").show();
+                        $jq("#event-marathon-personal-nodata").hide();
+                        
+                        $jq("#event-marathon-personal-name").text(data.customer['name']);
+                        if(data.customer['rank'] >= 0){
+                            $jq("#event-marathon-personal-rank").text(MARATHON_2_GIFTS[data.customer['rank']]);
+                        }else{
+                            $jq("#event-marathon-personal-rank").text("Không có");
+                        }
+                        
+                        data.customer['sum_grand_total'] = Helper.formatCurrency(data.customer['sum_grand_total']);
+                        $jq("#event-marathon-personal-total").text(data.customer['sum_grand_total']);
+                        $jq("#event-marathon-personal-order").text(data.customer['order_count']);
+                    }else{
+                        $jq("#event-marathon-personal-loaded").hide();
+                        $jq("#event-marathon-personal-nodata").show();
+                    }
+                }else{
+                    $jq("#event-marathon-personal-loaded").hide();
+                    $jq("#event-marathon-personal-guest").show();
+                    $jq("#event-marathon-personal-nodata").hide();
+                }
+                
+                $marathon_tab_personal.show();
+            }
+        });
+    }
+    
+    function addMarathonTable(index, customer_list){
+        if(!customer_list || customer_list.length <= 0){
+            return;
+        }
+        
+        let table_html = "<div class='col-md-4 event-marathon-ranking-column'>"
+        + "<div class='event-marathon-ranking-body'>"
+        + "<div class='event-marathon-ranking-header'><h3>Cột Mốc #" + (index+1)  + ": " + MARATHON_2_GIFTS[index] + "</h3></div>"
+        + "<table class='event-marathon-ranking-table'><thead><tr><th>Tên</th><th>Số Tiền</th></tr></thead><tbody>";
+        
+        let row_html = "";
+        for(let i in customer_list){
+            let customer = JSON.parse(customer_list[i]);
+            if(exlusive_list.includes(customer['customer_id'])){
+                continue;
+            }
+            customer['sum_grand_total'] = customer['sum_grand_total'] ; //Helper.formatCurrency();
+            row_html += "<tr><td>" + customer['name'] + "</td><td>" + customer['sum_grand_total'] + "</td></tr>";
+        }
+        
+//        let object_keys = Object.keys(customer_list);
+//        if(object_keys.length >= MARATHON_2_RANK_MAX_LIST){
+//            row_html += "<tr><td>...</td><td></td></tr>";
+//        }
+        
+        table_html += row_html + "</tbody></table></div></div>";
+        return $jq(table_html);
+    }
+    
+</script>

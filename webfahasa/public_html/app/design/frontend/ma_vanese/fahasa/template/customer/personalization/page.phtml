@@ -1,0 +1,75 @@
+<?php 
+    $is_mobile = Mage::helper('fhsmobiledetect')->isMobile();
+    
+    $catalog_helper = Mage::helper('catalog');
+    $array_order_types = array(
+        'default' => "Sắp xếp",
+        'week' => $catalog_helper->__("Weekly BestSeller"),
+        'month' => $catalog_helper->__("Monthly BestSeller"),
+        'year' => $catalog_helper->__("Yearly BestSeller"),
+        'created_at' => "Mới Nhất"
+    );
+    
+    $PAGE_SCRIPT = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS)
+            ."lib/personalization.js?q="
+            .Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix');
+    
+?>
+
+<div id="personalization-page-body">
+    <div id="personalization-header-title" class="block-header">
+        <img src="https://cdn0.fahasa.com/media/wysiwyg/icon-menu/ico_goiy@3x.png" class="block-header-icon"/>
+        <a class="block-header-title">Gợi Ý Dành Riêng Cho Bạn</a>
+    </div>
+    <?php if($is_mobile): ?>
+    <div id="personalization-menu-mobile">
+        <ul class="bxslider swiper-wrapper">
+        </ul>
+    </div>
+    <?php else: ?>
+        <ul id="personalization-page-menu">
+        </ul>
+    <?php endif; ?>
+    <div class="header-separator"><div class="line-separator"></div></div>
+    <div class="page-order-by-container">
+        <span style="margin-right: 10px;">Sắp xếp:</span>
+        <select id="personalization-page-order-by" onchange="clickToOrder()">
+        <?php foreach($array_order_types as $key=>$type): ?>
+            <option value="<?php echo $key; ?>" <?php if($key=='default'): ?>selected=""<?php endif; ?>> <?php echo $type; ?></option>
+        <?php endforeach; ?>
+        </select>
+        <div style="clear:both"></div>
+    </div>
+    
+    <div id="personalization-page-container"></div>
+</div>
+
+<div id="personalization-page-bottom">
+    <div id="personalization-page-loading">Loading ...</div>
+</div>
+
+<!---  NOT LOGGED IN -->
+<div id="personalization-not-loggedin">
+<!--    <p>Please <a href="/customer/account/login">login</a> to view our recommended products</p>-->
+    <p><?php echo $this->__('If you want to view your recommended products, please see more than three products') ?></p>
+</div>
+
+<script type="text/javascript" src="<?php echo $PAGE_SCRIPT; ?>"></script>
+<script type="text/javascript">
+    if(typeof personalization === "undefined"){
+	let is_mobile = "<?php echo $is_mobile; ?>";
+	var personalization = new Personalization();
+	// CUSTOMER_ID is declare in template: top_notification.phtml
+	// top_notification.phtml is not cached, so this 'CUSTOMER_ID' is not cached            
+	personalization.initPage(CUSTOMER_ID, is_mobile, SESSION_ID);
+	inited_personalization_block = true;
+    }
+    
+    if(personalization !== null){
+        function clickToOrder(){
+            let order_by = document.getElementById("personalization-page-order-by").value;
+            personalization.setOrderBy(order_by);
+        }
+    }
+    
+</script>

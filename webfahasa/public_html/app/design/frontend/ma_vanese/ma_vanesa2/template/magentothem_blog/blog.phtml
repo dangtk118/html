@@ -1,0 +1,57 @@
+<div id="fhs-blog">
+    <?php $posts = $this->getPosts(); ?>
+    <div id="messages_product_view">
+        <?php Mage::app()->getLayout()->getMessagesBlock()->setMessages(Mage::getSingleton('customer/session')->getMessages(true)); ?>
+        <?php echo Mage::app()->getLayout()->getMessagesBlock()->getGroupedHtml(); ?>
+    </div>
+    <?php
+    $catIdList = Mage::getStoreConfig('blog/blog/catIds');
+    $arr = explode(",", $catIdList);
+    ?>
+    <?php foreach ($arr as $index): ?>
+        <?php $catResult = $this->getCategoryTitle($index); ?>
+        <?php if (!empty($catResult)): ?> 
+
+            <div  class="col-xs-12"  style="padding: 0px 2px 5px 4px;">
+
+                <div >
+                    <?php $blog_result = $this->getCategoryPosts($index); ?>
+                    <?php if (count($blog_result) > 0) : ?>
+                        <div class="categoryTitle">
+                            <?php
+                            echo $catTitle = $catResult[0]['title'];
+                            ?>
+                        </div>
+                        <div class="col-xs-12"  style="padding: 10px 0px 0px 6px;">
+                            <?php foreach ($blog_result as $blog) : ?>
+                                <div class="col-md-4" style="margin-top: 10px; padding-left: 4px; padding-right: 2px;">
+                                    <div style="text-align: center; margin-right: 20px; macol-xs-12rgin-bottom: 10px">
+                                        <a href="<?php echo Mage::getBaseUrl()."blog/".$blog['url']; ?>"><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA). $blog["thumbnailimage"]; ?>"  style=" height: 180px; width: auto;"/></a>
+                                        
+                                    </div>
+                                    <div class="blog-title" style="font-weight: bold; margin-top: 5px; color: black;">
+                                        <?php 
+                                            echo "<a href=\"".Mage::getBaseUrl()."blog/" . $blog['url'] . "\">" . $blog['blogTitle'] . "</a>"; 
+                                        ?>
+                                    </div>
+                                    <div class = "blog-description">
+                                        <p class="text-concat">
+                                            <?php echo $blog["short_content"]; ?>
+                                        </p>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+
+                        <div style="text-align: right; margin-right: 24px;">
+                            <?php echo "<a href=\"".Mage::getBaseUrl()."blog/cat/" . $catResult[0]['identifier'] . "\">" . $this->__('Read More')."</a>" ?>
+                        </div>
+                    <?php endif; ?>
+
+                </div>
+            </div>
+        <?php endif; ?>
+
+    <?php endforeach; ?>
+
+</div>

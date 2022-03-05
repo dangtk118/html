@@ -1,0 +1,229 @@
+<?php 
+    $is_mobile = Mage::helper('fhsmobiledetect')->isMobile();
+    $catalog_helper = Mage::helper('catalog');
+    
+    $array_order_types = array(
+        'week' => $catalog_helper->__("Weekly BestSeller"),
+        'month' => $catalog_helper->__("Monthly BestSeller"),
+        'year' => $catalog_helper->__("Yearly BestSeller"),
+    );
+    $category_data = json_decode($this->getData('category_data'), true);
+?>
+
+<style type="text/css">
+
+#event-buffetcombo-body{
+    font-family: Montserrat,sans-serif;
+}
+    
+#event-buffetcombo-menu{
+    padding: 10px 0;
+    margin: 0px;
+    margin-bottom: 10px;
+    /*width: 50%;*/
+    margin: 0 auto;
+    background-color: #fff;
+    /*margin-bottom: 50px;*/
+}
+
+#event-buffetcombo-menu-mobile{
+    margin-bottom: 10px;
+}
+
+.buffetcombo-menu-item{
+    text-align: center;
+    padding: 0px;
+    font-size: 14px;
+}
+
+.buffetcombo-menu-item a{
+    padding: 15px;display:block;
+    cursor: pointer;
+}
+
+.buffetcombo-menu-item a:hover{
+    color: #F7931E !important;
+}
+
+.buffetcombo-menu-item .active{
+    background-color: #F14C4C;
+    cursor: pointer;
+}
+
+.buffetcombo-menu-item.active a{
+    color: #F7931E !important;
+    border: 1px solid #F7931E;
+    padding: 5px 12px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+#event-buffetcombo-menu .buffetcombo-menu-item{
+    display: inline;
+    text-align: center;
+    cursor: pointer;
+}
+
+.buffetcombo-menu-item a {
+  display: inline-block;
+  text-decoration: none;
+  color: #333;
+  margin: 0 10px;
+}
+
+#event-buffetcombo-menu .buffetcombo-menu-item:nth-child(2).active ~ hr {
+    margin-left: 20%;
+}
+
+#event-buffetcombo-menu .buffetcombo-menu-item:nth-child(3).active ~ hr {
+    margin-left: 40%;
+}
+
+#event-buffetcombo-menu .buffetcombo-menu-item:nth-child(4).active ~ hr {
+    margin-left: 60%;
+}
+
+#event-buffetcombo-menu .buffetcombo-menu-item:nth-child(5).active ~ hr {
+    margin-left: 80%;
+}
+
+#event-buffetcombo-menu hr {
+/*    height: .25rem;
+    width: 20%;
+    margin: 0;
+    background: #F7931E;
+    border: none;
+    transition: .3s ease-in-out;*/
+}
+
+#event-buffetcombo-loading-icon{
+    display: none;
+    margin: auto;
+    text-align: center;
+    background-color: #fff;
+    width: 50px;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.buffetcombo-item-out-of-stock{
+    position: relative;
+    z-index: 2;
+    margin-top: -80px;
+    display: flex;
+    top: -75px;
+    pointer-events: none;
+}
+
+.buffetcombo-item-out-of-stock-mobile{
+    position: relative;
+    z-index: 2;
+    margin-top: -50px;
+    display: flex;
+    top: -75px;
+    pointer-events: none;
+}
+
+.buffetcombo-menu-mobile-item{
+    margin: 5px;
+    padding: 5px;
+    text-align: center;
+    width: auto !important;
+}
+
+.buffetcombo-menu-mobile-item.active{
+    border-bottom: 4px solid;
+    color: #F7931E;
+}
+
+.buffetcombo-swiper-menu{
+    overflow: hidden;
+    background-color: #fff;
+    padding:5px 10px;
+}
+
+#event-buffetcombo-icon{
+    margin: 0 auto;
+    width: 250px;
+}
+
+.event-buffetcombo-msg-info{
+    padding: 10px;
+    margin: 0px 0px 20px 0px;
+    color: #fff;
+    background-color: #ff971e;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+}
+
+</style>
+
+<div id="event-buffetcombo-banner" style="margin-top: 5px;">
+    <?php echo $this->getChildHtml('event_buffetcombo_banner') ?>
+</div>
+
+<div id="event-buffetcombo-body">
+    <div id="event-buffetcombo-header">
+        <!--
+            <h1 style="color: #F7931E;font-size: 40px;margin: 30px auto;width: 280px;font-weight: bold;">Buffet Combo</h1>
+        -->
+        <div id="event-buffetcombo-icon">
+            <img width='250' src="<?php echo Mage::helper("event/buffetcombo")->getBuffetIcon(); ?>"/>
+        </div>
+    </div>
+    <?php if($is_mobile): ?>
+    <div id="event-buffetcombo-menu-mobile" class="buffetcombo-swiper-menu row">
+        <ul class="bxslider swiper-wrapper">
+            <li class="swiper-slide buffetcombo-menu-mobile-item" data-id="all">
+                <a href="?cat_id=all#event-buffetcombo-header"><?php echo $this->__('All'); ?></a>
+            </li>
+        </ul>
+    </div>
+    <?php else: ?>
+    <div id="event-buffetcombo-menu" class="row">
+        <ul>
+            <li class="buffetcombo-menu-item"><a></a></li>
+        </ul>
+    </div>
+    <?php endif; ?>
+    <div class="page-order-by-container">
+        <select id="event-buffetcombo-order-by" onchange="clickToOrder()">
+        <?php foreach($array_order_types as $key=>$type): ?>
+            <option value="<?php echo $key; ?>" <?php if($key=='week'): ?>selected=""<?php endif; ?>> <?php echo $type; ?></option>
+        <?php endforeach; ?>
+        </select>
+    </div>
+    <div>
+        <div id="event-buffetcombo-msg-total" class="event-buffetcombo-msg-info" style="display:none"><?php echo $this->__('We run out of Buffet Combos.'); ?></div>
+    </div>
+    <div id="event-buffetcombo-container">
+    </div>
+</div>
+
+<div id="event-buffetcombo-bottom">
+    <div id="event-buffetcombo-loading-icon">
+        <img src="/skin/frontend/ma_vanese/fahasa/images/ring_loader.svg" width="50" height="50"/>
+    </div>
+</div>
+
+<script type="text/javascript" src="/js/lib/event/buffetcombo.js?q=<?php echo Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix'); ?>"></script>
+<script type="text/javascript">
+    let is_mobile = "<?php echo $is_mobile; ?>";
+    let text_labels = {
+        'all': "<?php echo $this->__('All'); ?>",
+        'van_hoc': "<?php echo $this->__('Van Hoc'); ?>",
+        'kinh_te': "<?php echo $this->__('Kinh Te'); ?>",
+        'tam_ly_ky_nang': "<?php echo $this->__('Tam Ly Ky Nang'); ?>",
+        'nuoi_day_con': "<?php echo $this->__('Nuoi Day Con'); ?>",
+    };
+    let category_data = <?php echo json_encode($category_data);?>;
+    let eventBuffetCombo = new EventBuffetCombo();
+    eventBuffetCombo.init(text_labels, is_mobile, true, category_data);
+    
+    function clickToOrder(){
+        let order_by = document.getElementById("event-buffetcombo-order-by").value;
+        
+        eventBuffetCombo.setOrderBy(order_by);
+    }
+</script>

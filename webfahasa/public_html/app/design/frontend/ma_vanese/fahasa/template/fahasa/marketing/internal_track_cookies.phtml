@@ -1,0 +1,13 @@
+<?php 
+$duration = Mage::getStoreConfig('event_source/config/cookie_duration');
+?>
+<?php if(Mage::getStoreConfig('event_source/config/is_active') == 1): ?>
+<script src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS, true)
+        ."lib/internal_tracking.js?q="
+        .Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix');?>" ></script>
+
+<script type="text/javascript">
+    let internal_tracking = new InternalTracking({cookie_duration: <?php echo json_encode($duration); ?>});
+    internal_tracking.tracking();
+</script>
+<?php endif; ?>

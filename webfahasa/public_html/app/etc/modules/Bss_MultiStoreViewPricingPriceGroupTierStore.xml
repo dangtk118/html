@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Bss_MultiStoreViewPricingPriceGroupTierStore>
+      	<active>true</active>
+      	<codePool>local</codePool>
+      	<depends>
+			<Bss_MultiStoreViewPricing />
+		</depends>
+    </Bss_MultiStoreViewPricingPriceGroupTierStore>
+  </modules>
+</config>

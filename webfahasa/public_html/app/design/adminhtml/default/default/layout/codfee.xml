@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+  
+    <!--COD display in admins-->
+    <adminhtml_sales_order_view>
+        <reference name="order_totals">
+		    <block type="codfee/sales_order_total" name="codfee.sales.order.total" />
+
+        </reference>
+    </adminhtml_sales_order_view>
+
+    <adminhtml_sales_order_invoice_new>
+        <reference name="invoice_totals">
+		    <block type="codfee/sales_order_total" name="codfee.sales.order.total" />
+
+        </reference>
+    </adminhtml_sales_order_invoice_new>
+
+    <adminhtml_sales_order_invoice_updateqty>
+	    <reference name="invoice_totals">
+		    <block type="codfee/sales_order_total" name="codfee.sales.order.total" />
+        </reference>
+    </adminhtml_sales_order_invoice_updateqty>
+
+    <adminhtml_sales_order_invoice_view>
+	    <reference name="invoice_totals">
+		    <block type="codfee/sales_order_total" name="codfee.sales.order.total" />
+        </reference>
+    </adminhtml_sales_order_invoice_view>
+
+    <adminhtml_sales_order_creditmemo_new>
+        <reference name="creditmemo_totals">
+		    <block type="codfee/sales_order_total" name="codfee.sales.order.total" />
+        </reference>
+    </adminhtml_sales_order_creditmemo_new>
+
+    <adminhtml_sales_order_creditmemo_updateqty>
+        <reference name="creditmemo_totals">
+            <block type="codfee/sales_order_total" name="codfee.sales.order.total" />
+        </reference>
+    </adminhtml_sales_order_creditmemo_updateqty>
+
+    <adminhtml_sales_order_creditmemo_view>
+        <reference name="creditmemo_totals"> 
+		    <block type="codfee/sales_order_total" name="codfee.sales.order.total" />
+        </reference>
+    </adminhtml_sales_order_creditmemo_view>    
+
+   <!-- COD logic stuff-->
+    <codfee_adminhtml_province_index>
+        <reference name="content">
+            <block type="codfee/adminhtml_province" name="province" />
+        </reference>
+    </codfee_adminhtml_province_index>
+    <codfee_adminhtml_district_index>
+        <reference name="content">
+            <block type="codfee/adminhtml_district" name="district" />
+        </reference>
+    </codfee_adminhtml_district_index>
+    <codfee_adminhtml_area_index>
+        <reference name="content">
+            <block type="codfee/adminhtml_area" name="area" />
+        </reference>
+    </codfee_adminhtml_area_index>    
+    <codfee_adminhtml_rule_index>
+        <reference name="content">
+            <block type="codfee/adminhtml_rule" name="rule" />
+        </reference>
+    </codfee_adminhtml_rule_index>
+    <codfee_adminhtml_rule_edit>
+        <reference name="head">
+            <action method="addJs">
+                <script>mage/adminhtml/rules.js</script>
+            </action>
+        </reference>
+    </codfee_adminhtml_rule_edit>
+
+    <codfee_adminhtml_area_districtlist>
+        <block type="core/text_list" name="root" output="toHtml">
+            <block type="codfee/adminhtml_area_edit_tab_district" name="area.edit.tab.district"/>
+            <block type="adminhtml/widget_grid_serializer" name="related_grid_serializer">
+                <action method="initSerializerBlock">
+                    <grid_block_name>area.edit.tab.district</grid_block_name>
+                    <data_callback>getSelectedDistricts</data_callback>
+                    <hidden_input_name>selected_districts</hidden_input_name>
+                    <reload_param_name>odistrict</reload_param_name>
+                </action>
+                <action method="addColumnInputName">
+                    <input_name>position</input_name>
+                </action>
+            </block>
+        </block>
+    </codfee_adminhtml_area_districtlist>
+		
+    <codfee_adminhtml_area_districtlistgrid>
+        <block type="core/text_list" name="root" output="toHtml">
+            <block type="codfee/adminhtml_area_edit_tab_district" name="area.edit.tab.district"/>
+        </block>
+    </codfee_adminhtml_area_districtlistgrid>
+		
+    <codfee_adminhtml_area_provincelist>
+        <block type="core/text_list" name="root" output="toHtml">
+            <block type="codfee/adminhtml_area_edit_tab_province" name="area.edit.tab.province"/>
+            <block type="adminhtml/widget_grid_serializer" name="related_grid_serializer">
+                <action method="initSerializerBlock">
+                    <grid_block_name>area.edit.tab.province</grid_block_name>
+                    <data_callback>getSelectedProvinces</data_callback>
+                    <hidden_input_name>selected_provinces</hidden_input_name>
+                    <reload_param_name>oprovince</reload_param_name>
+                </action>
+                <action method="addColumnInputName">
+                    <input_name>position</input_name>
+                </action>
+            </block>
+        </block>
+    </codfee_adminhtml_area_provincelist>
+		
+    <codfee_adminhtml_area_provincelistgrid>
+        <block type="core/text_list" name="root" output="toHtml">
+            <block type="codfee/adminhtml_area_edit_tab_province" name="area.edit.tab.province"/>
+        </block>
+    </codfee_adminhtml_area_provincelistgrid>    
+</layout>

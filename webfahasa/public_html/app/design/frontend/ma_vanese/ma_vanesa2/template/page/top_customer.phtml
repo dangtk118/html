@@ -1,0 +1,36 @@
+<?php
+
+$BASE_SKIN_URL = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true);
+
+$MEDIA_URL = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);
+$SKIN_URL = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true);
+
+?>
+
+<style>
+    .login-cutomer-icon{
+        position: inherit;
+        background: url(<?php echo $SKIN_URL ?>/frontend/base/default/images/ico_customer_cam.png) no-repeat center center;
+        background-size: 20px!important;
+    }
+    @media (max-width: 992px){
+        #header .header1 .customer-top {
+            margin-right : 5px;
+            margin-left : 5px;
+        }
+    }
+    #header .header1 .customer-top {
+    padding-left: 0px;
+}
+</style>
+<div id="mini_cart_block" class="customer-top">
+    <?php $_cartQty = $this->getSummaryCount() ?>
+    <div>
+        <a href="<?php echo $this->getUrl('customer/account')?>" >
+                <div> 
+                    <div class="login-cutomer-icon" style="width:30px;height:35px;"></div>
+                </div>
+        </a>
+    </div>
+</div>
+

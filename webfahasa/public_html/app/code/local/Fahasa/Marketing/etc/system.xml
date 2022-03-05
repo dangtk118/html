@@ -1,0 +1,396 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <tabs>
+        <bye_iq translate="label" module="fhsmarketing">
+            <label>Bye IQ Enable</label>
+            <sort>30</sort>
+        </bye_iq>
+        <retry_iq translate="label" module="fhsmarketing">
+            <label>Retry IQ Enable</label>
+            <sort>40</sort>
+        </retry_iq>
+        <accesstrade translate="label" module="fhsmarketing">
+            <label>Access Trade Enable</label>
+            <sort>50</sort>
+        </accesstrade>
+        <netcore translate="label" module="fhsmarketing">
+            <label>Netcore Enable</label>
+            <sort>60</sort>
+        </netcore>
+        <chin_media translate="label" module="fhsmarketing">
+            <label>Chin Media Enable</label>
+            <sort>70</sort>
+        </chin_media>
+        <suggestion translate="label" module="fhsmarketing">
+            <label>Suggestion Enable</label>
+            <sort>80</sort>
+        </suggestion>
+        <asidebar translate="label" module="fhsmarketing">
+            <label>Mini Bar Enable</label>
+            <sort>90</sort>
+        </asidebar>
+        <enhanced_ecom translate="label" module="fhsmarketing">
+            <label>Enhanced Ecommerce Enable</label>
+            <sort>100</sort>
+        </enhanced_ecom>
+        <ulu translate="label" module="fhsmarketing">
+            <label>Affiliate ULU</label>
+            <sort>110</sort>
+        </ulu>
+    </tabs>
+    <sections>
+        <accesstrade>
+            <label>Access Trade Enable</label>
+            <tab>accesstrade</tab>             
+            <frontend_type>text</frontend_type>
+            <sort_order>150</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <general translate="label">
+                    <label>General</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>0</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>			    
+                        <enable translate="label">
+                            <label>Enable Access Trade</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enable>
+                        <enable_mobile translate="label">
+                            <label>Enable Access Trade Mobile</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enable_mobile>
+                        <expired_time>
+                            <label>Expire Session Time</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Expire Session after a period of time. Unit: hour. Ex: 720 (1 month = 720 hour)</comment>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </expired_time>
+                    </fields>
+                </general>
+            </groups>
+        </accesstrade>
+    </sections>
+    <sections>
+        <byeiq>
+            <label>Bye IQ Enable</label>
+            <tab>bye_iq</tab>             
+            <frontend_type>text</frontend_type>
+            <sort_order>150</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <general translate="label">
+                    <label>General</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>0</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>			    
+                        <enable translate="label">
+                            <label>Enable Bye IQ</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enable>
+                    </fields>
+                </general>
+            </groups>
+        </byeiq>
+        <retryiq>
+            <label>Retry IQ Enable</label>
+            <tab>retry_iq</tab>             
+            <frontend_type>text</frontend_type>
+            <sort_order>160</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <general translate="label">
+                    <label>General</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>0</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>			    
+                        <enable translate="label">
+                            <label>Enable Retry IQ</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enable>
+                    </fields>
+                </general>
+            </groups>
+        </retryiq>
+        <netcore>
+            <label>Netcore Enable</label>
+            <tab>netcore</tab>             
+            <frontend_type>text</frontend_type>
+            <sort_order>170</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <general translate="label">
+                    <label>General</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>30</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>			    
+                        <enable translate="label">
+                            <label>Enable Netcore</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enable>
+                    </fields>
+                </general>
+            </groups>
+        </netcore>
+        <chin_media>
+            <label>Chin Media Enable</label>
+            <tab>chin_media</tab>             
+            <frontend_type>text</frontend_type>
+            <sort_order>170</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <general translate="label">
+                    <label>General</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>30</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>			    
+                        <enable translate="label">
+                            <label>Enable Chin Media</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enable>
+                        <cat_main_ids>
+                            <label>Cat Main Ids exlude</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Category Main IDs vd: 4,3165</comment>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </cat_main_ids>
+                        <cat_mind_ids>
+                            <label>Cat Mind Ids exlude</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Category Mind IDs vd: 15</comment>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </cat_mind_ids>
+                        <cat_1_ids>
+                            <label>Cat 1 Ids exlude</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Category 1 IDs vd: 6564,6565</comment>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </cat_1_ids>
+                    </fields>
+                </general>
+            </groups>
+        </chin_media>
+        <suggestion>
+            <label>Suggestion Enable</label>
+            <tab>suggestion</tab>             
+            <frontend_type>text</frontend_type>
+            <sort_order>170</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <general translate="label">
+                    <label>General</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>30</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>			    
+                        <enable translate="label">
+                            <label>Enable Suggestion</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enable>
+                        <enable_mobile translate="label">
+                            <label>Enable Suggestion Mobile</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enable_mobile>
+                    </fields>
+                </general>
+            </groups>
+        </suggestion>
+        <asidebar>
+            <label>Asidebar Enable</label>
+            <tab>asidebar</tab>             
+            <frontend_type>text</frontend_type>
+            <sort_order>180</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <general translate="label">
+                    <label>General</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>30</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>			    
+                        <enable translate="label">
+                            <label>Enable Asidebar</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enable>
+                    </fields>
+                </general>
+            </groups>
+        </asidebar>
+        <enhanced_ecom>
+            <label>Enhanced Ecommerce Enable</label>
+            <tab>enhanced_ecom</tab>             
+            <frontend_type>text</frontend_type>
+            <sort_order>170</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <general translate="label">
+                    <label>General</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>30</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>			    
+                        <enable translate="label">
+                            <label>Enable Enhanced Ecommerce</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enable>
+                    </fields>
+                </general>
+            </groups>
+        </enhanced_ecom>
+        <ulu>
+            <label>Affiliate ULU Enable</label>
+            <tab>ulu</tab>             
+            <frontend_type>text</frontend_type>
+            <sort_order>180</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <general translate="label">
+                    <label>General</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>30</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>			    
+                        <enable translate="label">
+                            <label>Enable Affiliate ULU</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enable>
+                        <cat_main_ids>
+                            <label>Cat Main Ids exlude</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Category Main IDs vd: 4,3165</comment>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </cat_main_ids>
+                        <cat_mind_ids>
+                            <label>Cat Mind Ids exlude</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Category Mind IDs vd: 15</comment>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </cat_mind_ids>
+                        <cat_1_ids>
+                            <label>Cat 1 Ids exlude</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Category 1 IDs vd: 6564,6565</comment>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </cat_1_ids>
+                    </fields>
+                </general>
+            </groups>
+        </ulu>
+    </sections>
+</config>

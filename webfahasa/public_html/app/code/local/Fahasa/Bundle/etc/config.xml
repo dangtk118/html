@@ -1,0 +1,30 @@
+<config>
+    <modules>
+        <Fahasa_Bundle>
+            <version>0.1.0</version>
+        </Fahasa_Bundle>
+    </modules>
+    <global>
+        <models>
+            <bundle>
+                <rewrite>
+                    <product_type>Fahasa_Bundle_Model_Product_Type</product_type>
+                </rewrite>
+            </bundle>
+        </models>
+        <blocks>
+            <bundle>
+                <rewrite>
+                    <sales_order_items_renderer>Fahasa_Bundle_Block_Sales_Order_Items_Renderer</sales_order_items_renderer>
+                </rewrite>
+            </bundle>
+        </blocks>
+        <helpers>
+            <bundle>
+                <rewrite>
+                    <catalog_product_configuration>Fahasa_Bundle_Helper_Catalog_Product_Configuration</catalog_product_configuration>
+                </rewrite>
+            </bundle>
+        </helpers>
+    </global>
+</config>

@@ -1,0 +1,774 @@
+<?php
+$eventId = $this->getData("event_id");
+$eventDetail = $this->getEventDetail($eventId);
+$gameData = $eventDetail["gameData"];
+$mobile = Mage::helper('fhsmobiledetect')->isMobile();
+$giftsNumber = $eventDetail["giftsNumber"];
+?>
+<div id="game-block">
+    <div id="wheel-game" style="background-image: url('<?php 
+    if ($mobile){echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . $gameData["backgroundImage"];}
+    else{
+    echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . $gameData["backgroundImageWeb"]; }?>');
+         background-position: bottom;
+         background-repeat: no-repeat;
+         background-size: cover;">
+        <div style="<?php if($mobile){echo 'height:400px';}else{echo 'height: 800px';} ?>">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 containerbtn">
+                <button class="btnTutor"   
+                        style="background-image: url('<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . $gameData["backgroundBtn"]; ?>')" onclick="showGameTutorial()">Huớng dẫn quay</button>
+                <button 
+                    class="btnTutor loginbtn" 
+                    style="background-image: url('<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . $gameData["backgroundBtn"]; ?>')" onclick="showGifts()">Quà đã trúng</button> 
+                <button
+                class="btnTutor loginbtn"   
+                style="background-image: url('<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . $gameData["backgroundBtn"]; ?>')" onclick="showBuyTurn()">Đổi F-Point</button>
+            </div>
+            <div class="container-center" >
+                <img  class="game-title" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . $gameData["gameTitle"]; ?>" />
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 container-center" id="game-content" style=" display: none;">
+               
+                <div style="display: inline-block;  
+                         position: relative;">
+                    <div id="clockdiv" style=" left: 0;color: <?php echo $gameData["clockColor"]; ?>;">
+                        <div>
+                            <span class="hours"></span>
+                        </div>
+                        <div>
+                            <span class="">:</span>
+                        </div>
+                        <div>
+                            <span class="minutes"></span>
+                        </div>
+                        <div>
+                            <span class="">:</span>
+                        </div>
+                        <div>
+                            <span class="seconds"></span>
+                        </div>
+                    </div>
+                </div>
+                <div style="position: relative; top: 0%;">
+                    <div class="circle" >
+                        <img id="wheel" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . $gameData["gifImage"]; ?>"/>
+                        <img class="wheelBtn" id="wheelBtn"
+                             src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . $gameData["wheelBtn"]; ?>" />
+                    </div>
+                    <div id="pointer" class="circle-pointer">
+                        <img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . $gameData["arrowImage"]; ?>"/>
+                    </div>
+                </div>
+                  <div class="list-user">
+                </div>
+            </div>
+        </div>
+        <div class="container-center game-bottom">
+            <button class="btnTutor"   style="background-color: #4267b2; border-radius: 10px; width: 150px;" onclick="shareFacebook()">
+                <i class="fa fa-facebook" style="color: white;"></i>
+                <span style="color: white;">Chia sẻ</span>
+            </button>
+        </div>
+        <div class="game-popup-gift" >
+            <div class="game-popup-gift-outsite popup-scroll">
+                  <span class='close'>&times;</span>
+                <div class="game-popup-gift-title">
+                    <h3 class="game-title orange-title">QUÀ ĐÃ TRÚNG</h3>
+                    <h3 class="error"></h3>
+                </div>
+            </div>
+            <div class="container-center container-padding">
+                <button class="sharedBtnLeft">
+                    <a href="<?php echo Mage::getBaseUrl() . $gameData["detailCmsPageUrl"]; ?>">
+                        <span class="sharedTitleLeft">Xem chi tiết</span>
+                    </a>
+                </button>
+            </div>
+        </div>
+        <div class="game-popup-tutorial popup-scroll">
+            <div class="game-popup-tutorial-outsite">
+                <span class='close'>&times;</span>
+                <div class="game-popup-tutorial-title">
+                    <img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . $gameData["tutorImage"]; ?>"/>
+                </div>
+            </div>
+        </div>
+        <div class="game-popup-remain">
+            <div class="game-popup-remain-outsite">
+                <span class='close'>&times;</span>
+                <button class="content" onclick="shareFacebook()" style="border: none;padding: 0px;">
+                    <img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . $gameData["remainTurnImage"]; ?>" width="100%" height="100%"/>
+                    <div class="remain-content">
+                        <div >BẠN CÒN</div>
+                        <div><span class="remainQty">0</span> LƯỢT QUAY</span></div>
+
+                    </div>
+                </button>
+            </div>
+        </div>
+        <div class="game-popup-current-gift" style="width: <?php if ($mobile){echo "305px";}else{echo "450px";} ?> !important;">
+            <div class="game-popup-current-gift-outsite">
+                <span class='close'>&times;</span>
+                <div class="game-popup-current-gift-title">
+                    <h3 class="error"></h3>
+                </div>
+            </div>
+        </div>
+        <div class="game-popup-buy-turn" style="background-image: url('<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . $gameData["backgroundPopUp"]; ?>');">
+            <div class="game-popup-buy-turn-outsite">
+                <div class="content title-buy-turn container-center" >
+                    <div style=" padding: 20px 10px;  text-transform: uppercase; font-size: 20px;" class="titlebold">Bạn cần <?php echo $eventDetail["fpointTurnCost"]; ?> F-Point<br> cho 1 lượt quay</div>
+                    <div>
+                        <div class="remain-content">
+                            <div >Bạn còn <span class="remainQty titlebold">0</span> lượt quay</span></div>
+                        </div>
+                        <span >Bạn đang có </span>
+                        <span class="customerFpoint titlebold">0</span>
+                        <span class="titlebold"> F-Point</span>
+                        <a href="thanh-vien" target="_blank">
+                            <i class="fa fa-question"  ></i>
+                        </a>
+                    </div>
+                    <div style="padding: 10px; color: #F7931E;" class="titlebold">Bạn muốn đổi bao nhiêu lượt quay?</div>
+                    <div style="padding: 10px; ">Số lượng</div>
+                    <div style="flex-direction: row; padding: 8px;">
+                        <button class="btn-buy" onclick="minusBuyTurnQty()"><i class="fa fa-minus" ></i></button>
+                        <input type="text" name="buyTurnQty" id="buyTurnQty" value ="1" style="width: 60px;color: #F7931E;font-size: 18px;text-align: center;" min="1"
+                               oninput="checkBuyTurnQtyValid(this)" >
+                        <button  class="btn-buy" onclick="plusBuyTurnQty()"><i class="fa fa-plus" ></i></button>
+                    </div>
+                    <div class="total-fpoint-container">
+                        <span>Thành tiền:</span>
+                        <span class="totalQty titlebold">1</span>
+                        <span class="titlebold">x <?php echo $eventDetail["fpointTurnCost"]; ?> =</span>
+                        <span class="totalFpoint titlebold"><?php echo $eventDetail["fpointTurnCost"]; ?></span>
+                        <span class="titlebold">đ</span>
+                    </div>
+                </div>
+                <div class="buyturn-result title-buy-turn" style="text-align:center;"></div>
+                <div class="btnView">
+                    <button class="title-buy-turn titlebold closebtn btn-bottom">Hủy</button>
+                    <button class="title-buy-turn titlebold btn-bottom" id="btn-buy-fpoint" onclick="onClickBuyTurn()">Đổi ngay</button>
+                </div>
+            </div>
+        </div>
+        <div class="buy-turn-message">
+             <div class="buy-turn-message-outsite">
+             <span class='close'>&times;</span>
+                <div class="buy-turn-message-content">
+                </div>
+              </div>
+        </div>
+         <div class="youama-noti-window-sucess"  >
+            <div class="youama-window-outside">
+                <span class="close lg-close" style="top:0%; right:0%;position:relative">×</span>
+                <div class="youama-window-inside">
+                    <div class="youama-window-title">
+                        <h3 class="error"></h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var revertTime = null;
+    var curGift = {};
+    var eventId = "<?php echo $eventId; ?>";
+    var buyTurnQty = 1;
+    var customerFpoint = 0;
+    var fpointTurnCost = parseInt("<?php echo $eventDetail["fpointTurnCost"]; ?>");
+    var maxBuyQty = customerFpoint / fpointTurnCost;
+    var isLogin = false;
+    var currentFpoint = 0;
+    jQuery(document).ready(function () {
+        checkGame();
+        getListUserAttend(eventId);
+    });
+    function checkGame() {
+        new Ajax.Request(
+                "<?php echo $this->getUrl('event/index/checkGame1/', array('_secure' => true)) ?>", {
+                    method: "post",
+                    parameters: {eventId: eventId},
+                    onLoading: function () {
+                        jQuery('.youama-ajaxlogin-loader').fadeIn();
+                    },
+                    onLoaded: function () {
+                        jQuery('.youama-ajaxlogin-loader').fadeOut();
+                    },
+                    onFailure: function (request, status, error) {
+                        alert(request.statusText);
+                    },
+                    onSuccess: function (transport) {
+                        if (200 == transport.status) {
+                            var params = JSON.parse(transport.responseText);
+                            if (params.isLogin) {
+                                isLogin = params.isLogin;
+
+                                $jq("#wheel-game .loginbtn").prop("disabled", false);
+                                customerFpoint = params.customerFpoint;
+                                
+                                maxBuyQty = Math.floor(customerFpoint / fpointTurnCost);
+                            } else {
+                                $jq("#wheel-game .loginbtn").prop("disabled", true);
+                            }
+                            $jq("#game-content").show();
+                            if (params.success) {
+                                $jq("div.game-popup-buy-turn .customerFpoint").html(Math.round(params.customerFpoint).toLocaleString('en-US'));
+                                var giftsView = "";
+                                if (params.gifts.length > 0) {
+                                    params.gifts.forEach((gift, index) => {
+                                        let giftIcon = "";
+                                        let couponView = "";
+                                        if (gift.giftType == "fpoint") {
+                                            giftIcon = `<i class="fa fa-money" style="margin-left: 5px; font-size: 25px;color: #F7931E;"></i>`;
+                                        } else if (gift.giftType == "rule" || gift.giftType == "giftrule" || gift.giftType == "partner_coupon") {
+                                            giftIcon = `<i class="fa fa-ticket" style="margin:auto;font-size: 25px;color: #F7931E;"></i>`;
+                                            if (gift.couponCode) {
+                                                couponView = `<div>Mã giảm giá: ${gift.couponCode}</div>`;
+                                            }
+                                        }
+
+                                        let giftView = ` <div style="margin-left: 20px; margin-right: 20px;">
+                                        <div class="row " style="padding: 10px; border-bottom: 1px solid #d4d4d4; display: flex;"> 
+                                           <div style="  vertical-align: middle; " class="col-md-3 col-sm-3 col-xs-3">${giftIcon}</div>
+                                                <div class="col-md-9 col-sm-9 col-xs-9" style="text-align: left;  ">
+                                                    <div>
+                                                        <span style="color: black;">${gift.giftName}<span>
+                                                    </div>
+                                                    ${couponView}
+                                                </div>
+                                            </div>
+                                        </div> `;
+                                        giftsView += giftView;
+                                    });
+                                }
+                                jQuery('div.game-popup-gift h3.error').html(giftsView);
+
+                                let remainView = `<span>${params.remainQty}</span>`;
+                                jQuery('div.game-popup-remain .remainQty').html(remainView);
+                                jQuery('div.remain-content .remainQty').html(remainView);
+
+                                revertTime = params.revertTime.replace(" ", "T") + "Z";
+                                timerInit();
+
+                                $jq("#wheel-game #game-content").append(wheelContent);
+
+                            } else {
+
+                            }
+
+                        }
+                    }
+                });
+    }
+
+    jQuery("#game-content").on("click", "#wheelBtn", function () {
+        if (isLogin) {
+            runWheel();
+        } else {
+            jQuery(".youama-login-window").fadeIn();
+            jQuery('div.youama-ajaxlogin-cover').fadeIn();
+        }
+
+    });
+
+    const MAX_SPEED = 10;
+    const NUM_SEGMENTS = parseInt("<?php echo $giftsNumber; ?>");
+    const DEACCEL = -0.1;
+    let isActive = false;
+    let angle = 0;
+    let speed = 0;
+    let to_check_result = false;
+
+    function startGameTick() {
+        setInterval(function () {
+            updateWheel();
+        }, 10);
+    }
+
+    function runWheel() {
+        if (!isActive) {
+            isActive = true;
+            startGameTick();
+            speed = MAX_SPEED;
+            to_check_result = true;
+
+            var eventId = "<?php echo $eventId; ?>";
+            new Ajax.Request("<?php echo $this->getUrl("event/index/postRandom", array("_secure" => true)) ?>", {
+                method: "post",
+                parameters: {eventId: eventId},
+                onLoading: function () {
+                },
+                onLoaded: function () {
+                },
+                onSuccess: function (transport) {
+                    if (transport.status == 200) {
+                        var result = JSON.parse(transport.responseText);
+                        if (result.success) {
+                            let gift = result.attendCode;
+                            curGift = {
+                                image: result.giftImage,
+                                sharedLink: result.sharedLink
+                            };
+                            force_result = result.giftIndex;
+                            setTimeout(function () {
+                                
+                                speed = 0;
+                                let angle_segment = 360 / NUM_SEGMENTS;
+                                angle = (parseInt(result.giftIndex) * 360) / NUM_SEGMENTS - angle_segment / 2;
+                                rotateDiv('wheel', angle);
+                              
+                                setTimeout(function () {
+                                    isActive = false;
+                                    showCurrentGift();
+                                }, 1000);
+
+                            }, 2000);
+                        } else {
+                            if (result.message == "TURN_OVER") {
+
+                                curGift = {
+                                    image: result.giftImage
+                                };
+
+                                setTimeout(function () {
+                                   
+                                    speed = 0;
+                                    let angle_segment = 360 / NUM_SEGMENTS;
+                                    angle = (parseInt(1) * 360) / NUM_SEGMENTS - angle_segment;
+                                    rotateDiv('wheel', angle);
+                                    
+                                    setTimeout(function () {
+                                        isActive = false;
+                                        showCurrentGift();
+                                    }, 1000);
+                                }, 2000);
+                            }
+                            else if (result.message == "REQUIRE_CONFIRM_TELEPHONE"){
+                                var message = `<div style="text-align: center;line-height: 150%; font-size:16px;"><div>Vui lòng kích hoạt số điện thoại của bạn</div>
+                                    <button style="margin-top: 10px;" class="sharedBtn"><a href="<?php echo Mage::getBaseUrl() . "tryout/refer/"?>"><span class="sharedTitleRight">Kích hoạt</span></a></button>
+                                </div>`;
+                                    jQuery('div.youama-noti-window-sucess h3.error').html(message);
+                                    jQuery('div.youama-ajaxlogin-cover').fadeIn();
+                                    jQuery('div.youama-noti-window-sucess').fadeIn();
+                                 
+        
+                                force_result = 0;
+
+                                setTimeout(function () {
+                                   
+                                    speed = 0;
+                                    let angle_segment = 360 / NUM_SEGMENTS;
+                                    angle = (parseInt(1) * 360) / NUM_SEGMENTS - angle_segment;
+                                    rotateDiv('wheel', angle);
+                                    isActive = false;
+                                }, 100);
+                            }
+                            else{
+                                var message = "";
+                                if (result.message == "GAME_TIME_OUT"){
+                                    message = `<div style="text-align: center;line-height: 150%;"><div>Chương trình đã kết thúc. Cám ơn bạn đã quan tâm.</div></div>`;
+                                }
+                                else{
+                                    message = `<div style="text-align: center;line-height: 150%;"><div>Có lỗi xảy ra, vui lòng thử lại</div></div>`;
+                                }
+                                   jQuery('div.youama-noti-window-sucess h3.error').html(message);
+                                    jQuery('div.youama-noti-window-sucess').fadeIn();
+                                 force_resFult = 0;
+
+                                setTimeout(function () {
+                                    
+                                    speed = 0;
+                                    let angle_segment = 360 / NUM_SEGMENTS;
+                                    angle = (parseInt(1) * 360) / NUM_SEGMENTS - angle_segment;
+                                    rotateDiv('wheel', angle);
+                                    isActive = false;
+                                }, 2000);
+                            }
+                        }
+
+                    }
+                }
+
+            });
+        }
+    }
+
+    let speed_after = 0;
+    let distance_const = 0;
+    let distance_flag = false;
+    let force_result = 0;
+
+    function updateWheel() {
+
+        if (isActive) {
+            angle += speed;
+            angle = angle > 360 ? 0 : angle;
+            rotateDiv('wheel', angle);
+        }
+
+    }
+
+
+    function rotateDiv(id, angle) {
+        var div = document.getElementById(id);
+        div.style.webkitTransform = 'rotate(-' + angle + 'deg)';
+        div.style.mozTransform = 'rotate(-' + angle + 'deg)';
+        div.style.msTransform = 'rotate(-' + angle + 'deg)';
+        div.style.oTransform = 'rotate(-' + angle + 'deg)';
+        div.style.transform = 'rotate(-' + angle + 'deg)';
+    }
+
+
+    function checkResult() {
+        let cur_index = Math.floor((angle * NUM_SEGMENTS) / 360);
+        if (cur_index >= 0 && cur_index <= (NUM_SEGMENTS.length - 1)) {
+            return cur_index;
+        }
+
+        return null;
+    }
+
+    function checkResultIndex() {
+        let cur_index = Math.floor((angle * NUM_SEGMENTS) / 360);
+
+        if (cur_index >= 0 && cur_index <= (NUM_SEGMENTS.length - 1)) {
+            return cur_index;
+        }
+
+        return null;
+    }
+
+    function showGifts() {
+        checkGame();
+        jQuery('div.game-popup-gift').fadeIn();
+        jQuery('div.youama-ajaxlogin-cover').fadeIn();
+    }
+
+    function showGameTutorial() {
+        jQuery('div.game-popup-tutorial').fadeIn();
+        jQuery('div.youama-ajaxlogin-cover').fadeIn();
+    }
+    function showRemainTurn() {
+        checkGame();
+        jQuery('div.game-popup-remain').fadeIn();
+        jQuery('div.youama-ajaxlogin-cover').fadeIn();
+    }
+
+    jQuery("div.game-popup-gift .close, div.game-popup-remain .close, div.game-popup-tutorial .close, div.game-popup-current-gift .close, div.buy-turn-message .close, div.youama-noti-window-sucess .close").click(function () {
+        jQuery(this).parent().parent().fadeOut();
+        jQuery(".youama-ajaxlogin-cover").fadeOut();
+    });
+
+    jQuery("div.game-popup-buy-turn .closebtn").click(function () {
+        jQuery(this).parent().parent().parent().fadeOut();
+        jQuery(".youama-ajaxlogin-cover").fadeOut();
+        jQuery("div.game-popup-buy-turn .buyturn-result").empty();
+    });
+    
+    jQuery("div.buy-turn-message").on('click', ".close-ok", function(){
+        jQuery("div.buy-turn-message").fadeOut();
+        jQuery(".youama-ajaxlogin-cover").fadeOut(); 
+    });
+
+    function retryBuyTurn(){
+        jQuery("div.buy-turn-message").fadeOut();
+        jQuery(".youama-ajaxlogin-cover").fadeOut(); 
+        showBuyTurn();
+    }
+    
+    function shareFacebook() {
+        sharedLink = "<?php echo $gameData["shareLink"]; ?>";
+        var share = {
+            method: "share",
+            href: sharedLink
+        };
+        FB.ui(share, function (response) {
+            if (response && !response.error_message) {
+                onClickShare(eventId, sharedLink);
+            }
+        });
+    }
+
+    var isTimeout = false;
+    var timerCountDown = null;
+    function timerInit() {
+        if (timerCountDown){
+              clearInterval(timerCountDown);
+        }
+        var dateformatter = Date.parse(revertTime);
+        var curDate = new Date();
+        var offset = curDate.getTimezoneOffset();
+        var countDownDate = dateformatter + offset * 60000;
+        timerCountDown = setInterval(function () {
+            var now = new Date().getTime();
+
+            var distance = countDownDate - now;
+            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)) + days * 24;
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            
+            if (distance <= 0){
+                checkGame();
+                jQuery(".days").text(0);
+            jQuery(".hours").text(0); 
+           jQuery(".minutes").text(0);
+            jQuery(".seconds").text(0);  
+                 clearInterval(timerCountDown);
+                
+            }
+            else{
+                jQuery(".days").text(days);
+                jQuery(".hours").text(hours);
+                jQuery(".minutes").text(minutes);
+                jQuery(".seconds").text(seconds);
+            }
+            
+                  
+        }, 1000);
+    }
+
+    function showCurrentGift() {
+        var outgame = `<img src='${curGift.image}'>`;
+
+        var btndiv = "";
+        if (curGift.sharedLink) {
+            var sharedLink = curGift.sharedLink;
+
+            var title1 = $jq(document.createElement('div')).append(`<i  class="fa fa-facebook sharedIcon"></i>
+                                          <span class="sharedTitleRight">Chia sẻ</span>`);
+
+            var shareBtn = $jq(document.createElement('button')).addClass("sharedBtn").append(title1).click(function () {
+                var share = {
+                    method: "share",
+                    href: sharedLink
+                };
+                FB.ui(share, function (response) {
+                    if (response && !response.error_message) {
+                        onClickShare(eventId, sharedLink);
+                    }
+                });
+            });
+            var btndiv = $jq(document.createElement('div')).addClass("btncontainer").append(`
+                                    <button class="sharedBtnLeft">
+                                        <a href="<?php echo Mage::getBaseUrl() . $gameData["cmsPageUrl"]; ?>">
+                                                  <span class="sharedTitleLeft"><?php echo $gameData["cmsPageBtn"] ?></span>
+                                         </a>
+                                     </button>
+                                    `).append(shareBtn);
+        }
+
+
+        jQuery('div.youama-ajaxlogin-cover').fadeIn();
+        jQuery('div.game-popup-current-gift h3.error').html(outgame).append(btndiv);
+        jQuery('div.game-popup-current-gift').fadeIn();
+    }
+
+    function showBuyTurn() {
+        buyTurnQty = 1;
+        $jq("#buyTurnQty").val(buyTurnQty);
+        updateTotalFpoint();
+        jQuery("div.game-popup-buy-turn").fadeIn();
+        jQuery('div.youama-ajaxlogin-cover').fadeIn();
+        checkGame();
+    }
+
+    function minusBuyTurnQty() {
+        let curQty = parseInt($jq("#buyTurnQty").val()) - 1;
+        if (curQty - 1 <= 0) {
+            curQty = 1;
+        }
+        buyTurnQty = curQty;
+        $jq("#buyTurnQty").val(curQty);
+        updateTotalFpoint();
+    }
+
+    function plusBuyTurnQty() {
+        let curQty = parseInt($jq("#buyTurnQty").val()) + 1;
+        if (curQty > maxBuyQty) {
+            curQty = maxBuyQty;
+        }
+        buyTurnQty = curQty;
+        $jq("#buyTurnQty").val(curQty);
+        updateTotalFpoint();
+
+    }
+
+    function checkBuyTurnQtyValid(){
+        let curQty = $jq("#buyTurnQty").val();
+        curQty = curQty.replace(/[^0-9]/g, '');
+        if (curQty){
+            curQty = parseInt(curQty);
+        }
+        else{
+            curQty = 1;
+        }
+       
+        if (curQty > maxBuyQty){
+            curQty = maxBuyQty;
+        }
+        
+        if (curQty <= 0){
+            curQty = 1;
+        }
+       
+        buyTurnQty = curQty;
+        $jq("#buyTurnQty").val(curQty);
+        updateTotalFpoint();
+        
+    }
+    
+    function updateTotalFpoint() {
+        let html = `<div>Thành tiền${buyTurnQty}</div>`;
+        $jq("div.game-popup-buy-turn .total-fpoint-container .totalQty").html(buyTurnQty);
+        $jq("div.game-popup-buy-turn .total-fpoint-container .totalFpoint").html(Math.round(buyTurnQty * fpointTurnCost).toLocaleString('en-US'));
+    }
+
+    function onClickBuyTurn() {
+        $jq("#btn-buy-fpoint").attr('disabled', true);
+        new Ajax.Request(
+                "<?php echo $this->getUrl('event/index/buyturn/', array('_secure' => true)) ?>", {
+                    method: "post",
+                    parameters: {eventId: eventId, quantity: buyTurnQty},
+                    onLoading: function () {
+                        jQuery('.youama-ajaxlogin-loader').fadeIn();
+                    },
+                    onLoaded: function () {
+                        jQuery('.youama-ajaxlogin-loader').fadeOut();
+                    },
+                    onFailure: function (request, status, error) {
+                        alert(request.statusText);
+                    },
+                    onSuccess: function (transport) {
+                        if (transport.status == 200) {
+                            $jq("#btn-buy-fpoint").attr('disabled', false);
+                            checkGame();
+                            var result = JSON.parse(transport.responseText);
+                            if (result.success) {
+                                var successMsg = `
+                                <div style="text-align: center;padding:0px 10px;">
+                                    <div style="margin: 25px auto;">
+                                        <i class="fa fa-check-circle" style="margin-left: 5px; font-size: 80px;color: #5DDA5D;"></i>
+                                    </div>
+                                    <div style="margin-top: 10px;text-align: center; font-size: 16px;">Bạn vừa đổi thành công ${buyTurnQty} lượt chơi</div>
+                                    <div style="padding: 15px;">
+                                        <button class="close-ok" style="border: 2px solid #5DDA5D; border-radius: 23px; height: 45px; width: 120px;font-size: 18px; font-weight: bold; color: #5DDA5D;">OK</button>
+                                    </div>
+                                </div>`;
+                            } else {
+                              var successMsg = `
+                                <div style="text-align: center;padding:0px 10px;">
+                                    <div style="margin: 25px auto;">
+                                        <span class="fa fa-times-circle" style="margin-left: 5px; font-size: 80px;color: #F9425C;"></span>
+                                    </div>
+                                    <div style="margin-top: 10px;text-align: center; font-size: 16px;">Đổi F-Point không thành công. Vui lòng kiểm tra F-Point & thử lại</div>
+                                    <div style="padding: 15px;">
+                                        <button onclick="retryBuyTurn()" style="border: 2px solid #F9425C; border-radius: 23px; height: 45px; width: 120px;font-size: 18px;  color: #F9425C;">Thử lại</button>
+                                    </div>
+                                </div>`;
+                            }
+                            $jq("div.game-popup-buy-turn").hide();
+                            jQuery('div.youama-ajaxlogin-cover').fadeOut();
+                            $jq("div.buy-turn-message .buy-turn-message-content").html(successMsg);
+                            $jq("div.buy-turn-message").fadeIn();
+
+                        }
+
+                    }
+                }
+        );
+    }
+
+    function onClickShare(eventId, sharedLink) {
+        new Ajax.Request(
+                "<?php echo $this->getUrl('event/index/shareLog', array('_secure' => true)) ?>", {
+                    method: 'post',
+                    parameters: {eventId: eventId, sharedLink: sharedLink}
+                }
+        );
+    }
+     function getListUserAttend(eventId){
+         new Ajax.Request(
+                "<?php echo $this->getUrl('event/index/getUsersAttend/', array('_secure' => true)) ?>", {
+                    method: "post",
+                    parameters: {eventId: eventId},
+                    onLoading: function () {
+                        jQuery('.youama-ajaxlogin-loader').fadeIn();
+                    },
+                    onLoaded: function () {
+                        jQuery('.youama-ajaxlogin-loader').fadeOut();
+                    },
+                    onFailure: function (request, status, error) {
+                        alert(request.statusText);
+                    },
+                    onSuccess: function (transport) {
+                        if (transport.status == 200) {
+                            var result = JSON.parse(transport.responseText);
+
+                            var listView = "";
+                            for (let i = 0; i < result.length; i++){
+                                listView += '<li class="list-user-item">' + result[i].name + " đã trúng " + result[i].description + "</li>";
+                            }
+                            $jq(".list-user").html(listView);
+                             listLength = result.length;
+                            runList();
+
+                        }
+
+                    }
+                }
+        );
+    }
+    var isEnd = false;
+    var listLength = 0;
+    var countEnd = [];
+    var isMobile = "<?php echo ($mobile);?>";
+    var distanceUser = isMobile == 1 ? 30 : 40;
+    function runList(){
+        var i =0;
+        $jq(".list-user > li").each(function(index){
+            $jq(this).css("top", i);
+           i+= distanceUser;
+           scrollElement($jq(this), index);
+        });
+    }
+    
+    function scrollElement(elem, index) {
+    var top = parseInt($jq(elem).css("top"));
+    var temp = -1 * $jq('.list-user > li').height();
+
+    if(top < temp) {
+        if (isEnd){
+            if (countEnd.findIndex(x => x === index) == -1){
+                countEnd.push(index);
+                top =  $jq('.list-user').height() +  index * distanceUser;
+                $jq(elem).css("top",top);
+            }
+           else{
+             $jq(elem).css("top", top);
+            }
+        }
+        else{
+             $jq(elem).css("top", top);
+        }
+
+        if (index == listLength - 1){
+           isEnd = true;
+       }
+    }
+    
+    $jq(elem).animate({ top: (parseInt(top)-distanceUser) }, 1500, function () {
+        scrollElement($jq(this), index);
+    });
+    if (countEnd.length == listLength){
+        countEnd = [];
+        isEnd = false;
+    }
+ 
+}
+   
+</script>

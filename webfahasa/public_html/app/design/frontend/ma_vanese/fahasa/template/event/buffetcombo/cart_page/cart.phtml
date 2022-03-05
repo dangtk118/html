@@ -1,0 +1,163 @@
+<style type="text/css">
+    .event-buffetcombo-cart{
+        background-color: #f8ffdb;
+    }
+    
+    .event-buffetcombo-icon{
+        width: 100px !important;
+    }
+    .event-buffetcombo-cart-page{
+        position: relative;
+    }
+    .event-buffetcombo-icon-cart-page{
+        position: absolute;
+        top: 35%;
+        right: 5%;
+    }
+    .quantity-cart-mobile{
+        display: none;
+    }
+    .event-buffetcombo-icon-cart-page .cart-price .price{
+         color: #F7941E;
+            font-weight: 650;
+    }
+    @media (max-width: 992px){
+        .event-buffetcombo-icon-cart-page{
+            display: none;
+        }
+        .event-buffetcombo-icon-cart-mobile-page{
+            display : block!important;
+        }
+        .quantity-cart-mobile{
+            display: unset;
+        }
+        .event-buffetcombo-icon-cart-mobile-page span.price{
+            color: #F7941E;
+            font-weight: 650;
+        }
+    }
+</style>
+
+<?php
+    $is_mobile = Mage::helper('fhsmobiledetect')->isMobile();
+    $buffet_helper = Mage::helper("event/buffetcombo");
+    $checkout_session = Mage::getSingleton('checkout/session');
+    $buffet_combo = $checkout_session->getBuffetcombo();
+    $items = $buffet_helper->seperateNormalAndBuffetItems($this->getItems());
+    $use_gift = Mage::getStoreConfig('event_buffetcombo/config/use_gift');
+    $gift_item = null;
+?>
+<?php 
+    if($use_gift){
+        $gift_id = $checkout_session->getData('buffetcombo_gift_id');
+        
+        foreach ($items['normal_items'] as $_item) {
+            if ($gift_id != $_item->getProductId()) {
+                echo $this->getItemHtml($_item);
+                echo "<div class='border-product'></div>";
+            }else{
+                $gift_item = $_item;
+            }
+        }
+    }else{
+        foreach ($items['normal_items'] as $_item) {
+            echo $this->getItemHtml($_item);
+            echo "<div class='border-product'></div>";
+        }
+    }
+    $flag = 0;
+?>
+<div class="event-buffetcombo-cart-page">
+    <?php if(count($items['buffet_items']) > 0) : ?>
+    <div class="event-buffetcombo-icon-cart-mobile-page" style="display:none;background: white;">
+            <div style="text-align:center;display: flex;justify-content:space-between;">
+                <div style="padding:15px 15px 0px 15px;"><img src="<?php echo $buffet_helper->getBuffetIcon(); ?>" class="event-buffetcombo-icon"/></div>
+                <div style="display:flex;flex-direction: column;justify-content:center;align-content: center;padding:15px 15px 0px 15px;">
+                    <span class='text-price-total'><?php echo Mage::helper('wishlist')->__('Total'); ?></span>
+                    <span class="cart-price">
+                        <?php echo Mage::helper('checkout')->formatPrice($buffet_combo['price']); ?>
+                    </span>
+                </div>
+              
+            </div>
+        </div>
+<?php endif; ?>
+<?php foreach ($items['buffet_items'] as $key => $item):?>
+<?php 
+    $product = $item->getProduct();
+    $product_name = $product->getName();
+    $image_src = Mage::helper('catalog/image')->init($product, 'thumbnail');
+?>
+    <?php /// product buffet-combo : ?>
+        <div class="item-product-cart">
+                <div class="div-of-btn-remove-cart">
+                    <a href="<?php echo $buffet_helper->getDeleteUrl($item) ?>" title="<?php echo $this->__('Remove item') ?>" onclick="showLoadingCart()" class="btn-remove-desktop-cart"></a> 
+                </div>
+                <div class="img-product-cart">
+                    <a href="<?php echo $product->getProductUrl() ?>" title="<?php echo $product_name ?>" class="product-image">
+                        <img src="<?php echo $image_src ?>" width='150px' height="150px"  alt="<?php echo $product_name ?>" />
+                    </a>  
+                </div>
+                <div class="group-product-info">
+                    <div class="info-product-cart">
+                        <h2 class="product-name">
+                            <a href="<?php echo $product->getProductUrl() ?>"><?php echo $product_name; ?></a>
+                        </h2>
+                        <div class="price-original">
+                            <span class="cart-price">
+                                <span class="price"><?php echo Mage::helper('checkout')->formatPrice($item->getPriceInclTax()); ?></span>                                          
+                            </span>
+                        </div>
+                    </div>
+                    <div class="number-product-cart">
+                        <div class="product-view-quantity-box quantity-cart-mobile">
+                        <div class="product-view-quantity-box-block">
+                                <input type="text" class="qty-carts" align="center" value="1" disabled title="SL">
+                            </div>
+                            <div class="product-view-icon-remove-mobile" style="display:none">
+                                <a href="<?php echo $buffet_helper->getDeleteUrl($item) ?>" title="<?php echo $this->__('Remove item') ?>" onclick="showLoadingCart()" class="btn-remove-mobile-cart"></a>
+                            </div>
+                        </div>
+                        <?php if($flag == 0) : $flag = 1; // show gia thanh cua buffet-combo ?>
+                        <div class="event-buffetcombo-icon-cart-page">
+                                <div style="text-align:center">
+                                    <div><img src="<?php echo $buffet_helper->getBuffetIcon(); ?>" class="event-buffetcombo-icon"/></div>
+                                    <span class="cart-price">
+                                        <?php echo Mage::helper('checkout')->formatPrice($buffet_combo['price']); ?>
+                                    </span>
+                                </div>
+                            </div>
+                        <?php endif;?>
+                    </div>
+                </div>
+            </div>
+<?php endforeach; ?>
+</div>
+
+<?php
+    if($gift_item){ 
+        $product = $gift_item->getProduct();
+        $gift_image_src = Mage::helper('catalog/image')->init($product, 'thumbnail');
+        $gift_name = $product->getName();
+?>
+<div class='border-product'></div>
+<div class="item-product-cart">
+                <div class="div-of-btn-remove-cart">
+                </div>
+                <div class="img-product-cart">
+                        <img src="<?php echo $gift_image_src ?>" width="150px" height="150px" alt="<?php echo $gift_name; ?>">
+                </div>
+                <div class="group-product-info">
+                    <div class="info-product-cart">
+                        <h2 class="product-name">
+                           <?php echo $gift_name; ?>
+                        </h2>
+                        <div class="price-original">
+                            <span class="cart-price">
+                                <span class="price"><span class="price">0&nbsp;đ</span></span>                                          
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+<?php } ?>

@@ -1,0 +1,236 @@
+
+<?php $content = json_decode($this->getData('header'), true); ?>
+<?php
+if ($content) {
+    $defaultCatId = $content[0][urlLink];
+}
+?>
+<?php if ($content) : ?>
+    <div class="fhs-banner-image-block top-voted">
+        <?php foreach ($content as $data) : ?>
+            <div class="<?php echo $data["webClass"] ?>">
+                <div class="banner-home-inner">
+                    <a class="banner-click-a" href="<?php echo $data["urlLink"]; ?>">
+                        <?php if (!$mobile) : ?>
+                        <img id="banner-tagname-<?php echo preg_replace("/.*#catId/i", "", $data["urlLink"]);?>" class="banner-home-img" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . $data["urlWebImg"] ?>" alt="" />
+                        <?php else: ?>
+                            <img id="banner-tagname-<?php echo preg_replace("/.*#catId/i", "", $data["urlLink"]);?>" class="banner-home-img" src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . $data["urlMobileImg"] ?>" alt="" />
+                        <?php endif; ?>
+                    </a>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
+<?php endif; ?>
+<?php $tagName = json_decode($this->getData('tagName'), true);?>
+<div class="top-voted-tagname">
+<?php if ($tagName) : ?>
+    <?php foreach ($tagName as $tag) : ?>
+            <div class="<?php echo $tag["webClass"]?>" id="tagname-<?php echo $tag["tabId"]?>" >
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <a href="<?php echo $tag["urlLink"]; ?>">
+                        <?php if (!$mobile) : ?>
+                            <img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . $tag["urlWebImg"] ?>" alt="" />
+                        <?php else: ?>
+                            <img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . $tag["urlMobileImg"] ?>" alt="" />
+                        <?php endif; ?>
+                    </a>
+                </div>
+            </div>
+        <?php endforeach; ?>
+<?php endif; ?>
+</div>
+<div>
+    <div  class="youama-ajaxlogin-loader"></div>
+    <div id="alert-vote-product">
+    <div class="youama-noti-window-sucess">
+        <div class="youama-window-outside">
+            <span class="close lg-close">×</span>
+            <div class="youama-window-inside">
+                <div class="youama-window-title">
+                    <h3 class="error"></h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div id="top-voted-content" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 " style=" background-color: #ffffff; padding: 0px;">
+    </div>
+</div>
+<script type="text/javascript">
+    function getTopVotedByCatId(catId) {
+       jQuery('div[id*=tagname-]').css("display", "none");
+       jQuery("#tagname-" + catId).css("display", "block");
+       jQuery("img[id*=banner-tagname-]").removeClass("active");
+       jQuery("#banner-tagname-" + catId).addClass("active");
+        new Ajax.Request(
+                "<?php echo $this->getUrl('event/index/getTopVoted', array('_secure' => true)) ?>", {
+                    method: 'post',
+                    parameters: {catId: catId},
+                    onLoading: function () {
+                        jQuery('.youama-ajaxlogin-loader').fadeIn();
+                    },
+                    onLoaded: function () {
+                        jQuery('.youama-ajaxlogin-loader').fadeOut();
+                    },
+                    onSuccess: function (transport) {
+                        if (transport.status == 200) {
+                            var params = JSON.parse(transport.responseText);
+                            var listProduct = params;
+                            listProduct.forEach(function (item, index) {
+                                var image = `<img class="img-responsive product-img" src="${item.image}"/>`;
+
+                                var name = `<div class="product-name">${item.name}</div>`;
+
+                                var priceText = 0;
+                                var finalPrice = 0;
+                                if (item.typeId == "bundle") {
+                                    priceText = Math.round(item.minPrice).toLocaleString('en-US');
+                                    finalPrice = Math.round(item.maxPrice).toLocaleString('en-US');
+                                } else {
+                                    priceText = Math.round(item.price).toLocaleString('en-US');
+                                    finalPrice = Math.round(item.finalPrice).toLocaleString('en-US');
+                                }
+                                
+                                var finalPriceView = `<div style="margin-top: 15px;">
+                                  <div>
+                                    <span class="final-price">${finalPrice} đ</span></div>
+                                  </div>`;
+                                
+                                var priceView = "";
+                                if (priceText != finalPrice){
+                                    priceView = `
+                                     <div><span class="price">${priceText} đ</span></div>
+                                    `;
+                                }
+                                var discountPercent = `
+                                    <div style="margin-top: 15px;">
+                                        <div><span class="discount-percent">-${item.discountPercent}%</span></div>
+                                    </div>`;
+
+                                var voteButton = "";
+                                if (item.hadVoted == "1") {
+                                    voteButton = `<button disabled class="btn-voted" 
+                                        id="btn-vote-product-${item.productId}"
+                                    onclick="onClickVoteProduct(${item.productId})">
+                                 <i id="vote-product-icon" class="fa fa-star icon-voted" style="color: red;"></i>
+                                    <span class="btn-title" style="color: red;" >${item.percentVoted} Bình chọn</span></button>
+                                            `;
+                                } else {
+                                    voteButton = `<button class="btn-voted" 
+                                    id="btn-vote-product-${item.productId}"
+                                    onclick="onClickVoteProduct(${item.productId})">
+                                    <i id="vote-product-icon" class="fa fa-star icon-voted"></i>
+                                    <span class="btn-title" >${item.percentVoted} Bình chọn</span></button>
+                                    `;
+                                }
+                                
+                                var block = ` 
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 container-block">
+                                        <div class="row" style="display: flex; height: 100%;">
+                                            <div class="col-lg-5 col-sm-5 col-md-5 col-xs-6 hori-center" >
+                                                <div class="col-lg-3 col-sm-3 col-md-3 col-xs-2 "  >
+                                                    <span class="index-number">
+                                                        ${index + 1}
+                                                    </span>
+                                                </div>
+                                                <div class="col-lg-9 col-sm-9 col-md-9 col-xs-10 row" style="padding: 10px;">
+                                                    <a href="${item.productUrl}">
+                                                        ${image}
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-7 col-sm-7 col-md-7 col-xs-6"  style="display: flex; flex-direction: column;   padding: 15px 0px; height: 100%">
+                                                <div style=" display: flex;flex-direction: column;height: 100%; ; ">
+                                                    <div style="   vertical-align: top;display: flex; flex-direction: column; vertical-align: top;">
+                                                        ${name} 
+                                                    </div>
+                                                    
+                                                     </div>
+                                                        <div style="vertical-align: bottom;  ">
+                                                        <div class="row">
+                                                            <div class="ol-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                                                ${finalPriceView}
+                                                                ${priceView}
+                                                            </div>
+                                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-right">
+                                                                ${discountPercent}
+                                                            </div>
+                                                       </div>
+                                                        <div class="row" >
+                                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"  >
+                                                            ${voteButton}
+                                                        </div>
+                                                    </div>
+  
+                                               </div>
+                                            </div>
+                                        </div>
+                                    </div>`;
+
+                                jQuery("#top-voted-content").append(block);
+
+                            });
+                        }
+                    }
+
+
+                });
+    }
+
+    jQuery(document).ready(function () {
+        jQuery("#alert-vote-product div.youama-noti-window-sucess .close").click(function () {
+            jQuery("#alert-vote-product div.youama-noti-window-sucess").fadeOut();
+            jQuery("#alert-vote-product .youama-ajaxlogin-cover").fadeOut();
+        });
+        var defaultCatId = "<?php echo $defaultCatId ?>";
+        var catId = defaultCatId.replace(/.*#catId/gi, "");
+        getTopVotedByCatId(catId);
+    });
+
+    jQuery("a.banner-click-a").click(function (al) {
+        jQuery("#top-voted-content").empty();
+        var catId = jQuery(this).attr("href").replace(/.*#catId/gi, "");
+        getTopVotedByCatId(catId);
+    });
+
+
+    function onClickVoteProduct(productId) {
+        jQuery("#btn-vote-product-" + productId).prop('disabled', true);
+        new Ajax.Request(
+                "<?php echo $this->getUrl('event/index/postVoteProduct', array('_secure' => true)) ?>", {
+                    method: 'post',
+                    parameters: {productId: productId},
+                    onLoading: function () {
+                        jQuery('.youama-ajaxlogin-loader').fadeIn();
+                    },
+                    onLoaded: function () {
+                        jQuery('.youama-ajaxlogin-loader').fadeOut();
+                    },
+                    onSuccess: function (transport) {
+                        if (transport.status == 200) {
+                            var params = JSON.parse(transport.responseText);
+                            var success = params.success;
+                            var hadVoted = params.hadVoted;
+                            if (params.success) {
+                                var id = "#btn-vote-product-" + productId + " > span, #btn-vote-product-" + productId + " > i";
+                                jQuery("#btn-vote-product-" + productId).prop("disabled", true);
+                                jQuery(id).css({"color": "red"});
+                            } else {
+                                if (params.message == "ERR_NEED_LOGIN") {
+                                    jQuery(".youama-login-window").fadeIn();
+                                    jQuery('div.youama-ajaxlogin-cover').fadeIn();
+                                }
+                                else{
+                                    var errormess = "<?php echo Mage::getStoreConfig('game/voteproduct/errormess'); ?>";
+                                    jQuery('#alert-vote-product div.youama-noti-window-sucess h3.error').html("<div style='text-align:center;'>" + errormess + "</div>");
+                                    jQuery('#alert-vote-product div.youama-noti-window-sucess').fadeIn();
+                                }
+                            }
+                        }
+                    }
+                }
+        );
+    }
+
+</script>

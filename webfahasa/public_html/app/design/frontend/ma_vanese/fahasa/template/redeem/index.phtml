@@ -1,0 +1,125 @@
+<?php 
+    $tryoutMoney = Mage::helper('tryout')->determinetryout();
+?>
+</div>
+<style type="text/css">
+    .my-account{
+	display: none;
+    }
+</style>
+<div class="fhs-font account-fpoint">
+    <div class="account-fpoint-title"><?php echo $this->__('F-POINT ACCOUNT') ?></div>
+    <div class="account-fpoint-content">
+	<div class="account-redeem-fpoint">
+	    <div class="account-fpoint-subtitle"><?php echo $this->__("Redeem F-point / Freeship"); ?></div>
+	    <div class="account-fpoint-subcontent">
+		<div class="account-fpoint-subcontent-redeem">
+		    <input type="text" name="code" id="redeem-code" style="width:100%;" class="redeem-code-txt required-entry" required autocomplete="on" placeholder="<?php echo $this->__("Enter your code..."); ?>" value="<?php echo $_GET["code"]; ?>"/>
+		</div>
+		<div class="account-fpoint-subbtn"><button type="button" class="redeem-btn" id="redeem-submit"><?php echo $this->__("Redeem") ?></button></div>
+	    </div>
+	</div>
+	<div id="error-alert" class="account-redeem-error" style=" display: none; color: red;"></div>
+	<div class="account-fpoint-balance">
+	    <div class="account-fpoint-subtitle"><?php echo $this->__('Balance');?></div>
+	    <div class="account-fpoint-subcontent">
+		<?php echo $this->helper('core')->formatPrice($tryoutMoney);?>
+	    </div>
+	</div>
+    </div>
+
+</div>
+
+</div>
+
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+        jQuery("#redeem-submit").click(function () {
+            var redeemCode = jQuery("input#redeem-code").val();
+            redeemCode = redeemCode.replace(/\s/g, "");
+            if (redeemCode.length != 0) {
+                redeemfpoint(redeemCode);
+            } else {
+                jQuery('#error-alert').html('<?php echo $this->__("Code Invalid. Please use another code!"); ?>');
+                jQuery("#error-alert").fadeTo(5000, 500).slideUp(500, function () {
+                    jQuery("#error-alert").slideUp(1000);
+                });
+            }
+        });
+    });
+
+    function redeemfpoint(redeemCode) {
+        new Ajax.Request(
+                '<?php echo Mage::getBaseUrl() . 'redeem/index/redeem'; ?>', {
+                    method: 'post',
+                    parameters: {redeemCode: redeemCode},
+                    onLoading: function () {
+                        jQuery('.youama-ajaxlogin-loader').fadeIn();
+                    },
+                    onLoaded: function () {
+                        jQuery('.youama-ajaxlogin-loader').fadeOut();
+                    },
+                    onSuccess: function (transport) {
+                        if (200 == transport.status) {
+                            var key = transport.responseText;
+                            switch (key) {
+                                case "ERR_NEED_LOGIN":
+                                    var mess = "<?php echo $this->__("Please login before using code."); ?>";
+                                    jQuery("#error-alert").html(mess);
+                                    jQuery("#error-alert").fadeIn();
+                                    break;
+
+                                case "SERVER_ERROR":
+                                    var mess = "<?php echo $this->__("SERVER ERROR. Please try again later!"); ?>";
+                                    jQuery("#error-alert").html(mess);
+                                    jQuery("#error-alert").fadeIn();
+                                    setTimeout(function () {
+                                        window.location.href = "/customer/account/";
+                                    }, 2000);
+
+                                case "ERROR_CODE_INVALID":
+                                    var mess = "<?php echo $this->__("Error: Code invalid. Please use another code!"); ?>";
+                                    jQuery("#error-alert").html(mess);
+                                    jQuery("#error-alert").fadeIn();
+                                    break;
+
+                                case "ERROR_CODE_EXPIRED":
+                                    var mess = "<?php echo $this->__("Error: Code expired. Please use another code!"); ?>";
+                                    jQuery("#error-alert").html(mess);
+                                    jQuery("#error-alert").fadeIn();
+                                    break;
+
+                                case "ERROR_CODE_HAS_BEEN_USED":
+                                    var mess = "<?php echo $this->__("Error: Code has been used. Please use another code!"); ?>";
+                                    jQuery("#error-alert").html(mess);
+                                    jQuery("#error-alert").fadeIn();
+                                    break;
+
+                                case "ERROR_CODE_IS_LOCKED":
+                                    var mess = "<?php echo $this->__("Error: Code is locked. Please use another code!"); ?>";
+                                    jQuery("#error-alert").html(mess);
+                                    jQuery("#error-alert").fadeIn();
+                                    break;
+
+                                default:
+                                    var mess = "<?php echo $this->__("REDEEM CODE SUCCESSFULLY."); ?>";
+                                    jQuery("#error-alert").html("<div style='text-align:center;'>" + mess + "</div>");
+                                    jQuery("#error-alert").fadeIn();
+                                    setTimeout(function () {
+                                        window.location.href = "/customer/account/";
+                                    }, 2000);
+                                    break;
+                            }
+                        } else {
+                            var mess = "<?php echo $this->__("SERVER ERROR. Please try again later!"); ?>";
+                            jQuery("#error-alert").html(mess);
+                            jQuery("#error-alert").fadeIn();
+                            setTimeout(function () {
+                                window.location.href = "/customer/account/";
+                            }, 2000);
+                        }
+                    }
+                }
+        );
+    }
+</script>

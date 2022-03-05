@@ -1,0 +1,50 @@
+.pt_custommenu div.pt_menu .parentMenu a:hover, .pt_custommenu div.pt_menu .parentMenu span.block-title:hover, 
+.pt_custommenu #pt_menu_link ul li a.act, .pt_custommenu #pt_menu_link ul li a:hover, .pt_custommenu div.pt_menu.act,
+.tc-content{
+    background-color: #F78EAB;
+}
+.top-cart-title .fa, .header .form-search button.button span,
+.header-container .top-link .infor .fa,
+.pt_custommenu_content{
+    background-color: #EA7696;
+}
+.t-info .container-inner{
+    background-color: #f2f2f2;
+}
+.header-cd{    
+    padding-top: 5px;
+    padding-left: 10px;
+    background: none;
+    width: 100%;
+}
+
+.tab-title ul{
+    background-color: #f2a1b7;
+}
+.ma-menu .container{
+    background-color: rgba(255, 192, 203, 0.35);
+    border-top: none;
+}
+.header-container .container{
+    background-color: rgba(255, 192, 203, 0.35);
+}
+.cd-label{
+    color: #EA7696;
+}
+.header-container .top-link .infor, .header-container .top-link .infor span,
+.header-link a{
+    color: white;
+}
+.opc-wrapper-opc .opc-col-left, .opc-wrapper-opc .opc-col-center, .opc-wrapper-opc .opc-col-right{
+    border: 1px solid #EA7696;    
+}
+.header-container .top-link{
+    background: rgb(35,47,62);
+}
+.header-container .container{
+    background-color: transparent;
+}
+.item-inner .price-box .regular-price,
+.item-inner .price-box .special-price{
+    background: #EA7696;
+}

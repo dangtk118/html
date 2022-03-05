@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layout>
+    <customer_account>
+        <reference name="customer_account_navigation">
+            <action method="addLink" translate="label">
+                <name>My Vouchers</name>
+                <path>tryout/voucher</path>
+                <label>My vouchers</label>
+            </action>
+	    <action method="addLink" translate="label" module="wishlist" ifconfig="wishlist/general/active">
+		<name>wishlist</name>
+		<path>wishlist/</path>
+		<label>My Wishlist</label>
+	    </action>
+            <action method="addLink" translate="label">
+                <name>Series Book</name>
+                <path>tryout/seriesbook</path>
+                <label>Series book</label>
+            </action>
+            <action method="addLink" translate="label">
+                <name>F-point History</name>
+                <path>tryout/history</path>
+                <label>F-point / Freeship</label>
+            </action>
+	    <action method="addLink" translate="label" module="review">
+		<name>reviews</name>
+		<path>review/customer</path>
+		<label>My Product Reviews</label>
+	    </action>
+	    <!--
+	    <action method="addLink" translate="label" module="customer">
+                <name>refer</name> 
+                <path>tryout/refer/</path> 
+                <label>My Refer</label>
+            </action> 
+	    -->
+            <action method="addLink" translate="label" module="customer">
+                <name>notiication</name> 
+                <path>customer/notification</path> 
+                <label>Notifications</label>
+            </action> 
+            <action method="addLink" translate="label" module="newsletter">
+		<name>newsletter</name>
+		<path>newsletter/manage/</path>
+		<label>Newsletter Subscriptions</label>
+	    </action>
+        </reference>
+    </customer_account>
+    
+    <customer_account_edit>
+        <reference name="customer_edit">
+            <action method="setTemplate">
+                <template>fahasa/customer/form/edit.phtml</template>
+            </action>
+        </reference>
+    </customer_account_edit>
+    <customer_account_create>
+        <reference name="customer_form_register">
+            <action method="setTemplate">
+                <template>opc/customer/form/register.phtml</template>
+            </action>
+        </reference>
+    </customer_account_create>
+    
+    <customer_notification_index translate="label">
+        <label>Customer Notification</label>
+        <update handle="customer_account"/>
+        <reference name="content">
+            <block type="core/template" name="redeem" template="customer/notification/list.phtml"/>
+        </reference>
+    </customer_notification_index>
+    
+</layout>

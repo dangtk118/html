@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24">
+  <defs>
+    <linearGradient id="linear-gradient" x1="0.855" y1="0.164" x2="0.132" y2="0.836" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#ffe259"/>
+      <stop offset="1" stop-color="#ffa751"/>
+    </linearGradient>
+  </defs>
+  <g id="ico_sachtheobo" transform="translate(-469 -1482)">
+    <g id="Group_803" data-name="Group 803" transform="translate(-13647 1513)">
+      <circle id="Ellipse_48" data-name="Ellipse 48" cx="12" cy="12" r="12" transform="translate(14116 -31)" fill="url(#linear-gradient)"/>
+      <g id="ico-book" transform="translate(14120 -27)">
+        <path id="Path_426" data-name="Path 426" d="M0,0H16V16H0Z" fill="none"/>
+        <path id="Path_427" data-name="Path 427" d="M3,18.628a5.684,5.684,0,0,1,5.926,0,5.684,5.684,0,0,1,5.926,0" transform="translate(-0.926 -5.955)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <path id="Path_428" data-name="Path 428" d="M3,5.628a5.684,5.684,0,0,1,5.926,0,5.684,5.684,0,0,1,5.926,0" transform="translate(-0.926 -1.604)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <line id="Line_148" data-name="Line 148" y2="8.366" transform="translate(1.859 4.182)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <line id="Line_149" data-name="Line 149" y2="8.366" transform="translate(8.069 4.182)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <line id="Line_150" data-name="Line 150" y2="8.366" transform="translate(14.141 4.182)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+    </g>
+  </g>
+</svg>

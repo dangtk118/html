@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<config>
+    <sections>
+        <currency module="directory">
+            <groups>
+                <options >
+                    <fields>
+                        <base>
+                            <show_in_store>1</show_in_store>
+                        </base>
+                    </fields>
+                </options>
+            </groups>
+        </currency>
+    </sections>
+</config>

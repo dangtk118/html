@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <Fahasa_Cmsjson>
+            <version>0.1.0</version>
+        </Fahasa_Cmsjson>
+    </modules>
+    <global>
+        <blocks>
+            <cmsjson>
+                <class>Fahasa_Cmsjson_Block</class>
+            </cmsjson>
+        </blocks>
+        <helpers>
+            <cmsjson>
+                <class>Fahasa_Cmsjson_Helper</class>
+            </cmsjson>
+        </helpers>
+    </global>
+    <frontend>
+        <routers>
+            <cmsjson>
+                <use>standard</use>
+                <args>
+                    <module>Fahasa_Cmsjson</module>
+                    <frontName>cmsjson</frontName>
+                </args>
+            </cmsjson>
+        </routers>
+    </frontend>
+</config>

@@ -1,0 +1,16 @@
+<?php echo $this->getMessagesBlock()->toHtml() ?>
+<?php 
+	$meigee_bizarre_general = MAGE::helper('ThemeOptionsBizarre')->getThemeOptionsBizarre('meigee_bizarre_general');
+	$loginAjaxStatus = $meigee_bizarre_general['loginajax']['status'];
+?>
+<p class="text-login"><?php echo $this->__('Already registered?') ?> <a class="opc-link-login" href="<?php echo Mage::helper('customer')->getLoginUrl(); ?>"><?php echo $this->__('Login here')?></a></p>
+<div class="clear"></div>
+<?php if($loginAjaxStatus): ?>
+	<script type="text/javascript">
+		/* Login ajax */
+		jQuery('.opc-link-login').on('click', function(){
+			ajaxLogin("<?php echo $this->getUrl('meigeeactions/login/') ?>", false);
+			return false;
+		});
+	</script>
+<?php endif; ?>

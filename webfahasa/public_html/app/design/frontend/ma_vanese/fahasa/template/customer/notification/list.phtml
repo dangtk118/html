@@ -1,0 +1,769 @@
+<?php
+
+$customer_helper = Mage::helper('customer');
+$mobile = Mage::helper('fhsmobiledetect')->isMobile();
+
+?>
+
+<style type="text/css">
+    .col-fhs-main-body{
+        background: none;
+    }
+    
+    #notification-top-msg{
+        padding: 15px 25px;
+        border: 1px solid #e6e6e6;
+        -webkit-box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
+        background-color: white;
+        margin-bottom: 15px;
+        display: none;
+    }
+
+    #notification-top-msg .notification-top-msg-header{
+        padding-bottom: 5px;
+        border-bottom: 2px solid #FF9800;
+        margin-bottom: 15px;
+        color: #FF9800;
+    }
+
+    #notification-top-msg .notification-top-msg-header h3{
+        font-size: 20px;
+        font-weight: bold;
+        float:left;
+    }
+
+    #notification-top-msg .notification-top-msg-header-date {
+        float: right;
+        color: #333;
+        padding-top: 20px;
+    }
+
+    #notification-top-msg .notification-top-msg-container{
+        padding: 20px 20px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        margin-bottom: 10px;
+    }
+
+    #notification-top-msg .notification-top-msg-body{
+        max-height: 34px;
+        overflow: hidden;
+    }
+    
+    #notification-container{
+        padding: 20px;
+        background-color: #fff;
+        border: 1px solid #e6e6e6;
+        -webkit-box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
+    }
+    
+    .notification-msg-tab{
+        cursor: pointer !important;
+        float: left;
+        margin: 10px 10px 10px 0px;
+    }
+    
+    .notification-msg-tab.active a{
+        color: #FF9800 !important;
+        user-select: none;
+    }
+    
+    .notification-msg-tab-label{
+        float: left;
+        padding: 2px 2px 2px 5px;
+        font-size: 16px;
+    }
+    
+    .notification-msg-tab-underline{
+        clear: both;
+        border: 1px solid #FF9800;
+    }
+
+    .notification-body{
+        padding: 5px;
+        border-top: none;
+        display: block !important;
+        border-bottom-left-radius: 4px;
+        border-bottom-right-radius: 4px;
+        display:block  !important;
+        background-color: #fff;
+        overflow-y: auto;
+        padding-right: 15px;
+        max-height: 600px;
+    }
+
+    .notification-body .list-group{
+        margin: 0px;
+    }
+    
+    .notification-item{
+        border-bottom: 1px solid #e6e6e6;
+        padding: 10px 10px;
+    }
+    
+    .notification-item-clickable{
+        cursor: pointer;
+        background-color: #f9ffd6;
+    }
+    
+    .notification-item-header{
+        margin-bottom: 10px;
+    }
+
+    .notification-item-title{
+        font-size: 14px;
+        font-weight: bold;
+        float: left;
+    }
+
+    .notification-item-date{
+        font-style: italic;
+        float: right;
+    }
+
+    .notification-item-icon{
+        width: 32px;
+        float: left;
+        margin-right: 10px;
+    }
+
+    .notification-item-text{
+        
+    }
+
+    .notification-body-loading{
+        margin: 50px auto;
+        width: 100px;
+        padding: 5px 15px;
+        text-align: center;
+    }
+
+    #notification-body-list{
+        display: none;
+    }
+    
+    .notification-msg-tab-unseen{
+        border: 3px;
+        border-radius: 50%;
+        margin-top: 3px;
+        opacity: 0;
+        position: relative;
+        display: inline-block;
+        float: right;
+        text-align: center;
+        background-color: #ff2020;
+        padding: 4px;
+    }
+    
+    .notification-top-msg-result, .notification-item-msg-result{
+        margin-top: 18px;
+    }
+    
+    #notification-body-empty{
+        display: none;
+        padding: 40px;
+        text-align: center;        
+    }
+    
+    #notification-popup{
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: 999;
+        background-color: #24242470;
+        display: none;
+    }
+    
+    #notification-popup-container{
+        width: 98vw;
+        max-width: 650px;
+        margin: 0 auto;
+        margin-top: 70px;
+    }
+    
+    #notification-popup .notification-popup-header{
+        background-color: #ff9800;
+        padding: 10px 20px;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+    }
+    
+    #notification-popup .notification-popup-header h3{
+        font-size: 20px;
+        float: left;
+        color: #fff;
+        font-weight: bold;
+    }
+    
+    #notification-popup .notification-popup-date{
+        float: right;
+        padding: 10px;
+        color: #fff;
+    }
+    
+    @media (max-width: 767px){    
+        #notification-popup-container{
+            margin-top: 10px;
+        }
+        
+        #notification-popup .notification-popup-header h3{
+            line-height: 1.2em;
+        }
+    }
+    
+    .notification-popup-body{
+        min-height: 100px;
+        background-color: #fff;
+        z-index: 9999;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+        padding: 15px;
+    }
+    
+    .notification-popup-body .radio input{
+        margin-top: -10px;
+    }
+    
+    .notification-popup-content{
+        overflow: auto;
+        max-height: 40vh;
+        padding: 5px;
+    }
+    
+    .notification-popup-data{
+        padding: 10px;
+    }
+    
+    .notification-popup-actions{
+        text-align: center;
+    }
+    #notification-menu li.swiper-slide{
+        text-align: center;
+    }
+    .notification-msg-tab.swiper-slide{
+        width: unset;
+    }
+</style>
+
+<div class='<?php if($mobile){ echo 'row'; }else{ echo '';};?>'>
+    <div id="notification-top-msg">
+        <div class="notification-top-msg-header">
+            <h3></h3>
+            <div class="notification-top-msg-header-date">23/3/2019</div>
+            <div style="clear:both"></div>
+        </div>
+        <div>
+            <div class="notification-top-msg-container">
+                <div class="notification-top-msg-body"></div>
+            </div>
+            <div class="notification-top-msg-actions">
+            </div>
+        </div>
+    </div>
+<?php if(!$mobile) : ?>    
+    <div id="notification-container">
+        <ul id="notification-menu">
+            <li data-id="all" class="notification-msg-tab">
+                <a>
+                    <div class="notification-msg-tab-unseen"></div>
+                    <div class="notification-msg-tab-label"><?php echo $customer_helper->__('Notification All'); ?></div>
+                    <div class="clearfix"></div>
+                </a>
+            </li>
+            <li data-id="order" class="notification-msg-tab">
+                <a>
+                    <div class="notification-msg-tab-unseen"></div>
+                    <div class="notification-msg-tab-label"><?php echo $customer_helper->__('Notification Order'); ?></div>
+                    <div class="clearfix"></div>
+                </a>
+            </li>
+            <li data-id="event" class="notification-msg-tab">
+                <a>
+                    <div class="notification-msg-tab-unseen"></div>
+                    <div class="notification-msg-tab-label"><?php echo $customer_helper->__('Notification Event'); ?></div>
+                    <div class="clearfix"></div>
+                </a>
+            </li>
+            <li data-id="coupon" class="notification-msg-tab">
+                <a>
+                    <div class="notification-msg-tab-unseen"></div>
+                    <div class="notification-msg-tab-label"><?php echo $customer_helper->__('Notification Coupon'); ?></div>
+                    <div class="clearfix"></div>
+                </a>
+            </li>
+            <li data-id="action" class="notification-msg-tab">
+                <a>
+                    <div class="notification-msg-tab-unseen"></div>
+                    <div class="notification-msg-tab-label"><?php echo $customer_helper->__('Notification Action'); ?></div>
+                    <div class="clearfix"></div>
+                </a>
+            </li>            
+        </ul>
+        <div class="notification-msg-tab-underline"></div>
+        <div>
+            <div class="notification-body-loading">Đang tải ...</div>
+            <div class="notification-body">
+                <ul id="notification-body-list">
+                </ul>
+                <div id="notification-body-empty">Không có thông báo.</div>
+            </div>
+        </div>
+    </div>
+<?php else : ?>
+    <div id="notification-container" class='notification-container-mobile'>
+        <div class="swiper-notification-container">
+            <ul id="notification-menu" class="swiper-wrapper">
+                <li data-id="all" class="notification-msg-tab swiper-slide">
+                    <a>
+                        <div class="notification-msg-tab-unseen"></div>
+                        <div class="notification-msg-tab-label"><?php echo $customer_helper->__('Notification All'); ?></div>
+                       
+                    </a>
+                </li>
+                <li data-id="order" class="notification-msg-tab swiper-slide">
+                    <a>
+                        <div class="notification-msg-tab-unseen"></div>
+                        <div class="notification-msg-tab-label"><?php echo $customer_helper->__('Notification Order'); ?></div>
+                        
+                    </a>
+                </li>
+                <li data-id="event" class="notification-msg-tab swiper-slide">
+                    <a>
+                        <div class="notification-msg-tab-unseen"></div>
+                        <div class="notification-msg-tab-label"><?php echo $customer_helper->__('Notification Event'); ?></div>
+                       
+                    </a>
+                </li>
+                <li data-id="coupon" class="notification-msg-tab swiper-slide">
+                    <a>
+                        <div class="notification-msg-tab-unseen"></div>
+                        <div class="notification-msg-tab-label"><?php echo $customer_helper->__('Notification Coupon'); ?></div>
+                        
+                    </a>
+                </li>
+                <li data-id="action" class="notification-msg-tab swiper-slide">
+                    <a>
+                        <div class="notification-msg-tab-unseen"></div>
+                        <div class="notification-msg-tab-label"><?php echo $customer_helper->__('Notification Action'); ?></div>
+                        
+                    </a>
+                </li>            
+            </ul>
+        </div>
+        <div class="notification-msg-tab-underline"></div>
+        <div>
+            <div class="notification-body-loading">Đang tải ...</div>
+            <div class="notification-body">
+                <ul id="notification-body-list"></ul>
+                <div id="notification-body-empty">Không có thông báo.</div>
+            </div>
+        </div>
+    </div>
+<?php endif;?>    
+    <div id="notification-popup">
+        <div id="notification-popup-container">
+            <div class="notification-popup-header">
+                <h3>Tet</h3>
+                <div class="notification-popup-date">23/3/2019</div>
+                <div style="clear:both"></div>
+            </div>
+            <div class="notification-popup-body">
+                <div class="notification-popup-content"></div>
+                <div class="notification-popup-data">
+                </div>
+                <div class="notification-popup-actions">
+                    <button title="Yes" class="button" onclick="clickSavePopupItem()"><span>Lưu</span></button>
+                    <button title="No" class="button button-secondary" style="margin-left:10px" onclick="closeNotificationPopUp()">
+                        <span>Đóng Lại</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    
+const NOTIFICATION_KEY = 'notification-item-';
+    let $notification_loading = $jq(".notification-body-loading");
+    let $notification_list = $jq("#notification-body-list");
+    let $notification_menu_tabs = $jq("#notification-menu li");
+    let $current_tab = $notification_menu_tabs.eq(0);
+    let $notification_empty = $jq("#notification-body-empty");
+    let current_popup_item;
+    
+    $notification_menu_tabs.click(function () {
+        let $li = $jq(this);
+        getMyNotifications($li.attr('data-id'));
+    });
+    
+    let tab_param = Helper.getQueryParam('tab');
+    if(tab_param){
+        getMyNotifications(tab_param);
+    }else{
+        getMyNotifications('all');
+    }
+    
+    function getMyNotifications(type) {
+        $notification_list.empty();
+        $notification_list.hide();
+        $notification_empty.hide();
+        $notification_loading.show();
+        
+        $jq.ajax({
+            url: "/customer/notification/list",
+            method: 'post',
+            data: {
+                type: type,
+            },
+            success: function (data) {
+                $notification_list.show();
+                $notification_loading.hide();
+                if (!data['result']) {
+                    $notification_empty.show();
+                    return;
+                }
+                
+                if(data['notes'].length <= 0){
+                    $notification_empty.show();
+                }
+                
+                for (let i = 0; i < data['notes'].length; i++) {
+                    let note = data['notes'][i];
+                    $item = addMyNotification(note);
+                    $notification_list.append($item);
+                    
+                    if(note['id'] == data['top_msg']['id']){
+                        note['is_top_msg'] = true;
+                    }
+                }
+                
+                $notification_menu_tabs.each(function(){
+                    let $li = $jq(this);
+                    let item_type = $li.attr('data-id');
+                    
+                    if(item_type=='all'){
+                        if(Object.keys(data['unseens']).length > 0){
+                            $li.find('.notification-msg-tab-unseen').css('opacity', 1);
+                        }else{
+                            $li.find('.notification-msg-tab-unseen').css('opacity', 0);
+                        }
+                    }else{
+                        if(data['unseens'][item_type]){
+                            $li.find('.notification-msg-tab-unseen').css('opacity', 1);
+                        }else{
+                            $li.find('.notification-msg-tab-unseen').css('opacity', 0);
+                        }
+                    }
+                    
+                    if(type == item_type){
+                        if ($current_tab) {
+                            $current_tab.removeClass('active');
+                        }
+                        $current_tab = $li;
+                        $li.addClass('active');
+                    }
+                });
+
+                clearUnseenMsgs();
+                
+                /*
+                 *  Top Notification Message
+                 */
+                showTopNotification(data['top_msg']);
+            }
+        });
+    }
+    
+    function addMyNotification(item) {
+        if(!item){
+            return;
+        }
+        
+        let item_icon_url = "";
+        if(item['page_type']){
+            item_icon_url = "<img src='" + NOTIFICATION_URL + NOTIFICATION_ICONS[item['page_type']] + "'>";
+        }
+        
+        let $item_html = $jq("<li class='notification-item'>"
+                + "<div class='notification-item-header'>"
+                + "<div class='notification-item-title'>" + item['title'] + "</div>"
+                + "<div class='notification-item-date'>" + item['formated_created_at'] + "</div>"
+                + "<br style='clear:both;'>"
+                + "</div><div class='notification-item-icon'>"
+                + item_icon_url 
+                + "</div><div class='notification-item-text'>" + item['content'] + "</div>"
+                + "<div class='notification-item-msg-actions' style='float: right;clear: both;margin-top: 5px;'></div>"
+                + "<div class='notification-item-msg-result'></div>"
+                + "<div style='clear:both;'></div>"
+                + "</div></li>");
+        
+        let div_id = NOTIFICATION_KEY + item['id'];
+        $item_html.attr('id',div_id);
+        $item_html.attr('data-unseen', item['seen_status']);
+        $item_html.attr('data-msg-id', item['id']);
+        
+        if(item['seen_status'] == "0"){
+            $item_html.addClass('notification-item-unseen');
+        }
+        
+        if(item['url']){
+            $item_html.attr('data-url', item['url']);
+            $item_html.click(function(){
+                window.location.href = $jq(this).attr('data-url');
+                if($item_html.attr('data-unseen') == "0"){
+                    clearUnseenMsgs($item_html.attr('data-msg-id'));
+                }
+            });
+        }
+        
+        $item_html.hover(function(){
+            $this = $jq(this);
+            if($this.attr('data-url')){
+                $this.addClass('notification-item-clickable');
+            }
+        }, function(){
+            $this = $jq(this);
+            if($this.attr('data-url')){
+                $this.removeClass('notification-item-clickable');
+            }
+        });
+        
+        item['action_type'] = parseInt(item['action_type']);
+        item['action_result'] = parseInt(item['action_result']);
+        if(item['page_type']=='action'){
+            switch(item['action_type']){
+                case 1:
+                    break;
+                case 2:
+                    if(item['action_result']){
+                        $item_result = $item_html.find('.notification-item-msg-result');
+                        let label_result;
+                        switch(item['action_result']){
+                            case 2:
+                                label_result = "<?php echo $customer_helper->__('Notification Yes'); ?>";
+                                break;
+                            default:
+                                label_result = "<?php echo $customer_helper->__('Notification No'); ?>";
+                        }
+                        $item_result.html("<?php echo $customer_helper->__('Notification Result'); ?>" + ": " + label_result);
+                    }else{
+                        $item_actions = $item_html.find('.notification-item-msg-actions');
+                        $item_actions.html(printActionMsgBlock(item));
+                    }
+                    break;
+                case 3:
+                    $item_html.find('.notification-item-text').addClass('notification-item-msg-cutoff');
+                    
+                    if(item['action_result']){
+                        $item_result = $item_html.find('.notification-item-msg-result');
+                        let data;
+                        try{
+                            data = JSON.parse(item['action_data']);
+                        }catch(err){
+                            return;
+                        }
+                        
+                        let label_result = data['options'][item['action_result'] - 1];
+                        if(!label_result){
+                            return;
+                        }
+                        $item_result.html("<?php echo $customer_helper->__('Notification Result'); ?>" + ": " + label_result);
+                    }else{
+                        $item_actions = $item_html.find('.notification-item-msg-actions');
+                        $item_actions.html(printActionMsgBlock(item));
+                    }
+                    break;
+                default:
+            }
+        }
+        
+        return $item_html;
+    }
+    
+    function clearUnseenMsgs(msg_id){
+        $jq.ajax({
+            url: "/customer/notification/clearunseen",
+            method: 'post',
+            data: {
+                type: $current_tab.attr('data-id'),
+                msg_id: msg_id,
+            },
+            success: function (data) {
+                /// log data
+            }
+        });
+    }
+    
+    function responseToActionMessage(item, action_result){
+        
+        let div_id = NOTIFICATION_KEY + item['id'];
+        if(div_id){
+            $jq("#" + div_id).hide();
+        }
+        
+        if(item['is_top_msg']){
+            $jq("#notification-top-msg").hide();
+        }
+        
+        if(item['is_popup_msg']){
+            $jq("#notification-popup").hide();
+        }
+        
+        $jq.ajax({
+            url: "/customer/notification/responsetomsg",
+            method: 'post',
+            data: {
+                msg_id: item['id'],
+                action_result: action_result,
+            },
+            success: function (data) {
+                if(data.result){
+                    if(item['action_type'] == 2 || item['action_type'] == 3){
+                        alert("Lựa chọn của bạn đã được lưu lại");
+                    }
+                }
+                /// log data
+            }
+        });
+        
+        item['action_type'] = parseInt(item['action_type']);
+        switch(item['action_type']){
+            case 1:
+                if(item['url']){
+                    window.location.href = item['url'];
+                }
+                break;
+            case 2:
+                break;
+            default:
+        }
+    }
+    
+    function printActionMsgBlock(item){
+        
+        $buttons = null;
+        item['action_type'] = parseInt(item['action_type']);
+        switch(item['action_type']){
+            case 1:
+                let $button_1_html = $jq("<button title='Xem' class='button'><span>Xem</span></button>");
+                $button_1_html.click(function(){
+                    responseToActionMessage(item, 1);
+                });
+                $buttons = $button_1_html;
+                break;
+            case 2:
+                let $button_2_yes_html = $jq("<button title='' class='button'><span>Có</span></button>");
+                $button_2_yes_html.click(function(){
+                    responseToActionMessage(item, 2);
+                });
+                
+                let $button_2_no_html = $jq("<button title='Không' class='button button-secondary' style='margin-left:10px'>"
+                        + "<span>Không</span></button>");
+                $button_2_no_html.click(function(){
+                    responseToActionMessage(item, 1);
+                });
+                
+                let $button_2_actions_html = $jq("<div class='notification-top-msg-action-2'></div>");
+                $button_2_actions_html.append($button_2_yes_html).append($button_2_no_html);
+                
+                $buttons = $button_2_actions_html;
+                break;
+            case 3:
+                let $button_3_html = $jq("<button title='Xem' class='button'><span>Xem Thêm</span></button>");
+                $button_3_html.click(function(){
+                    showPoUpNotification(item);
+                });
+                $buttons = $button_3_html;
+                
+                break;
+            default:
+        }
+        
+        return $buttons;
+    }
+    
+    function closeNotificationPopUp(){
+        $jq("#notification-popup").hide();
+    }
+    
+    function showTopNotification(top_notification){
+        if(!top_notification){
+            return;
+        }
+        
+        $jq("#notification-top-msg .notification-top-msg-header h3").text(top_notification['title']);
+        $jq("#notification-top-msg .notification-top-msg-header-date").text(top_notification['formated_created_at']);
+        $jq("#notification-top-msg .notification-top-msg-body").html(top_notification['content']);
+        
+        let $top_msg_action = $jq("#notification-top-msg  .notification-top-msg-actions");
+        
+        top_notification['is_top_msg'] = true;
+        $top_msg_action.html(printActionMsgBlock(top_notification));
+        
+        $jq("#notification-top-msg").show();
+    }
+    
+    function showPoUpNotification(item){
+        current_popup_item = item;
+        $jq("#notification-popup").show();
+        $jq("#notification-popup .notification-popup-header h3").text(item['title']);
+        $jq("#notification-popup .notification-popup-date").text(item['formated_created_at']);
+        $jq("#notification-popup .notification-popup-content").html(item['content']);
+        
+        let $data_html = printActionData(item['action_data']);
+        $jq("#notification-popup .notification-popup-data").html($data_html);
+    }
+    
+    function clickSavePopupItem(){
+        if(!current_popup_item){
+            closeNotificationPopUp();
+            return;
+        }
+        
+        let selected_value = $jq('#notification-popup input[name=notification_popup_options]:checked').val();
+        if(selected_value){
+        }else{
+            alert("Xin vui lòng chọn một lựa chọn");
+            return;
+        }
+        
+        current_popup_item['is_popup_msg'] = true;
+        responseToActionMessage(current_popup_item, selected_value);
+    }
+    
+    function printActionData(data){
+        if(!data) return;
+        
+        try{
+            data = JSON.parse(data);
+        }catch(e){
+            return;
+        }
+        
+        if(!data || !data['options']){
+            return;
+        }
+        
+        let all_options = '';
+        for(let i=0; i < data['options'].length; i++){
+            let option = data['options'][i];
+            all_options += "<div class='radio'><label><input type='radio' name='notification_popup_options' value='"
+            + (i+1) + "'>" 
+            + option + "</label></div>";
+        }
+        
+        return $jq(all_options);
+    }
+    new Swiper('.swiper-notification-container', {
+        direction: 'horizontal',
+        slidesPerView: 'auto',
+        freeMode: true,
+    });
+</script>
+
+

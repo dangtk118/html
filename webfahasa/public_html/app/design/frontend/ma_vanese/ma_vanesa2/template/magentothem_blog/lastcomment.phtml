@@ -1,0 +1,20 @@
+<?php $comments = $this->getComment(); ?>
+<div class="latest-comment block">
+    <div class="latest-comment-title block-title">
+        <strong><span>Latest Comment</span></strong>
+    </div>
+    <div class="comments">
+        <?php foreach ($comments as $comment): ?>
+            <div class="comment col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="username"><?php echo $comment->getUser() ?></div>
+                <?php                 $title = Mage::helper('blog')->limitString($comment->getTitle(), 50);                ?>
+                <div class="post-name"><a href="<?php echo $comment->getAddress() ?>"><?php echo $title; ?></a></div>
+                <?php                 $content = Mage::helper('blog')->limitString( $comment->getComment(), 300);                ?>
+                <div class="content col-lg-12 col-md-12 col-sm-12 col-xs-12"><?php echo $content; ?></div>
+                
+                <div class="datetime"><?php echo $comment->getCreatedTime() ?></div>
+            </div>
+        <?php endforeach; ?>
+    </div>
+    <div class="clearer"></div>
+</div>

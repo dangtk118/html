@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <Fahasa_Formkey>
+            <version>0.1.0</version>
+        </Fahasa_Formkey>
+    </modules>
+    <frontend>
+        <layout>
+            <updates>
+                <fahasa_formkey>
+                    <file>fhsformkey.xml</file>
+                </fahasa_formkey>
+            </updates>
+        </layout>
+    </frontend>
+    <global>
+        <blocks>
+            <fhsformkey>
+                <class>Fahasa_Formkey_Block</class>
+            </fhsformkey>
+        </blocks>
+    </global>
+</config>
+

@@ -1,0 +1,107 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2014 X.commerce, Inc. (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+$SKIN_URL_FAIL = $this->getSkinUrl('images/order_status/ico_fail.png', array('_secure' => true));
+$mobile = Mage::helper('fhsmobiledetect')->isMobile();
+$isLogin = Mage::getSingleton('customer/session')->isLoggedIn();
+
+$canRepayment = false;
+
+$_order = Mage::getModel('sales/order')->loadByIncrementId($this->getRealOrderId());
+if($_order->getStatus() === "pending_payment"){
+    $timeout = Mage::getStoreConfig('repayment_config/config/timeout');
+    if(!empty($timeout)){
+	$timeout_datetime = date('Y-m-d H:i:s', strtotime("+7 hours "."-".$timeout." seconds"));
+    }
+    $created_at = date('Y-m-d H:i:s', strtotime('+7 hours', strtotime($_order->getCreatedAt())));
+    $timeout_countdown = strtotime($created_at) - strtotime($timeout_datetime);
+    
+    if(strtotime($created_at) > strtotime($timeout_datetime)){
+	$canRepayment = true;
+    }
+    
+    if(!$isLogin){
+	$lastOrderId = \Mage::getSingleton('checkout/session')->getLastOrderIdForPayment();
+	if(empty($lastOrderId)){
+	    $canRepayment = false;
+	}
+    }
+}
+
+?>
+<div class="status-order-template">
+    <div class="content-status-order"> 
+        <div class="image-status-order">
+            <img src="<?php echo $SKIN_URL_FAIL; ?>"  class="center">
+        </div>
+        <div class="title-status-order"><h1 class="failure-order">THANH TOÁN KHÔNG THÀNH CÔNG</h1></div>
+        <div class="text-status-order">
+            <p>Đã có vấn đề xảy ra với việc thanh toán của bạn, bạn vui lòng thử lại.</p>
+            <p>Đây là mã đơn hàng của bạn : #
+		<?php if(!$isLogin):?>
+		    <span class="color-fhs-orange"> <?php echo $this->getRealOrderId(); ?></span>
+		<?php else:?>
+		    <a href="<?php echo "/sales/order/view/order_id/".$_order->getId();?>" ><span class="color-fhs-orange"> <?php echo $_order->getIncrementId(); ?></span></a>
+		<?php endif;?>
+		trong trường hợp bạn muốn liên hệ.</p>
+        </div>
+        <?php
+        $orderId = $_order->getId();
+        if($orderId) :
+        $pamentMethod = $_order->getPayment()->getMethodInstance()->getCode();
+        ?>
+        <?php if (Mage::helper('sales/reorder')->canReorder($_order)) : ?>
+	    <?php if($canRepayment):?>
+	    <div class="button-status-order" style=""><a id="repayment_btn" href="/repayment/index/payment/id/<?php echo Mage::helper("event/data")->encryptor('encrypt',$_order->getIncrementId());?>"><?php echo $this->__('Re-payment') ?> <span><?php echo ($timeout_countdown > 0)?'&nbsp;('.$timeout_countdown.'s)':'';?></span></a></div>    
+	    <script>
+		let repayment_countdown_time = <?php echo $timeout_countdown;?>;
+		let repayment_countdown_avalible = true;
+		setInterval(repaymentCountDown, 1000);
+		function repaymentCountDown(){
+		    if(!repayment_countdown_avalible){return;}
+		    repayment_countdown_time--;
+		    if(repayment_countdown_time < 1){
+			$jq('#repayment_btn').attr('href','<?php echo Mage::getUrl('sales/order/reorder', array('order_id' => $orderId)); ?>');
+			$jq('#repayment_btn').text('<?php echo $this->__('Reorder') ?>');
+			repayment_countdown_avalible = false;
+		    }else{
+			$jq('#repayment_btn span').html("&nbsp;("+repayment_countdown_time+"s)");
+		    }
+		}
+	    </script>
+	    <?php else:?> 
+		<div class="button-status-order" style=""><a href="<?php echo Mage::getUrl('sales/order/reorder', array('order_id' => $orderId)); ?>"><?php echo $this->__('Reorder') ?></a></div>
+	    <?php endif;?>
+            
+        <?php endif; endif; ?>
+    </div>
+    <div class="contact-status-order">
+    <div><span class="color-fhs-black"><?php echo $this->__('Contact Us') ?>:</span></div>
+	    <div><?php echo $this->__('Please call us at:') ?>  <a href="tel:1900636467"><span class="color-fhs-orange">1900.63.64.67</span></a></div>
+	    <div><?php echo $this->__('Please email us at:') ?> <a href="mailto:info@fahasa.com"><span class="color-fhs-orange">info@fahasa.com</span></a></div>
+    </diV>
+</div>
+
+

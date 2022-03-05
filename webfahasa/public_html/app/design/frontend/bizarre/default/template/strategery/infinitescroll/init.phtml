@@ -1,0 +1,86 @@
+<?php
+/** @var $this Strategery_Infinitescroll_Block_Init */
+/**
+ * InfiniteScroll - Magento Integration
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0),
+ * available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ *
+ * @category   Strategery
+ * @package    Strategery_Infinitescroll
+ * @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ * @copyright  Copyright (c) 2011 Strategery Inc. (http://usestrategery.com)
+ *
+ * @author     Enrique Piatti (contacto@enriquepiatti.com)
+ */
+?>
+<?php if($this->isEnabled()): ?>
+<?php
+	$configData = $this->getConfigData();
+	$helper = Mage::helper('infinitescroll');
+?>
+<script>
+	function modeChecker(){
+		if(jQuery('ul.products-grid').length){
+			return "ul.products-grid";
+		}else if(jQuery('ol.products-list').length){
+			return "ol.products-list";
+		}
+	}
+	
+	var infiniteScrollFlag = false;
+	var StrategeryInfiniteScroll = {
+		loadScript : function(url, callback) {
+			var safelistener = function(){
+				try {
+					callback();
+				} catch(e) {
+					console.log(e.message);
+				}
+			};
+
+			if(infiniteScrollFlag == false){
+				jQuery.ajax({
+					url: url,
+					dataType: "script",
+					success: safelistener
+					// ,error: errorCallback
+				});
+			}else{
+				safelistener();
+			}
+		},
+		init: function(){
+			StrategeryInfiniteScroll.loadScript("<?php echo $this->getJsUrl('jquery/infinitescroll/jquery-ias.min.js') ?>", function(){
+					jQuery(function($) {
+
+						var config = {
+							container : '<?php echo $helper->getConfigData('selectors/content') ?>',
+							item: ["ul.products-grid", "ol.products-list", modeChecker()],
+							pagination: '<?php echo $helper->getConfigData('selectors/pagination') ?>',
+							next: '<?php echo $helper->getConfigData('selectors/next') ?>',
+							triggerPageThreshold: <?php echo (int) $helper->getConfigData('design/load_more_threshold') ?>,
+							trigger: '<?php echo $this->__('More Items'); ?>',
+							history: <?php echo ($helper->isMemoryActive()) ? 'true' : 'false'; ?>,
+							scrollContainer: <?php if($helper->getConfigData('design/local_mode')): ?>$('<?php echo $helper->getConfigData('selectors/content') ?>')<?php else: ?>$(window)<?php endif ?>,
+							thresholdMargin: -<?php echo (int) $helper->getConfigData('design/buffer_px') ?>
+						};
+
+						if (window.ias_config){
+							$.extend(config, window.ias_config);
+						}
+
+						$.ias(config);
+						
+						infiniteScrollFlag = true;
+
+						$('<?php echo Mage::getStoreConfig('infinitescroll/selectors/toolbar') ?>').<?php echo $helper->getConfigData('design/hide_toolbar') ? 'hide' : 'show' ?>();
+				});
+			});
+		}
+	};
+</script>
+<?php endif ?>

@@ -1,0 +1,146 @@
+<?php if(Mage::getStoreConfig('seriesbook_config/config/is_active')):?>
+<?php 
+    $page_size = Mage::getStoreConfig('seriesbook_config/config/page_size');
+    $sort_by = Mage::getStoreConfig('seriesbook_config/config/sort_by');
+    
+    $page_type = $this->getData('page_type');
+    $is_lazy_loading_data = $this->getData('lazy_loading');
+    $blockId = $this->getData("blockId");
+    
+    $is_page_type = true;
+    $is_lazy_loading = false;
+    $is_grid = false;
+    
+    if($page_type == 'slider'){$is_page_type = false;}
+    if($page_type == 'grid'){$is_page_type = false; $is_grid = true; $page_size = 10;}
+    
+    if(!empty($is_lazy_loading_data)){$is_lazy_loading = $is_lazy_loading_data;}
+    
+    $block_id = rand(100000,999999);
+    
+    $sort_by_list = [
+	"Top Subscribes"=>"",
+	"Weekly BestSeller"=>"num_orders",
+	"Monthly BestSeller"=>"num_orders_month",
+	"Yearly BestSeller"=>"num_orders_year",
+	"Weekly Trending"=>"product_view",
+	"Monthly Trending"=>"product_view_month",
+	"Yearly Trending"=>"product_view_year",
+	"Discount"=>"discount_percent",
+	"Sale Price"=>"min_price",
+	"Created At"=>"created_at",
+	];
+    
+    $skin_url = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true);
+    $queryfier = Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix');
+    $JS_SCRIPT = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS, true)."lib/seriesbook.js?q=".$queryfier;
+    $CSS_FILE = $skin_url."frontend/ma_vanese/fahasa/css/seriesbook.css?q=".$queryfier;
+    
+    $language = [];
+    $language['subscribes'] = $this->__("subscribes");
+    
+    $order_by_more = 'top_subscribes';
+    if(!empty($sort_by)){
+	$order_by_more = $sort_by;
+    }
+    $helper = Mage::helper("seriesbook");
+    $fhsCampaign = "?order=".$order_by_more."&fhs_campaign=".$helper->getFhsCampaignSeriSet();
+    $fhsCampaign_series_set = "?order=".$order_by_more."&fhs_campaign=".$helper->getCampaignSeriesSetPage();
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo $CSS_FILE; ?>" media="all" />
+<style>
+    .fhs-product-grid .sorter{
+	width: 280px;
+	padding-left: 16px;
+	max-width: calc(100vw - 50px);
+    }
+    @media (max-width: 1024px){
+	.fhs-product-grid .sorter{
+	    width: 230px;
+	}
+    }
+</style>
+<div <?php echo (!empty($blockId))?'id="'.$blockId.'"':''; ?> class="page-empty-banner col-lg-12 col-md-12 col-sm-12">
+        <div class="col-main">
+             <div class="container">
+                <div class="container-inner">
+<div style="justify-content: center;">
+		<!-- Begin Content -->
+		<div class="clear"></div>
+		<div id="fhs-product-grid<?php echo $block_id;?>" class="fhs-product-grid loading">
+		    <div class="fhs-product-grid-title-icon series_header"><img src="<?php echo $skin_url.'frontend/ma_vanese/fahasa/images/ico_seriesbo.svg?q='.$queryfier;?>"/><span><?php echo $this->__('Series set');?></span></div>
+		    <?php if($is_page_type):?>
+			<div class="toolbar-top">
+			    <div class="toolbar  col-sm-12 col-xs-12 col-md-12 ">
+				<div class="sorter">
+				    <p class="view-mode">
+				    </p>
+				    <div class="abc-xyz">
+					<div class="dropdownfhs-text hidden-xs"><p><?php echo $this->__('Sort By') ?> :</p></div>
+					<div class="sort-by dropdownfhs dropdownfhs-select">
+					    <div class="selectBox selectBox-order selectBox-order<?php echo $block_id;?>">
+						<span class="selected selected-order selected-order<?php echo $block_id;?>"></span>
+						<span class="selectArrow selectArrow-order selectArrow-order<?php echo $block_id;?>"></span>
+						<div class="selectOptions selectOptions-order selectOptions-order<?php echo $block_id;?>" style="display: none;">
+						    <?php foreach ($sort_by_list as $sort_key => $sort_item): ?>
+							<span  class="selectOption selectOption-order selectOption-order<?php echo $block_id;?>" value="<?php echo $sort_item; ?>" <?php echo ($sort_item == trim($sort_by)) ? 'selected=\"selected\"' : ''; ?>><?php echo $this->__($sort_key); ?></span>
+						    <?php endforeach; ?>
+						</div>
+					    </div>
+					</div>
+				    </div> 
+				</div>
+			    </div>
+			</div>
+		    <?php endif;?>
+		    <div class="clear"></div>
+		    
+		    <?php if($is_page_type):?>
+			<div id="seriesbook_grid<?php echo $block_id;?>" class="fhs-product-grid-content" style="display: none;">
+			    <ul id="seriesbook_grid_item<?php echo $block_id;?>" class="fhs-product-grid-list"></ul>
+			</div>
+			<div id="seriesbook_bottom<?php echo $block_id;?>" style="clear: both;"></div>
+			<div id="seriesbook_empty<?php echo $block_id;?>" class="seriesbook_empty" style="display:none;">
+			    <img width="90" height="90" src="<?php echo $skin_url."/frontend/ma_vanese/fahasa/images/checkout_cart/ico_emptycart.svg?q=".$queryfier;?>">
+			    <div><?php echo $this->__("Don't have series set");?></div>
+			</div>
+			<div class="fhs_loading_panel">
+			    <img class="default-icon-loading" src="<?php echo $skin_url."/frontend/ma_vanese/fahasa/images/ring_loader.svg";?>">
+			</div>
+		    <?php else:?>
+			<div id="seriesbook_grid<?php echo $block_id;?>" class="fhs-product-slider-content" style="display: none;">
+			    <div id="seriesbook_slider<?php echo $block_id;?>" class="swiper-container">
+				<ul id="seriesbook_grid_item<?php echo $block_id;?>" class="swiper-wrapper fhs-product-slider-list"></ul>
+			    </div>
+			    <div id="fhs-tab-slider-prev<?php echo $block_id;?>" class="fhs-tab-slider-prev position-tab-prev swiper-button-prev" ></div>
+			    <div id="fhs-tab-slider-next<?php echo $block_id;?>" class="fhs-tab-slider-next position-tab-next swiper-button-next" ></div>
+			    <div class="clear tabs-xem-them xem-them-item-aaa">
+				<a href="/all-series.html<?php echo $fhsCampaign_series_set.'_MORE';?>"><?php echo $this->__('View more'); ?></a>
+			    </div>
+			</div>
+			<div id="seriesbook_empty<?php echo $block_id;?>" class="seriesbook_empty" style="display:none;">
+			    <img width="90" height="90" src="<?php echo $skin_url."/frontend/ma_vanese/fahasa/images/checkout_cart/ico_emptycart.svg?q=".$queryfier;?>">
+			    <div><?php echo $this->__("Don't have series set");?></div>
+			</div>
+			<div class="fhs_loading_panel">
+			    <img class="default-icon-loading" src="<?php echo $skin_url."/frontend/ma_vanese/fahasa/images/ring_loader.svg";?>">
+			</div>
+		    <?php endif;?>
+		</div>
+		
+		<div id="seriesbook_follow_btn<?php echo $block_id;?>"></div>
+		<!-- End Content -->
+
+		</div>
+	    </div>
+	</div>
+    </div>
+</div>
+   
+
+<script type="text/javascript" src="<?php echo $JS_SCRIPT; ?>"></script>
+<script type="text/javascript">
+    var seriesbook_page_<?php echo $block_id;?> = new SeriesBook();
+    seriesbook_page_<?php echo $block_id;?>.initSeriesSet(<?php echo $is_page_type?'true':'false';?>, <?php echo $is_grid?'true':'false';?>, <?php echo $block_id;?>,<?php echo json_encode($language, JSON_UNESCAPED_UNICODE);?>, '<?php echo trim($sort_by);?>', <?php echo $page_size;?>, '<?php echo $fhsCampaign; ?>', <?php echo $is_lazy_loading?'true':'false';?>);
+</script>
+<?php endif;?>

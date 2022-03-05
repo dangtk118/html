@@ -1,0 +1,166 @@
+<?php 
+$SKIN_URL = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN);
+$current_locale = 'default';
+
+switch (Mage::app()->getLocale()->getLocaleCode()){
+    case 'vi_VN':
+	$current_locale = 'default';
+	break;
+    case 'en_US':
+	$current_locale = 'english';
+	break;
+    case 'ja_JP':
+	$current_locale = 'japan';
+	break;
+}
+?>
+
+<?php if(count($this->getStores())>1): ?>
+<style>
+    .fhs_top_languages{
+	margin-top: 8px;
+	position: relative;
+    }
+    .fhs_top_languages > div:first-of-type{
+	margin: 5px 5px 5px 15px;
+	display: flex;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	flex-direction:row;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+	-webkit-align-items: center;
+	-webkit-justify-content: flex-start;
+	justify-content: flex-start;
+	cursor: pointer;
+	user-select: none;
+	height: 48px;
+    }
+    .fhs_top_languages > div:first-of-type > span{
+	display: flex;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	flex-direction:row;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+	-webkit-align-items: center;
+	-webkit-justify-content: flex-start;
+	justify-content: flex-start;
+	padding-left: 4px;
+    }
+    .fhs_top_languages > div:first-of-type > span > img{
+	width: 10px;
+    }
+    .fhs_top_languages > .fhs_top_languages_dropdown{
+	display: none;
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	padding: 6px;
+	-webkit-transform: translate(0, 100%);
+	-ms-transform: translate(0, 100%);
+	-moz-transform: translate(0, 100%);
+	transform: translate(0, 100%);
+	border: 1px solid #e4e4e4;
+	background-color: white;
+	z-index: 999;
+	white-space: nowrap;
+	-webkit-box-shadow: 0 3px 8px rgba(0, 0, 0, .25);
+	-moz-box-shadow: 0 3px 8px rgba(0, 0, 0, .25);
+	box-shadow: 0 3px 8px rgba(0, 0, 0, .25);
+	border-radius: 8px;
+	-moz-border-radius: 8px;
+	 -webkit-border-radius: 8px;
+    }
+    .fhs_top_languages > .fhs_top_languages_dropdown > div{
+	padding: 6px;
+	display: flex;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	flex-direction:row;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+	-webkit-align-items: center;
+	-webkit-justify-content: flex-start;
+	justify-content: flex-start;
+	cursor: pointer;
+	user-select: none;
+    }
+    .fhs_top_languages > .fhs_top_languages_dropdown > div > span:first-of-type{
+	width: 31px;
+    }
+    .fhs_top_languages > .fhs_top_languages_dropdown > div > span:nth-of-type(2){
+	width: calc(100% - 62px);
+	padding-left: 8px;
+    }
+    .fhs_top_languages > .fhs_top_languages_dropdown > div > span:last-of-type{
+	width: 31px;
+	display: flex;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	flex-direction:row;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+	-webkit-align-items: center;
+	-webkit-justify-content: center;
+	justify-content: center;
+    }
+</style>
+<div class="fhs_top_languages">
+    <div class="fhs_top_languages_button">
+	<?php foreach ($this->getStores() as $_lang): ?>
+	    <?php if($_lang->getCode() != "mobile" && $current_locale == $_lang->getCode()):?>
+		<img src="<?php echo $this->getSkinUrl('images/' . $_lang->getCode() . '.svg');?>" alt=""/>
+	    <?php endif;?>
+	<?php endforeach;?>
+	<span><img src="<?php echo $SKIN_URL . "frontend/ma_vanese/fahasa/images/ico_dropdown.svg"; ?>"/></span>
+    </div>
+    <div class="fhs_top_languages_dropdown">
+	<?php foreach ($this->getStores() as $_lang): ?>
+	    <?php if($_lang->getCode() != "mobile"):?>
+		<div <?php if($current_locale != $_lang->getCode()):?>
+				class="lang-flag-img-target" lang="<?php echo $_lang->getCode(); ?>"
+			    <?php endif;?> >
+		    <span>
+			<img src="<?php echo $this->getSkinUrl('images/' . $_lang->getCode() . '.svg');?>" lang="<?php echo $_lang->getCode(); ?>" alt=""/>
+		    </span>
+		    <span lang="<?php echo $_lang->getCode(); ?>">
+			<?php echo $_lang->getName(); ?>
+		    </span>
+		    <span>
+			<?php if($current_locale == $_lang->getCode()):?>
+			    <img src="<?php echo $SKIN_URL . "frontend/ma_vanese/fahasa/images/ico_choose.svg"; ?>"/>
+			<?php endif;?>
+		    </span>
+		</div>
+	    <?php endif;?>
+	<?php endforeach;?>
+    </div>
+</div>
+<script type="text/javascript">
+    $jq('.fhs_top_languages').hover(
+	function(){
+	    $jq('.fhs_top_languages_dropdown').fadeIn(0);
+	},
+	function(){
+	    $jq('.fhs_top_languages_dropdown').fadeOut(0);
+	}
+    );
+</script>
+<?php endif;?>

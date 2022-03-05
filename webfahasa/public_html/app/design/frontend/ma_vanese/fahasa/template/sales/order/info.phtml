@@ -1,0 +1,264 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2014 X.commerce, Inc. (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php /** @var $this Mage_Sales_Block_Order_Info */ ?>
+<?php 
+    $_order = $this->getOrder();
+    $sym_currency = Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol();
+?>
+<?php echo $this->getMessagesBlock()->toHtml() ?>
+<div class="page-title title-buttons" style="margin: 0px;">
+    <h1>
+        <?php
+        echo $this->__('Order #%s', $_order->getRealOrderId());
+//            if ($_order->getState() == 'canceled' || $_order->getStatus() == 'canceled'){
+        echo " - " . $_order->getStatusLabel();
+//            }
+        ?>
+
+    </h1>
+    <h4><?php echo $this->getChildHtml('buttons') ?></h4>
+    <div class="contact-btn">
+        <?php
+        $listContact = Mage::helper('coreextended')->getFhsContactOrder($_order->getRealOrderId());
+        if (count($listContact) > 0) {
+            $notSeen = 0;
+            foreach ($listContact as $contact) {
+                if ($contact['seen'] == 0) {
+                    $notSeen++;
+                }
+            }
+            ?>
+            <?php if ($notSeen > 0) : ?>
+                <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo" onclick="seenContact()">
+                    <?php echo $this->__("You have missed %s contacts", $notSeen); ?>
+                </button>
+            <?php else: ?>
+                <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo">
+                    <?php echo $this->__("Contact history", $notSeen); ?>
+                </button>
+            <?php endif; ?>
+        <?php } ?>
+    </div>
+</div>
+<div>
+    <div id="demo" class="collapse">
+        <table>
+            <tr>
+                <th></th>
+                <th><?php echo $this->__('Order #') ?></th>
+                <th><?php echo $this->__('Note') ?></th>
+                <th><?php echo $this->__('Date contact') ?></th>
+            </tr>
+            <?php
+            $listSeen = array();
+            foreach ($listContact as $contact):
+                $listSeen[] = $contact["id"];
+                ?>
+                <tr class="<?php if ($contact['seen'] == 0) { echo "contact-not-seeen";} ?>">
+                    <td class="contact-type">
+                        <?php
+                        switch ($contact['type']) {
+                            case "email":
+                                echo '<i class="fa fa-2x fa-envelope"></i>';
+                                break;
+                            case "phone":
+                                echo '<i class="fa fa-2x fa-phone"></i>';
+                                break;
+                            case "sms":
+                                echo '<i class="fa fa-2x fa-comment"></i>';
+                                break;
+                            default :
+                                echo '<i class="fa fa-2x fa-exchange"></i>';
+                                break;
+                        }
+                        ?>
+                    </td>
+                    <td><?php echo $contact['suborder_id'] ?></td>
+                    <td><?php echo $contact['content'] ?></td>
+                    <td><?php echo $contact['created_at'] ?></td>
+                </tr>
+                <?php
+            endforeach;
+            ?>
+        </table> 
+    </div>
+</div>
+<script type="text/javascript">
+function seenContact(){
+    jQuery.ajax({
+        type: "POST",
+        url: "/customer/account/seenContact/",
+        data: { 
+            orderId: "<?php echo $_order->getRealOrderId(); ?>",
+            listSeen: "<?php echo implode(",", $listSeen); ?>" 
+        }
+    });
+};
+</script>
+<?php echo $this->getStatusHistoryRssUrl($_order) ?>
+<dl class="order-info-2">
+    <dd>
+            <?php $_links = $this->getLinks(); ?>
+        <ul id="order-info-tabs">
+            <?php foreach ($_links as $_link): ?>
+                <?php if ($_link->getUrl()): ?>
+                    <li><a href="<?php echo $_link->getUrl() ?>"><?php echo $_link->getLabel() ?></a></li>
+                <?php else: ?>
+                    <li class="current"><?php echo $_link->getLabel() ?></li>
+    <?php endif; ?>
+<?php endforeach; ?>
+        </ul>
+        <script type="text/javascript">decorateGeneric($('order-info-tabs').select('LI'), ['first', 'last']);</script>
+    </dd>
+</dl>
+
+
+<div class="col2-set order-shipping-info-box">
+    <div class="progress-info-division">
+        <div class="next-step next-step-dot next-step-horizontal order-status-progress-bar">
+            <?php echo $this->getProgressStep($_order); ?>
+        </div>
+        <?php 
+        if($_order->getStatus() == 'pending' || $_order->getStatus() == 'pending_payment' || $_order->getStatus() == 'paid'){
+            $_arrow_left = "11.6";
+        }else if($_order->getStatus() == 'customer_confirmed'){
+            $_arrow_left = "36.7";
+        }else if($_order->getStatus() == 'processing'){
+            $_arrow_left = "61.8";
+        }else if(($_order->getStatus() == "canceled" || $_order->getStatus() == "complete")){
+            $_arrow_left = "86.9";
+        }else{
+            $_arrow_left = "11.6";
+        }
+            ?>
+        <div class="tracking-list">
+            <div class="translate" style="left: <?php echo $_arrow_left; ?>%;"></div>
+            <div class="tracking-list-info-table"></div>
+            <div class="view-more"><a class="text link"><span class="tracking-view-btn">XEM THÊM</span></a><a class="text link" href="#." hrefs="#order-details"><span style="padding-left: 20px;">CHI TIẾT</span></a></div>
+        </div>
+    </div>
+</div>
+    
+<div class="order-info-box-2">
+    <div class="order-info-2-1">
+        <div class="order-info-billing-address">
+            <div class="box-title">
+                <h2 class="sales"><?php echo $this->__('Shipping Address') ?></h2>
+            </div>
+            <div class="box-content">
+                <address><?php echo $_order->getShippingAddress()->format('html') ?></address>
+            </div>
+        </div>
+    </div>
+    <div class="order-info-2-2">
+        <?php if (!$_order->getIsVirtual()): ?>
+            <div class="order-info-shipping-description">
+                <div class="box-title">
+                    <h2 class="sales"><?php echo $this->__('Shipping Method') ?></h2>
+                </div>
+                <div class="box-content">
+                    <?php if ($_order->getShippingDescription()): ?>
+                        <?php echo $this->escapeHtml($_order->getShippingDescription()) ?>
+                    <?php else: ?>
+                        <p><?php echo $this->helper('sales')->__('No shipping information available'); ?></p>
+                    <?php endif; ?>
+                </div>
+        </div>
+        <?php endif; ?>
+        <div>   
+            <div class="box-title">
+            <h2 class="sales"><?php echo $this->__('Payment Method') ?></h2>
+            </div>
+            <div class="box-content">
+                <?php echo $this->getPaymentInfoHtml() ?>
+            </div>
+        </div>
+    </div>
+    <div class="order-info-2-3">
+        <div class="order-info-total">
+            <div class="box-title">
+                <h2 id="order-final-total" class="sales"><?php echo $this->__('Grand Totals').":&nbsp;".$this->getOrder()->formatPrice($_order->getGrandTotal())." ".$sym_currency ?></h2>
+            </div>
+        </div>
+        <div class="order-info-VAT">
+            <div class="box-title">
+            <h2 class="sales"><?php echo $this->__('Information Outputting Invoice') ?></h2>
+            </div>
+            <div class="box-content">
+                <i><?php echo $this->getVAT($_order); ?></i>
+            </div>
+        </div>
+        <div class="order-info-description">
+            <div class="box-title">
+            <h2 class="sales"><?php echo $this->__('Note') ?></h2>
+            </div>
+            <div class="box-content">
+                <?php echo $this->getNote($_order); ?>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+$jq(document).ready(function() {
+    var order_tracking = <?php echo $this->getOrderLog($_order); ?>;
+    tracking_info = "<div class='tracking-item'><div class='text desc info tracking-item-time light-gray'>"+ order_tracking[0].date+"</div><div class='tracking-item-content'><span class='text desc'>"+order_tracking[0].status+"</span></div></div>";
+    $jq(".tracking-list-info-table").html(tracking_info);
+
+    jQuery('.tracking-view-btn').click(function () {
+        var tracking_info = "";
+        var tracking_btn_text = $jq(".tracking-view-btn").html();
+        if(tracking_btn_text == "XEM THÊM"){
+            order_tracking.forEach(function(value) {
+                var temp = "<div class='tracking-item'><div class='text desc info tracking-item-time light-gray'>"+ value.date+"</div><div class='tracking-item-content'><span class='text desc'>"+value.status+"</span></div></div>";
+                tracking_info += temp;
+              });
+            $jq(".tracking-list-info-table").html(tracking_info);
+            $jq(".tracking-view-btn").html("RÚT GỌN");
+        }else{
+            var value = order_tracking[0];
+            tracking_info = "<div class='tracking-item'><div class='text desc info tracking-item-time light-gray'>"+ value.date+"</div><div class='tracking-item-content'><span class='text desc'>"+value.status+"</span></div></div>";
+            $jq(".tracking-list-info-table").html(tracking_info);
+            $jq(".tracking-view-btn").html("XEM THÊM");
+        }
+    });
+    $jq('a[hrefs^="#"]').on('click', function(event) {
+    var target = $jq(this.getAttribute('hrefs'));
+    var sub_order_data_target = $jq(this.getAttribute('data-target'));
+    if(sub_order_data_target.length){
+        if (!$jq(this).hasClass("collapsed")) {
+            return;
+        }
+    }
+    if(target.length) {
+        event.preventDefault();
+        $jq('html, body').stop().animate({
+            scrollTop: target.offset().top
+        }, 1000);
+    }
+    });
+});
+</script>

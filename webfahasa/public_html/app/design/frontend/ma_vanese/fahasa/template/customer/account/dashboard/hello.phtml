@@ -1,0 +1,253 @@
+<?php
+$mobile = Mage::helper('fhsmobiledetect')->isMobile();
+$customer = Mage::getSingleton('customer/session')->getCustomer();
+$helper_fpoint = Mage::helper("fahasa_customer/fpoint");
+
+$fullname = trim($customer->getName());
+$email = $customer->getRealEmail();
+
+$freeshipTimes = $helper_fpoint->getFreeship($customer, true);
+$amountFpoint = $helper_fpoint->getFpoint($customer, true);
+$level = $helper_fpoint->getVipLevel($customer, true);
+$fpointAccureYear = $helper_fpoint->getFpointAccureYear($customer, true);
+
+$numOldOrders = Mage::helper('tryout')->getAllOrderInYear();
+$totalPay = Mage::helper('tryout')->getPayAccureYear();
+$listLevel = Mage::helper('tryout')->getListLevelMember();
+
+$img = Mage::helper('tryout')->handleLineFpoint($fpointAccureYear, $listLevel[2]["num_point_begin_level"]);
+
+switch ($level) {
+    case 1:
+        $labelMemner = $this->__("VIP");
+        $imgIcon = "icon-vip";
+        break;
+    case 2:
+        $labelMemner = $this->__("F-VIP");
+        $imgIcon = "icon-fvip";
+        break;
+    default:
+        $labelMemner = $this->__("Member");
+        $imgIcon = "icon-thanthiet";
+}
+
+$messLevelNoti = "";
+if ($fpointAccureYear >= $listLevel[1]["num_point_begin_level"] & $fpointAccureYear < $listLevel[2]["num_point_begin_level"]) {
+    $messLevelNoti = $this->__("You will be uplevel to %s in the next round.", $this->__("VIP")) . " " . Mage::getStoreConfig('tablevel/general/text_levelup');
+} else if ($fpointAccureYear >= $listLevel[1]["num_point_begin_level"]) {
+    $messLevelNoti = $this->__("You will be uplevel to %s in the next round.", $this->__("F-VIP")) . " " . Mage::getStoreConfig('tablevel/general/text_levelup');
+}
+?>
+<?php if(!$mobile) : ?>
+<div style="margin: 0 0 20px; overflow: auto;">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 member-icon pad-vip-icon">
+            <?php if ($messLevelNoti): ?>
+                <a href="<?php echo mage::getBaseURL(); ?>thanh-vien">
+                <?php endif; ?>
+                <image src="<?php echo $this->getSkinUrl('images/' . $imgIcon . '.png'); ?>" title="<?php echo $messLevelNoti; ?>"/>
+                <?php if ($messLevelNoti): ?>
+                    <span id="member-info-noti"></span>
+                <?php endif; ?>
+                <?php if ($messLevelNoti): ?>
+                </a>
+            <?php endif; ?>
+        </div>
+    </div>
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pad-vip-icon">
+            <p class="title-collected-fpoint"><?php echo $this->__("Collected Point %s", Mage::getStoreConfig('tablevel/general/num_date')) ?>: <?php echo number_format($fpointAccureYear); ?> Fpoint</p>
+        </div>
+    </div>
+    <div>
+        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-0"></div>
+        <div class="col-lg-10 col-md-10 col-sm-10 col-xs-12 collected-fpoint" style="padding: 0px; margin-bottom: 20px;">
+            <image src="<?php echo $this->getSkinUrl('images/fpoint/Fpoint-level-chart-' . $img . '.png'); ?>">
+        </div>
+        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-0"></div>
+    </div>
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 member-info">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 member-info-label">
+	    <?php if(!empty($fullname)):?>
+		<p>
+		    <?php echo $this->__("Full name"); ?>: <span class="member-value"><?php echo $this->escapeHtml($customer->getName()); ?></span>
+		</p>
+	    <?php endif;?>
+	    <?php if(!empty($email)):?>
+		<p style="word-wrap: break-word;">
+		    Email: <strong class="member-value"><?php echo $email;?></strong>
+		</p>
+	    <?php endif;?> 
+            <p>
+                <?php echo $this->__("Member Level"); ?>: <span class="member-value"><?php echo $labelMemner; ?></span>
+            </p>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="padding-top-10 padding-bottom-10" style="border-bottom: 1px solid #ccc; font-size: 16px;">
+                <?php echo Mage::helper('customer')->__('Account Information'); ?>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 padding-left-none padding-top-10  padding-right-none">
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 padding-left-none">
+                    F-point
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                    <?php echo Mage::helper('checkout')->formatPrice($amountFpoint); ?>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 padding-left-none padding-right-none" style="text-align: right;">
+                    <a href="<?php echo mage::getBaseURL(); ?>thanh-vien" class="color-default">
+                        <?php echo $this->__("See more") ?>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 padding-left-none padding-top-10 padding-right-none">
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 padding-left-none">
+                    Freeship
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                    <?php echo $freeshipTimes; ?> <?php echo $this->__("times") ?> 
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 padding-left-none padding-right-none" style="text-align: right;">
+                    <a href="<?php echo mage::getBaseURL(); ?>freeship" class="color-default">
+                        <?php echo $this->__("See more") ?>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 padding-left-none padding-top-10 padding-bottom-10  padding-right-none">
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 padding-left-none">
+                    <?php echo $this->__("Plastic cover"); ?>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                    <?php echo $this->__("coming soon") ?>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 padding-left-none padding-right-none" style="text-align: right;">
+                    <a href="<?php echo mage::getBaseURL(); ?>plasticcover"  class="color-default">
+                        <?php // echo $this->__("See more") ?>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 padding-left-none padding-top-10 padding-right-none" >
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 padding-left-none">
+                    <?php echo $this->__("The successful orders in %s", Mage::getStoreConfig('tablevel/general/num_date')); ?>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 padding-right-none" style="text-align: center">
+                    <?php echo $numOldOrders ?>
+                </div>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 padding-left-none padding-top-10 padding-bottom-10 padding-right-none">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 padding-left-none">
+                    <?php echo $this->__("The amount paid in %s", Mage::getStoreConfig('tablevel/general/num_date')); ?>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 padding-right-none" style="text-align: center">
+                    <?php echo Mage::helper('checkout')->formatPrice($totalPay); ?>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<?php else : // ----------------HANDLE CHO MOBILE -------------------- ?>
+<div class="" style="overflow: auto;">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 member-icon pad-vip-icon">
+            <?php if ($messLevelNoti): ?>
+                <a href="<?php echo mage::getBaseURL(); ?>thanh-vien">
+                <?php endif; ?>
+                <image src="<?php echo $this->getSkinUrl('images/' . $imgIcon . '.png'); ?>" title="<?php echo $messLevelNoti; ?>"/>
+                <?php if ($messLevelNoti): ?>
+                    <span id="member-info-noti"></span>
+                <?php endif; ?>
+                <?php if ($messLevelNoti): ?>
+                </a>
+            <?php endif; ?>
+        </div>
+    </div>
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pad-vip-icon">
+            <p class="title-collected-fpoint"><?php echo $this->__("Collected Point %s", Mage::getStoreConfig('tablevel/general/num_date')) ?>: <?php echo number_format($fpointAccureYear); ?> Fpoint</p>
+        </div>
+    </div>
+    <div>
+        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-0"></div>
+        <div class="col-lg-10 col-md-10 col-sm-10 col-xs-12 collected-fpoint" style="padding: 0px; margin-bottom: 20px;">
+            <image src="<?php echo $this->getSkinUrl('images/fpoint/Fpoint-level-chart-' . $img . '.png'); ?>">
+        </div>
+        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-0"></div>
+    </div>
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 member-info no-padding" style='background:none;'>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 member-info-label">
+            <p>
+                <?php echo $this->__("Full name"); ?>: <span class="member-value"><?php echo $customer->getName(); ?></span>
+            </p>
+	    <?php if(!empty($email)):?>
+		<p style="word-wrap: break-word;">
+		    Email: <strong class="member-value"><?php echo $email; ?></strong>
+		</p>
+	    <?php endif;?> 
+            <p style="word-wrap: break-word;">
+            </p>
+            <p>
+                <?php echo $this->__("Member Level"); ?>: <span class="member-value"><?php echo $labelMemner; ?></span>
+            </p>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div style="border-bottom: 1px solid #ccc;">
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 padding-left-none padding-top-10  padding-right-none">
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 padding-left-none">
+                    F-point
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                    <?php echo Mage::helper('checkout')->formatPrice($amountFpoint); ?>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 padding-left-none padding-right-none" style="text-align: right;">
+                    <a href="<?php echo mage::getBaseURL(); ?>thanh-vien" class="color-default">
+                        <?php echo $this->__("See more") ?>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 padding-left-none padding-top-10 padding-right-none">
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 padding-left-none">
+                    Freeship
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                    <?php echo $freeshipTimes; ?> <?php echo $this->__("times") ?> 
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 padding-left-none padding-right-none" style="text-align: right;">
+                    <a href="<?php echo mage::getBaseURL(); ?>freeship" class="color-default">
+                        <?php echo $this->__("See more") ?>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 padding-left-none padding-top-10 padding-right-none padding-bottom-10" style="border-bottom: 1px solid #ccc;">
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 padding-left-none">
+                    <?php echo $this->__("Plastic cover"); ?>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                    <?php echo $this->__("coming soon") ?>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 padding-left-none padding-right-none" style="text-align: right;">
+                    <a href="<?php echo mage::getBaseURL(); ?>plasticcover"  class="color-default">
+                        <?php // echo $this->__("See more") ?>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 padding-left-none padding-top-10 padding-right-none" >
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 padding-left-none">
+                    <?php echo $this->__("The successful orders in %s", Mage::getStoreConfig('tablevel/general/num_date')); ?>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 padding-right-none" style="text-align: center">
+                    <?php echo $numOldOrders ?>
+                </div>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 padding-left-none padding-top-10 padding-bottom-10 padding-right-none">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 padding-left-none">
+                    <?php echo $this->__("The amount paid in %s", Mage::getStoreConfig('tablevel/general/num_date')); ?>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 padding-right-none" style="text-align: center">
+                    <?php echo Mage::helper('checkout')->formatPrice($totalPay); ?>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
+

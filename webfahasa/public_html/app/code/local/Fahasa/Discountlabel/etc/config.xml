@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <Fahasa_Discountlabel>
+            <version>0.1.0</version>
+        </Fahasa_Discountlabel>
+    </modules>
+    <global>
+        <helpers>
+            <discountlabel>
+                <class>Fahasa_Discountlabel_Helper</class>
+            </discountlabel>
+        </helpers>        
+    </global>
+</config>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>    
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <byeiq translate="title" module="fhsmarketing">
+                                        <title>Bye IQ Enable</title>
+                                    </byeiq>
+                                    <retryiq translate="title" module="fhsmarketing">
+                                        <title>Retry IQ Enable</title>
+                                    </retryiq>
+                                    <accesstrade translate="label" module="fhsmarketing">
+                                        <title>Access Trade Enable</title>
+                                    </accesstrade>
+                                    <netcore translate="label" module="fhsmarketing">
+                                        <title>Netcore Enable</title>
+                                    </netcore>
+                                    <chin_media translate="label" module="fhsmarketing">
+                                        <title>Chin Media Enable</title>
+                                    </chin_media>
+                                    <suggestion translate="label" module="fhsmarketing">
+                                        <title>Suggestion Enable</title>
+                                    </suggestion>
+                                    <asidebar translate="label" module="fhsmarketing">
+                                        <title>Aside Bar Enable</title>
+                                    </asidebar>
+                                    <enhanced_ecom translate="label" module="fhsmarketing">
+                                        <title>Enhanced Ecommerce Enable</title>
+                                    </enhanced_ecom>
+                                    <ulu translate="label" module="fhsmarketing">
+                                        <title>Affiliate ULU</title>
+                                    </ulu>
+                                </children>
+                            </config>
+                        </children>
+		    </system>                    
+                </children>
+            </admin>
+        </resources>
+    </acl>  
+</config>

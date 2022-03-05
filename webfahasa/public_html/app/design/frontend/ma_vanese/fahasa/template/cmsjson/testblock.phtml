@@ -1,0 +1,12 @@
+<?php
+$pageUrl = $this->getData(page_url);
+$descType = $this->getData(desc_type);
+$result = $this->getDescriptionByPageUrl($pageUrl, $descType);
+$description = $result['description'];
+?>
+
+
+<div class="fhs-banner-image-block">
+    <?php echo html_entity_decode($description) ?>
+
+</div>

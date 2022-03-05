@@ -1,0 +1,112 @@
+<?php 
+    $MEDIA_URL = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);
+    $WEB_SLIDES_PER_VIEW = 9;
+    $MOBILE_SLIDES_PER_VIEW = 3;
+    
+    $is_mobile = Mage::helper('fhsmobiledetect')->isMobile();
+    $slides_per_view = $is_mobile? $MOBILE_SLIDES_PER_VIEW: $WEB_SLIDES_PER_VIEW;
+      
+//     $data2 = '[
+//        {
+//        "img": "wysiwyg/NXB/logo-nxb/logo-home-page/cambridge.jpg",
+//        "link":"cambridge-elt"
+//        },
+//        {
+//        "img":"wysiwyg/NXB/logo-nxb/logo-home-page/cengage.jpg",
+//        "link":"cengage-elt"
+//        },
+//        {
+//        "img":"wysiwyg/NXB/logo-nxb/logo-home-page/Harper-Collins.jpg",
+//        "link":"harper-collins"
+//        },
+//        {
+//        "img":"wysiwyg/NXB/logo-nxb/logo-home-page/hachette.jpg",
+//        "link":"hachette-publishing"
+//        },
+//        {
+//        "img":"wysiwyg/NXB/logo-nxb/logo-home-page/macgrawhill.jpg",
+//        "link":"mcgraw-hill-publishing"
+//        },
+//        {
+//        "img":"wysiwyg/NXB/logo-nxb/logo-home-page/macmillan.jpg",
+//        "link":"macmillan-elt"
+//        },
+//        {
+//        "img":"wysiwyg/NXB/logo-nxb/logo-home-page/oxford.jpg",
+//        "link":"oxford-elt"
+//        },
+//        {
+//        "img":"wysiwyg/NXB/logo-nxb/logo-home-page/paragon.jpg",
+//        "link":"parragon-publishing"
+//        },
+//        {
+//        "img":"wysiwyg/NXB/logo-nxb/logo-home-page/pearson---longman.jpg",
+//        "link":"pearson-elt"
+//        },
+//        {
+//        "img":"wysiwyg/NXB/logo-nxb/penguin.jpg",
+//        "link":"penguin-publishing"
+//        },
+//        {
+//        "img":"wysiwyg/NXB/logo-nxb/logo-home-page/sterling.jpg",
+//        "link":"sterling-publishing"
+//        },
+//        {
+//        "img":"wysiwyg/NXB/logo-nxb/logo-home-page/usborn.jpg",
+//        "link":"usborne-publishing"
+//        }
+//        
+//        
+//    ]'; 
+    //$image_links = json_decode($data2, true);
+    $image_links = json_decode($this->getData('data'), true);
+    $loading_icon_url = $this->getSkinUrl('images/ring_loader.svg');
+?>
+<style type="text/css">
+    .cms-horizontal-slider{
+        background-color: #fff;
+        margin: 20px 0px 0px 0px;
+    }
+    
+    .cms-horizontal-slider .swiper-container{
+        padding:15px 20px
+    }
+</style>
+
+<div class="row cms-horizontal-slider">
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            <?php foreach($image_links as $link): ?>
+            <div class="swiper-slide" data-url="google.com" onclick="goToSliderItemUrl(this)">
+                <a href=<?php echo $link['link']; ?>>
+		    <img class = "swiper-lazy image-silde-cus" src="<?php // echo $MEDIA_URL . $link;
+			echo  $MEDIA_URL.$link['img']; ?>" alt="" />
+		    <div class="swiper-lazy-preloader"><img style='padding-bottom:0' src='<?php echo $loading_icon_url;?>'/></div>
+		</a>
+            </div>
+            <?php endforeach; ?>
+        </div>
+        <!-- If we need navigation buttons -->
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function goToSliderItemUrl(){
+        
+    }
+    
+    new Swiper('.cms-horizontal-slider .swiper-container', {
+        slidesPerView: <?php echo $slides_per_view; ?>,
+        slidesPerGroup: <?php echo $slides_per_view; ?>,
+        spaceBetween:20,
+	preloadImages: false,
+	lazy: true,
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+        longSwipesMs: 800,
+    });
+</script>

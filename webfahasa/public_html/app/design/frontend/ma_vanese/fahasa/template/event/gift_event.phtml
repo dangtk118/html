@@ -1,0 +1,259 @@
+<?php
+   $listgift = Mage::helper('almostcart')->getListGiftAlmostCart();
+   $listLimitGift = $listgift["listLimitGift"];
+   $listAllGift = $listgift["listAllGift"];
+   $type = $listgift["type"];
+   if ($type == "random") {
+       $randomGift = $listgift["randomGift"];
+   }
+   $appliedRulesGift = $listgift["appliedRulesGift"];
+   $media_url = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA, true);
+   $skin_url = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true);
+   $queryfier = Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix');
+   
+   $canChooseIndex = array_search(true, array_column($listAllGift, "canChoose"));
+   $fewGift = null;
+   
+   if ($canChooseIndex == -1)
+   {
+       $fewGift = array(0, 1);
+   }
+   else if ($canChooseIndex < sizeof($listAllGift) - 1){
+       $fewGift = array($canChooseIndex, $canChooseIndex + 1);
+   }
+   else{
+       $fewGift = array($canChooseIndex - 1, $canChooseIndex);
+   }
+   $mobile = Mage::helper('fhsmobiledetect')->isMobile();
+   ?>
+<?php if (Mage::getStoreConfig('event_almostcart_block/config/active')): ?>
+<div class="clear"></div>
+<div class="almost-cart" style="background-color: white;margin-top: 25px;">
+   <div id="gift_event" class="almost-cart-limit">
+      <h3 style="float:left;margin-bottom: 10px;" id="gift_step_header" class="step_5"><?php echo $this->__("Select a free gift now"); ?></h3>
+      <div>
+         <?php foreach ($listAllGift as $key1 => $rankgift): ?> 
+         <?php
+            // rank > 3 item => slider
+            $flagSlider = false;
+            $numList = count($rankgift["data"]);
+            if ($mobile){
+                if ($numList > 2)
+                {
+                    $flagSlider = TRUE;
+                }
+            } else {
+                if ($numList > 3)
+                {
+                    $flagSlider = TRUE;
+                }
+            }
+            
+            ?>
+         <div class="rank-container" style=" display: <?php echo in_array($key1, $fewGift) ? "" : "none;" ?>;">
+            <div style="font-weight: bold; font-size: 14px;margin-left: 15px;padding-top: 20px;padding-bottom: 10px; "><?php echo $rankgift["alternateName"]; ?></div>
+            <div class="clear"></div>
+            <div class="<?php echo $rankgift["rankId"]; ?> <?php echo ($flagSlider) ? "swiper-container" : ""; ?>">
+               <div class="swiper-wrapper">
+                  <?php foreach ($rankgift["data"] as $key2 => $gift): ?>
+                  <?php 
+                     $isApply = $appliedRulesGift == $gift['ruleId'] ? true : false;
+                     ?>
+                  <div style="position: relative;"  id="gift-<?php echo $key1 . '-' . $key2; ?>" 
+                     class="gift-item-container swiper-slide  <?php echo ($flagSlider) ? "col-sm-4 col-md-4 col-xs-6" : "col-sm-4 col-md-4 col-xs-6"; ?> <?php echo ($gift["canChoose"] == True) ? "active" : "deactivate"; ?>"
+                     >
+                     <img src="<?php echo $gift["image"]; ?>"    title="<?php echo $gift["name"]; ?>"
+                        style="position: relative; display: inline-block;">
+                     <div class="gift-button-container" >
+                        <?php if (!$gift['isInStock']) : ?>
+                        <div style="color: orange; font-weight: bold; text-align: center;font-size: 16px;">Hết quà</div>
+                        <?php else :?>
+                        <?php if ($gift['canChoose']) : ?>
+                        <?php if ($isApply) :?>
+                        <button
+                           class="btn-apply"
+                           type="button"
+                           onclick="cancelFreeGift(this.id)"
+                           id="btn-add-gift-<?php echo $key1 . '-' . $key2; ?>"
+                           >Hủy nhận quà</button>
+                        <?php else :?>
+                        <button
+                           class="btn-apply"
+                           type="button"
+                           onclick="addFreeGift(this.id)"
+                           id="btn-add-gift-<?php echo $key1 . '-' . $key2; ?>"
+                           >Nhận quà</button>
+                        <?php endif;?>
+                        <?php endif;?>
+                        <?php endif; ?>
+                        <button
+                           type="button"
+                           id="btn-show-gift-<?php echo $key1 . '-' . $key2; ?>"
+                           onclick="showGiftDetail(this.id)" class="btn-apply btn-detail">Chi tiết</button>
+                     </div>
+                  </div>
+                  <?php endforeach; ?>
+               </div>
+               <div class="swiper-button swiper-button-prev <?php echo ($flagSlider) ? ' ' : 'swiper-button-hidden'; ?>" style="">
+                  <img src="<?php echo $skin_url . "frontend/ma_vanese/fahasa/images/fpointstore/ico_slide_left.png?q=" . $queryfier; ?>" width="44px"/>
+               </div>
+               <div class="swiper-button swiper-button-next <?php echo ($flagSlider) ? ' ' : 'swiper-button-hidden'; ?>" style="">
+                  <img src="<?php echo $skin_url . "frontend/ma_vanese/fahasa/images/fpointstore/ico_slide_right.png?q=" . $queryfier; ?>" width="44px"/>
+               </div>
+            </div>
+         </div>
+         <?php endforeach; ?>
+      </div>
+   </div>
+   <div id="view-all-gift">
+      <i class="fa fa-arrow-circle-o-down" style='font-size:20px; color: orange;'></i>
+      <span style="color: orange;font-weight: bold;font-size: 14px;">
+      <?php echo $this->__("See more gift"); ?>
+      </span>
+   </div>
+   <div class="youama-noti-window-sucess" style="">
+      <div  class="popup-container">
+         <div class="popup-content">
+            <div class="popup-description"> 
+            </div>
+         </div>
+         <div class="btn-container">
+            <button 
+               onclick="hidePopUpGiftDetail()"
+               type='button' class="btn-cancel lg-close">Bỏ qua</button>
+            <button type='button' class="btn-confirm" onclick="onclickApplyCurrentGift()">Nhận quà</button>
+         </div>
+      </div>
+   </div>
+</div>
+<?php endif; ?>
+<style>
+</style>
+<script type="text/javascript">
+   var list_gift = <?php echo json_encode($listAllGift);?>;
+   jQuery(document).ready(function () {
+   var currentShowGift = null;
+   var swiper = new Swiper('.swiper-container', {
+     observer: true, observeParents: true,
+     loop: true,
+     preloadImages: false,
+     lazy: true,
+     slidesPerView: 'auto',
+     sfreeMode: true,
+     navigation: {
+       nextEl: '.swiper-button-next',
+       prevEl: '.swiper-button-prev',
+     },
+   });
+       jQuery('.gift-item-container').on({
+           mouseenter: function(){
+                let ids = this.id.replace("gift-", "");
+               let indexArr = ids.split("-");
+               if (indexArr.length == 2){
+                   jQuery(this).find(".gift-button-container").show();
+                   jQuery(this).find('img').addClass('darken-image');
+               }
+           },
+           mouseleave: function(){
+                let ids = this.id.replace("gift-", "");
+           let indexArr = ids.split("-");
+           if (indexArr.length == 2){
+               jQuery(this).find(".gift-button-container").hide();
+               jQuery(this).find('img').removeClass('darken-image');
+           }
+           }
+       });
+       
+       
+      jQuery("#view-all-gift").click(function () {
+          jQuery(".rank-container").show();
+       });
+   
+       
+   });
+   
+   function addFreeGift(id){
+       let idTemp = id.replace("btn-add-gift-", "");
+       let idArr = idTemp.split("-");
+       if (idArr.length == 2){
+           let curRank = list_gift[idArr[0]];
+           if (curRank.data && curRank.data.length > 0){
+               let currentGift = curRank.data[idArr[1]];
+            new Ajax.Request(
+               '<?php echo $this->getUrl('onestepcheckout/index/addGift', array('_secure' => true)) ?>', {
+                   method: 'post',
+                   parameters: {apply: 1,
+                   ruleId: currentGift.ruleId},
+                   onLoading: function () {
+                       jQuery('.youama-ajaxlogin-loader').fadeIn();
+                   },
+                   onLoaded: function () {
+                       jQuery('.youama-ajaxlogin-loader').fadeOut();
+                   },
+                   onSuccess: function (transport) {
+                       if (200 == transport.status) {
+                           var result = JSON.parse(transport.responseText);
+                           jQuery("button[id^=btn-add-gift-]").text("Nhận quà").attr("onclick", "addFreeGift(this.id)");
+                           if (result.success) {
+                               jQuery("#" + id).text("Hủy nhận quà").attr("onclick", "cancelFreeGift(this.id)");
+                               save_shipping_method(shipping_method_url, 1, 1);
+                           }
+                       }
+                   }
+               });
+           }
+           
+           }
+          }
+          
+   function cancelFreeGift(id){
+       new Ajax.Request(
+               '<?php echo $this->getUrl('onestepcheckout/index/addGift', array('_secure' => true)) ?>', {
+                   method: 'post',
+                   parameters: {apply: 0},
+                   onLoading: function () {
+                       jQuery('.youama-ajaxlogin-loader').fadeIn();
+                   },
+                   onLoaded: function () {
+                       jQuery('.youama-ajaxlogin-loader').fadeOut();
+                   },
+                   onSuccess: function (transport) {
+                       if (200 == transport.status) {
+                           var result = JSON.parse(transport.responseText);
+                           if (result.success) {
+                                 jQuery("#" + id).text("Nhận quà").attr("onclick", "addFreeGift(this.id)");
+                               save_shipping_method(shipping_method_url, 1, 1);
+                           }
+                       }
+                   }
+               });
+   }
+           
+   function showGiftDetail(id){
+       jQuery('.youama-noti-window-sucess').show();
+       jQuery('.youama-ajaxlogin-cover').show();
+       let idTemp = id.replace("btn-show-gift-", "");
+       let idArr = idTemp.split("-");
+       if (idArr.length == 2){
+          
+           let curRank = list_gift[idArr[0]];
+           if (curRank.data && curRank.data.length > 0){
+               let currentGift = curRank.data[idArr[1]];
+               currentShowGift = currentGift;
+               currentShowGift.id = "btn-add-gift-" + idArr[0] + '-' + idArr[1];
+               jQuery('.youama-noti-window-sucess .popup-description').html(currentGift.description);
+           }
+       }
+       
+   }
+   
+   function hidePopUpGiftDetail(){
+       jQuery('.youama-noti-window-sucess').hide();
+       jQuery('.youama-ajaxlogin-cover').hide();
+   }
+   function onclickApplyCurrentGift(){
+       hidePopUpGiftDetail();
+       addFreeGift(currentShowGift.id);
+       
+   }
+</script>

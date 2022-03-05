@@ -1,0 +1,154 @@
+<?php
+$helper = Mage::helper('event');
+$matchList = $helper->getFootballMatchs();
+?>
+<div class="main-container col1-layout">
+    <div class="main">
+        <div class="page-empty-banner col-lg-12 col-md-12 col-sm-12">
+            <div style="text-align: center">
+                <?php echo Mage::app()->getLayout()->createBlock('cms/block')->setBlockId('fhsevent-top')->toHtml(); ?>
+            </div>
+            <div style="margin-top:0px"></div>
+            <div class="col-main">
+                <div class="container" >
+                    <div style="clear: both;"></div>
+                    <div class="fhsevent-content">
+                        <div style="text-align: center">
+                            <?php echo Mage::app()->getLayout()->createBlock('cms/block')->setBlockId('fhsevent-center')->toHtml(); ?>
+                        </div>
+                        <div style="text-align: center;">
+                            <?php foreach ($matchList as $match): ?>
+                                <?php
+                                $event_id = "worldcup_" . $match["id"];
+                                $played = $helper->getDataPlayed($event_id);
+                                ?>
+                                <div class="football-match col-sm-12 padding-none">
+                                    <div class="col-sm-4 col-xs-4 team-left padding-none">
+                                        <img class="flag" src="<?php echo $match["flagteam1"]; ?>" >
+                                    </div>
+                                    <div class="col-sm-4 col-xs-4 iconcenter padding-none">
+                                        <img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . "event/" . Mage::getStoreConfig('event/intro/iconcenter'); ?>" >
+                                    </div>
+                                    <div class="col-sm-4 col-xs-4 team-right padding-none">
+                                        <img class="flag" src="<?php echo $match["flagteam2"]; ?>" >
+                                    </div>
+                                    <div class="col-sm-12 col-xs-12 padding-none">
+                                        <div class="col-sm-4 col-xs-4 padding-none">
+                                            <input id="<?php echo $match["id"] ?>-team1" name="<?php echo $match["id"] ?>-team" type="radio" value="<?php echo $match["team1"] ?>" <?php echo ($played == $helper->remove_sign(preg_replace("/\s+/", "", strtolower($match["team1"])))) ? "checked" : ""; ?>>
+                                            <label for="<?php echo $match["id"] ?>-team1">Chọn</label>
+                                        </div>
+                                        <div class="col-sm-4 col-xs-4 padding-none btn-center">
+                                            <?php if ($played == "guest"): ?><!--chua dang nhap-->
+                                                <a href="<?php echo Mage::getBaseUrl() ?>customer/account/login/referer/"><div class="guest">Đăng nhập để tham dự</div></a>
+
+                                            <?php elseif ($played == FALSE): ?><!--chua du doan-->
+                                                <button id="<?php echo $match["id"] ?>" value="<?php echo $match["id"] ?>" type="submit"  name="form-<?php echo $match["id"] ?>" class="btn btn-success" >
+                                                    <span>
+                                                        <img class="flag" src="<?php echo $this->getSkinUrl('images/icon-bong.png'); ?>" >
+                                                    </span>
+                                                    Xác nhận
+                                                </button>
+
+                                            <?php else: ?><!--da du doan-->
+                                                <button disabled class="btn btn-done" ><span class="guest">Đã dự đoán</span></button>
+                                            <?php endif; ?>
+                                        </div>
+                                        <div class="col-sm-4 col-xs-4 padding-none">
+                                            <input id="<?php echo $match["id"] ?>-team2" name="<?php echo $match["id"] ?>-team" type="radio" value="<?php echo $match["team2"] ?>" <?php echo ($played == $helper->remove_sign(preg_replace("/\s+/", "", strtolower($match["team2"])))) ? "checked" : ""; ?>>
+                                            <label for="<?php echo $match["id"] ?>-team2">Chọn</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="clear: both;"> </div>
+                            <?php endforeach; ?>
+                        </div>
+
+                        <div style="display: none;" class="youama-ajaxlogin-loader"></div>
+                        <div class="youama-noti-window-sucess">
+                            <div class="youama-window-outside">
+                                <span class="close">×</span>
+                                <div class="youama-window-inside">
+                                    <div class="youama-window-title">
+                                        <h3 class="success"></h3>
+                                        <h3 class="error"></h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="youama-noti-window-error">
+                            <div class="youama-window-outside">
+                                <span class="close">×</span>
+                                <div class="youama-window-inside">
+                                    <div class="youama-window-title">
+                                        <h3></h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fhsevent-bottom">
+                        <?php echo Mage::app()->getLayout()->createBlock('cms/block')->setBlockId('fhsevent-bottom')->toHtml(); ?>
+                    </div>
+
+                    <script type="text/javascript">
+                        function hideAnimation() {
+                            jQuery('.youama-ajaxlogin-cover').fadeOut();
+                            jQuery('.youama-ajaxlogin-loader').fadeOut();
+                            jQuery('.youama-noti-window').fadeOut();
+                            jQuery('.youama-noti-window-error').fadeOut();
+                            jQuery('.youama-noti-window-sucess').fadeOut();
+                            jQuery('div.youama-noti-window-sucess h3').html("");
+                        }
+
+                        jQuery(document).ready(function () {
+                            jQuery('div.youama-noti-window-error .close').click(function () {
+                                hideAnimation();
+                            });
+
+                            jQuery('div.youama-noti-window-sucess .close').click(function () {
+                                location.reload();
+                            });
+                        });
+                        $jq(".fhsevent-content button.btn-success").click(function () {
+                            jQuery('.youama-ajaxlogin-cover').fadeIn();
+                            var id = this.id;
+                            var value = $jq("input:radio[name=" + id + "-team]:checked").val();
+                            if (value == undefined) {
+                                jQuery('div.youama-noti-window-error h3').html("Vui lòng chọn 1 đội thắng để tiếp tục dự đoán.");
+                                jQuery('div.youama-noti-window-error').fadeIn();
+                            } else {
+                                new Ajax.Request(
+                                        '<?php echo $this->getUrl('event/index/post', array('_secure' => true)) ?>', {
+                                            method: 'post',
+                                            parameters: {
+                                                match: id,
+                                                team: value
+                                            },
+                                            onLoading: function () {
+                                                jQuery('.youama-ajaxlogin-loader').fadeIn();
+                                            },
+                                            onLoaded: function () {
+                                                jQuery('.youama-ajaxlogin-loader').fadeOut();
+                                            },
+                                            onSuccess: function (transport) {
+                                                if (200 == transport.status) {
+                                                    var html = '<img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . "event/" . Mage::getStoreConfig('event/intro/success'); ?>" style="width: 290px;" >';
+                                                    jQuery('div.youama-noti-window-sucess h3.success').html(html);
+                                                    jQuery('div.youama-noti-window-sucess').fadeIn();
+                                                } else {
+                                                    //                                aler?t("error hearrrrr       ");
+                                                    jQuery('div.youama-noti-window-sucess h3.error').html("Dự đoán thất bại, vui lòng thử lại.");
+                                                    jQuery('div.youama-noti-window-sucess').fadeIn();
+                                                }
+                                            }
+                                        }
+                                );
+                            }
+                        });
+                    </script>
+                    <!--end body event page-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

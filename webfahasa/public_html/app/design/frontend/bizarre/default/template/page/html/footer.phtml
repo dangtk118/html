@@ -1,0 +1,26 @@
+<?php
+/**
+ * Magento
+ *
+ * @category    design
+ * @package     meigeetheme_default
+ * @copyright   Copyright (c) 2012 MeigeeTeam. (http://www.meigeeteam.com)
+ */
+ $meigee_bizarre_general = MAGE::helper('ThemeOptionsBizarre')->getThemeOptionsBizarre('meigee_bizarre_general');
+ $footer_status = $meigee_bizarre_general['footer']['footer_status'];
+ $footer_static = $meigee_bizarre_general['footer']['footer_static'];
+?>
+<footer id="footer">
+	<?php if($footer_status == 1): ?>
+		<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId($footer_static)->toHtml() ?>
+	 <?php endif; ?>
+	<div class="footer-bottom">
+		<div class="container_12">
+				<div class="grid_12">
+					<?php echo $this->getChildHtml('store_switcher'); ?>
+					<address><?php echo $this->getCopyright(); ?></address>
+				</div>
+				<div class="clear"></div>
+		</div>
+	</div>
+</footer>

@@ -1,0 +1,167 @@
+<?php $mobile = Mage::helper('fhsmobiledetect')->isMobile(); ?>
+<?php
+$POPUP_SCRIPT = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS, true)
+        ."lib/popup.js?q="
+        .Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix');
+
+$skin_url = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true);
+
+$contents = json_decode($this->getData('data'), true); 
+
+$title = $contents['title'];
+$button = $this->getData('button');
+$buttonColor = $this->getData("buttonColor") ?? "#fff";
+$buttonBackground = $this->getData('buttonBackground') ?? "#ff9800";
+?>
+<?php if ($contents) : ?>
+<style>
+    .popup-container{
+            display: none; /* Hidden by default */ 
+            position: fixed; /* Stay in place */
+            z-index: 999; /* Sit on top */
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            top : 0;
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            overflow:auto;
+        }
+        
+        @media (max-width:650px){
+            .popup-rules{
+            position: inherit;
+            margin: auto;
+            max-width: 90%;
+            max-height: 450px;
+            overflow-y: auto;
+            overflow: hidden;
+            background-color: #fafafa;
+            border-radius: 10px;
+            box-sizing: border-box;
+            font-size: 100%;
+            color: #303030;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom : 0;
+            box-shadow: 0 10px 40px 4px rgba(0, 0, 0, 0.3);
+            transition: linear;
+        }
+    
+}
+@media (min-width:650px){
+    .popup-rules{
+            position: inherit;
+            margin: auto;
+            max-width: 70vh;
+            height: fit-content;
+            overflow-y: auto;
+            overflow: hidden;
+            background-color: #fafafa;
+            border-radius: 10px;
+            box-sizing: border-box;
+            font-size: 100%;
+            color: #303030;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom : 0;
+            box-shadow: 0 10px 40px 4px rgba(0, 0, 0, 0.3);
+            transition: linear;
+        }
+}
+@media (min-width:479px){
+    .popup-rules-content{
+            width: 100%;
+            max-height: 500px;
+            overflow: hidden;
+            overflow-y: auto;
+            box-sizing: border-box;
+            -webkit-overflow-scrolling: touch;
+        }
+        .popup-rules .popup-title {
+            font-size: 1.6em;
+            font-weight: bold;
+            text-align : center;
+            padding: 10px 0 10px 12px;
+        }
+}
+@media (max-width:479px){
+    .popup-rules-content{
+            width: 100%;
+            max-height: 350px;
+            overflow: hidden;
+            overflow-y: auto;
+            box-sizing: border-box;
+            -webkit-overflow-scrolling: touch;
+        }
+        .popup-rules .popup-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            padding: 10px 0 10px 12px;
+        }
+}        
+        .popup-container ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        .popup-container ::-webkit-scrollbar-track {
+            background-color: rgba(0, 0, 0, 0);
+        }
+
+        .popup-container ::-webkit-scrollbar-thumb {
+            background-color: rgba(0, 0, 0, 0.1);
+            background-clip: padding-box;
+            border: solid rgba(0, 0, 0, 0);
+            border-width: 2px 3px 2px 3px;
+        }
+
+        .popup-container ::-webkit-scrollbar-thumb:hover {
+            background-color: rgba(0, 0, 0, 0.15);
+        }
+        .popup-icons{
+            position: absolute;
+            background: url(<?php echo $skin_url; ?>frontend/ma_vanese/fahasa/images/ico_close.png) no-repeat center;
+            height: 30px;
+            width: 30px;
+            top : 5px;
+            right: 5px;
+            cursor: pointer;
+
+        }
+        .popup-buttons{
+            font-size: 1.2em;
+            font-weight: bold;
+            text-align: center;
+            padding: 10px;
+            border-radius: 30px;
+            width: 20vh;
+            margin: auto;
+            cursor: pointer;
+        }
+        .popup-buttons:hover{
+                box-shadow: 0px 6px 8px hsl(0, 0%, 90%);
+                transform: scale(1.03);
+            }
+        .popup-subtitle{
+            padding: 5px 8px 5px 22px;
+            color: white;
+            font-size: 1.5em;
+            font-weight: 650;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .popup-text{
+            font-family: sans-serif;
+            font-size: 1.1em;
+        }
+</style>
+    <div class="popup-container"></div>
+<?php endif; ?>
+<script type="text/javascript" src="<?php echo $POPUP_SCRIPT; ?>"></script>
+<script type="text/javascript">
+    var popup = new Popup();
+    var dataArray = <?php echo json_encode($contents) ?>;
+    popup.init(dataArray);
+    
+</script>

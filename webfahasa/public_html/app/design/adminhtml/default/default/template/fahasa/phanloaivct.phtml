@@ -1,0 +1,42 @@
+<div class="content-header">
+    <table cellspacing="0" class="grid-header">
+        <tr>
+            <td><h3><?php echo $this->__('Normal Shipping'); ?></h3></td>
+            <td class="a-right">
+                <button onclick="khuvuc_form.submit()" class="scalable save" type="button"><span>Save</span></button>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div class="entry-edit">
+    <?php $areaCollection = Mage::getModel('vietnamshipping/area')->getCollection(); ?>
+    <form id="khuvuc_form" name="khuvuc_form" method="post" action="<?php echo $this->getURL('*/*/post'); ?>">
+        <input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
+        <fieldset id="khuvuc">
+            <table cellspacing="5" class="form-list">
+                <tr>
+                    <th>Ten khu vuc</th>
+                    <th style="text-align: center">From</th>
+                    <th style="text-align: center">To</th>
+                    <th style="text-align: center">Express From</th>
+                    <th style="text-align: center">Express To</th>
+                </tr>
+                <?php foreach ($areaCollection as $area): ?>
+                <input name="khuvuc_id_<?php echo $area->getAreaId(); $area->getData(); ?>" id="khuvuc_id" type="hidden" value="<?php echo $area->getAreaId(); ?>"/>
+                    <tr>
+                        <td><?php echo $area->getAreaName(); ?></td>
+                        <td><input name="khuvuc_from_<?php echo $area->getAreaId(); ?>" id="khuvuc_from" type="text" value="<?php echo Mage::helper('phanloaivct')->getLabelValue($area->getId(),"khuvuc_from"); ?>" /></td>
+                        <td><input name="khuvuc_to_<?php echo $area->getAreaId(); ?>" id="khuvuc_to" type="text" value="<?php echo Mage::helper('phanloaivct')->getLabelValue($area->getId(),"khuvuc_to"); ?>" /></td>
+                        <td><input name="express_khuvuc_from_<?php echo $area->getAreaId(); ?>" id="express_khuvuc_from" type="text" value="<?php echo Mage::helper('phanloaivct')->getLabelValue($area->getId(),"express_khuvuc_from"); ?>" /></td>
+                        <td><input name="express_khuvuc_to_<?php echo $area->getAreaId(); ?>" id="express_khuvuc_to" type="text" value="<?php echo Mage::helper('phanloaivct')->getLabelValue($area->getId(),"express_khuvuc_to"); ?>" /></td>
+                    </tr>                
+                <?php endforeach; ?>
+            </table>            
+
+        </fieldset>
+    </form>
+</div>
+<script type="text/javascript">
+    var khuvuc_Form = new varienForm('khuvuc_form', true);
+</script>

@@ -1,0 +1,331 @@
+<?php
+$identify = $this->getIdentify();
+$_helper = $this->helper('catalog/output');
+$productsOnRow = $this->getProductsOnRow();
+if(!$productsOnRow) {$productsOnRow = 3;}
+$rows = $this->getData('number_of_row');
+if(!$rows) {$rows = 2;}
+$isBestSeller = $this->getData('bestseller');
+$isNew = $this->getData('new');
+$isComingSoon = $this->getData('comingsoon');
+$catId = $this->getData('catId');
+$data = array();
+if($isNew){
+    $data["new"] = "";
+    $new_label = $this->getData('new_label');
+    if($new_label){
+        $data["new"]["label"] = $new_label;
+    } 
+}
+if($isBestSeller){
+    $data["bestseller"] = "";
+    $bs_label = $this->getData('bestseller_label');
+    if($bs_label){
+        $data["bestseller"] = array("label" => $bs_label);
+    }
+}
+if($isComingSoon){    
+    $data["comingsoon"] = array("soon_release" => "1");    
+    $cs_label = $this->getData('comingsoon_label');
+    if($cs_label){
+        $data["comingsoon"]["label"] = $cs_label;
+    }    
+}
+?>
+
+<?php
+        //$mobile = Mage::helper('mobiledetect')->isMobile();        
+        $mobile = Mage::helper('fhsmobiledetect')->isMobile();
+        $item_width = Mage::getStoreConfig('categorytabsliders/categorytabsliders_config/item_width');        
+        $items_show = Mage::getStoreConfig('categorytabsliders/categorytabsliders_config/items_show');
+        $speed = Mage::getStoreConfig('categorytabsliders/categorytabsliders_config/speed');
+        $interval = Mage::getStoreConfig('categorytabsliders/categorytabsliders_config/interval');
+        $nav_ctrl = Mage::getStoreConfig('categorytabsliders/categorytabsliders_config/nav_ctrl');
+        $next_back = Mage::getStoreConfig('categorytabsliders/categorytabsliders_config/next_back');
+        $show_price = Mage::getStoreConfig('categorytabsliders/categorytabsliders_config/show_price');
+        $review = Mage::getStoreConfig('categorytabsliders/categorytabsliders_config/show_review');		
+?>
+
+<?php if($mobile): ?>
+<?php if($this->getNDisplayOnMobile() !== "0"){?>
+<?php $rows = 1; ?>    
+<div class="categorytab-slider m-ts-con-margin">
+<div id="container">	
+	<div class="tab_container">
+            <?php foreach($data as $k => $v) {
+            ?>
+                <div class="cd-label"><?php if(!$data[$k]["label"]){echo $this->__($k);} else {echo $data[$k]["label"];} ?></div>
+                <div style="visibility: hidden;" id="tab<?php echo $k.'-'.$identify;?>" class="tab_content_<?php echo $identify; ?>"> 
+			<?php $_productCollection = $this->getTabSliderProductCollection($k, $v, 1); ?>
+			<?php $_collectionSize = $_productCollection->count() ?>
+			<?php $_columnCount = $productsOnRow; ?>
+                    <div class="bxslider">	
+                        <?php $i=0; foreach ($_productCollection as $_product): ?>                                
+                                <?php if($i % $rows == 0): ?>
+                                    <div class="item<?php if(($i-1)%$_columnCount==0): ?> first<?php elseif($i%$_columnCount==0): ?> last<?php endif; ?>">
+                                <?php endif; ?>                                    
+                                        <div class="item-inner" style="position: relative">
+                                            <?php
+                                                // Get the Special Price
+                                                $specialprice = $_product->getFinalPrice();
+                                                $price = $_product->getPrice(); 
+                                                $discountLabel = Mage::helper('discountlabel')->handleDisplayDiscountLabel($_product, true, false);
+                                                echo $discountLabel;
+                                            ?>
+						<div class="ma-box-content" style="padding-left: 0px">
+							<div class="products clearfix">
+								<div class="product images-container">
+									 <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" class="product-image">
+									  <span class="product-image">
+									  <img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(120,161); ?>" width="270" height="364" class="flazy" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" />
+									  </span>									    
+									 </a>
+								</div>
+								<div class="price-label">
+                                                                        <div class="price-box"><div style="margin-top: 20px;" class="price-box">
+                                                                        <?php
+                                                                        $sym = Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol();                                                                         
+                                                                        if($price != $specialprice){
+
+                                                                            if($specialprice != '')
+                                                                            {
+                                                                                echo '<p class="special-price">
+                                                                                <span class="price-label">Special Price</span>
+                                                                                <span id="product-price-384'.$_product->getId().'" class="price m-price-font">'.''.number_format($specialprice,0, ",", ".").$sym.'</span>
+                                                                                </p> ';
+                                                                            } 
+                                                                            if($price != ''){
+                                                                                echo '<p class="old-price bg-white"><span class="price-label">';
+                                                                                echo $this->__('Regular Price'). ': </span>';
+                                                                                echo '<span id="old-price-'.$_product->getId().'" class="price m-price-font">'.''.number_format($price,0, ",", ".").$sym.'</span></p>';
+                                                                            }
+                                                                        }else {
+                                                                            echo '<span id="product-price-a'.$_product->getId().'" class="regular-price">
+                                                                                <span class="price m-price-font">'.''.$this->getPriceHtml($_product, true).'</span>                                    
+                                                                                </span>';    
+                                                                        }
+                                                                        ?>
+                                                                        </div></div>
+                                                                </div>
+							</div>							
+							<h2 class="product-name m-product-name"><a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($_product->getName(), null, true) ?>"><?php echo $_helper->productAttribute($_product, $_product->getName(), 'name') ?></a></h2>
+							
+							
+							<?php echo $this->getReviewsSummaryHtml($_product, 'short') ?>
+							
+							
+							
+						</div>	
+					</div>                                
+                                <?php $i++ ?>
+                                <?php if($i % $rows == 0): ?>        
+				</div>
+                                <?php endif; ?>
+                                <?php if($_collectionSize == $i && $i % $rows != 0) echo "</li>"; ?>
+			<?php endforeach ?>
+                    </div>		
+                    <script type="text/javascript">					
+                        $jq(document).ready(function(){
+                            <?php $idBx = '#tab'.$k.'-'.$identify.' .bxslider'; ?>
+                            $jq("<?php echo $idBx; ?>").bxSlider(
+                                {                                                                                                            
+                                    minSlides:1,
+                                    maxSlides: 6,
+                                    slideWidth: 100,
+                                    slideMargin: 20, 
+                                    pager: false,    
+                                    controls:false,
+                                    pause: 0,
+                                    speed: 300,
+                                    preloadImages: 'all',
+                                    infiniteLoop:false,
+                                    onSliderLoad: function(){
+                                        $jq("<?php echo $idBx; ?>").css("visibility", "visible");
+                                    }
+                                }
+                            );
+                        });
+                    </script>
+                </div><!-- #tab1 -->
+            <?php }?>    
+	</div> <!-- .tab_container --> 
+</div> <!-- #container -->
+</div>
+<script type="text/javascript">
+$jq(window).load(function() {
+    var sliderH = $jq(".tab_content_<?php echo $identify; ?> .bxslider").height();    
+    $jq(".tab_content_<?php echo $identify; ?> .bx-viewport").attr("style", function(i, s){ sliderH=parseInt(sliderH)+10;return s + 'min-height: ' + sliderH + "px !important;" });
+});
+</script>
+<?php }?>
+<?php else : ?>
+<div class="categorytab-slider">
+<div id="container">
+	<div class="tab-title ma-title">
+		<ul class="tabs tabs<?php echo '-'.$identify;?>  tab_categorys">
+                    <div class="ts-header">
+                        <?php 
+                            $i = 0;
+                            foreach($data as $k => $v) {                                                            
+                        ?>
+                                <li class="<?php if($i==0){ echo "active"; }?>" rel="tab<?php echo $k.'-'.$identify;?>">
+                                    <?php if(!$data[$k]["label"]){echo $this->__($k);} else {echo $data[$k]["label"];} ?>
+                                </li>
+                        <?php $i++; } ?>
+                    </div>
+		</ul>
+	</div>
+	<div class="tab_container">
+            <?php foreach($data as $k => $v) {
+            ?>
+                <div id="tab<?php echo $k.'-'.$identify;?>" class="tab_content_<?php echo $identify; ?>" style="display: none;"> 
+			<?php $_productCollection = $this->getTabSliderProductCollection($k, $v, 0); ?>
+			<?php $_collectionSize = $_productCollection->count() ?>
+			<?php $_columnCount = $productsOnRow; ?>
+                    <ul class="bxslider">	
+                        <?php $i=0; foreach ($_productCollection as $_product): ?>                                
+                                <?php if($i % $rows == 0): ?>
+                                    <li class="item sl-width<?php if(($i-1)%$_columnCount==0): ?> first<?php elseif($i%$_columnCount==0): ?> last<?php endif; ?>">
+                                <?php endif; ?>
+                                    <?php                                    
+                                    // Get the Special Price
+                                    $specialprice = $_product->getFinalPrice();
+                                    $price = $_product->getPrice();                                    
+                                    ?>                                
+					<div class="item-inner" style="position: relative">
+                                            <?php
+                                                $discountLabel = Mage::helper('discountlabel')->handleDisplayDiscountLabel($_product, true, false);
+                                                echo $discountLabel;
+                                            ?>
+						<div class="ma-box-content">
+							<div class="products clearfix">
+								<div class="product images-container">
+									 <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" class="product-image">
+									  <span class="product-image">
+									  <img src="<?php echo $this->getSkinUrl('images/ring_loader.gif') ?>" data-src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(270,364); ?>" width="270" height="364" class="flazy" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" />
+									  </span>									    
+									 </a>
+								</div>
+								<div class="price-label">
+                                                                        <div class="price-box"><div class="price-box">
+                                                                        <?php
+                                                                        $sym = Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol();                                                                         
+                                                                        if($price != $specialprice){
+
+                                                                            if($specialprice != '')
+                                                                            {
+                                                                                echo '<p class="special-price">
+                                                                                <span class="price-label">Special Price</span>
+                                                                                <span id="product-price-384'.$_product->getId().'" class="price">'.''.number_format($specialprice,0, ",", ".").$sym.'</span>
+                                                                                </p> ';
+                                                                            } 
+                                                                            if($price != ''){
+                                                                                echo '<p class="old-price bg-white"><span class="price-label">';
+                                                                                echo $this->__('Regular Price'). ': </span>';
+                                                                                echo '<span id="old-price-'.$_product->getId().'" class="price">'.''.number_format($price,0, ",", ".").$sym.'</span></p>';
+                                                                            }
+                                                                        }else {
+                                                                            echo '<span id="product-price-a'.$_product->getId().'" class="regular-price">
+                                                                                <span class="price">'.''.$this->getPriceHtml($_product, true).'</span>                                    
+                                                                                </span>';    
+                                                                        }
+                                                                        ?>
+                                                                        </div></div>
+							  </div>
+							</div>
+							<div class="actions">
+								<div class="actions-inner">
+									<?php echo Mage::helper('discountlabel')->displayBuyButton($_product); ?>
+										
+									<?php
+									if(Mage::getStoreConfig('categorytabsliders/categorytabsliders_config/addtowishlist') || Mage::getStoreConfig('categorytabsliders/categorytabsliders_config/addtocompare')):
+									?>
+										<ul class="add-to-links">
+											<?php if ($this->helper('wishlist')->isAllow()) : ?>
+											<?php
+											if(Mage::getStoreConfig('categorytabsliders/categorytabsliders_config/addtowishlist')):
+											?>
+												<li><a href="<?php echo $_product->getId() ?>" title="<?php echo $this->__('Add to Wishlist') ?>" class="link-wishlist"><i class="fa fa-heart"></i><?php echo $this->__('Add to Wishlist') ?></a></li>
+											<?php endif; ?>
+											<?php endif; ?>
+											<?php if($_compareUrl=$this->getAddToCompareUrl($_product)): ?>
+											<?php
+											if(Mage::getStoreConfig('categorytabsliders/categorytabsliders_config/addtocompare')):
+											?>
+												<li><span class="separator">|</span> <a href="<?php echo $_product->getId() ?>" title="<?php echo $this->__('Add to Compare') ?>" class="link-compare"><i class="fa fa-retweet"></i><?php echo $this->__('Add to Compare') ?></a></li>
+												<?php endif; ?>
+											<?php endif; ?>
+											
+										</ul>
+									<?php endif; ?>
+								</div>	
+							</div>
+							<h2 class="product-name"><a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($_product->getName(), null, true) ?>"><?php echo $_helper->productAttribute($_product, $_product->getName(), 'name') ?></a></h2>
+							
+							
+							<?php echo $this->getReviewsSummaryHtml($_product, 'short') ?>
+							
+							
+							
+						</div>	
+					</div>                                
+                                <?php $i++ ?>
+                                <?php if($i % $rows == 0): ?>        
+				</li>
+                                <?php endif; ?>
+                                <?php if($_collectionSize == $i && $i % $rows != 0) echo "</li>"; ?>
+			<?php endforeach ?>
+                    </ul>		
+                    <script type="text/javascript">					
+                        $jq(document).ready(function(){
+                            <?php $idBx = '#tab'.$k.'-'.$identify.' .bxslider'; ?>
+                            $jq("<?php echo $idBx; ?>").bxSlider(
+                                {                                                                        
+                                    pause: 0,			  
+                                    minSlides:1,
+                                    maxSlides: 6,
+                                    slideWidth: <?php echo $item_width ?>,
+                                    slideMargin: 45,                                    
+                                    infiniteLoop:false,
+                                    touchEnabled: false,
+                                    hideControlOnEnd: true,
+                                    preloadImages: 'all',
+                                    onSlideAfter: function(slide, oldIndex, newIndex){
+                                            var currentS = $jq("<?php echo $idBx; ?>");
+                                            loadImages(currentS);
+                                    }
+                                }
+                            );
+                        });
+                    </script>
+                </div><!-- #tab1 -->
+            <?php }?>    
+	</div> <!-- .tab_container --> 
+</div> <!-- #container -->
+</div>
+<script type="text/javascript">
+$jq(window).load(function() {
+    $jq(".tab_content_<?php echo $identify; ?>").hide();
+    $jq(".tab_content_<?php echo $identify; ?>:first").show();                   
+    $jq(".tab_content_<?php echo $identify; ?> .bx-viewport").css("height", "inherit");
+    $jq(".bx-wrapper").css("max-width", "inherit");
+    loadImages($jq(".tab_content_<?php echo $identify; ?> .bxslider"));
+    $jq("ul.tabs<?php echo '-'.$identify;?> li").click(function() {
+        $jq("ul.tabs<?php echo '-'.$identify;?> li").removeClass("active");
+        $jq(this).addClass("active");
+        $jq(".tab_content_<?php echo $identify; ?>").hide();
+        var activeTab = $jq(this).attr("rel");                 
+        $jq("#"+activeTab).fadeIn();
+        var sliderHeight = $jq("#"+activeTab + " .bx-viewport ul.bxslider").height();        
+        $jq("#"+activeTab + " .bx-viewport").css("height", sliderHeight);
+        loadImages($jq("#"+activeTab +" .bxslider"));
+    });
+});
+$jq(window).resize(function() {
+    waitForFinalEvent(function(){
+        var activeTab = $jq("ul.tabs<?php echo '-'.$identify;?> li").filter(".active").attr("rel");
+        loadImages($jq("#"+activeTab +" .bxslider"));
+    }, 500, randomIntFromInterval(1, 1000));    
+});
+</script> 
+<?php endif; ?>

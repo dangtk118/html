@@ -1,0 +1,73 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+/* @var $this Mage_Core_Block_Template */
+/* @var $catalogSearchHelper Mage_Catalogsearch_Helper_Data */
+$catalogSearchHelper =  $this->helper('catalogsearch');
+$SKIN_URL = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN);
+?>
+<div class="box search_box ">
+<form id="search_mini_form_mobile" action="<?php echo $catalogSearchHelper->getResultUrl() ?>" method="get">
+    <div class="search pull-left">
+    <div class="form-search">
+        <input id="search_mobile" type="text" name="<?php echo $catalogSearchHelper->getQueryParamName() ?>" autocomplete="off" placeholder="<?php echo $this->__('Search entire store here...');?>" value="<?php echo $catalogSearchHelper->getEscapedQueryText() ?>" class="input-search ">
+        <span class="button-search fa fa-search"></span>
+        <!--<button type="submit" title="<?php echo $this->__('Search') ?>" class="ves-button-search"></button>-->
+        <div class="btn-remove btn-remove2 remove-text-search-form-mini-mobile" style="display: none;"></div>
+        <div id="search_autocomplete" class="search-autocomplete"></div>    
+	<div class="form-search-form"></div>
+    </div>
+    </div>
+</form>
+</div>
+<script type="text/javascript">
+//<![CDATA[
+    var searchForm_desktop = new Varien.searchForm('search_mini_form_desktop', 'search_desktop', '<?php echo $this->__('') ?>');
+    var searchForm_mobile = new Varien.searchForm('search_mini_form_mobile', 'search_mobile', '<?php echo $this->__('') ?>');
+    //searchForm.initAutocomplete('<?php echo $catalogSearchHelper->getSuggestUrl() ?>', 'search_autocomplete');
+    
+$jq(document).ready(function () {
+	if ($jq('#search_mobile').val() == "" || typeof $jq('#search_mobile').val() === 'undefined') {
+		$jq('.remove-text-search-form-mini-mobile').hide();
+	} else {
+		$jq('.remove-text-search-form-mini-mobile').show();
+	}
+});
+
+$jq('#search_mobile').on("keyup", function () {
+	if ($jq('#search_mobile').val() != "") {
+		$jq('.remove-text-search-form-mini-mobile').show();
+	} else {
+		$jq('.remove-text-search-form-mini-mobile').hide();
+	}
+});
+$jq('.remove-text-search-form-mini-mobile').click(function () {
+	$jq('#search_mobile').val("");
+        $jq('#search_mobile').focus();
+	$jq('.remove-text-search-form-mini-mobile').hide();
+});
+//]]>
+
+</script>

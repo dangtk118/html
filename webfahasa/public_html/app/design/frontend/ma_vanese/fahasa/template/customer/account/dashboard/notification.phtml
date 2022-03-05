@@ -1,0 +1,108 @@
+<?php
+//$currentUrl = $this->helper('core/url')->getCurrentUrl();
+//$controller = $this->getRequest()->getControllerName();
+//$module_name = $this->getRequest()->getModuleName();
+$action_name = $this->getRequest()->getActionName();
+$route_name= $this->getRequest()->getRouteName();
+$donateFpoint_total = 0;
+$is_miss_info = false;
+if($route_name == 'customer' || $route_name == 'review' || $route_name == 'tryout' || $route_name == 'newsletter' || $route_name == 'wishlist' || $route_name == 'sales'){
+    if($action_name != 'edit'){
+	$customer = Mage::getSingleton('customer/session')->getCustomer();
+	
+	$telephone = $customer->getTelephone();
+	$referCode = $customer->getReferCode();
+	$email = $customer->getRealEmail();
+	$gender = $customer->getGender();
+	if(!empty($customer->getDob())){$dob = strtotime($customer->getDob());}
+	
+	$donateFpoint = Mage::helper('fahasa_customer')->getDonateFpoint($customer);
+	if($donateFpoint['telephone'] > 0 && empty($telephone) || empty($referCode)){
+	    $donateFpoint_total = $donateFpoint_total + $donateFpoint['telephone'];
+	}
+	if($donateFpoint['email'] > 0 && empty($email)){
+	    $donateFpoint_total = $donateFpoint_total + $donateFpoint['email'];
+	}
+	if($donateFpoint['dob'] > 0 && empty($dob)){
+	    $donateFpoint_total = $donateFpoint_total + $donateFpoint['dob'];
+	}
+	if($donateFpoint['gender'] > 0 && empty($gender)){
+	    $donateFpoint_total = $donateFpoint_total + $donateFpoint['gender'];
+	}
+	if($donateFpoint_total == 0){
+	    if(empty($telephone) || empty($referCode) || empty($email) || empty($dob) || empty($gender)){
+		$is_miss_info = true;
+	    }
+	}
+    }
+}
+?>
+<?php 
+    if($donateFpoint_total > 0 || $is_miss_info):
+    $donateFpoint_total = number_format($donateFpoint_total, 0, ",", ".");
+    $mobile = Mage::helper('fhsmobiledetect')->isMobile();
+?>
+<style>
+    .account_confirm_notification{
+	padding: 8px 20px;
+	background-color: white;
+	display: flex;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	flex-direction:row;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+	-webkit-align-items: center;
+	-webkit-justify-content: flex-start;;
+	justify-content: flex-start;
+    }
+    .account_confirm_notification i:first-of-type{
+	font-size: 1.3em; 
+	color: #dc3545;
+    }
+    .account_confirm_notification > span{
+	padding: 0 0 0 8px;
+    }
+    .account_confirm_notification > span > span:first-of-type{
+	padding: 0 8px 0 0;
+    }
+    .account_confirm_notification > span > span:nth-of-type(2){
+	padding: 0 8px 0 0;
+	font-weight: 600;
+    }
+    .account_confirm_notification a{
+	font-weight: 600; color: #dc3545;
+    }
+    @media screen and (max-width: 950px){
+	.account_confirm_notification{
+	    padding: 8px 10px 8px 10px;
+	}
+	.account_confirm_notification > span{
+	    padding: 0 0 0 15px;
+	}
+	.account_confirm_notification > span > span:first-of-type{
+	    padding: 0 4px 0 0;
+	}
+	.account_confirm_notification > span > span:nth-of-type(2){
+	    padding: 0 4px 0 0;
+	}
+    }
+</style>
+<div class="account_confirm_notification">
+    <i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <span>
+	<?php if($is_miss_info):?>
+	    <span><?php echo $this->__('Please update your account information:');?></span>
+	    <?php echo $mobile?'<br/>':'';?>
+	<?php else:?>
+	    <span><?php echo $this->__('Confirm all account information to get:');?></span>
+	    <?php echo $mobile?'<br/>':'';?><span><?php echo $donateFpoint_total;?> F-Point .</span>
+	<?php endif;?>
+    <a href="/customer/account/edit/"><?php echo $this->__('Update information now');?></a></span>
+</div>
+</div>
+<div class="col-main col-lg-9 col-md-9 col-sm-12 col-xs-12 col-fhs-main-body" style="margin-top: 8px;">
+<?php endif;?>

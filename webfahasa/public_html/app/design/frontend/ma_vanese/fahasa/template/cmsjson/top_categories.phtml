@@ -1,0 +1,64 @@
+<?php
+$MEDIA_URL = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);
+
+/*
+$categoryData = '[
+        {
+            "title": "Nghiệp Vụ 4.0",
+            "products": [
+                "http://placehold.jp/100x100.png",
+                "http://placehold.jp/100x100.png",
+                "http://placehold.jp/100x100.png"
+            ]
+        },{
+            "title": "The Gioi Phang XIn Hay Binh Dang",
+            "products": [
+                "http://placehold.jp/100x100.png",
+                "http://placehold.jp/100x100.png",
+                "http://placehold.jp/100x100.png"
+            ]
+        },{
+            "title": "Nhung Tac Pham Van Hoc Kinh Dien",
+            "products": [
+                "http://placehold.jp/100x100.png",
+                "http://placehold.jp/100x100.png",
+                "http://placehold.jp/100x100.png"
+            ]
+        },{
+            "title": "Hanh Trinh Hoc Lam Me",
+            "products": [
+                "http://placehold.jp/100x100.png",
+                "http://placehold.jp/100x100.png",
+                "http://placehold.jp/100x100.png"
+            ]
+        }
+    ]';
+*/
+
+$categoryData = $this->getData('data');
+$categories = json_decode($categoryData, true);
+
+?>
+
+<div class="row cms-top-categories">
+    <?php foreach ($categories as $cat): ?>
+        <div class="col-sms-12 col-sm-12 col-md-3 hidden-xs">
+            <div style="background-color: #fff;padding: 20px;">
+                <div class="cms-top-categories-title"><?php echo $cat['title']; ?></div>
+                <div class="row">
+                    <?php foreach ($cat['products'] as $product): ?>
+                        <?php if($product['link'] != "") : ?>
+                        <div class="col-sms-4 col-sm-4 col-md-4" style="padding: 5px">
+                            <a href="<?php echo $product['link']; ?>"><img src="<?php echo $MEDIA_URL . $product['img']; ?>"/></a>
+                        </div>
+                        <?php else : ?>
+                        <div class="col-sms-4 col-sm-4 col-md-4" style="padding: 5px">
+                            <img src="<?php echo $MEDIA_URL . $product['img']; ?>"/>
+                        </div>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        </div>
+    <?php endforeach; ?>
+</div>

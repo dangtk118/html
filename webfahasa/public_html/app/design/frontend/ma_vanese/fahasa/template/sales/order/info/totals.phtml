@@ -1,0 +1,60 @@
+<?php 
+    $orders_rule = Mage::registry('current_order_options_rule');
+    $hide_total = false;
+    $hide_shipping_fee = false;
+    if(!empty($orders_rule)){
+	$hide_total = $orders_rule['hide_total'];
+	$hide_shipping_fee = $orders_rule['hide_shipping_fee'];
+    }
+    $ttt = $this->getTotals();
+?>
+<?php
+if($this->getOrder()->getIsFreeship() ==1):?>
+<!--<div class="order-freeship"><?php // echo $this->__("This order was applied 'Freeship'.");?></div>-->
+<?php endif; ?>
+<?php $sym_currency = Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol(); ?>
+<div class="order-subOrder-total-mobile">
+    
+    <?php foreach ($this->getTotals() as $_code => $_total): if($_code== "tax" || $_code == "shipping"){continue;} ?>
+	<?php if(!$hide_total && $_code != "original_shipping_fee"):?> 
+	    <div>
+		<span><?php echo $this->escapeHtml($_total->getLabel()); ?>: </span>
+		<span class="order-totals-price"><?php echo $this->formatValue($_total) ?>&nbsp;<span class="sym-totals"><?php echo $sym_currency; ?></span></span>
+	    </div>
+	<?php endif;?>
+    
+	<?php if(!$hide_shipping_fee && $_code == "original_shipping_fee"):?> 
+	    <div>
+		<span><?php echo $this->escapeHtml($_total->getLabel()); ?>: </span>
+		<span class="order-totals-price"><?php echo $this->formatValue($_total) ?>&nbsp;<span class="sym-totals"><?php echo $sym_currency; ?></span></span>
+	    </div>
+	<?php endif;?>
+        
+
+    <?php endforeach ?>
+</div>
+ <div class="order-subOrder-total-desktop">
+        <div>
+        <?php foreach ($this->getTotals() as $_code => $_total): if($_code== "tax" || $_code == "shipping"){continue;}?>
+	    <?php 
+	    if(!$hide_total && $_code != "original_shipping_fee"):?> 
+		<p><span><?php echo $this->escapeHtml($_total->getLabel()); ?>: </span></p>
+	    <?php endif;?>
+		
+	    <?php if(!$hide_shipping_fee && $_code == "original_shipping_fee"):?> 
+		<p><span><?php echo $this->escapeHtml($_total->getLabel()); ?>: </span></p>
+	    <?php endif;?>
+        <?php endforeach?>
+        </div>
+        <div>
+        <?php foreach ($this->getTotals() as $_code => $_total): if($_code== "tax" || $_code == "shipping"){continue;} ?>
+	    <?php if(!$hide_total && $_code != "original_shipping_fee"):?> 
+		<p class="order-totals-price"><?php echo $this->formatValue($_total) ?>&nbsp;<span class="sym-totals"><?php echo $sym_currency; ?></span></p>
+	    <?php endif;?>
+		
+	    <?php if(!$hide_shipping_fee && $_code == "original_shipping_fee"):?> 
+		<p class="order-totals-price"><?php echo $this->formatValue($_total) ?>&nbsp;<span class="sym-totals"><?php echo $sym_currency; ?></span></p>
+	    <?php endif;?>
+        <?php endforeach?>
+        </div>
+</div> 

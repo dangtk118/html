@@ -1,0 +1,16 @@
+<div class="total-cart-page">
+    <div class="title-cart-page-left">
+        <?php if ($this->getRenderingArea() == $this->getTotal()->getArea()): ?><strong><?php endif; ?>
+            <?php echo $this->escapeHtml($this->getTotal()->getTitle()); ?>
+        <?php if ($this->getRenderingArea() == $this->getTotal()->getArea()): ?></strong><?php endif; ?>
+    </div>
+    <div class="number-cart-page-right">  
+        <?php if ($this->getRenderingArea() == $this->getTotal()->getArea()): ?><strong><?php endif; ?>
+            <?php if($this->getTotal()->getCode() == "is_freeship"):?>
+            <?php echo $this->__("Yes"); ?>
+            <?php else:?>
+            <?php echo $this->helper('checkout')->formatPrice($this->getTotal()->getValue()) ?>
+            <?php endif; ?>
+        <?php if ($this->getRenderingArea() == $this->getTotal()->getArea()): ?></strong><?php endif; ?>
+    </div>
+</div>

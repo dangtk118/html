@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <tabs>
+        <fahasa_flashsale translate="label" module="flashsale">
+            <label>Flash Sale</label>
+            <sort>1</sort>
+        </fahasa_flashsale>
+    </tabs>
+    <sections>
+        <flashsale_config translate="label" module="flashsale">
+            <label>Flash Sale</label>
+            <tab>fahasa_flashsale</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>200</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <config translate="label">
+                    <label>Config</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <expanded>1</expanded>
+                    <fields>
+                        <is_active>
+                            <label>Is Active</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <comment></comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </is_active>
+                        <active_flashsale_id>
+                            <label>Active FlashSale Id</label>
+                            <frontend_type>text</frontend_type>
+                            <comment></comment>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </active_flashsale_id>
+                        <slider_limit>
+                            <label>Max products in slider</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Max products loaded for flashsale slider</comment>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </slider_limit>
+                        <products_per_page>
+                            <label>Products per page</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Number of products loaded per request</comment>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </products_per_page>
+                         <redis_host>
+                            <label>Redis Host</label>
+                            <frontend_type>text</frontend_type>
+                            <comment></comment>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </redis_host>
+                        <redis_port>
+                            <label>Redis Port</label>
+                            <frontend_type>text</frontend_type>
+                            <comment></comment>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </redis_port>
+                        <redis_host_flashsale>
+                            <label>Redis Host Flashsale</label>
+                            <frontend_type>text</frontend_type>
+                            <comment></comment>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </redis_host_flashsale>
+                        <redis_port_flashsale>
+                            <label>Redis Port Flashsale</label>
+                            <frontend_type>text</frontend_type>
+                            <comment></comment>
+                            <sort_order>70</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </redis_port_flashsale>
+                        <redis_host_eventcart>
+                            <label>Redis Host Event Cart</label>
+                            <frontend_type>text</frontend_type>
+                            <comment></comment>
+                            <sort_order>80</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </redis_host_eventcart>
+                        <redis_port_eventcart>
+                            <label>Redis Port Event Cart</label>
+                            <frontend_type>text</frontend_type>
+                            <comment></comment>
+                            <sort_order>90</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </redis_port_eventcart>
+                         <redis_host_customeraction>
+                            <label>Redis Host Customer Action</label>
+                            <frontend_type>text</frontend_type>
+                            <comment></comment>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </redis_host_customeraction>
+                        <redis_port_customeraction>
+                            <label>Redis Port Customer Action</label>
+                            <frontend_type>text</frontend_type>
+                            <comment></comment>
+                            <sort_order>110</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </redis_port_customeraction>
+                         <redis_host_catalogaction>
+                            <label>Redis Host catalog Action</label>
+                            <frontend_type>text</frontend_type>
+                            <comment></comment>
+                            <sort_order>111</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </redis_host_catalogaction>
+                        <redis_port_catalogaction>
+                            <label>Redis Port catalog Action</label>
+                            <frontend_type>text</frontend_type>
+                            <comment></comment>
+                            <sort_order>112</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </redis_port_catalogaction>
+                         <redis_host_publicaction>
+                            <label>Redis Host Public Action</label>
+                            <frontend_type>text</frontend_type>
+                            <comment></comment>
+                            <sort_order>120</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </redis_host_publicaction>
+                        <redis_port_publicaction>
+                            <label>Redis Port Public Action</label>
+                            <frontend_type>text</frontend_type>
+                            <comment></comment>
+                            <sort_order>130</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </redis_port_publicaction>
+                        <redis_day_timelife>
+                            <label>Redis Day timelife (public)</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>vd: 1 for 1 day timelife cache, 0 for turn off cache</comment>
+                            <sort_order>131</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </redis_day_timelife>
+                        <redis_querylier>
+                            <label>Redis Queryfier (public default)</label>
+                            <frontend_type>text</frontend_type>
+                            <comment></comment>
+                            <sort_order>132</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </redis_querylier>
+                        <redis_querylier_product>
+                            <label>Redis Queryfier (product)</label>
+                            <frontend_type>text</frontend_type>
+                            <comment></comment>
+                            <sort_order>134</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </redis_querylier_product>
+                        <redis_querylier_catalog>
+                            <label>Redis Queryfier catalog</label>
+                            <frontend_type>text</frontend_type>
+                            <comment></comment>
+                            <sort_order>137</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </redis_querylier_catalog>
+                         <redis_host_cart>
+                            <label>Redis Host Cart</label>
+                            <frontend_type>text</frontend_type>
+                            <comment></comment>
+                            <sort_order>138</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </redis_host_cart>
+                        <redis_port_cart>
+                            <label>Redis Port Cart</label>
+                            <frontend_type>text</frontend_type>
+                            <comment></comment>
+                            <sort_order>139</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </redis_port_cart>
+                        <enable_queue>
+                            <label>Enable Queue</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <comment></comment>
+                            <sort_order>140</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </enable_queue>
+                        <expired_time>
+                            <label>Expired Time</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Expired Time Waiting Orde</comment>
+                            <sort_order>150</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </expired_time>
+                        <hide_price_label>
+                            <label>Type Hide Price Label</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_TypeHideFlashsalePrice</source_model>
+                            <comment>Type hide or show label: None or x13.000d or 1x3.000d</comment>
+                            <sort_order>160</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </hide_price_label>
+                        <group_type>
+                            <label>Group By Type</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_TypeFlashsaleGroupBy</source_model>
+                            <comment>Group type products based on: None or category_mid or supplier</comment>
+                            <sort_order>170</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </group_type>
+                    </fields>
+                </config>
+                <config_product_redis translate="label">
+                    <label>Redis Product</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>20</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <expanded>1</expanded>
+                    <fields>
+                        <is_active>
+                            <label>Is Active</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <comment></comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </is_active>
+                         <redis_host_product>
+                            <label>Redis Host product</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Redis for get product fields</comment>
+                            <sort_order>131</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </redis_host_product>
+                        <redis_port_product>
+                            <label>Redis Port product</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Redis for get product fields</comment>
+                            <sort_order>132</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </redis_port_product>
+                        <is_print_to_log>
+                            <label>Is Print time load to log</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <comment>log file: redis_product_debug.log</comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </is_print_to_log>
+                    </fields>
+                </config_product_redis>
+            </groups>
+        </flashsale_config>
+    </sections>
+</config>

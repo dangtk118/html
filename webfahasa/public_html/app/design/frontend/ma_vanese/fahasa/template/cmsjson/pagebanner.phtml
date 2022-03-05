@@ -1,0 +1,18 @@
+<?php $content = json_decode($this->getData('data'), true); 
+$noLinkArr = array("", "#", "##");
+?>
+
+<?php if ($content) : ?>
+    <div class="page-banner">
+        <?php foreach ($content as $data): ?>
+        <a <?php if($data['thele']) : ?> class="cursor-pointer" name="<?php echo $data['thele'] ?>" <?php endif; ?> <?php if($data["urlLink"] && !in_array($data["urlLink"], $noLinkArr)):?> href="<?php echo $this->handleURLLink($data["urlLink"]); ?>"  <?php if (isset($data["target"])) : echo "target=\"" . $data['target'] . "\""; endif;?> <?php endif;?>>
+                <?php $mobile = Mage::helper('fhsmobiledetect')->isMobile(); ?>
+                <?php if (!$mobile) : ?>
+                       <img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . $data["urlWebImg"] ?>" alt="" width="1920px">
+                <?php else: ?>
+                    <img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . $data["urlMobileImg"] ?>" alt="" />
+                <?php endif; ?>
+            </a>
+        <?php endforeach; ?>
+    </div>
+<?php endif; ?>

@@ -1,0 +1,442 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+/**
+ * Product list template
+ *
+ * @see Mage_Catalog_Block_Product_List
+ */
+?>
+<?php
+$_productCollection = $this->getLoadedProductCollection();
+$_helper = $this->helper('catalog/output');
+//$mobile = Mage::helper('mobiledetect')->isMobile();
+$mobile = Mage::helper('fhsmobiledetect')->isMobile();
+$typeMode = $this->getTypeMode();
+$i = 0;
+if ($typeMode) {
+    $pagesize = $_productCollection->getPageSize();
+    // get default $currentPage = 1
+    if (Mage::getBlockSingleton('page/html_pager') != FALSE) {
+        $currentPage = Mage::getBlockSingleton('page/html_pager')->getCurrentPage();
+    } else {
+        $currentPage = 1;
+    }
+    $i = ($currentPage - 1) * $pagesize;
+}
+$criteoList = array();
+?>
+<?php if (!$_productCollection->count()): ?>
+    <p class="note-msg"><?php echo $this->__('There are no products matching the selection.') ?></p>        
+    <?php if($_GET['in_stock'] == null || $_GET['in_stock'] == "1") : ?>        
+        <div class="url_no_filter_in_stock" style="display: none;">
+            <?php
+            $urlParams = array();
+                $urlParams['_current']  = true;
+                $urlParams['_escape']   = true;
+                $urlParams['_use_rewrite']   = true;
+                $urlParams['_query']    = array("in_stock" => 0);
+            echo $this->getUrl('*/*/*', $urlParams);
+            ?>
+        </div>
+        <div class="info-msg">
+            <div><?php echo $this->__('Continue searching. Please wait!') ?></div>
+        </div>
+        <div id="m-wait" style="display: block;">
+            <p class="loader" id="loading_mask_loader"><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true);?>frontend/base/default/images/mana_core/m-wait.gif" alt="Loading..."><br>Please wait...</p>
+        </div>
+    <?php endif ?>
+<?php else: ?>
+    <div class="category-products row">    
+        <?php if (!$typeMode):?>
+            <div class="toolbar-top">
+                <?php echo $this->getToolbarBlock()->setTemplate('catalog/product/list/toolbar_top.phtml')->toHtml() ?>
+            </div>
+        <?php endif;?>
+        <?php // List mode ?>
+        <?php if ($this->getMode() != 'grid'): ?>
+            <?php $_iterator = 0; ?>
+            <ol class="products-list" id="products-list">
+                <?php foreach ($_productCollection as $_product): ?>
+                    <?php $criteoList[] = $_product->getId(); ?>
+                    <li class="item<?php if (++$_iterator == sizeof($_productCollection)): ?> last<?php endif; ?>">
+                        <div class="item-inner">
+                            <div class="row">
+                                <div class=" products-images col-sm-4 col-md-4 col-sms-6 col-smb-12">
+                                    <div class="images-content">
+                                        <div class="products clearfix">
+                                            <div class="product images-container">
+                                                <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" class="product-image">
+                                                    <span class="product-image">
+                                                        <img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(270, 364); ?>" width="270" height="364" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" />
+                                                    </span>									     
+                                                </a>
+                                            </div>
+                                        </div>	
+                                    </div>	
+                                </div>
+                                <?php // Product description ?>
+                                <div class="product-shop col-sm-8 col-md-8 col-sms-6 col-smb-12">
+                                    <div class="f-fix">
+                                        <?php $_productNameStripped = $this->stripTags($_product->getName(), null, true); ?>
+                                        <h2 class="product-name"><a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $_productNameStripped; ?>"><?php echo $_helper->productAttribute($_product, $_product->getName(), 'name'); ?></a></h2>
+					    <?php if ($_product->getRatingSummary()): ?>
+                                            <?php echo $this->getReviewsSummaryHtml($_product) ?>
+                                        <?php endif; ?>
+
+                                        <div class="desc std">
+                                            <?php $descr = $_helper->productAttribute($_product, $_product->getShortDescription(), 'short_description'); ?>
+                                            <?php echo substr($descr, 1, 650); ?>
+                                            <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $_productNameStripped ?>" class="link-learn"><?php echo $this->__('Learn More') ?></a>
+                                        </div>
+                                        <?php echo $this->getPriceHtml($_product, true) ?>
+                                        <div class="actions">
+                                            <div class="actions-inner">
+                                                <div class="addto-cart">
+                                                    <?php if ($_product->isSaleable()): ?>
+                                                        <button type="button" title="<?php echo $this->__('Add to Cart') ?>" class="button btn-cart" onclick="setLocation('<?php echo $_product->getId() ?>')"><span><span><i class="fa fa-shopping-cart"></i><?php echo $this->__('Add to Cart') ?></span></span></button>
+                                                    <?php else: ?>
+                                                        <p class="availability out-of-stock"><span><?php echo $this->__('Out of stock') ?></span></p>
+                                                    <?php endif; ?>
+                                                </div>
+                                                <ul class="add-to-links">
+                                                    <?php if ($_compareUrl = $this->getAddToCompareUrl($_product)): ?>
+                                                        <li><span class="separator">|</span> <a href="<?php echo $_product->getId() ?>" title="<?php echo $this->__('Add to Compare') ?>" class="link-compare"><i class="fa fa-refresh"></i><?php echo $this->__('Add to Compare') ?></a></li>
+                                                    <?php endif; ?>
+
+                                                    <?php if ($this->helper('wishlist')->isAllow()) : ?>
+                                                        <li><a href="<?php echo $_product->getId() ?>" title="<?php echo $this->__('Add to Wishlist') ?>" class="link-wishlist"><i class="fa fa-heart"></i><?php echo $this->__('Add to Wishlist') ?></a></li>
+                                                    <?php endif; ?>
+                                                </ul>
+                                            </div>	
+                                        </div>	
+                                    </div>	
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                <?php endforeach; ?>
+            </ol>
+            <script type="text/javascript">decorateList('products-list', 'none-recursive')</script>
+
+        <?php else: ?>
+
+            <?php // Grid Mode ?>
+
+            <?php $_collectionSize = $_productCollection->count() ?>
+            <?php
+            $_columnCount = 4;
+            if ($this->getColumnCount() == 6) {
+                $_columnCount = 6;
+            }
+            ?>
+            <?php // $_columnCount = 4  ?>
+            <ul class="<?php if($mobile && !$typeMode): echo "products_grid_mobile"; else: echo "products-grid fhs-top " . $typeMode; endif;?>">
+                <?php foreach ($_productCollection as $_product): ?>
+                    <?php
+                    $criteoList[] = $_product->getId();
+                    //begin typeMode
+                    if ($typeMode):$i++;
+                        ?>
+
+                        <li class="top-best-row col-sm-12 col-xs-12 col-md-12 <?php if (($i - 1) % $_columnCount == 0): ?> first<?php elseif ($i % $_columnCount == 0): ?> last<?php endif; ?>">
+                            <div class="item-inner">
+                                <div class="ma-box-content">
+                                    <div class="col-sm-1 col-xs-2 col-md-1 count"><?php echo $i ?></div>
+                                    <div class="col-sm-4 col-xs-7 col-md-2 products clearfix" >
+                                        <?php
+                                        $discountLabel = Mage::helper('discountlabel')->handleDisplayDiscountLabel($_product, false, false);
+                                        echo $discountLabel;
+                                        ?>
+                                        <div class="product images-container">
+                                            <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" class="product-image">
+                                                <span class="product-image grid-top-p">
+
+                                                    <img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(400, 400); ?>" width="270" height="364" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" />
+                                                </span>
+
+                                            </a>
+                                        </div>
+                                        <div class="price-label">
+                                                    <?php
+                                                    $price = $_product->getPrice();
+                                                    $specialprice = $_product->getFinalPrice(); // $specialprice = $_product->getSpecialPrice();
+                                                    $f_price = Mage::helper('discountlabel')->displayProductPrice($_product, $price, $specialprice);
+                                                    if ($f_price) {
+                                                        echo $f_price;
+                                                    } else {
+                                                        echo '<span id="product-price-a' . $_product->getId() . '" class="">
+                                                            <span class="price">' . $this->getPriceHtml($_product, true) . '</span>                                    
+                                                            </span>';
+                                                    }
+                                                    ?>
+					<?php if(!empty($_product->getEpisode())):?>
+					    <div class='episode-label'><?php echo $_product->getEpisode();?> </div>
+					<?php endif;?>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-5 col-xs-12 col-md-8">
+                                        <div class="product-name-top-best">
+                                            <h2><a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($_product->getName(), null, true) ?>"><?php echo $_helper->productAttribute($_product, $_product->getName(), 'name') ?></a></h2>
+                                            <?php
+                                            if (!$mobile):
+                                                $maxlen = 370;
+                                                $wraptext = wordwrap(trim(strip_tags($_product->getDescription())), $maxlen, "---\n---", false);
+                                                $breakpos = strpos($wraptext, "---\n---");
+                                                if ($breakpos) {
+                                                    $description = substr($wraptext, 0, strpos($wraptext, "---\n---")) . " ...";
+                                                } else {
+                                                    $description = $wraptext;
+                                                }
+                                                ?>
+                                                <div class="product-description-top-best"><?php echo $description; ?></a></div>
+                                                <?php echo Mage::helper('discountlabel')->displayBuyButton($_product); ?>
+                                            <?php endif; ?>
+                                </div>
+                                        <?php if ($_product->getRatingSummary()): ?>
+                                            <?php echo $this->getReviewsSummaryHtml($_product, 'short') ?>
+                                        <?php endif; ?>
+                            </div>
+                                </div>
+                            </div>
+                        </li>		
+
+
+
+                    <?php else: ?>
+                    <?php
+                        $cssCol = "col-md-3";
+                        if ($this->getColumnCount() == 6) {
+                            $cssCol = "col-md-2";
+                        }
+                        ?>
+                        <?php if(!$mobile) : // ---- item mobile?>
+                        <li class=" ">
+                            <div class="item-inner">
+                                <?php
+                                $discountLabel = Mage::helper('discountlabel')->handleDisplayDiscountLabel($_product, false, false);
+                                echo $discountLabel;
+                                ?>
+                                <div class="ma-box-content">
+                                    <div class="products clearfix">
+                                        <div class="product images-container">
+                                            <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" class="product-image">
+                                                <span class="product-image">
+                                                    <img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(400, 400); ?>" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" />
+                                                </span>							   
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <?php if (!$mobile): ?>
+                                        <div class="actions">
+                                            <div class="actions-inner">
+                                                <?php echo Mage::helper('discountlabel')->displayBuyButton($_product); ?>
+                                                <ul class="add-to-links">
+                                                    <?php if ($this->helper('wishlist')->isAllow()) : ?>
+                                                        <li><a href="<?php echo $_product->getId() ?>" title="<?php echo $this->__('Add to Wishlist') ?>" class="link-wishlist"><i class="fa fa-heart"></i><?php echo $this->__('Add to Wishlist') ?></a></li>
+                                                    <?php endif; ?>
+                                                    <?php if ($_compareUrl = $this->getAddToCompareUrl($_product)): ?>
+                                                        <li><span class="separator">|</span> <a href="<?php echo $_product->getId() ?>" title="<?php echo $this->__('Add to Compare') ?>" class="link-compare"><i class="fa fa-retweet"></i><?php echo $this->__('Add to Compare') ?></a></li>
+                                                    <?php endif; ?>
+                                                </ul>
+                                            </div>	
+                                        </div>
+                                    <?php endif; ?>
+				    
+				    <?php if($_product->getTypeId() != 'series'):?>
+					<h2 class="product-name-no-ellipsis p-name-list"><a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($_product->getName(), null, true) ?>"><?php echo preg_replace('/\xc2\xa0/', ' ', $_helper->productAttribute($_product, $_product->getName(), 'name')); ?></a></h2>                                    
+				    <?php else: ?> 
+					<h2 class="product-name-no-ellipsis p-name-list fhs-series"><a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($_product->getName(), null, true) ?>"><span class="fhs-series-label"><i></i></span><?php echo preg_replace('/\xc2\xa0/', ' ', $_helper->productAttribute($_product, $_product->getName(), 'name')); ?></a></h2>                                    
+				    <?php endif; ?>
+				
+				    <?php if($_product->getTypeId() != 'series'):?>
+					<div class="price-label">
+							<?php
+							$price = $_product->getPrice();
+							$specialprice = $_product->getFinalPrice(); // $specialprice = $_product->getSpecialPrice();
+							$f_price = Mage::helper('discountlabel')->displayProductPrice($_product, $price, $specialprice);
+							if ($f_price) {
+							    echo $f_price;
+							} else {
+							    echo '<span id="product-price-a' . $_product->getId() . '" class="">
+								<span class="price">' . $this->getPriceHtml($_product, true) . '</span>                                    
+								</span>';
+							}
+							?>
+					     <?php if(!empty($_product->getEpisode())):?>
+						<div class='episode-label'><?php echo $_product->getEpisode();?> </div>
+					    <?php endif;?>
+					</div>
+					<div class="rating-container">
+					    <?php // if($_product->getRatingSummary()):  ?>
+					    <?php echo $this->getReviewsSummaryHtml($_product, 'short') ?>
+					    <?php // endif;  ?>
+					    <?php
+					    $product = Mage::getModel('catalog/product')->load($_product->getId());
+					    $soonRelease = $product->getSoonRelease();
+					    ?>
+					    <?php if($soonRelease):?>
+					     <div>
+						<div class="hethang product-hh">
+						    <span><span><?php echo $this->__("Coming soon");?></span></span>
+						</div>
+					    </div>
+						<?php elseif(!$_product->isSaleable()): ?>
+					    <div>
+						 <div class="hethang product-hh">
+						     <span><span><?php echo $this->__("Out of stock");?></span></span>
+						 </div>
+					    </div>
+					    <?php endif ?>
+					</div>
+				    <?php else:?>
+					<?php if(!empty($_product->getEpisode())):?>
+					    <div class="fhs-series-episode-label"><?php echo $_product->getEpisode();?></div>
+					<?php endif;?>
+
+					<div class="fhs-series-subscribes"><?php echo (!empty($_product->getSubscribes()))?$_product->getSubscribes():'0';?> lượt theo dõi</div>
+				    <?php endif;?>
+                                </div>
+                            </div>
+                        </li>
+                        <?php else: ?>
+                        <li class="product-item-mobile">
+                            <div class="item-inner">
+                                <?php
+                                $discountLabel = Mage::helper('discountlabel')->handleDisplayDiscountLabel($_product, false, false);
+                                echo $discountLabel;
+                                ?>
+                                <div class="ma-box-content">
+                                    <div class="products clearfix">
+                                        <div class="product images-container">
+                                            <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" class="product-image">
+                                                <span class="product-image">
+                                                    <img src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize(400, 400); ?>" alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>" />
+                                                </span>							   
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <?php  // format lenght cho product name
+                                        $nameProduct = $_product->getName();
+                                    ?>
+				    <?php if($_product->getTypeId() != 'series'):?>
+					<h2 class="product-name-no-ellipsis p-name-list"><a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($_product->getName(), null, true) ?>"><?php echo preg_replace('/\xc2\xa0/', ' ', $nameProduct); ?></a></h2>                                    
+				    <?php else: ?> 
+					<h2 class="product-name-no-ellipsis p-name-list fhs-series"><a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->stripTags($_product->getName(), null, true) ?>"><span class="fhs-series-label"><i></i></span><?php echo preg_replace('/\xc2\xa0/', ' ', $nameProduct); ?></a></h2>                                    
+				    <?php endif; ?>
+				
+                                    <?php if($_product->getTypeId() != 'series'):?>
+					<div class="price-label" style='margin-bottom:5px;'>
+                                            <div class="price-box">
+                                                    <?php
+                                                    $price = $_product->getPrice();
+                                                    $specialprice = $_product->getFinalPrice(); // $specialprice = $_product->getSpecialPrice();
+                                                    $f_price = Mage::helper('discountlabel')->displayProductPriceMobile($_product, $price, $specialprice);
+                                                    if ($f_price) {
+                                                        echo $f_price;
+                                                    } else {
+                                                        $sym = Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol();
+                                                        $html = "";
+                                                        $html .= '<div class="special-price">
+                                                        <span id="product-price-'.$_product->getId().'" class="price">'.''.number_format($specialprice,0, ",", ".")." ".$sym.'</span>
+                                                        </div> ';
+                                                    
+                                                        echo $html;
+                                                    }
+                                                    ?>
+                                            </div>
+					<?php if(!empty($_product->getEpisode())):?>
+					    <div class='episode-label'><?php echo $_product->getEpisode();?> </div>
+					<?php endif;?>
+                                        </div>
+					<div class="rating-container-mobile">
+					    <?php // if($_product->getRatingSummary()):  ?>
+					    <?php echo $this->getReviewsSummaryHtml($_product, 'short') ?>
+					    <?php // endif;  ?>
+					    <?php
+					    $product = Mage::getModel('catalog/product')->load($_product->getId());
+					    $soonRelease = $product->getSoonRelease();
+					    ?>
+					</div>
+					    <?php if($soonRelease):?>
+						<div class="hethang product-hh hh-mobile">
+						    <span><span><?php echo $this->__("Coming soon");?></span></span>
+						    </div>
+						<?php elseif(!$_product->isSaleable()): ?>
+						 <div class="hethang product-hh hh-mobile">
+						     <span><span><?php echo $this->__("Out of stock");?></span></span>
+						 </div>
+					    <?php endif ?>
+					</div>
+				    <?php else: ?> 
+					<?php if(!empty($_product->getEpisode())):?>
+					    <div class="fhs-series-episode-label"><?php echo $_product->getEpisode();?></div>
+					<?php endif;?>
+
+					<div class="fhs-series-subscribes"><?php echo (!empty($_product->getSubscribes()))?$_product->getSubscribes():'0';?> lượt theo dõi</div>
+				    <?php endif; ?>
+                            </div>
+                        </li>
+                        <?php endif ?>
+                    <?php
+                    // endif; typeMode
+                    endif;
+                endforeach
+                ?>
+            </ul>
+            
+        <?php endif; ?>
+        <div class="toolbar-bottom">
+            <?php echo $this->getToolbarBlock()->setTemplate('catalog/product/list/toolbar.phtml')->toHtml() ?>
+        </div>
+    </div>
+<?php endif; ?>
+<script type="text/javascript">
+    $jq(document).ready(function () {
+        $jq(".hethang").unbind('click');
+        if("<?php echo $typeMode?>" == "list"){
+            $jq(".toolbar .sorter .sort-by").hide();
+            $jq(".toolbar .select-sort-by").hide();
+        }
+        if($jq(".url_no_filter_in_stock").length > 0){
+            var url = $jq(".url_no_filter_in_stock").text().trim();
+            window.location.href = url;
+        }
+    });
+</script>
+<?php if (false): ?>
+    <script type="text/javascript" src="//static.criteo.net/js/ld/ld.js" async="true"></script>
+    <script type="text/javascript">
+        window.criteo_q = window.criteo_q || [];
+        window.criteo_q.push(
+                {event: "setAccount", account: 34556},
+                {event: "setEmail", email: ""},
+                {event: "setSiteType", type: "<?php echo Mage::helper("fhsmarketing")->getSiteType(); ?>"},
+                {event: "viewList", item: ["<?php echo implode(",", $criteoList) ?>"]}
+        );
+    </script>
+<?php endif; ?>

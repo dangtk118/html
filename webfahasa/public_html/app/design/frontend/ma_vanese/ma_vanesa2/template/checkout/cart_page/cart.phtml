@@ -1,0 +1,679 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+/**
+ * Shopping cart template
+ *
+ * @see Mage_Checkout_Block_Cart
+ */
+?>
+<?php 
+//    $event_cart = Mage::helper('eventcart')->checkEventCart(null, false, true);
+    $product_helper = Mage::helper('fahasa_catalog/product');
+//    Mage::register('event_cart', $event_cart);
+    $event_cart_coupon_applied = 0;
+    
+    $js_url = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS, true);
+    $skin_url = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true);
+    $queryfier = Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix');
+    
+    $loading_img = $this->getSkinUrl('images/fpointstore/loading.png');
+    
+    $CHECKOUT_OUTSTOCK_PRODUCT_SCRIPT = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS, true)."lib/checkout_outstock_product.js?q=".$queryfier;
+    
+    $hashSessionKey = Mage::helper('onestepcheckout')->getHashSessionKeyAsciiArr();
+    $PS_SCRIPT = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS, true)."lib/ps.js?q=".$queryfier;
+    $hashSessionKey = Mage::helper('onestepcheckout')->getHashSessionKeyAsciiArr();
+   
+    $eventCart_keys =  Mage::getStoreConfig('eventcart_config/config/event_cart_list');
+    if(!empty($eventCart_keys)){
+	$eventCart_keys = explode(",",$eventCart_keys);
+    }else{
+	$eventCart_keys = array('affect_carts','affect_coupons','affect_freeships','affect_payments');
+    }
+    
+    $languages = $product_helper->getLanguagesList('cart');
+    $languages['ico_exclaiming'] = $skin_url . 'frontend/ma_vanese/fahasa/images/exclaiming.svg?q=' . $queryfier;
+    
+    $is_login = Mage::getSingleton('customer/session')->isLoggedIn();
+    $is_active_wallet_voucher = false;//Mage::getStoreConfig('fpointstorev2_config/wallet_voucher/is_active');
+    $wallet_helper = Mage::helper("fpointstorev2/data");
+    if($is_login){
+	$customer = Mage::getSingleton('customer/session')->getCustomer();
+	$customer_id = $customer->getEntityId();
+	$orders_payment_pending = Mage::helper('repayment')->getOrderIdPaymentPending($customer->getEntityId());
+    }
+    
+//    $event_cart_matched_full = [];
+//    $event_cart_parsed = $product_helper->getFirstEventCart($event_cart);
+//    $event_cart_show = $event_cart_parsed['event_cart_show'];
+//    $event_cart_viewmore = $event_cart_parsed['event_cart_viewmore'];
+
+//    $promotion_show_html = $product_helper->getPromotionCartHtml($event_cart_show, $languages);
+
+//    $promotion_popup_html = $product_helper->getPromotionPopupHtml($event_cart, $languages, $eventCart_keys);
+    
+//    $couponCode = $this->getQuote()->getCouponCode();
+//    $fhsCoin = Mage::getSingleton('core/session')->getFhsCoin();
+//    if(!$couponCode && $fhsCoin['code']){
+//	$couponCode = $fhsCoin['code'];
+//	$_coinCode = $fhsCoin['code'];
+//    }
+//    $coupon_label = Mage::getSingleton('core/session')->getCouponLabel();
+    
+//    $freeshipCode = Mage::getSingleton('checkout/type_onepage')->getQuote()->getFreeshipCode();
+//    $freeship_coupon_label = Mage::getSingleton('core/session')->getFreeshipLabel();
+    
+//    $event_cart_sumary = '';
+   
+//    if((!empty($couponCode) && !empty($coupon_label))
+//	||(!empty($freeshipCode) && !empty($freeship_coupon_label))){
+//	    if(!empty($coupon_label) && !empty($couponCode)){
+//		$event_cart_sumary = '<div class="fhs_label_coupon_label_row"><div class="fhs_label_coupon_label_orange"><div>'.$coupon_label.'</div><div onclick="fhs_promotion.applyCoupon(this);" coupon="'.$couponCode.'" apply="0"><img src="'.$skin_url."frontend/ma_vanese/fahasa/images/ico_delete_orange.svg?q=".$queryfier.'"/></div></div></div>';
+//	    }
+//		
+//	    if(!empty($freeship_coupon_label) && !empty($freeshipCode)){
+//		$event_cart_sumary .= '<div class="fhs_label_coupon_label_row"><div class="fhs_label_coupon_label_green"><div>'.$freeship_coupon_label.'</div><div onclick="fhs_promotion.applyCoupon(this);" coupon="'.$freeshipCode.'" apply="0"><img src="'.$skin_url."frontend/ma_vanese/fahasa/images/ico_delete_green.svg?q=".$queryfier.'"/></div></div></div>';
+//	    }
+//		    
+//    }elseif($event_cart_parsed['num_events_matched'] > 0){
+//	$event_cart_sumary = "<div class='fhs-event-promo-sumary-matched' onclick='fhs_promotion.showEventCart();'>"
+//		."<span>".$this->__('%s eligible rewards', ($event_cart_parsed['num_events_matched']))."</span>"
+//		."<span><img src='".$skin_url . 'frontend/ma_vanese/fahasa/images/ico_seemore_blue.svg?q=' . $queryfier."'/></span>"
+//		."</div>";
+//    }
+//    $event_cart_sumary .= $languages['coupon_info'];
+    
+?>
+<style>
+    @media (min-width:992px){
+        /* tat srcoll hidden o offcanvas va srcoll o html*/
+        html, body, .offcanvas-container, .offcanvas-pusher, .offcanvas-content{
+            overflow-x : unset;
+        }
+        html {
+            overflow-y : unset;
+        }
+        /* set lai height cho .product-name a */
+        .product-name a{
+            min-height: unset!important;
+        }
+        .product-name-full-text a{
+            min-height: unset!important;
+        }
+    }
+    /* chinh margin  o (only) cart page  */
+    .cart{
+        margin-bottom: 0px!important;
+    }
+    /* margin bottom #personalization-grid only cart page*/
+    #personalization-grid{
+        margin-top: 0px!important;
+    }
+    @media (max-width:992px){
+        #content{
+            min-height: unset;
+        }
+        .main{
+            min-height: unset;
+        }
+        .ma-block-link-follow{
+            margin-top: 35px;
+        }
+    }
+    
+    @media screen and (max-width: 425px){
+        .row{
+            padding-bottom: 40px;
+        }
+    }
+    
+</style>
+<link rel="stylesheet" type="text/css" href="<?php echo $skin_url."frontend/ma_vanese/fahasa/css/cart_page.css?q=".$queryfier; ?>" media="all" />
+<link rel="stylesheet" type="text/css" href="<?php echo $skin_url."frontend/ma_vanese/ma_vanesa2/css/magestore/onestepcheckout_v2.css?q=".$queryfier; ?>" media="all" />
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 cart-page">
+        <div id="content">
+	    <?php if(!empty($orders_payment_pending)):?>
+		<div class="fhs_cart_msg_block">
+		    <?php if(sizeof($orders_payment_pending) > 1):?>
+			<?php echo $this->__("Have <a href='/sales/order/history/'>%s</a> orders be waiting for payment confirmation from partner. Please <a href='/sales/order/history/'>re-payment</a>", sizeof($orders_payment_pending));?>
+		    <?php else:?>
+			<?php echo $this->__("Orders <a href='/sales/order/view/order_id/%s'>#%s</a> is waiting for payment confirmation from partner. Please <a href='/repayment/index/payment/id/%s'>re-payment</a>", $orders_payment_pending[0]['entity_id'],$orders_payment_pending[0]['increment_id'],Mage::helper("event/data")->encryptor('encrypt',$orders_payment_pending[0]['increment_id']));?>
+		    <?php endif;?>
+		    <div class="fhs_cart_msg_block_close" onclick="$jq('.fhs_cart_msg_block').fadeOut(0);"><img src="<?php echo $skin_url . 'frontend/ma_vanese/fahasa/images/ico_delete_gray.svg?q=' . $queryfier; ?>"/></div>
+		</div>
+	    <?php endif;?>
+            
+            <div class="fhs_redis_cart_msg">
+                <div>
+                    <img src="<?php echo $skin_url . 'frontend/ma_vanese/fahasa/images/exclaiming.svg?q=' . $queryfier; ?>"/>
+                </div>
+                <div class="message">
+                </div>
+            </div>
+
+            <?php //$messagesBlock = $this->getMessagesBlock()->getGroupedHtml(); ?>
+	    <div class="message_error"><?php //echo $messagesBlock; ?></div>
+	    
+            <div class="cart">
+                <div class="cart-banner-block fhs-no-mobile-block">
+                    <?php // echo $this->getLayout()->createBlock('cms/block')->setBlockId('cart-banner-block')->toHtml(); ?>
+                </div>
+                <div class="page-title title-buttons">
+                    <div   class="page-title-container">
+                        <h1 style="display: inline-block;width: auto;"><?php echo $this->__('Shopping Cart') ?></h1>
+                        <span  class="cart-title-num-items"></span>
+                    </div>
+                </div>
+                <?php //--- Start loading cart for ajax ?>
+                <div class="cart-loading">
+                    <div class="cart-loading-icon">
+                        <img src="<?php echo $skin_url . 'frontend/ma_vanese/fahasa/images/bar_loading.gif?q=' . $queryfier; ?>" />
+                    </div>
+                </div>
+                <?php //--- End loading cart for ajax ?>
+                <?php ///---Start event_cart mobile ---/// ?>
+                <div class="cart-event-promo-outer-mobile" style="display: none;">
+                    <div class="col-xs-12 col-sm-12 block event-cart-mobile-ui event-promotion-block" id="block-totals-mobile" style="display:none;">
+                        <div class="totals">
+                            <div class="fhs_checkout_event_promotion">
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+                <?php ///---End event_cart ---///  ?>
+		
+                <?php echo $this->getChildHtml('form_before') ?>
+                <form action="<?php echo $this->getUrl('checkout/cart/updatePost') ?>" method="post" id="form-cart">
+                    <?php echo $this->getBlockHtml('formkey'); ?>
+                        <div class="cart-ui-content row ">
+                            <div class="col-sm-8 col-xs-12">
+                                <div>
+                                    <?php ///---Begin header title qty ---///  ?>
+                                    <div class="header-cart-item" >
+                                        <div class="checkbox-all-product ">
+                                            <input class="checkbox-add-cart"  type="checkbox"  id="checkbox-all-products" onclick="cart.checkAllProducts()"/>
+                                        </div>
+                                        <div><span><?php echo $this->__("Select All");?> (<span class="num-items-checkbox"></span> <?php echo $this->__("items");?>)</span></div>
+                                        <div><?php echo $this->__("Quantity");?></div>
+                                        <div><?php echo $this->__("Subtotal");?></div>
+                                        <div></div>
+                                    </div>
+                                    <?php ///---End header title qty ---///  ?>
+                                    <div class="product-cart-left">
+                                    </div>
+                                </div>
+                            </div>
+                           
+                            <div class="col-sm-4 hidden-max-width-992">
+                                <div class="total-cart-right">
+                                    <div class="effect-scroll-cart-right">
+					
+                                        <?php ///---Start event_cart ---/// ?>
+                                        <div class="cart-event-promo-outer">
+                                        <div class="col-xs-12 col-sm-12 block event-promotion-block" id="block-totals" style="display: none;">
+                                            <div class="totals">
+                                                <div class="fhs_checkout_event_promotion">
+						</div>
+                                            </div>
+                                        </div> 
+                                        </div>
+                                        <?php ///---End event_cart ---/// ?>
+                                        <div style="clear:both;"></div>
+                                        <div class="block-total-cart" style="display: none;">
+                                            <?php echo Mage::app()->getLayout()->createBlock('checkout/cart_totals')->setData('totals', $redis_totals)->setTemplate('checkout/cart/totalsV2.phtml')->toHtml(); ?>
+                                            <div class="checkout-type-button-cart" style="text-align: center;">
+                                                <div class="method-button-cart">
+                                                    <button onclick="cart.goToCheckout(this)"
+                                                            type="button" title="<?php echo $this->__('Proceed to Checkout') ?>" 
+                                                            class="button btn-proceed-checkout btn-checkout"
+                                                            ><span><span><?php echo $this->__('Proceed to Checkout') ?></span></span>
+                                                    </button>
+                                                    <div class="retail-note"><a href="<?php echo $this->getUrl("chinh-sach-khach-si") ?>" target="_blank"><?php echo $this->__("(Terms & conditions of sale apply)"); ?></a></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="fhs_error_message_cart" style="margin-top:10px;background: white;padding:10px;display:none;"></div>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                        <script type="text/javascript">decorateTable('shopping-cart-table')</script>
+                </form>
+                <div class="fhs-bsidebar hidden-desktop">
+                    <div class="tab-bsidebar-total-button-mobile">
+                        <div class="tab-bsidebar-total-mobile">
+                            <div class="title-price-mobile"></div>
+                            <div class="total-price-mobile"></div>
+                        </div>
+                        <div class="tab-bsidebar-button-mobile">
+                            <?php // button : ?>
+                            <div class="checkout-type-button-cart" style="text-align: center;">
+                                <div class="method-button-cart">
+                                    <button onclick="cart.goToCheckout()"
+                                            type="button" title="<?php echo $this->__('Proceed to Checkout') ?>" 
+                                            class="button btn-proceed-checkout btn-checkout"
+                                            ><span><span><?php echo $this->__('Proceed to Checkout') ?></span>
+                                        <i class="fa fa-arrow-right" style="font-size: 14px;margin-left: 5px;"></i>
+
+
+                                        </span></button>
+                                </div>
+                            </div>
+                            <?php // end button : ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="cart-collaterals row" style="display:none;">
+                    <div class="col-2 col-xs-12 col-sm-6 cart-product-block">
+                        <?php // echo $this->getLayout()->createBlock('cms/block')->setBlockId('cart-product-block')->toHtml(); ?>
+                    </div>
+                </div>
+                <div class="personalize-short-block">
+                        <?php // echo $this->getLayout()->createBlock('cms/block')->setBlockId('short-personalize')->toHtml(); ?>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="youama-noti-window messages-checkout-cart" style="padding-bottom: 30px; top: 25% !important;">
+    <div class="youama-window-outside">
+        <span class="close">×</span>
+        <div class="youama-window-inside">
+            <div class="youama-window-title " style="padding: 15px 15px 5px;">
+                <h3 id="fhs-message-checkout-notice" style="color: #c00;">                    
+                </h3>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <button type="button" id="btn-mess-1" class="button btn-proceed-checkout btn-checkout youama-ajaxlogin-button fl btn-process-noti" style="margin-top: 10px">
+                    <span>
+                        <span>
+                            <?php echo $this->__("Close"); ?>
+                        </span>
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<?php /* loading icon */ ?>
+<div id="popup-default-loading">
+    <div id="popup-default-loading-icon" style="padding: 15px 0px;">
+	<center><div id="default-icon-loading" style="height: 128px; width: 128px; background: url('<?php echo $this->getSkinUrl('images/fpointstore/loading.png') ?>') no-repeat center center transparent; background-size: 110px;"></div></center>
+    </div>
+    <div class="popup-default-loading-content">
+	<div id="popup-default-loading-context-text" class="popup-fahasa-default-content-text" style="padding: 15px;">Đang cập nhật giỏ hàng</div>
+    </div>
+</div>
+
+<?php /* loading pop event cart*/ ?>
+<?php // if(false: ?>
+<div id="popup-loading-event-cart">
+    <div class="popup-loading-event-cart-info">
+	<div class="popup-loading-event-cart-title">
+	    <div class="fhs-event-promo-title">
+		<div class="fhs-event-promo-title-left">
+		    <span><img src="<?php echo $skin_url . 'frontend/ma_vanese/fahasa/images/promotion/ico_coupon.svg?q=' . $queryfier; ?>"/></span>
+		    <span><?php echo $this->__('Choose code'); ?></span>
+		    <span class="fhs_label_note" style="margin-left: 8px;"><?php echo $languages['coupon_info'];?></span>
+		</div>
+		<div class="fhs-event-promo-title-right">
+		    <div class="fhs_event_promo_btn_close lg-close" onclick="fhs_promotion.closeEventCart();"><img src="<?php echo $skin_url . 'frontend/ma_vanese/fahasa/images/ico_delete_gray.svg?q=' . $queryfier; ?>"/></div>
+		</div>
+	    </div>
+	</div>
+	<div class="fhs-input-box fhs-input-btn fhs-input-group-horizontal-coupon popup-loading-event-cart-coupon">
+	    <div class="fhs_checkout_block_content">
+		<div class="fhs_checkout_block_address_block">
+		    <div class="fhs-input-box fhs-input-btn fhs-input-group-horizontal-coupon">
+			<div class="fhs-input-item">
+			    <div class="fhs-input-group">
+				<input class="fhs-textbox fhs_checkout_coupon" type="text" validate_type="text" placeholder="<?php echo $this->__('Press promotion code/Gift'); ?>" id="fhs_checkout_coupon" name="coupon" value="" maxlength="200" />
+				<span id="fhs_checkout_btn_coupon" onclick="fhs_promotion.btn_coupon_click(this);" class="fhs-input-icon"  ><?php echo $languages['apply'];?></span>
+				<div class="fhs_checkout_block_coupon_search" onclick="showEventCart();"><span><?php echo $this->__('Choose code');?></span> <span class="fhs_label_note"><?php echo $this->__('can choose 2'); ?></span></div>
+			    </div>
+			</div>
+			<?php echo $languages['coupon_info'];?>
+			<div class="fhs-input-alert"></div>
+		    </div>
+		</div>
+		<div class="fhs_checkout_block_loading"><div><div id="default-icon-loading" style="height: 40px; width: 40px; background: url('<?php echo $loading_img; ?>') no-repeat center center transparent; background-size: 40px;"></div></div></div>
+	    </div>
+	</div>
+	<div class="popup-loading-event-cart-content">
+<!--	<ul id="popup-loading-event-cart-content-tab" class="fhs-tabs fhs-tabs-no-couponbox" <?php echo (!$is_login || !$is_active_wallet_voucher)?"style='display:none'":"";?> >
+	    <li class="fhs-tabs-item fhs-tabs-item-promotion active"><a><?php echo $this->__("My promotion"); ?></a><hr></li>
+	    <li class="fhs-tabs-item fhs-tabs-item-walletvoucher"><a><?php echo $this->__("My voucher"); ?></a><hr></li>
+	</ul>-->
+	<div id="popup-loading-event-cart-content-tabs" class="loading">
+	    
+<!-- promotion voucher -->
+		<div class="popup-loading-event-cart-content-promotion">
+		    <?php // echo $promotion_popup_html;?>
+		</div>
+	    </div>
+	</div>
+    </div>
+	
+    <div class="popup-loading-event-cart-detail">
+	<div class="popup-loading-event-cart-title">
+	    <div class="fhs-event-promo-title">
+		<div class="fhs-event-promo-title-left" onclick="fhs_promotion.closeEventCartDetail();">
+		    <div><img src="<?php echo $skin_url . 'frontend/ma_vanese/fahasa/images/ico_back_blue.svg?q=' . $queryfier; ?>"/></div>
+		</div>
+		<div class="fhs-event-promo-title-center"><?php echo $this->__('Terms & Conditions'); ?></div>
+		<div class="fhs-event-promo-title-right lg-close" onclick="fhs_promotion.closeEventCart();">
+		    <div><img src="<?php echo $skin_url . 'frontend/ma_vanese/fahasa/images/ico_delete_gray.svg?q=' . $queryfier; ?>"/></div>
+		</div>
+	    </div>
+	</div>
+	<div class="popup-loading-event-cart-content">
+	    <div class="fhs-event-promo-list">
+		<div id="fhs-event-promo-list-detail" class="fhs-event-promo-list-item">
+		</div>
+	    </div>
+	    <div id="fhs-event-promo-list-detail-content" class="fhs-event-promo-list-detail-content">
+	    </div>
+	</div>
+    </div>
+    <div class="popup-loading-event-cart-bottom">
+	<div id="popup_event_cart_info_close" class="close-popup-event">
+	    <button type="button" title="<?php echo $this->__("Close"); ?>" class="btn-close-popup-event"><span><?php echo $this->__("Close"); ?></span></button>
+	</div>
+	<div id="popup_event_cart_detail_close" class="close-popup-event">
+	</div>
+    </div>
+</div>
+<?php // endif; ?>
+
+<!-- Private Security Begin-->
+<script type="text/javascript" src="<?php echo $js_url."lib/ps.js?q=".$queryfier; ?>"></script>
+<script type="text/javascript">
+    var ps = new PrivateSecure(<?php echo json_encode($hashSessionKey);?>);    
+</script>
+<!-- Private Security Product --> 
+
+<script type="text/javascript" src="<?php echo $js_url."lib/cart.js?q=".$queryfier; ?>"></script>
+<script type="text/javascript">
+    var cart = new Cart();
+    cart.init('<?php echo $skin_url?>', <?php echo json_encode($languages, JSON_UNESCAPED_UNICODE);?>, SESSION_ID);
+    jQuery(document).ready(function () {
+        var button = jQuery("button.button.btn-checkout");
+        //if (button.hasClass("no-checkout")) {
+        //}
+        var errorMsg = $jq("ul.messages .error-msg")[0];
+        errorMsg = $jq(errorMsg).text();
+        if(errorMsg !== ""){
+            $jq("div#fhs_error_message_cart").show();
+            $jq("div#fhs_error_message_cart").html(errorMsg);
+            var a = $jq("<a href=\"#shopping-cart-table\"> See Details.</a>");
+            $jq("div#fhs_error_message_cart").append(a);
+        }
+        jQuery('.youama-window-outside .close, button#btn-mess-1').click(function () {
+            jQuery('.youama-ajaxlogin-cover').fadeOut();
+            jQuery('.youama-noti-window').fadeOut();
+            jQuery('.youama-noti-window-sucess').fadeOut();
+            jQuery('div.youama-ajaxlogin-error').html("");
+        });
+        //jQuery('button#btn-mess-1').click(function () {
+            //location.href = '<?php echo Mage::getBaseUrl() . Mage::getStoreConfig('checkoutmessage/checkoutmessage_group/link1'); ?>';
+        //});
+        jQuery('button.no-checkout').click(function () {
+            var message = $jq("ul.messages .notice-msg")[0];
+            message = $jq(message).text();
+            $jq("div.messages-checkout-cart  h3#fhs-message-checkout-notice").html(message);
+            jQuery('.youama-ajaxlogin-cover').fadeIn();
+            jQuery('.youama-noti-window').fadeIn(1000);
+            return false;
+        });
+    });
+    
+    //  START Tang/giam so luong Qty cho product trong gio hang 
+   
+    function subtractQty(productId,e){
+	let qty = parseInt($jq('#qty-'+productId).val());
+	if(qty > 1){
+            jQuery('.youama-ajaxlogin-cover').fadeIn();
+            $jq('#popup-default-loading').fadeIn();
+            hiddenSrcollLoading()
+	    $jq('#qty-'+productId).val(qty - 1);
+        if (e.preventDefault) e.preventDefault();
+            var form = document.getElementById('form-cart');
+            var input = document.createElement('input');// prepare a new input DOM element
+            input.setAttribute('name',"update_cart_action" );//set the param name
+            input.setAttribute('value',"update_qty");//set the value
+            input.setAttribute('type',"hidden")//set the type, like "hidden" or other
+            form.appendChild(input);//append the input to the form
+            setTimeout(function(){ form.submit(); },500);//send with added input
+	}else{
+	    $jq('#qty-'+productId).val(1);
+	}
+    }
+    function addQty(productId,e){
+        console.log('add qty ', productId);
+	let qty = parseInt($jq('#qty-'+productId).val());
+        var value = $jq('#qty-'+productId).attr("value");
+	let maxlength = parseInt($jq('#qty-'+productId).attr('maxlength'));
+        let qtylength = qty.toString().length;
+        console.log('qtya00000000000 ', qty)
+                console.log('qtya22 ', qty)
+
+	if(qtylength < maxlength && qty < 99){
+            console.log('inside hiadde loding')
+            jQuery('.youama-ajaxlogin-cover').fadeIn();
+            $jq('#popup-default-loading').fadeIn();
+            hiddenSrcollLoading()
+            
+	    $jq('#qty-'+productId).val(qty + 1);
+            if (e.preventDefault) e.preventDefault();
+            var form = document.getElementById('form-cart');
+//            alert(form);
+            var input = document.createElement('input');// prepare a new input DOM element
+            console.log('input', input);
+            input.setAttribute('name',"update_cart_action" );//set the param name
+            input.setAttribute('value',"update_qty");//set the value
+            input.setAttribute('type',"hidden")//set the type, like "hidden" or other
+            form.appendChild(input);//append the input to the form
+            setTimeout(function(){ form.submit(); },500);//send with added input
+//            form.submit();//send with added input
+            
+	}else{
+	    $jq('#qty-'+productId).val(value);
+	}
+    }
+//    function validateNumber(evt) {
+//      var theEvent = evt || window.event;
+//
+//      // Handle paste
+//      if (theEvent.type === 'paste') {
+//	  key = event.clipboardData.getData('text/plain');
+//      } else {
+//      // Handle key press
+//	  var key = theEvent.keyCode || theEvent.which;
+//	  key = String.fromCharCode(key);
+//      }
+//      var regex = /[0-9]|\./;
+//      if( !regex.test(key) ) {
+//	theEvent.returnValue = false;
+//	if(theEvent.preventDefault) theEvent.preventDefault();
+//      }
+//    }
+//    function validateQty(productId){
+//        var value = $jq('#qty-'+productId).attr("value");
+//	if(!$jq('#qty-'+productId).val()){
+//	    $jq('#qty-'+productId).val(1);
+//	}
+//	else{
+//	    let qty = parseInt($jq('#qty-'+productId).val());
+//	    let maxlength = parseInt($jq('#qty-'+productId).attr('maxlength'));
+//            let qtylength = qty.toString().length;
+//	    if(qty < 1){
+//		$jq('#qty-'+productId).val(1);
+//	    }
+//            else if(qtylength > maxlength){
+//		$jq('#qty-'+productId).val(value);
+//	    }
+//	}   
+//            let qty = parseInt($jq('#qty-'+productId).val());
+//            if(qty <= 99){
+//            hiddenSrcollLoading();
+//            jQuery('.youama-ajaxlogin-cover').fadeIn();
+//            $jq('#popup-default-loading').fadeIn();
+//            var form = document.getElementById('form-cart');
+//            var input = document.createElement('input');// prepare a new input DOM element
+//            input.setAttribute('name',"update_cart_action" );//set the param name
+//            input.setAttribute('value',"update_qty");//set the value
+//            input.setAttribute('type',"hidden")//set the type, like "hidden" or other
+//            form.appendChild(input);//append the input to the form
+//            setTimeout(function(){ form.submit(); },500);//send with added input
+//            }else{
+//              $jq('#qty-'+productId).val(value);  
+//            }
+//    } 
+    function showLoadingCart(){
+        jQuery('.youama-ajaxlogin-cover').fadeIn();
+        $jq('#popup-default-loading').fadeIn();
+        hiddenSrcollLoading();
+    }
+    function hiddenSrcollLoading(){
+        /* mobile : */
+        $jq('*').bind('touchmove', false);
+    }
+    //  END Tang/giam so luong Qty cho product trong gio hang
+      
+    // Start get value total final price and text for mobile web : 
+    $jq(document).ready(function () {
+        let text = $jq(".title-final-total").children( ".title-cart-page-left" ).text();
+        let value = $jq(".title-final-total").children( ".number-cart-page-right" ).text();
+            $jq(".title-price-mobile").html(text);
+            $jq(".total-price-mobile").html(value);
+    });
+    // End get value total final price and text for mobile web
+    
+    // handle xu ly hien pop o iphone (lan cac thiet bi khac) :
+    $jq(".product-view-icon-remove-mobile a").click(function(event){
+    event.preventDefault();
+    let linkLocation = this.href; 
+    jQuery('.youama-ajaxlogin-cover').fadeIn();
+    $jq('#popup-default-loading').fadeIn();
+    hiddenSrcollLoading();
+    setTimeout(function(){
+        window.location.href = linkLocation;
+    },500);
+    });
+    // showPop event_cart 
+    $jq(".btn-more-event-cart").click(function(e){
+	$jq('.youama-ajaxlogin-cover').fadeIn();
+	$jq('#popup-loading-event-cart').fadeIn(10,function(){$jq("#popup-loading-event-cart").focus();});
+    });
+    $jq(".btn-close-popup-event").click(function(e){
+	$jq('.youama-ajaxlogin-cover').fadeOut(0);
+	$jq('#popup-loading-event-cart').fadeOut(0);
+    });
+</script>
+
+<script type="text/javascript" src="<?php echo $js_url."lib/promotion.js?q=".$queryfier; ?>"></script>
+<script type="text/javascript">
+    var fhs_promotion = new Promotion();
+    fhs_promotion.initPromotion(<?php echo !empty($event_cart)?json_encode($event_cart, JSON_UNESCAPED_UNICODE):'{}';?>, <?php echo json_encode($languages, JSON_UNESCAPED_UNICODE);?>, <?php echo json_encode($eventCart_keys, JSON_UNESCAPED_UNICODE);?>, true);
+</script>
+
+<?php if (Mage::getStoreConfig('netcore/general/enable') == 1):?>
+<!-- Netcore Action Begin -->
+    <?php if($netcore = Mage::getSingleton('customer/session')->getNetcore()):?>
+	<script>
+	    <?php echo "window.onload = function() {".$netcore."}"; ?>
+	</script>
+        <?php Mage::getSingleton('customer/session')->unsNetcore("");?>
+    <?php endif;?>
+<!-- Netcore Action End --> 
+<?php endif;?>
+
+<!-- Suggestion Product Begin-->
+<?php if (Mage::getStoreConfig('suggestion/general/enable') == 1):?>
+    <?php if(!empty($suggestion = Mage::getSingleton('customer/session')->getSuggestion())):?>
+	<script type="text/javascript" src="<?php echo $js_url."lib/suggestion.js?q=".$queryfier; ?>"></script>
+	<script>
+	    jQuery(document).ready(function(){
+		<?php echo $suggestion;?>
+	    });
+	</script> 
+	<?php Mage::getSingleton('customer/session')->unsSuggestion("");?>
+    <?php endif; ?> 
+<?php endif; ?> 
+<!-- End Suggestion Product --> 
+<!-- Enhanced Ecom Product Begin-->
+<?php
+if (Mage::getStoreConfig('enhanced_ecom/general/enable') == 1):
+    $enhanced_ecom = Mage::getSingleton('customer/session')->getEnhancedEcom();
+    if ($enhanced_ecom):
+        ?>
+        <script>
+            jQuery(document).ready(function(){
+        <?php echo $enhanced_ecom; ?>
+        </script>  
+        <?php Mage::getSingleton('customer/session')->unsEnhancedEcom(""); ?>
+    <?php endif; ?> 
+<?php endif; ?> 
+<!-- End Enhanced Ecom Product --> 
+
+<!-- Choose Out of stock product Begin -->
+<?php if (Mage::getStoreConfig('eventcart_config/config/show_checkout_stock') == 1):
+    $languages_checkout_stock = $product_helper->getLanguagesList('checkout_stock');
+    ?>
+<script type="text/javascript" src="<?php echo $CHECKOUT_OUTSTOCK_PRODUCT_SCRIPT; ?>"></script>
+<script type="text/javascript" src="<?php echo $PS_SCRIPT; ?>"></script>
+<script type="text/javascript">
+    var ps = new PrivateSecure(<?php echo json_encode($hashSessionKey);?>);    
+    var checkout_outstock_product = new CheckoutOutStockProduct("<?php echo $skin_url;?>",<?php echo json_encode($languages_checkout_stock, JSON_UNESCAPED_UNICODE);?>);
+//    checkout_outstock_product.checkCartHasOutStockProductInCart();
+</script>
+<div id="popup-out-stock-product">
+    <div class="popup-out-stock-product-detail" style="display: none;">
+        <div class="header">
+            <div>
+               <?php echo $languages_checkout_stock['choose_replace_product'];?>
+            </div>
+           
+            <div class="lg-close"  onclick="checkout_outstock_product.hidePopupOutStockProduct();">
+                <img src="<?php echo $skin_url . 'frontend/ma_vanese/fahasa/images/ico_delete_gray.svg?q=' . $queryfier; ?>"/>
+            </div>
+        </div>
+        <div class="content">
+            <div class='block-title'><?php echo $languages_checkout_stock['product_not_available'];?></div>
+            <div class="main-product">
+            </div>
+            <div class='block-title'><?php echo $languages_checkout_stock['product_recommendation'];?></div>
+            <div class="list-product" >
+            </div>
+        </div>
+    </div>
+</div>
+<?php endif; ?> 
+<!-- Choose Out of stock product End --> 

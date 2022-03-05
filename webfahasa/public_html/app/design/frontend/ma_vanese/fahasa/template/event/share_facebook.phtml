@@ -1,0 +1,193 @@
+<?php
+
+$block_data = $this->getData('data');
+$sharedLink = $this->getData('sharedLink');
+$eventId = $this->getData('eventId');
+$isMobile = Mage::helper('fhsmobiledetect')->isMobile();
+?>
+
+
+<style type="text/css">
+    
+    #share-fb-button{
+        border-radius: 8px;
+        color: #fff;
+        background-color: #4267B2;
+        display: inline-block;
+        padding: 5px 14px;
+        position: absolute;  bottom: 2%; 
+        left: 50%; 
+        transform: translate(-50%, -50%); 
+    }
+    
+    #share-fb-button .share-title{
+        font-size: 16px;
+        line-height: 2em;
+        margin: 0px 5px;
+    }
+    
+    #share-fb-button .share-title-mobile{
+        font-size: 12px;
+        line-height: 2em;
+        margin: 0px 5px;
+    }
+    
+    .share-fb-block{
+
+    }
+    
+    #event-share-fb-coupons{
+        display: none;
+    }
+    
+    .share-fb-block-body{
+        padding: 10px;
+        margin: 5px;
+        border: 5px dashed #676767;
+        border-radius: 20px;
+        background: #fff;
+    }
+
+    .share-fb-block-discount{
+        font-size: 24px;
+        font-weight: bold;
+        text-align: center;
+        background-color: #00a4dd;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        padding: 15px;
+        color: #fff;
+    }
+    
+    .share-fb-block-code{
+        font-size: 40px;
+        border-bottom: 4px #757575 dotted;
+        text-align: center;
+        padding: 10px 0px;
+        margin: 5px 0px;
+        font-weight: bold;
+        color: #f74417;
+        font-family: serif;
+    }
+
+    .share-fb-block-desc{
+        margin: 15px;
+        text-align: center;
+        font-size: 20px;
+    }
+    .sharedIcon{
+        font-size: 20px;
+    }
+    
+    .share-fb-container{
+        display: inline-block; position: relative; margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .share-fb-counter{
+        padding: 4px;
+        background-color: #ffffff;
+        border-radius: 4px;
+        color: #4267b2;
+        font-size: 16px;
+        width: 80%;
+        margin: 0 auto;
+        text-shadow: none;
+        margin-bottom: 3px;
+    }
+</style>
+ 
+<div style="text-align: center;">
+    <div class="share-fb-container">
+        <div id="share-fb-button" class="btn btn-primary">
+            <i  class="fa fa-facebook sharedIcon"></i>
+            <span class="<?php if($isMobile){echo "share-title-mobile"; } else {echo "share-title";}?>">Share Facebook</span>
+            <div class="share-fb-counter"></div>
+        </div>
+        <img src="<?php if($isMobile){echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . $this->getData('urlMobileImg');} 
+        else{echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . $this->getData('urlWebImg');}?>"/>
+    </div>
+    
+    <div id="event-share-fb-coupons" class="row">
+        <div class="col-md-4 share-fb-block">
+            <div class="share-fb-block-body">
+                <div class="share-fb-block-discount"></div>
+                <div class="share-fb-block-code"></div>
+                <div class="share-fb-block-desc"></div>
+                <div class="fhsrule-buffet-coupon-remaining">
+                    <div class="fhsrule-buffet-coupon-label"></div>
+                    <div class="progress" style="margin-bottom: 5px;border-radius: 0px;height: 10px;">
+                        <div class="progress-bar" role="progressbar" style="width: 99%;" aria-valuenow="99" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let block_share_fb_data = '<?php echo $block_data; ?>';
+    
+    $jq.ajax({
+            url: "/node_api/fhsrule/sharefb",
+            method: 'post',
+            data: {
+                data: block_share_fb_data,
+                event_id: "<?php echo $eventId; ?>"
+            },
+            success: function (data) {
+                if(!data.result){
+                    return;
+                }
+                
+                let $share_coupons = $jq("#event-share-fb-coupons");
+                $share_coupons.empty();
+                $share_coupons.show();
+                let rules = data['rules'];
+                for(let i=0; i < rules.length; i++){
+                    let rule = rules[i];
+                    let remain = parseInt(rule['uses_per_coupon']) - parseInt(rule['times_used']);
+                    let progress_ratio = 100 - parseInt(parseFloat(rule['times_used']) / parseFloat(rule['uses_per_coupon']) * 100);
+                    
+                    let item = "<div class='col-md-4 share-fb-block'><div class='share-fb-block-body'>"
+                            + "<div class='share-fb-block-discount'>" + rule['discount'] + "</div>"
+                            + "<div class='share-fb-block-code'>" + rule['code'] + "</div>"
+                            + "<div class='share-fb-block-desc'>" + rule['description'] + "</div>"
+                            + "<div class='fhsrule-buffet-coupon-remaining'>"
+                            + "<div class='fhsrule-buffet-coupon-label'>Còn "+ remain +" Coupons</div>"
+                            + "<div class='progress' style='margin-bottom: 5px;border-radius: 0px;height: 10px;'>"
+                            + "<div class='progress-bar' role='progressbar' style='width: " + progress_ratio + "%;' aria-valuenow='" + progress_ratio + "' aria-valuemin='0' aria-valuemax='100'></div>"
+                            + "</div></div>";
+                    
+                    $share_coupons.append($jq(item));
+                }
+                
+                $share_counter = $jq(".share-fb-counter");
+                $share_counter.text(data['share_number'] + ' shares');
+            }
+    });
+    
+    document.getElementById('share-fb-button').onclick = function () {
+        let sharedLink = "<?php echo $sharedLink; ?>";
+        let eventId = "<?php echo $eventId; ?>";
+        FB.ui({
+            method: 'share',
+            name: 'Facebook Dialogs',
+            href: sharedLink
+        }, function (response) {
+           if (response && !response.error_message) {
+                $jq.ajax({
+                    url: "<?php echo $this->getUrl('event/index/shareCms', array('_secure' => true)) ?>",
+                    method: 'post',
+                    data: {
+                        eventId: eventId,
+                        sharedLink: sharedLink
+                    },
+                    success: function (data) {
+
+                    }
+                });
+            }
+        });
+    }
+</script>

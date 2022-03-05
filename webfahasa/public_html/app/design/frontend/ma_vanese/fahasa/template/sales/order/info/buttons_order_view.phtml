@@ -1,0 +1,632 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2014 X.commerce, Inc. (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+
+<?php $_order = $this->getOrder() ?>
+<?php
+$customer = Mage::getSingleton('customer/session')->getCustomer();
+$increment_id = $_order->getData('increment_id');
+$customer_email = $_order->getData('customer_email');
+$email = $customer->getRealEmail();
+if((substr($customer_email, 0, 9) === "notverify") 
+    && (substr($customer_email, -11) === "@fahasa.com")){
+    if(!empty($email)){
+	$customer_email = $email;
+    }else{
+	$customer_email = '';
+    }
+}
+
+$surveyComplete = Mage::helper('ykienkhachhang')->checkSurveyComplete($increment_id);
+$product_quality = array
+	(
+	array("1","Rất kém"),
+	array("2","Kém"),
+	array("3","Trung bình"),
+	array("4","Tốt"),
+	array("5","Rất tốt")
+	);
+$delivery_quality = array
+	(
+	array("1","Rất Chậm"),
+	array("2","Chậm"),
+	array("3","Bình Thường"),
+	array("4","Nhanh"),
+	array("5","Rất nhanh")
+	);
+$delivery_men = array
+	(
+	array("1","Khó chịu, cáu gắt"),
+	array("2","Bình Thường"),
+	array("3","Vui vẻ, dễ chịu")
+	);
+$delivery_contact = array
+	(
+	array("1","Không"),
+	array("2","Có")
+	);
+$customer_service = array
+	(
+	array("0","Tôi không liên lạc với tổng đài Fahasa.com"),
+	array("1","Không hài lòng"),
+	array("2","Hài lòng"),
+	array("3","Rất hài lòng")
+	);
+shuffle($product_quality);
+shuffle($delivery_quality);
+shuffle($delivery_men);
+shuffle($delivery_contact);
+shuffle($customer_service);
+
+if($_order->getStatus() === "pending_payment"){
+    $timeout = Mage::getStoreConfig('repayment_config/config/timeout');
+    if(!empty($timeout)){
+	$timeout_datetime = date('Y-m-d H:i:s', strtotime("+7 hours "."-".$timeout." seconds"));
+    }
+    $created_at = date('Y-m-d H:i:s', strtotime('+7 hours', strtotime($_order->getCreatedAt())));
+    $timeout_countdown = strtotime($created_at) - strtotime($timeout_datetime);
+}
+
+?>
+
+<?php $reason = Mage::helper('cancelorder')->getReasonCancel() ?>
+<div style="text-align:center;" class="order-view-buttons-color">
+    <!--<input type="button" class="order-view-buy-again" value="Mua Lai">-->
+    <!--<span class="back-link"><a href="<?php // echo Mage::getUrl('sales/order/history') ?>"><small>&laquo; </small><?php // echo $this->__('Back') ?></a></span>-->
+    <?php // if ($this->helper('rss/order')->isStatusNotificationAllow()): ?>
+         <!--<a href="<?php // echo $this->helper('rss/order')->getStatusHistoryRssUrl($_order) ?>" class="link-rss f-none"><?php // echo $this->__('Subscribe to Order Status') ?></a>-->
+    <?php // endif; ?>
+    <div class="order-view-buttons-color-child">
+	<?php if(strtotime($created_at) > strtotime($timeout_datetime) && ($_order->getStatus() == 'pending_payment')):?>
+	    <a href="/repayment/index/payment/id/<?php echo Mage::helper("event/data")->encryptor('encrypt',$_order->getIncrementId());?>" id="repayment_btn" class="link-reorder order-view-buy-again-btn"><?php echo $this->__('Re-payment') ?> <span><?php echo ($timeout_countdown > 0)?'&nbsp;('.$timeout_countdown.'s)':'';?></span></a>
+	    <script>
+		let repayment_countdown_time = <?php echo $timeout_countdown;?>;
+		let repayment_countdown_avalible = true;
+		setInterval(repaymentCountDown, 1000);
+		function repaymentCountDown(){
+		    if(!repayment_countdown_avalible){return;}
+		    repayment_countdown_time--;
+		    if(repayment_countdown_time < 1){
+			$jq('#repayment_btn').attr('href','<?php echo $this->getReorderUrl($_order) ?>');
+			$jq('#repayment_btn').text('<?php echo $this->__('Reorder') ?>');
+			repayment_countdown_avalible = false;
+		    }else{
+			$jq('#repayment_btn span').html("&nbsp;("+repayment_countdown_time+"s)");
+		    }
+		}
+	    </script>
+	<?php elseif ($this->helper('sales/reorder')->canReorder($_order)) :?> 
+	    <a href="<?php echo $this->getReorderUrl($_order) ?>" class="link-reorder order-view-buy-again-btn"><?php echo $this->__('Reorder') ?></a>
+	<?php endif;?>
+	    
+	<?php if ($_order->getStatus() !== "canceled" &&
+		    $_order->getStatus() !== "cancelled" &&
+		    $_order->getStatus() !== "complete" &&
+		    $_order->getStatus() !== "closed" && 
+		    $_order->getStatus() !== 'processing' && 
+		    $_order->getStatus() !== 'delivering'&& 
+		    $_order->getStatus() !== 'pending_payment'&& 
+		    $_order->getStatus() !== 'packed' ) :
+		?>
+		<a href="#" id="cancel-order" class="order-view-review-btn"><?php echo $this->__('Cancel order') ?></a>
+	<?php endif; ?>
+	    
+	<?php if ($_order->getStatus() == "complete" && !empty($customer_email)):?>
+	    <a href="#" id="review-order" class="order-view-review-btn"><?php echo $this->__('Review order') ?></a>
+	<?php endif; ?>
+    </div>
+</div>   
+<div id="cancel-order-cover"></div>
+<div id="popup-cancel-order">
+    <!--    <button id = "coupon-message-close">X</button>-->
+    <div class = "col-sm-12 col-md-12 col-sms-12 popup-cancel-order popup-cancel-order-title"><?php echo $this->__("Lý do huỷ đơn hàng") ?></div>
+    <div class = "col-sm-12 col-md-12 col-sms-12 form-group popup-cancel-order popup-cancel-order-content">
+        <div class="form-group">
+            <form action="" method="POST">
+                <select id="reason" name ="reason_cancel_order" class="form-control">
+                    <option value="0"><?php echo '----- Chọn lý do muốn huỷ đơn hàng'; ?></option>
+                    <?php foreach ($reason as $rs): ?>
+                        <option value="<?php echo $rs['reason_id'] ?>"><?php echo $rs['reason_description']; ?></option>
+                    <?php endforeach; ?>
+                    <option value="9"><?php echo 'Khác'; ?></option>
+                </select>
+            </form>
+        </div>
+
+        <div id="other-cancel-reason" style="display: none; text-align: left;" >
+            <?php echo 'Nhập vào lý do khác'; ?>
+            <textarea id="other-reason-input" cols="5" rows="2" name="other-reason" maxlength="100"></textarea>
+            <h6 class="pull-right" id="count-message"></h6>
+        </div>
+    </div>
+
+    <div class="col-sm-12 col-md-12 col-sms-12 confirm-cancel-order" style="padding: 20px;">
+        <button id="cancel" type="button" onclick="closeCancelOrderBox()" class="cancel-order-confirm cancel">
+            <span>
+                <?php echo $this->__('Đóng lại') ?>                                    
+            </span>
+        </button>
+        <button id="confirm" type="submit" onclick="reasoncancel()" class="cancel-order-confirm" disabled="true">
+            <span>
+                <?php echo $this->__('Ok') ?>                                    
+            </span>
+        </button>
+
+    </div>
+
+</div>
+
+<div id="cancel-order-cover"></div>
+
+<div id="popup-review-order">
+    <div class="popup-review-order-header">
+        Ý KIẾN KHÁCH HÀNG
+    </div>
+    <div class="popup-review-order-body">
+        <div id="order-info" class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding-bottom: 20px;">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="text-align: left; padding_left: 10px;">
+                <label style="font-weight: bold;">Đơn Hàng</label>
+                <input type="text" class="form-control review-order-textbox" id="order_id" name="order_id" readonly value="<?php echo $increment_id; ?>">
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="text-align: left; padding-left: 10px;">
+                <label style="font-weight: bold;">Email</label>
+                <input type="email" class="form-control review-order-textbox" id="email" readonly name="email" value="<?php echo $customer_email; ?>">
+            </div>
+        </div>
+        <div id="ykienkhachhang" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 popup-review-order-content">
+	    <?php if($surveyComplete == 1):?>
+		<div class="row">
+		    <div class="survey_success col-lg-12 col-md-12 col-sm-12 col-xs-12 bg-success">
+			<i class="fa fa-check-circle fa-3x" aria-hidden="true"></i>
+			<span>Bạn đã hoàn thành đánh giá cho đơn hàng này.</span>
+		    </div>
+		</div>
+	    <?php else:?>
+		<form class="form-horizontal" id="ykienkhachhang_form" method="post" action="<?php echo Mage::getUrl('ykienkhachhang/index/post'); ?>" enctype="multipart/form-data">
+		    <div class="row err_message">
+			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+			    <i class="fa fa-exclamation" aria-hidden="true"></i>
+			    <span></span>
+			</div>
+		    </div>
+		    <div class="phan1 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+			<div class="row" style="padding-left: 30px;padding-right: 10px;">
+			    <div class ="col-lg-12 col-md-12 col-sm-12 col-xs-12 flex-center">
+				<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 flex-center">
+				    <div class ="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+					<center><img src="<?php echo $this->getSkinUrl('images/ykienkhachhang/Book-icon.png') ?>" style="width: 40px;"></center>
+				    </div>
+				    <div class ="col-lg-9 col-md-9 col-sm-9 col-xs-9 review-order-body-icon-text">
+					<center>CHẤT LƯỢNG SẢN PHẨM</center>
+					</div>
+				</div>
+				<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+				    <div class="container" style="text-align: left;">
+					<p><b>1. Chất Lượng Sản Phẩm</b></p>
+					<form action="" method="POST">
+					    <select id="product" class="form-control review-order-combo">
+						<option value="0"><?php echo 'Đánh giá chất lượng sản phẩm'; ?></option>
+						<?php foreach($product_quality as $item): ?>
+						    <option value="<?php echo $item[0]?>"><?php echo $item[1]; ?></option>
+						<?php endforeach; ?>
+					    </select>
+					</form>
+					<div>
+					    <div class="sanpham1-note input-note">
+						<label for="sanpham1-note">Fahasa.com chân thành xin lỗi vì những trải nghiệm không tốt của quý khách. Quý khách vui lòng chia sẻ những trải nghiệm không tốt về chất lượng sản phẩm trong đơn hàng vừa qua, để Fahasa.com có thể cải thiện chất lượng sản phẩm lần sau.</label>
+						<textarea cols="4" id="sanpham1-note" name="sanpham1-note" class="form-control"></textarea>
+					    </div>
+					</div>
+				    </div>
+				</div>
+			    </div>
+			</div>
+		    </div>
+		    <div class="phan2 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+			<div class="row" style="padding-left: 30px;padding-right: 10px;">
+			    <div class ="col-lg-12 col-md-12 col-sm-12 col-xs-12 flex-center">
+				<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 flex-center">
+				    <div class ="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+					<center><img src="<?php echo $this->getSkinUrl('images/ykienkhachhang/Shipping-icon.png') ?>" style="width: 40px;"></center>
+				    </div>
+				    <div class ="col-lg-9 col-md-9 col-sm-9 col-xs-9 review-order-body-icon-text">
+					<center>CHẤT LƯỢNG GIAO HÀNG</center>
+					</div>
+				</div>
+				<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+				    <div class ="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+				<div class="container" style="text-align: left;">
+				    <p><b>1. Thời Gian Giao Hàng</b></p>
+				    <form action="" method="POST">
+					<select id="delivery-time" class="form-control review-order-combo">
+					    <option value="0"><?php echo 'Đánh giá thời gian giao hàng'; ?></option>
+					    <?php foreach($delivery_quality as $item): ?>
+						<option value="<?php echo $item[0]?>"><?php echo $item[1]; ?></option>
+					    <?php endforeach; ?>
+					</select>
+				    </form>
+
+				    <div>
+					<div class="giaohang1-note input-note">
+					    <textarea id="giaohang1-note" name="giaohang1-note" class="form-control" rows="2"></textarea>
+					</div>
+				    </div>
+
+				    <p><b>2. Thái Độ Nhân Viên Giao Hàng</b></p>
+				    <form action="" method="POST">
+					<select id="delivery-men" class="form-control review-order-combo">
+					    <option value="0"><?php echo 'Đánh giá thái độ nhân viên giao hàng'; ?></option>
+					    <?php foreach($delivery_men as $item): ?>
+						<option value="<?php echo $item[0]?>"><?php echo $item[1]; ?></option>
+					    <?php endforeach; ?>
+					</select>
+				    </form>
+
+				    <div>
+					<div class="giaohang2-note input-note">
+					    <textarea id="giaohang2-note" name="giaohang2-note" class="form-control" rows="2"></textarea>
+					</div>
+				    </div>
+				    <p><b>3. Nhân Viên Giao Hàng Liên Hệ Trước?</b></p>
+				    <form action="" method="POST">
+					<select id="delivery-contact" name ="reason_cancel_order" class="form-control review-order-combo">
+					    <?php foreach($delivery_contact as $item): ?>
+						<option value="<?php echo $item[0]?>"><?php echo $item[1]; ?></option>
+					    <?php endforeach; ?>
+					</select>
+				    </form>
+				</div>
+			    </div>
+				</div>
+			    </div>
+			</div>
+		    </div>
+		    <div class="phan3 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+			<div class="row" style="padding-left: 30px;padding-right: 10px;">
+			    <div class ="col-lg-12 col-md-12 col-sm-12 col-xs-12 flex-center">
+				<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 flex-center">
+				    <div class ="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+					<center><img src="<?php echo $this->getSkinUrl('images/ykienkhachhang/Call-icon.png') ?>" style="width: 40px;"></center>
+				    </div>
+				    <div class ="col-lg-9 col-md-9 col-sm-9 col-xs-9 review-order-body-icon-text">
+					<center>CHĂM SÓC KHÁCH HÀNG</center>
+					</div>
+				</div>
+				<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+				    <div class="container" style="text-align: left;">
+					<p><b>1. Chất Lượng Chăm Sóc Khách Hàng FAHASA.COM</b></p>
+					<form action="" method="POST">
+					    <select id="customer-service" class="form-control review-order-combo">
+						<option value="-1"><?php echo 'Đánh giá chất lượng chăm sóc khách hàng Fahasa.com'; ?></option>
+					    <?php foreach($customer_service as $item): ?>
+						<option value="<?php echo $item[0]?>"><?php echo $item[1]; ?></option>
+					    <?php endforeach; ?>
+					    </select>
+					</form>
+
+					<div>
+					    <div class="cskh1-note input-note">
+						<label for="cskh1-note">Fahasa.com chân thành xin lỗi vì những trải nghiệm không tốt của quý khách. Quý khách vui lòng đóng góp ý kiến để Fahasa.com hoàn  thiện hơn.</label>
+						<textarea id="cskh1-note" name="cskh1-note" class="form-control"></textarea>
+					    </div>
+					</div>
+				    </div>
+				</div>
+			    </div>
+			</div>
+		    </div>
+		</form>
+	    <?php endif;?>
+        </div>
+	<div class="clear"></div>
+        <div class="popup-review-order-footer btn-submit">
+            <button id="cancel" type="button" onclick="closeReviewOrderBox()" class="review-order-confirm cancel">
+		<span>
+		    <?php echo $this->__('Đóng lại') ?>                                    
+		</span>
+	    </button>
+	    <button id="singlebutton" type="submit" onclick="revieworder()" name="singlebutton" class="review-order-confirm confirm">
+		<span>
+		    <?php echo $this->__('Đánh Giá') ?>                                    
+		</span>
+	    </button>
+        </div>
+    </div>
+</div>
+
+
+<div id="noti-success">
+    <div class="noti-success icon"><i class="fa fa-thumbs-o-up fa-8x" aria-hidden="true"></i></div>
+    <div class="noti-success top"><?php echo 'Cảm ơn bạn đã gửi nhận xét cho đơn hàng #' . $increment_id; ?></div>
+    <?php if(Mage::getStoreConfig("ykienkhachhang/general/enable")) : ?>
+        <div class="noti-success bot">Fahasa.com xin gửi tặng bạn mã giảm giá 20k cho đơn hàng từ 300k, vào <a style="text-decoration: underline; color: #007bff;" href='/tryout/voucher'>ví voucher</a> để kiểm tra và sử dụng ngay!</div>
+    <?php endif;?>
+    <button id="cancel" type="button" onclick="closeNotiBox()" class="noti-success cancel">
+        <span>
+            <?php echo $this->__('Đóng lại') ?>                                    
+        </span>
+    </button>
+</div>
+<script >
+    const order_id = "<?php echo $increment_id ?>";
+    const customer_email = "<?php echo $customer_email ?>";
+    var order_status = "<?php echo $_order->getStatus(); ?>";
+    var sanpham1 = null;
+    var giaohang1 = null;
+    var giaohang2 = null;
+    var giaohang3 = null;
+    var cskh1 = null;
+    jQuery(document).ready(function () {
+        jQuery('#cancel-order').click(function () {
+            document.getElementById('other-reason-input').value = "";
+            jQuery('#cancel-order-cover').fadeIn();
+            jQuery('#popup-cancel-order').fadeIn();
+        });
+
+        jQuery('#review-order').click(function () {
+            openReviewPopup();
+        });
+        function openReviewPopup(){
+            document.getElementById('other-reason-input').value = "";
+            jQuery('#cancel-order-cover').fadeIn();
+            jQuery('#popup-review-order').fadeIn();
+        }
+
+        $('cancel').click(function () {
+            jQuery('#cancel-order-cover').fadeOut();
+            jQuery('#popup-cancel-order').fadeOut();
+        });
+
+        $('reason').on('change', function () {
+            if (this.value == 9) {
+                jQuery('#other-cancel-reason').show();
+            } else {
+                jQuery('#other-cancel-reason').hide();
+            }
+            if (this.value == 0) {
+                document.getElementById("confirm").disabled = true;
+                document.getElementById("confirm").classList.remove("enabled");
+            } else {
+                document.getElementById("confirm").disabled = false;
+                document.getElementById("confirm").classList.add("enabled");
+            }
+        });
+
+        $('product').on('change', function () {
+            var check_product = this.value;
+            if (check_product == 1 || check_product == 2 || check_product == 3) {
+                $jq(".sanpham1-note").show();
+                $jq("#sanpham1-note").focus();
+            } else {
+                $jq(".sanpham1-note").hide();
+            }
+        });
+        $('delivery-time').on('change', function () {
+            var check_giaohang1 = this.value;
+            if (check_giaohang1 == 1 || check_giaohang1 == 2) {
+                $jq(".giaohang1-note").show();
+                $jq("#giaohang1-note").focus();
+            } else {
+                $jq(".giaohang1-note").hide();
+            }
+        });
+        $('delivery-men').on('change', function () {
+            var check_giaohang2 = this.value;
+            if (check_giaohang2 == 1) {
+                $jq(".giaohang2-note").show();
+                $jq("#giaohang2-note").focus();
+            } else {
+                $jq(".giaohang2-note").hide();
+            }
+        });
+
+        $('customer-service').on('change', function () {
+            var check_cskh1 = this.value;
+            if (check_cskh1 == 1) {
+                $jq(".cskh1-note").show();
+                $jq("#cskh1-note").focus();
+            } else {
+                $jq(".cskh1-note").hide();
+            }
+        });
+        
+        // ?open=popup-review-order for open popup on url
+        var isPopupopen = Helper.getQueryParam('open');
+        if((isPopupopen == "popup-review-order") && (order_status == "complete")){
+            openReviewPopup();
+        }
+        
+    });
+    function closeCancelOrderBox() {
+        jQuery('#cancel-order-cover').fadeOut();
+        jQuery('#popup-cancel-order').fadeOut();
+        hideLoadingAnimation();
+        return;
+    }
+    
+    function closeNotiBox() {
+        jQuery('#noti-success').fadeOut();
+        jQuery('#cancel-order-cover').fadeOut();
+        window.location.reload();
+        hideLoadingAnimation();
+        return;
+    }
+    
+    function closeReviewOrderBox() {
+        jQuery('#popup-review-order').fadeOut();
+        jQuery('#cancel-order-cover').fadeOut();
+        hideLoadingAnimation();
+        return;
+    }
+
+    function reasoncancel() {
+        var reason_desc = null;
+        $reason_id = $jq("#reason").val();
+        if ($reason_id == "9") {
+            reason_desc = document.getElementById("other-reason-input").value;
+        } else {
+            reason_desc = null;
+        }
+        var parameters = {
+            "order_id": '<?php echo $_order->getEntityId();?>',
+            "increment_id": order_id,
+            "customer_email": customer_email,
+            "reason_id": $reason_id,
+            "reason_description": reason_desc
+        };
+        
+        document.getElementById("confirm").disabled = true;
+        
+        showLoadingAnimation();
+        $jq.ajax({
+            url: "<?php echo $this->getUrl('sales/order/insertordercancelreason') ?>",
+            type: 'post',
+            dataType : "json",
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+            data: parameters,
+            error: function(){
+                hideLoadingAnimation();
+                document.getElementById("confirm").disabled = false;
+            },
+            success: function (data) {
+                hideLoadingAnimation();
+                document.getElementById("confirm").disabled = false;
+                jQuery('#cancel-order-cover').fadeOut();
+                jQuery('#popup-cancel-order').fadeOut();
+		location.reload();
+            }
+        });
+    }
+
+    function revieworder() {
+        var sanpham1_note = null;
+        var giaohang1_note = null;
+        var giaohang2_note = null;
+        var cskh1_note = null;
+        var mess = null;
+        var sanpham1 = document.getElementById("product").value;
+        var giaohang1 = document.getElementById("delivery-time").value;
+        var giaohang2 = document.getElementById("delivery-men").value;
+        var giaohang3 = document.getElementById("delivery-contact").value;
+        var cskh1 = document.getElementById("customer-service").value;
+        console.log(cskh1);
+        if (sanpham1 == 0) {
+            mess = "<?php echo $this->__('Vui lòng chọn 1 lựa chọn cho chất luợng sản phẩm.'); ?>";
+            alert(mess);
+            return false;
+        } else if (giaohang1 == 0) {
+            mess = "<?php echo $this->__('Vui lòng chọn 1 lựa chọn cho thời gian giao hàng.'); ?>";
+            alert(mess);
+            return false;
+        } else if (giaohang2 == 0) {
+            mess = "<?php echo $this->__('Vui lòng chọn 1 lựa chọn cho thái độ nhân viên giao hàng.'); ?>";
+            alert(mess);
+            return false;
+        } else if (cskh1 == -1) {
+            mess = "<?php echo $this->__('Vui lòng chọn 1 lựa chọn cho chất lượng chăm sóc khách hàng Fahasa.com.'); ?>";
+            alert(mess);
+            return false;
+        } else {
+            if (sanpham1 == 1 || sanpham1 == 2 || sanpham1 == 3) {
+                sanpham1_note = document.getElementById("sanpham1-note").value;
+            } else {
+                sanpham1_note = "";
+            }
+
+            if (giaohang1 == 1 || giaohang1 == 2) {
+                giaohang1_note = document.getElementById("giaohang1-note").value;
+            } else {
+                giaohang1_note = "";
+            }
+            if (giaohang2 == 1) {
+                giaohang2_note = document.getElementById("giaohang2-note").value;
+            } else {
+                giaohang2_note = "";
+            }
+            if (cskh1 == 1) {
+                cskh1_note = document.getElementById("cskh1-note").value;
+            } else {
+                cskh1_note = "";
+            }
+            showLoadingAnimation();
+            const URL_Y_KIEN_KHACH_HANG = '/ykienkhachhang/index/post';
+            new Ajax.Request(
+                    URL_Y_KIEN_KHACH_HANG, {
+                        method: 'post',
+                        parameters: {
+                            email: "<?php echo $customer_email; ?>",
+                            order_id: "<?php echo $increment_id; ?>",
+                            sanpham1: sanpham1,
+                            sanpham1_note: sanpham1_note,
+                            giaohang1: giaohang1,
+                            giaohang1_note: giaohang1_note,
+                            giaohang2: giaohang2,
+                            giaohang2_note: giaohang2_note,
+                            giaohang3: giaohang3,
+                            cskh1: cskh1,
+                            cskh1_note: cskh1_note
+                        },
+                        onSuccess: function () {
+                            hideLoadingAnimation();
+                            jQuery('#popup-review-order').fadeOut();
+                            jQuery('#noti-success').fadeIn();
+                            return;
+                        }
+                    });
+        }
+    }
+</script>
+
+<script type="text/javascript">
+//<![CDATA[
+    var curCount = 0;
+    $jq("#count-message").html(curCount + " ký tự");
+    $jq("#other-reason-input").keyup(function () {
+        var count = $jq("#other-reason-input").val().length;
+        $jq("#count-message").html(count + " ký tự");
+    });
+//]]>
+</script>
+
+<script type="text/javascript">
+    $jq(document).ready(function () {
+        new Ajax.Request(
+                '<?php echo $this->getUrl('ykienkhachhang/index/checkExistOrder/', array('_secure' => true)); ?>', {
+                    method: 'post',
+                    parameters: {
+                        customerEmail: "<?php echo $customer_email; ?>",
+                        orderId: "<?php echo $increment_id; ?>"
+                    },
+                    onSuccess: function (transport) {
+                        var response = transport.responseText.evalJSON(true);
+                        if (response.message == 0) {
+                            $jq(".err_message span").html("<?php echo $this->__('Thông tin đơn hàng không chính xác.'); ?>");
+                            $jq(".err_message").show();
+                        }
+                    }
+                });
+    });
+</script>

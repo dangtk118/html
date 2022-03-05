@@ -1,0 +1,182 @@
+<?php
+/**
+ * Magento
+ *
+ * @category    design
+ * @package     meigeetheme_default
+ * @copyright   Copyright (c) 2012 MeigeeTeam. (http://www.meigeeteam.com)
+ */
+?>
+<?php 
+	$_product = $this->getProduct();
+	$helpImg = $this->helper('ThemeOptionsBizarre/images');
+	$meigee_bizarre_productpage = MAGE::helper('ThemeOptionsBizarre')->getThemeOptionsBizarre('meigee_bizarre_productpage');
+	if ($_product->getBizarreRelatedpos() == 0) {
+		$rel_pos = $meigee_bizarre_productpage['general']['relatedposition'];
+	}
+	else {
+		switch ($_product->getBizarreRelatedpos()) {
+			case 2:
+				$rel_pos = 'sidebar';
+				break;
+			case 3:
+				$rel_pos = 'bottom';
+				break;
+			default:
+				$rel_pos = 'sidebar';
+				break;
+		}
+	}
+	if ($_product->getBizarreRelatedmode() == 0) {
+		$view_mode = $meigee_bizarre_productpage['general']['relatedviewmode'];
+	} else {
+		switch ($_product->getBizarreRelatedmode()) {
+			case 1:
+				$view_mode = 0;
+				break;
+			case 2:
+				$view_mode = 1;
+				break;
+			default:
+				$view_mode = 0;
+				break;
+		}
+	}
+	
+	
+	
+	if ($rel_pos == 'sidebar' && $view_mode == 0) {
+		$productpage_additional = $meigee_bizarre_productpage['additional'];
+		if ($_product->getBizarrePrrelatedcontent()):
+			echo $_product->getBizarrePrrelatedcontent();
+		elseif ($productpage_additional['product_related_content']):
+			$product_related_blocks = explode(",", $productpage_additional['product_related_content']);
+			foreach ($product_related_blocks as $product_related_block) {
+				echo '<div class="product-custom-related">' . $this->getLayout()->createBlock('cms/block')->setBlockId(trim($product_related_block))->toHtml() . '</div>';
+			};
+		elseif($this->getItems()->getSize()):
+			if ($_product->getBizarrePrrelated() == 0) {
+				$productpage_collateral_related = $meigee_bizarre_productpage['general']['collateral_related'];
+			} else {
+				switch ($_product->getBizarrePrrelated()) {
+					case 1:
+						$productpage_collateral_related = 'related_slider';
+						break;
+					case 2:
+						$productpage_collateral_related = 'related_list';
+						break;
+				}
+			}
+?>
+<div class="related-wrapper">
+	<div class="block block-related large-image">
+		<div class="block-content">
+			<div <?php if ($productpage_collateral_related == 'related_slider' && count($this->getItems())>2): ?>id="block-related-slider"<?php else:?> class="no-slider" <?php endif; ?>>
+				<ul class="carousel-ul">
+				<?php $i=0; foreach($this->getItems() as $_item): ?>
+					<li class="item">
+						<div class="product">
+							<div class="grid-indent">
+								<div class="product-details">
+									<p class="product-name"><a href="<?php echo $_item->getProductUrl() ?>"><?php echo $this->escapeHtml($_item->getName()) ?></a></p>
+									<?php echo $this->getPriceHtml($_item, true, '-related') ?>
+									<?php if(!$_item->isComposite() && $_item->isSaleable()): ?>
+										<?php if (!$_item->getRequiredOptions()): ?>
+											<label class="related-checkbox-label" for="related-checkbox<?php echo $_item->getId() ?>"><span><?php echo $this->__('Select'); ?></span><i class="fa fa-angle-right"></i>
+												<input type="checkbox" class="checkbox related-checkbox" id="related-checkbox<?php echo $_item->getId() ?>" name="related_products[]" value="<?php echo $_item->getId() ?>" />
+											</label>
+										<?php endif; ?>
+									<?php endif; ?>
+								</div>
+								<a href="<?php echo $_item->getProductUrl() ?>" title="<?php echo $this->escapeHtml($_item->getName()) ?>" class="product-image"><img <?php echo $helpImg->getImgSources($_item, 'thumbnail', 480, null); ?> alt="<?php echo $this->escapeHtml($_item->getName()) ?>" /></a>
+							</div>
+						</div>
+					</li>
+				<?php $i++; endforeach ?>
+				</ul>
+			</div>
+			<p class="related-products-button"><a href="#" onclick="selectAllRelated(this); return false;"><?php echo $this->__('select all') ?></a></p>
+		</div>
+		<script type="text/javascript">
+			//<![CDATA[
+			$$('.related-checkbox').each(function(elem){
+				Event.observe(elem, 'click', addRelatedToProduct)
+			});
+
+			var relatedProductsCheckFlag = false;
+			function selectAllRelated(txt){
+				if (relatedProductsCheckFlag == false) {
+					$$('.related-checkbox').each(function(elem){
+						elem.checked = true;
+						elem.up().select('span')[0].replace('<span><?php echo $this->__('Deselect'); ?></span>');
+					});
+					relatedProductsCheckFlag = true;
+					txt.innerHTML="<?php echo $this->__('deselect all') ?>";
+					txt.addClassName('selected');
+				} else {
+					$$('.related-checkbox').each(function(elem){
+						elem.checked = false;
+						elem.up().select('span')[0].replace('<span><?php echo $this->__('Select'); ?></span>');
+					});
+					relatedProductsCheckFlag = false;
+					txt.innerHTML="<?php echo $this->__('select all') ?>";
+					txt.removeClassName('selected');
+				}
+				addRelatedToProduct();
+			}
+
+			function addRelatedToProduct(){
+				var checkboxes = $$('.related-checkbox');
+				var values = [];
+				for(var i=0;i<checkboxes.length;i++){
+					if(checkboxes[i].checked) values.push(checkboxes[i].value);
+				}
+				if($('related-products-field')){
+					$('related-products-field').value = values.join(',');
+				}
+			}
+			//]]>
+
+			slider_items_length = jQuery('.block-related .item').size();
+			if(slider_items_length > 1){
+				var slider_bullets = '<ul class="slideSelectors">';
+				for(i=1; i<=slider_items_length; i++){
+					if(i==1){selected_item = ' selected'}else{selected_item = ''}
+					slider_bullets += '<li class="button-item' + selected_item + '" id="item' + i + '">' + i + '</li>'
+				}
+				slider_bullets += '</ul>';
+				jQuery('.block-related #block-related-slider').after(slider_bullets);
+			}
+			if(jQuery('.block-related.large-image #block-related-slider').length) {
+				jQuery('.block-related.large-image #block-related-slider').iosSlider({
+					responsiveSlideWidth: true,
+					snapToChildren: true,
+					desktopClickDrag: true,
+					infiniteSlider: false,
+					onSlideChange: slideChange,
+					navSlideSelector: '.block-related .slideSelectors .button-item'
+				});
+			 } 
+			function slideChange(args) {
+				/* indicator */
+				jQuery('.slideSelectors .button-item').removeClass('selected');
+				jQuery('.slideSelectors .button-item:eq(' + (args.currentSlideNumber-1) + ')').addClass('selected'); 
+			} 
+			jQuery('.large-image .related-checkbox').on('click', function(){
+				if(jQuery(this).is(':checked')) {
+					jQuery(this).parent().find('span').text('<?php echo $this->__('Deselect'); ?>');
+				} else {
+					if (jQuery(this).not(':checked')) {
+						jQuery(this).parent().find('span').text('<?php echo $this->__('Select'); ?>');
+					}
+				}
+			});
+			function sliderLoaded(args) {
+				slideChange(args);
+			}
+		</script>
+	</div>
+</div>
+<?php endif;
+	}
+?>

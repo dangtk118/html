@@ -1,0 +1,121 @@
+<config>
+    <modules>
+        <Fahasa_Weblog>
+            <version>0.0.1</version>
+        </Fahasa_Weblog>
+    </modules>
+    <global>
+        <models>
+            <weblog>
+                <class>Fahasa_Weblog_Model</class>
+            </weblog>
+        </models>
+        <events>
+            <checkout_cart_product_add_after>
+                <observers>
+                   <weblog_checkout_cart_product_add_after>
+                      <type>singleton</type>
+                      <class>Fahasa_Weblog_Model_Observer</class>
+                      <method>AddProductToCart</method>
+                   </weblog_checkout_cart_product_add_after>
+               </observers>
+            </checkout_cart_product_add_after>
+            
+            <sales_quote_remove_item>
+                <observers>
+                    <weblog_sales_quote_remove_item>
+                      <type>singleton</type>
+                      <class>Fahasa_Weblog_Model_Observer</class>
+                      <method>RemoveProductFromCart</method>
+                    </weblog_sales_quote_remove_item>                        
+                </observers>
+            </sales_quote_remove_item>
+            
+            <checkout_submit_all_after>
+                <observers>
+                   <weblog_checkout_submit_all_after>
+                      <type>singleton</type>
+                      <class>Fahasa_Weblog_Model_Observer</class>
+                      <method>FinishCheckout</method>
+                   </weblog_checkout_submit_all_after>
+               </observers>
+            </checkout_submit_all_after>
+            
+            <checkout_controller_onepage_save_shipping_method>
+                <observers>
+                   <weblog_checkout_controller_onepage_save_shipping_method>
+                      <type>singleton</type>
+                      <class>Fahasa_Weblog_Model_Observer</class>
+                      <method>SaveShippingMethod</method>
+                   </weblog_checkout_controller_onepage_save_shipping_method>
+               </observers>
+            </checkout_controller_onepage_save_shipping_method>
+                        
+            <customer_login>
+                <observers>
+                    <weblog_customer_login>
+                        <type>singleton</type>
+                        <class>Fahasa_Weblog_Model_Observer</class>
+                        <method>LogIn</method>
+                    </weblog_customer_login>
+                </observers>
+            </customer_login> 
+            
+            <payment_info_block_prepare_specific_information>
+                <observers>
+                    <weblog_payment_info_block_prepare_specific_information>
+                        <type>singleton</type>
+                        <class>Fahasa_Weblog_Model_Observer</class>
+                        <method>SavePaymentMethod</method>
+                    </weblog_payment_info_block_prepare_specific_information>
+                </observers>
+            </payment_info_block_prepare_specific_information>
+            
+            <catalog_controller_product_view>
+                <observers>
+                    <weblog_catalog_controller_product_view>
+                        <type>singleton</type>
+                        <class>Fahasa_Weblog_Model_Observer</class>
+                        <method>ViewProduct</method>
+                    </weblog_catalog_controller_product_view>
+                </observers>
+            </catalog_controller_product_view>
+
+            <catalog_controller_category_init_after>
+                <observers>
+                    <weblog_catalog_controller_category_init_after>
+                        <type>singleton</type>
+                        <class>Fahasa_Weblog_Model_Observer</class>
+                        <method>ViewCategory</method>
+                    </weblog_catalog_controller_category_init_after>
+                </observers>
+            </catalog_controller_category_init_after>
+            
+            <cms_page_render>
+                <observers>
+                    <weblog_cms_page_render>
+                        <type>singleton</type>
+                        <class>Fahasa_Weblog_Model_Observer</class>
+                        <method>ViewCmsPage</method>
+                    </weblog_cms_page_render>
+                </observers>
+            </cms_page_render>        
+            
+            <controller_action_predispatch_catalogsearch_result_index>
+                <observers>
+                    <controller_action_predispatch_catalogsearch_result_index>
+                        <type>singleton</type>
+                        <class>Fahasa_Weblog_Model_Observer</class>
+                        <method>Search</method>
+                    </controller_action_predispatch_catalogsearch_result_index>
+                </observers>
+            </controller_action_predispatch_catalogsearch_result_index>
+                                                      
+        </events>
+        <helpers>
+            <weblog>
+                <class>Fahasa_Weblog_Helper</class>
+            </weblog>   
+        </helpers>
+    </global>
+</config>

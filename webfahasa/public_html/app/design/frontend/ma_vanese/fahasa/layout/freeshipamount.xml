@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<layout>
+    
+    <sales_order_view>
+        <reference name="order_totals">
+            <block type="freeshipamount/sales_order_freeshipamount" />
+            <block type="freeshipamount/sales_order_originalshippingfee" />
+
+        </reference>
+    </sales_order_view>
+  
+    
+    
+</layout>
+

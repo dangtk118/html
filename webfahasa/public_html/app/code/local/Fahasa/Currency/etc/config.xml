@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <Fahasa_Currency>
+            <version>0.0.1</version>
+        </Fahasa_Currency>
+    </modules>
+    <global>
+        <models>
+            <directory>
+                <rewrite>
+                    <currency>Fahasa_Currency_Model_Currency</currency>
+                </rewrite>
+            </directory>
+        </models>
+    </global>
+</config>

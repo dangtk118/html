@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <Fahasa_Rating>
+            <version>0.1.0</version>
+        </Fahasa_Rating>
+    </modules>
+    <global>        
+        <models>
+            <rating_resource>
+                <rewrite>  
+                    <rating_option_vote_collection>Fahasa_Rating_Model_Resource_Rating_Option_Vote_Collection</rating_option_vote_collection>
+                </rewrite>
+            </rating_resource>
+        </models>
+    </global>
+</config>

@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+
+<layout version="0.1.0">
+    <repayment_index_payment>
+        <reference name="root">
+            <action method="setTemplate">
+                <template>page/1column.phtml</template>
+            </action>
+        </reference>
+        <reference name="head">
+            <action method="setTitle">
+                <title>Re-payment - FAHASA.COM</title>
+            </action>
+            <action method="addJs">
+                <script>lib/repayment.js</script>
+            </action>
+            <action method="addCss">
+                <stylesheet>css/magestore/onestepcheckout_v2.css</stylesheet>
+            </action>
+        </reference>
+        <reference name="content">
+            <block type="repayment/repayment" name="repayment_page" template="repayment/repayment.phtml"></block>
+        </reference>
+    </repayment_index_payment>
+</layout>

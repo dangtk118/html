@@ -1,0 +1,756 @@
+/*
+    Common
+*/
+.fs-layout-item{
+    margin-top: 10px;
+     display: flex;
+    justify-content: center;
+}
+.fs-layout-item > .fpointstore-item{
+    min-width: 290px;
+    max-width: 290px;
+}
+.fpointstore-item .fpointstore-item-image{
+    max-height: auto;
+    width: 100%;
+}
+#popup-fpointstore-detail-content > .fpointstore-item .fpointstore-item-image{
+    -webkit-border-top-left-radius: 10px;
+    -webkit-border-top-right-radius: 10px;
+}
+.fpointstore-item-chay-hang{
+    
+}
+#popup-fpointstore-detail-content > .fpointstore-item{
+    max-width: none !important;
+}
+#popup-fpointstore-detail-content .fpointstore-item .fpointstore-item-image{
+    max-height: 157px !important;
+    width: 340px !important;;
+}
+
+.fpointstore-item .ma-box-content{
+    padding-bottom: 5px;
+}
+.fpointstore-item .ma-box-content .products{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.fpointstore-item .gift-name{
+    margin-top: 5px;
+    text-align: left;
+    line-height: 18px;
+    display: inline-block;
+    width: 100%;
+    height: 2.6em;
+}
+
+.fpointstore-item .gift-name > a{
+    font-size: 0.8em;
+    font-weight: 600;
+    font-family: sans-serif;
+}
+.fpointstore-percent{
+    font-size: 0.9em;
+    font-family: sans-serif;
+    margin-left: 1px;
+}
+.fpointstore-fpoint{
+    float: left;
+}
+.fpointstore-btnconfirm{
+    position: absolute;               
+    top: 50%;                   
+    left: 100%;                         
+    transform: translate(-100%, -50%)
+}
+.fpointstore-btn{
+    text-align: center;
+    padding: 10px 0 10px 0;
+}
+.btn-gift {
+/*    -moz-border-radius-bottomleft: 12px;
+    -moz-border-radius-bottomright: 12px;
+    -moz-border-top-left-radius: 12px;
+    -moz-border-top-right-radius: 12px;*/
+    -webkit-border-bottom-left-radius: 12px;
+    -webkit-border-bottom-right-radius: 12px;
+    -webkit-border-top-left-radius: 12px;
+    -webkit-border-top-right-radius: 12px;
+    background-color: white;
+    height: 26px;
+    width: 100px;
+    color: #F39801;
+    font-weight: 600;
+    font-size: 0.9em;
+    font-family: sans-serif;
+    border: 1px solid #F39801;
+}
+.btn-gift.confirm {
+    background-color: #F39801;
+    color: white;
+}
+.fpointstore-btn > .btn-gift.confirm{
+    margin-left: 10px;
+}
+.btn-gift.confirm:disabled{
+    background-color: #E0E0E0;
+    border: 1px solid #E0E0E0;
+}
+.fpointstore-fpoint{
+    font-size: 1.15em;
+    font-family: sans-serif;
+    position: absolute;               
+    top: 50%;                        
+    transform: translate(0, -50%);
+}
+.fpointstore-parner{
+    position: absolute;               
+    top: 100%;                        
+    transform: translate(0, -100%);
+}
+.fpointstore-parner span:first-child{
+    font-size: 0.8em;
+    font-family: sans-serif;
+    font-weight: 600;
+    padding: 5px;
+    color: white;
+    background-color: #000;
+    height: 22px;
+    float: left;
+    
+}
+.fpointstore-parner span:nth-of-type(2){
+    border-top: 22px solid transparent;
+    border-left: 10px solid #000;
+    float: left;
+}
+
+.fpointstore-item .item-inner{
+    text-align: left;
+    padding: 0 0 5px 0;
+}
+.fpointstore-item .fpointstore-item:hover{
+    -webkit-box-shadow: 3px 3px 3px 0 #d4d4d5, 0 0 0 1px #d4d4d5;
+    box-shadow: 3px 3px 3px 0 #d4d4d5, 0 0 0 1px #d4d4d5;
+    -webkit-transition: -webkit-box-shadow .1s ease,-webkit-transform .1s ease;
+    transition: -webkit-box-shadow .1s ease,-webkit-transform .1s ease;
+    transition: box-shadow .1s ease,transform .1s ease;
+    transition: box-shadow .1s ease,transform .1s ease,-webkit-box-shadow .1s ease,-webkit-transform .1s ease;
+}
+
+.fpointstore-item .product.images-container{
+    text-align: center;
+}
+
+.fpointstore-item .progress {
+    height: 10px !important;
+    border-radius: 6px !important;
+    margin-bottom: 0px;
+    border: 1px solid #d6d6d6;
+    background-color: #f2f2f2;
+    background-image: none;
+}
+
+.fpointstore-item .progress-value {
+    position:absolute;
+    right:0;
+    left:0;
+}
+
+.fpointstore-item .progress-bar{
+    background-image: -webkit-linear-gradient(top, #fead38 0%, #f39801 100%);
+    background-image: linear-gradient(to bottom, #fead38 0%, #f39801 100%);
+}
+
+
+#fpointstore-slider .fpointstore-countdown, #fpointstore-page .fpointstore-countdown{
+    color: #fff;
+    font-size: 16px;
+    font-family: sans-serif;
+    padding-right: 5px;
+    width: 150px;
+    display: inline-block;
+    margin-top: 5px;
+    margin-bottom: 7px;
+}
+
+#fpointstore-slider .fpointstore-countdown-number, #fpointstore-page .fpointstore-countdown-number, #fpointstore-product .fpointstore-countdown-number{
+    padding: 5px 8px 5px 8px;
+    background-color: #770909;
+    color: #fff;
+    font-size: 14px;
+    font-family: sans-serif;
+    font-weight: bold;
+}
+
+.fpointstore-page-loading-icon{
+    margin: auto;
+    text-align: center;
+    background-color: #fff;
+    width: 50px;
+    border-radius: 5px;
+    padding: 5px;
+}
+/*
+    Slider
+*/
+#fpointstore-slider{
+    border: 1px solid #e6e6e6;
+    background: white;
+    margin-top: 10px;
+    display: none;
+    padding-bottom: 10px;
+}
+
+.swiper-slide.fpointstore-item > .item-inner{
+    max-width: 290px;
+}
+
+#fpointstore-slider .fhs-full-p{
+    background: white;
+}
+
+#fpointstore-slider .bx-prev{
+    margin-left: -15px;
+}
+
+#fpointstore-slider .fpointstore-head{
+    min-height: 45px;
+    border-bottom: 2px solid #d22121 !important;
+    width: 100% !important;
+}
+
+#fpointstore-slider .fpointstore-body{
+    margin: 10px 0px 5px 0px;
+    min-height: 237px;
+}
+
+#fpointstore-slider .fpointstore-label{
+    margin-top: 5px;
+}
+
+#fpointstore-slider .fpointstore-label span:first-child{
+    float: left;
+    background-color: #d22121;
+    color: white;
+    font-weight: bold;
+    padding: 5px 10px 5px 10px;
+    font-size: 18px;
+    font-family: sans-serif;
+    line-height: 30px;
+    margin-top: 5px;
+}
+
+#fpointstore-slider .fpointstore-label span:nth-of-type(2){
+    border-top: 40px solid transparent;
+    border-left: 30px solid #d22121;
+    float: left;
+    margin-top: 5px;
+}
+
+#fpointstore-slider .fpointstore-periods{
+    float: right;
+    background-color: #d22121;
+    padding: 2px 0px 2px 5px;
+    margin-right: 5px;
+}
+
+#fpointstore-slider .fpointstore-periods .fpointstore-countdown-icon{
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+    padding: 4px;
+    float: left;
+    margin-right: 4px;
+    margin-top: 2px;
+}
+
+#fpointstore-slider .fpointstore-countdown-label{
+    float: left;
+    padding: 5px;
+    font-size: 15px;
+    font-family: sans-serif;
+    font-weight: bold;
+    color: #fff;
+    margin-top: 3px;
+}
+/*
+    Page
+*/
+#fpointstore-top-banner{
+}
+
+#fpointstore-page{
+    margin-top: 10px;
+}
+
+#fpointstore-page .fpointstore-page-countdown-label{
+    font-size: 20px;
+    font-family: sans-serif;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 6px;
+}
+
+#fpointstore-page .fpointstore-page-periods {
+    background-color: #ffffff;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    -webkit-box-shadow: 3px 3px 3px 0 #d4d4d5, 0 0 0 1px #d4d4d5;
+    box-shadow: 3px 3px 3px 0 #d4d4d5, 0 0 0 1px #d4d4d5;
+    min-height: 60px;
+}
+
+#fpointstore-page .fpointstore-page-period{
+    font-size: 18px;
+    font-family: sans-serif;
+    font-weight: bold;
+    padding: 0px;
+    height: 40px;
+    border-bottom: 3px solid #d22121;
+}
+
+#fpointstore-page .fpointstore-page-period-label{
+    display: inline-block;
+    cursor: pointer;
+}
+
+#fpointstore-page .fpointstore-page-period-label span:first-child{
+    padding: 5px 5px 5px 25px;
+}
+
+#fpointstore-page .fpointstore-page-period-label span:nth-of-type(2){
+    padding: 10px 0px 10px 0px;
+}
+
+#fpointstore-page .fpointstore-page-period-label span:nth-of-type(2) div{
+    border-left: 1px solid #646464;
+    height: 20px;
+}
+
+#fpointstore-page .fpointstore-page-period-active .fpointstore-page-period-label span:nth-of-type(2) div{
+    border-left: 1px solid #fff;
+    height: 20px;
+}
+
+#fpointstore-page .fpointstore-page-period-label span:nth-of-type(3){
+    padding: 5px 10px 5px 5px;
+}
+
+#fpointstore-page .fpointstore-page-period-label span:first-child
+, #fpointstore-page .fpointstore-page-period-label span:nth-of-type(2)
+, #fpointstore-page .fpointstore-page-period-label span:nth-of-type(3){
+    float: left;
+    line-height: 30px;
+}
+
+#fpointstore-page .fpointstore-page-period-label span:nth-of-type(4){
+    float: left;
+}
+
+#fpointstore-page .fpointstore-page-period-active .fpointstore-page-period-label span:first-child
+, #fpointstore-page .fpointstore-page-period-active .fpointstore-page-period-label span:nth-of-type(2)
+, #fpointstore-page .fpointstore-page-period-active .fpointstore-page-period-label span:nth-of-type(3){
+    background-color: #d22121;
+    color: white;
+}
+
+#fpointstore-page .fpointstore-page-period-active .fpointstore-page-period-label span:nth-of-type(4){
+    border-top: 40px solid transparent;
+    border-left: 30px solid #d22121;
+}
+
+#fpointstore-page
+.col-xs-5ths,
+.col-sm-5ths,
+.col-md-5ths,
+.col-lg-5ths {
+    position: relative;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+#fpointstore-page .col-xs-5ths {
+    width: 20%;
+    float: left;
+}
+
+@media (min-width: 768px) {
+    #fpointstore-page .col-sm-5ths {
+        width: 20%;
+        float: left;
+    }
+}
+
+@media (min-width: 992px) {
+    #fpointstore-page .col-md-5ths {
+        width: 20%;
+        float: left;
+    }
+}
+
+@media (min-width: 1200px) {
+    #fpointstore-page .col-lg-5ths {
+        width: 20%;
+        float: left;
+    }
+}
+
+#fpointstore-page .fpointstore-page-countdown{
+    padding: 15px 10px 15px 10px;
+    margin: auto;
+    width: 260px;
+    background-color: #d22121;
+    -webkit-box-shadow: 3px 3px 3px 0 #b7b7b7, 0 0 0 1px #d4d4d5;
+    box-shadow: 3px 3px 3px 0 #b7b7b7, 0 0 0 1px #d4d4d5;
+    margin-top: 20px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+#fpointstore-page .fpointstore-countdown{
+    width: 200px;
+    margin-top: 4px;
+    margin-bottom: 2px;
+}
+
+#fpointstore-page .fpointstore-page-countdown span{
+    color: #fff;font-size: 24px;font-weight: bold;
+    font-family: sans-serif;
+}
+
+#fpointstore-page .fpointstore-page-middle-banner{
+
+}
+
+#fpointstore-page .fpointstore-page-content{
+    padding: 10px;
+    min-height: 400px;
+    margin-top: 0px;
+    margin-bottom: 10px;
+    margin: auto;
+     display: flex;
+    justify-content: center;
+}
+
+#fpointstore-page .fpointstore-page-products{
+    display:none;
+}
+
+#fpointstore-page .fpointstore-item{
+    border-radius: 2px;
+    background-color: #fff;
+}
+
+#fpointstore-page .fpointstore-countdown-icon{
+    width: 48px;
+    height: 48px;
+    display: inline-block;
+    padding: 2px;
+    border-radius: 4px;
+    float: left;
+    margin-top: -4px;
+}
+
+
+/*
+*   Product
+*/
+#fpointstore-product{
+    padding-left: 0px;
+    padding-right: 10px;
+}
+
+#fpointstore-product .col-md-6:nth-child(1){
+    padding-left: 0px;
+}
+
+#fpointstore-product .col-md-6:nth-child(1) img{
+    width: 80px;
+    margin-top: 18px;
+}
+
+#fpointstore-product .col-md-6:nth-child(2){
+    height: 62px;
+    width: 165px;
+    float: right;
+}
+
+#fpointstore-product .fpointstore-product-banner{
+    height: 40px;
+    border-radius: 3px;
+    margin-top: -5px;
+    margin-bottom: 5px;
+}
+
+#fpointstore-product .fpointstore-countdown{
+    width: 155px;
+    background-color: #d22121;
+    padding: 10px;
+}
+
+#fpointstore-product .fpointstore-countdown-label{
+    font-size: 15px;
+    font-family: sans-serif;
+    text-align: center;
+}
+
+.kasitoo .add-to-box{
+    border-top: 1px solid #c1c1c1;
+    padding-top: 15px;
+}
+
+/*
+    FpointStore Page Mobile
+*/
+#fpointstore-page-mobile{
+    margin-top: 5px;
+}
+
+#fpointstore-page-mobile .fpointstore-page-periods{
+    background-color: #fff;
+}
+
+#fpointstore-page-mobile-periods{
+    background-color: #fff;
+}
+
+#fpointstore-page-mobile .fpointstore-page-periods .fpointstore-page-period-item{
+    display: inline-block;
+    padding: 10px 10px;
+    float: left;
+    width: 100px;
+    text-align: center;
+    margin: auto;
+}
+
+#fpointstore-page-mobile .swiper-slide.fpointstore-page-period-active{
+    background-color: #d22121;
+    color: #fff;
+}
+
+#fpointstore-page-mobile .fpointstore-page-period-time{
+    font-size: 18px;
+    font-family: sans-serif;
+}
+
+#fpointstore-page-mobile .swiper-slide.fpointstore-page-period-active .fpointstore-page-period-time{
+    font-weight: bold;
+}
+
+#fpointstore-page-mobile .fpointstore-page-period-status{
+    border-top: 1px solid #ccc;
+    padding-top: 2px;
+}
+
+#fpointstore-page-mobile .fpointstore-page-period-active .fpointstore-page-period-status{
+    border-top: 1px solid #fff;
+}
+
+#fpointstore-page-mobile .swiper-slide{
+    width: 96px;
+    text-align: center;
+}
+
+#fpointstore-page-mobile .fpointstore-page-countdown{
+    background-color: #fff;
+    margin-top: 5px;
+    padding: 10px;
+    padding-left: 20px;
+}
+
+#fpointstore-page-mobile .fpointstore-page-countdown{
+    background-color: #d22121;
+    font-size: 14px;
+    font-family: sans-serif;
+    font-weight: bold;
+    color: #fff;
+    padding: 8px 15px;
+}
+
+#fpointstore-page-mobile .fpointstore-page-countdown-label{
+    padding-right: 2px;
+}
+
+#fpointstore-page-mobile .fpointstore-countdown-number{
+    padding: 4px 6px;
+    background-color: #770909;
+    color: #fff;
+    font-size: 14px;
+    font-family: sans-serif;
+    font-weight: bold;
+}
+
+#fpointstore-page-mobile .fpointstore-countdown-icon{
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+    padding: 2px;
+    border-radius: 4px;
+    float: left;
+    margin-top: -2px;
+    margin-left: -2px;
+    margin-right: 2px;
+}
+
+#fpointstore-page-mobile .fpointstore-item{
+    background-color: #fff;
+}
+
+#fpointstore-page-mobile .fpointstore-page-period-content{
+    padding-left: 5px;
+    padding-right: 15px;
+    padding-top: 5px;
+    min-height: 200p;
+}
+
+/*
+    Error
+*/
+#fpointstore-error{
+    margin: 60px;
+    display:none;
+}
+
+#fpointstore-error .fpointstore-error-msg{
+    background-color: #d22121;
+    -webkit-box-shadow: 3px 3px 3px 0 #b7b7b7, 0 0 0 1px #d4d4d5;
+    box-shadow: 3px 3px 3px 0 #b7b7b7, 0 0 0 1px #d4d4d5;
+    max-width: 450px;
+    margin: auto;
+    padding: 30px;
+    font-size: 20px;
+    font-family: sans-serif;
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+    
+}
+
+.fpointstore-link-more{
+    float: right;
+    color: #FF9800;
+    font-size: 14px;
+    font-family: sans-serif;
+    margin: 10px;
+}
+
+#popup-fpointstore-cover {
+    display: none;
+    background: #261E1E none repeat scroll 0% 0%;
+    opacity: 0.5;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    float: left;
+    position: fixed;
+    z-index: 99998;
+}
+#popup-fpointstore-detail {
+    opacity: 1;
+    position: fixed;
+    z-index: 99999;
+    width: 340px;
+    background-color: white;
+    display: none;
+    border: none;
+    top: 25%;
+    left: 50%;
+    margin-left: -170px;
+    -moz-border-radius-bottomleft: 10px;
+    -moz-border-radius-bottomright: 10px;
+    -moz-border-top-left-radius: 10px;
+    -moz-border-top-right-radius: 10px;
+    -webkit-border-bottom-left-radius: 10px;
+    -webkit-border-bottom-right-radius: 10px;
+    -webkit-border-top-left-radius: 10px;
+    -webkit-border-top-right-radius: 10px;
+}
+#popup-fpointstore-alert {
+    opacity: 1;
+    position: fixed;
+    z-index: 99999;
+    width: 350px;
+    max-width: 100%;
+    background-color: white;
+    display: none;
+    border: none;
+    top: 25%;
+    left: 50%;
+    margin-left: -175px;
+    -moz-border-radius-bottomleft: 10px;
+    -moz-border-radius-bottomright: 10px;
+    -moz-border-top-left-radius: 10px;
+    -moz-border-top-right-radius: 10px;
+    -webkit-border-bottom-left-radius: 10px;
+    -webkit-border-bottom-right-radius: 10px;
+    -webkit-border-top-left-radius: 10px;
+    -webkit-border-top-right-radius: 10px;
+}
+#popup-fpointstore-loading {
+    opacity: 1;
+    position: fixed;
+    z-index: 99999;
+    width: 350px;
+    background-color: white;
+    display: none;
+    border: none;
+    top: 25%;
+    left: 50%;
+    margin-left: -175px;
+    -moz-border-radius-bottomleft: 10px;
+    -moz-border-radius-bottomright: 10px;
+    -moz-border-top-left-radius: 10px;
+    -moz-border-top-right-radius: 10px;
+    -webkit-border-bottom-left-radius: 10px;
+    -webkit-border-bottom-right-radius: 10px;
+    -webkit-border-top-left-radius: 10px;
+    -webkit-border-top-right-radius: 10px;
+}
+.fpointstore-item.swiper-slide {
+    margin-top: 20px;
+    text-align: center;
+    background: #fff;
+    /* Center slide text vertically */
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+}
+.fpointstore-list > .fpointstore-item{
+    margin-top: 10px;
+}
+.swiper-wrapper.fpointstore-list > .fpointstore-item{
+    margin-top: 20px;
+}
+#fpointstore-icon-loading{
+    -webkit-animation-name: rotate;
+    -webkit-animation-duration:2s;
+    -webkit-animation-iteration-count:infinite;
+    -webkit-animation-timing-function:linear;
+    -moz-animation-name: rotate;
+    -moz-animation-duration:2s;
+    -moz-animation-iteration-count:infinite;
+    -moz-animation-timing-function:linear;
+}
+@-webkit-keyframes rotate {
+  from {-webkit-transform:rotate(0deg);}
+  to {  -webkit-transform:rotate(360deg);}
+}
+
+@-moz-keyframes rotate {
+  from {-moz-transform:rotate(0deg);}
+  to {  -moz-transform:rotate(360deg);}
+}

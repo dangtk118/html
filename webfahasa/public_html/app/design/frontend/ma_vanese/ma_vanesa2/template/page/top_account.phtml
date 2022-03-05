@@ -1,0 +1,230 @@
+<?php
+$SKIN_URL = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN);
+$is_login = Mage::getSingleton('customer/session')->isLoggedIn();
+
+?>
+
+<style>
+    
+    .fhs_top_account{
+	margin-top: 8px;
+	display: flex;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	flex-direction:column;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+	-webkit-align-items: center;
+	-webkit-justify-content: flex-end;
+	justify-content: flex-end;
+	position: relative;
+    }
+    .fhs_top_account > div:first-of-type{
+	margin: 5px 0 5px 15px;
+	display: flex;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	flex-direction:column;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+	-webkit-align-items: center;
+	-webkit-justify-content: flex-end;
+	justify-content: flex-end;
+	cursor: pointer;
+	user-select: none;
+    }
+    .fhs_top_account > div:first-of-type > div:first-of-type{
+	height: 30px;
+	display: flex;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	flex-direction:column;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+	-webkit-align-items: center;
+	-webkit-justify-content: center;
+	justify-content: center;
+    }
+    .fhs_top_account > div:first-of-type > div:last-of-type{
+	line-height: 18px;
+	text-transform: uppercase;
+	color: #F7941E;
+	font-size: 12px;
+    }
+    .fhs_top_account > .fhs_top_account_dropdown{
+	display: none;
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	padding: 6px;
+	-webkit-transform: translate(0, 100%);
+	-ms-transform: translate(0, 100%);
+	-moz-transform: translate(0, 100%);
+	transform: translate(0, 100%);
+	border: 1px solid #e4e4e4;
+	background-color: white;
+	z-index: 999;
+	white-space: nowrap;
+	-webkit-box-shadow: 0 3px 8px rgba(0, 0, 0, .25);
+	-moz-box-shadow: 0 3px 8px rgba(0, 0, 0, .25);
+	box-shadow: 0 3px 8px rgba(0, 0, 0, .25);
+	border-radius: 8px;
+	-moz-border-radius: 8px;
+	 -webkit-border-radius: 8px;
+    }
+    .fhs_top_account > .fhs_top_account_dropdown > .fhs_top_account_line{
+        background-color: #dadde1;
+	color: #dadde1;
+	height: 1px;
+	margin: 4px 8px;
+    }
+    .fhs_top_account > .fhs_top_account_dropdown > div > a{
+	padding: 6px;
+	display: flex;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	flex-direction:row;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+	-webkit-align-items: center;
+	-webkit-justify-content: flex-start;
+	justify-content: flex-start;
+	color:#333333;
+    }
+    .fhs_top_account > .fhs_top_account_dropdown > div > a > span:first-of-type{
+	width: 31px;
+    }
+    .fhs_top_account > .fhs_top_account_dropdown > div > a > span:last-of-type{
+	display: flex;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	flex-direction:row;
+	-webkit-flex-wrap: nowrap; /* Safari */
+	flex-wrap:         nowrap;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+	-webkit-align-items: center;
+	-webkit-justify-content: center;
+	justify-content: center;
+	word-wrap:break-word;
+    }
+    
+    .fhs_top_account_login{
+	margin-top: 8px;
+	display: flex;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	flex-direction:column;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+	-webkit-align-items: center;
+	-webkit-justify-content: flex-end;
+	justify-content: flex-end;
+	position: relative;
+    }
+    .fhs_top_account_login > div:first-of-type{
+	margin: 5px 0 5px 15px;
+	display: flex;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	flex-direction:column;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+	-webkit-align-items: center;
+	-webkit-justify-content: flex-end;
+	justify-content: flex-end;
+	cursor: pointer;
+	user-select: none;
+    }
+    .fhs_top_account_login > div:first-of-type > div:first-of-type{
+	height: 30px;
+	display: flex;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	flex-direction:column;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+	-webkit-align-items: center;
+	-webkit-justify-content: center;
+	justify-content: center;
+    }
+    .fhs_top_account_login > div:first-of-type > div:last-of-type{
+	line-height: 18px;
+	text-transform: uppercase;
+	color: #F7941E;
+	font-size: 12px;
+    }
+</style>
+
+<?php if($is_login):?>
+    <div class="fhs_top_account">
+	<div class="fhs_top_account_button" onclick="location.href='/customer/account/'">
+	    <div><img src="<?php echo $SKIN_URL . "frontend/ma_vanese/fahasa/images/ico_user.svg"; ?>"/></div>
+	    <div><?php echo $this->__('Account');?></div>
+	</div>
+	<div class="fhs_top_account_dropdown">
+	    <div>
+		<a href="/customer/account/">
+		    <span><img src="<?php echo $SKIN_URL . "frontend/ma_vanese/fahasa/images/ico_settings.svg"; ?>"/></span>
+		    <span><?php echo $this->__('My Dashboard');?></span>
+		</a>
+	    </div>
+	    <div class="fhs_top_account_line"></div>
+	    <div>
+		<a href="/customer/account/logout/">
+		    <span><img src="<?php echo $SKIN_URL . "frontend/ma_vanese/fahasa/images/ico_log-out.svg"; ?>"/></span>
+		    <span><?php echo $this->__('Log Out');?></span>
+		</a>
+	    </div>
+	</div>
+    </div>
+    <script type="text/javascript">
+	$jq('.fhs_top_account').hover(
+	    function(){
+		$jq('.fhs_top_account_dropdown').fadeIn(0);
+	    },
+	    function(){
+		$jq('.fhs_top_account_dropdown').fadeOut(0);
+	    }
+	);
+    </script>
+<?php else:?> 
+    <div class="fhs_top_account_login">
+	<div class="fhs_top_account_login_button" onclick="fhs_account.showLoginPopup('login');$jq('#login_username').focus();">
+	    <div><img src="<?php echo $SKIN_URL . "frontend/ma_vanese/fahasa/images/ico_log-in.svg"; ?>"/></div>
+	    <div><?php echo $this->__('Login');?></div>
+	</div>
+    </div>
+<?php endif;?>

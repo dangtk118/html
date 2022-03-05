@@ -1,0 +1,177 @@
+<?xml version="1.0"?>
+<config>
+    <sections>
+        <payment translate="label" module="vnpay">
+            <label>Payment Methods</label>
+            <tab>sales</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>400</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <vnpay translate="label">
+                    <label>Thanh toán qua VNPAY</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>6</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <active translate="label">
+                            <label>Enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </active>
+                        <title translate="label">
+                            <label>Title</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </title>
+                        <order_status translate="label">
+                            <label>New Order Status</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_order_status</source_model>
+                            <sort_order>70</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </order_status>
+                        <vnp_Url translate="label">
+                            <label>URL cổng thanh toán VNPAY- Virtual Payment Client URL: </label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </vnp_Url>
+                        <vnp_UrlReturn translate="label">
+                            <label>URL return VNPAY: </label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </vnp_UrlReturn>
+                        <vnp_UrlBase translate="label">
+                            <label>URL base VNPAY: </label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </vnp_UrlBase>
+                        <vnp_Terminal translate="label">
+                            <label>Terminal ID (Mã website)</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>3</sort_order>
+                            <!--    <backend_model>adminhtml/system_config_backend_encrypted</backend_model> -->
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </vnp_Terminal>
+                        <hash_code translate="label">
+                            <label>Secretkey (checksum)</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>4</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </hash_code>
+                        <vnp_Terminal_Mobile_android translate="label">
+                            <label>Terminal ID (Mã MobileApp Android)</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </vnp_Terminal_Mobile_android>
+                        <hash_code_mobile_android translate="label">
+                            <label>Secretkey (checksum-Mobile Android)</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>6</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </hash_code_mobile_android>	
+                        <vnp_Terminal_Mobile_ios translate="label">
+                            <label>Terminal ID (Mã MobileApp iOS)</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>7</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </vnp_Terminal_Mobile_ios>
+                        <hash_code_mobile_ios translate="label">
+                            <label>Secretkey (checksum-Mobile iOS)</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>8</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </hash_code_mobile_ios>	
+                        <vnp_Locale translate="label">
+                            <label>Payment Server Display Language Locale</label>
+                            <frontend_type>text</frontend_type>
+                            <comment><![CDATA[Ngôn ngữ hiện thị trên cổng (vn/en)]]></comment>
+                            <sort_order>9</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </vnp_Locale>
+                        <vnp_Currency translate="label">
+                            <label>Currency code</label>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>10</sort_order>
+                            <source_model>adminhtml/system_config_source_currency</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </vnp_Currency>
+                        <vnp_Active_Tutorial translate="label">
+                            <label>Turn/On tutorial</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </vnp_Active_Tutorial>
+                        <vnp_Block_Id translate="label">
+                            <label>Block id (show content of tutorial)</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>11</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </vnp_Block_Id>
+                        <vnp_tutorial_title>
+                            <label>Tutorial Title (title showed in payment method)</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>12</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </vnp_tutorial_title>
+                        <sort_order translate="label">
+                            <label>Sort Order</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>13</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </sort_order>
+                    </fields>
+                </vnpay>
+                
+            </groups>
+        </payment>
+    </sections>
+</config>

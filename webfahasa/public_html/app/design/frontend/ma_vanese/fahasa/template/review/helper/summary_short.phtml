@@ -1,0 +1,73 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2014 X.commerce, Inc. (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+//$ratingSku = $this->getData("product")->getData('sku'); //"9780136038788";
+//$ratingCollection = Mage::getModel('amazonrating/amazonrating')->load($this->getData("product")->getData("sku"));
+//$rating_count_fahasa = $this->getReviewsCount();
+//$rating_count_amazon = $ratingCollection->getData('numericScore');
+//$rating_count_average = max($rating_count_fahasa, $rating_count_amazon);
+$ratingCollection = Mage::helper('amazonrating')->getRating($this->getData("product")->getData("sku"));
+$rating_count_average = 0;
+$fhsAvgScore = 0;
+if($this->getReviewsCount()>0){
+    $ratings = $this->getReviewsCount();
+}
+if($this->getRatingSummary()>0){
+    $fhsAvgScore =$this->getRatingSummary();
+}
+if($ratingCollection){
+    $amzAvgScore = 0;
+    $grAvgScore = 0;
+    if($ratingCollection[0]['awsAvgScore']){
+	$amzAvgScore = ($ratingCollection[0]['awsAvgScore']/5)*100;
+    }
+    if($ratingCollection[0]['grAvgScore']){
+	$grAvgScore = ($ratingCollection[0]['grAvgScore']/5)*100;
+    }
+    if($ratingCollection[0]['awsRatings']){
+	$ratings += $ratingCollection[0]['awsRatings'];
+    }
+    if($ratingCollection[0]['grRatings']){
+	$ratings += $ratingCollection[0]['grRatings'];
+    }
+    $rating_count_average = max($fhsAvgScore, $amzAvgScore, $grAvgScore);
+}
+else{
+    $rating_count_average = $fhsAvgScore;
+}
+
+?>
+<?php if ($rating_count_average > 0) { ?>
+    <div class="ratings">
+            <div class="rating-box">
+                <div class="rating" style="width:<?php echo $rating_count_average>100?100:$rating_count_average; ?>%"></div>
+            </div>
+        <div class="amount">(<?php echo $ratings; ?>)</div>
+    </div>
+<?php } else if ($this->getDisplayIfEmpty()): ?>
+    <p class="no-rating"><a href="<?php echo $this->getReviewsUrl() ?>#review-form"><?php echo $this->__('Be the first to review this product') ?></a></p>
+<?php endif; ?> 

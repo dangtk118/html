@@ -1,0 +1,75 @@
+<?php $isLogin = $this->helper('customer')->isLoggedIn()?>
+<?php if(!$isLogin){?>
+    <?php $user = $this->helper('fblogin')->getFbUser()?>
+    <div id="bt-loginfb">
+         <?php if(!$user || !$user['email']){?>
+            <a class="fb_button fb_button_medium btn btn-block btn-social btn-facebook fhs-fb" onclick="login();return false;" href="#">
+                <i class="fa fa-facebook"></i>
+                <?php echo $this->__('Login') ?>
+            </a>
+        <?php }else{?>
+            <a class="fb_button fb_button_medium btn btn-block btn-social btn-facebook fhs-fb" onclick="window.location.href = '<?php echo $this->getFbloginUrl() ?>';">
+                <i class="fa fa-facebook"></i>
+                <?php echo $this->__('Login') ?>
+            </a>
+        <?php }?>
+    </div>
+    <script src="http://connect.facebook.net/en_US/all.js"></script>
+	<script type="text/javascript">
+		<?php if (!$user && $isLogin== false) { ?>
+		var newwindow;
+		var intId;
+		function login(){
+			var  screenX    = typeof window.screenX != 'undefined' ? window.screenX : window.screenLeft;
+			var	 screenY    = typeof window.screenY != 'undefined' ? window.screenY : window.screenTop;
+			var	 outerWidth = typeof window.outerWidth != 'undefined' ? window.outerWidth : document.body.clientWidth;
+			var	 outerHeight = typeof window.outerHeight != 'undefined' ? window.outerHeight : (document.body.clientHeight - 22);
+			var	 width    = 500;
+			var	 height   = 270;
+			var	 left     = parseInt(screenX + ((outerWidth - width) / 2), 10);
+			var	 top      = parseInt(screenY + ((outerHeight - height) / 2.5), 10);
+			var	 features = (
+					'width=' + width +
+					',height=' + height +
+					',left=' + left +
+					',top=' + top
+				  );
+		
+			newwindow=window.open('<?php echo $this->getFbLoginButtonUrl() ?>','Login_by_facebook',features);
+		
+			if (window.focus) {
+				newwindow.focus()
+			}
+			return false;
+		}
+		<?php } ?>
+		<?php if ($user && $isLogin== false) { ?>
+		var newwindow;
+		var intId;
+		function login(){
+			var  screenX    = typeof window.screenX != 'undefined' ? window.screenX : window.screenLeft;
+			var	 screenY    = typeof window.screenY != 'undefined' ? window.screenY : window.screenTop;
+			var	 outerWidth = typeof window.outerWidth != 'undefined' ? window.outerWidth : document.body.clientWidth;
+			var	 outerHeight = typeof window.outerHeight != 'undefined' ? window.outerHeight : (document.body.clientHeight - 22);
+			var	 width    = 500;
+			var	 height   = 270;
+			var	 left     = parseInt(screenX + ((outerWidth - width) / 2), 10);
+			var	 top      = parseInt(screenY + ((outerHeight - height) / 2.5), 10);
+			var	 features = (
+					'width=' + width +
+					',height=' + height +
+					',left=' + left +
+					',top=' + top
+				  );
+		
+			newwindow=window.open('<?php echo $this->getFbLoginButtonUrl() ?>','Login_by_facebook',features);
+		
+			if (window.focus) {
+				newwindow.focus()
+			}
+			return false;
+		}
+		<?php } ?>
+    </script>
+<?php }?>
+<?php Mage::getSingleton('customer/session')->setBeforeAuthUrl(Mage::helper('core/url')->getCurrentUrl()) ?>

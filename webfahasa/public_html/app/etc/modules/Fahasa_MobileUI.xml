@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Fahasa_Mobileui>
+            <codePool>local</codePool>
+            <active>true</active>
+        </Fahasa_Mobileui>
+    </modules>
+</config>

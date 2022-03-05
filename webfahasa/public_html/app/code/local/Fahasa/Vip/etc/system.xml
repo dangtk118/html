@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <tabs>
+        <vip translate="label" module="vip">
+            <label>Customer VIP</label>
+            <sort_order>99999</sort_order>
+        </vip>
+    </tabs>
+    <sections>
+        <vip_input translate="label" module="vip">
+            <label>Customer VIP Config Options</label>
+            <tab>vip</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>1000</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>  
+            <groups>
+                <general translate="label comment">
+                    <label>General</label>
+                    <sort_order>50</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <comment>*input Customer VIP register,onestepcheckout,customer info</comment>
+                    <fields>
+                        <active translate="label comment">
+                            <label>show/hide vip_id</label>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>54</sort_order>
+                            <source_model>adminhtml/system_config_source_enabledisable</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </active>
+                        <active_vip_company translate="label comment">
+                            <label>show/hide  company_id</label>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>54</sort_order>
+                            <source_model>adminhtml/system_config_source_enabledisable</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </active_vip_company>
+                        <no_apply_vip translate="label comment">
+                            <label>List sku no apply vip</label>
+                            <comment>Ex: 1903041244305a,1903041244312a,...</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </no_apply_vip>
+                    </fields>
+                </general>
+            </groups> 
+                          
+        </vip_input>
+    </sections>
+</config>

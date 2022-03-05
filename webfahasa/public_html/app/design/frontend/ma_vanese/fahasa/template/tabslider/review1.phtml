@@ -1,0 +1,43 @@
+<?php 
+$_product = $this->getProduct();
+$ratingCollection = Mage::helper('amazonrating')->getRating($_product->getSku());
+$rating_count_average = 0;
+$fhsAvgScore = 0;
+$ratings = 0;
+if($_product->getFhsReviewsCount()>0){
+    $ratings = $_product->getFhsReviewsCount();
+}
+if($_product->getFhsRatingSummary()>0){
+    $fhsAvgScore =$_product->getFhsRatingSummary();
+}
+if($ratingCollection){
+    $amzAvgScore = 0;
+    $grAvgScore = 0;
+    if($ratingCollection[0]['awsAvgScore']){
+	$amzAvgScore = ($ratingCollection[0]['awsAvgScore']/5)*100;
+    }
+    if($ratingCollection[0]['grAvgScore']){
+	$grAvgScore = ($ratingCollection[0]['grAvgScore']/5)*100;
+    }
+    if($ratingCollection[0]['awsRatings']){
+	$ratings += $ratingCollection[0]['awsRatings'];
+    }
+    if($ratingCollection[0]['grRatings']){
+	$ratings += $ratingCollection[0]['grRatings'];
+    }
+    $rating_count_average = max($fhsAvgScore, $amzAvgScore, $grAvgScore);
+}else{
+    $rating_count_average = $_product->getFhsRatingSummary();
+}
+?>
+
+<?php if ($rating_count_average > 0) { ?>
+    <div class="rating">
+        <div class="rating-box">
+	    <div class="rating" style="width:<?php echo $rating_count_average>100?100:$rating_count_average; ?>%"></div>
+	</div>
+        <div class="amount">(<?php echo $ratings; ?>)</div>
+    </div>
+<?php } else if ($this->getDisplayIfEmpty()): ?>
+    <p class="no-rating"><a href="<?php echo $this->getReviewsUrl() ?>#review-form"><?php echo $this->__('Be the first to review this product') ?></a></p>
+<?php endif; ?>

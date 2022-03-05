@@ -1,0 +1,136 @@
+<?php
+$is_mobile = Mage::helper('fhsmobiledetect')->isMobile();
+
+$CSS_FILE = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true)
+        . "frontend/ma_vanese/fahasa/css/flashsale.css?q="
+        . Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix');
+
+//$MOMENT_SCRIPT = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS, true)
+//        . "lib/moment.min.js?q="
+//        . Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix');
+
+$FS_SCRIPT = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS, true)
+        . "lib/flashsale.js?q="
+        . Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix');
+$loading_icon_url = $this->getSkinUrl('images/ring_loader.svg');
+?>
+
+<link rel="stylesheet" type="text/css" href="<?php echo $CSS_FILE; ?>" media="all" />
+<script type="text/javascript" src="<?php echo $FS_SCRIPT; ?>"></script>
+
+<div id="flashsale-top-banner" style="margin-top: 5px;">
+    <?php echo $this->getChildHtml('flashsale_top_banner') ?>
+</div>
+
+<div id="flashsale-error">
+    <div class="flashsale-error-msg">
+    </div>
+</div>
+
+<?php if ($is_mobile): ?>
+    <div id="flashsale-page-mobile">
+        <div style="height: 107px;">
+            <div id="flashsale-page-mobile-periods" style="top:0px; width: 100%; z-index: 9999;">
+                <div class="row flashsale-header" >
+                    <a href="/flashsale">
+                        <img src="https://cdn0.fahasa.com/media/wysiwyg/icon-menu/ico_flashsale@3x.png" style="width: 25px; height: 25px;margin-left: 10px;"/>
+                        <span class='flashsale-header-title'>FLASH SALE</span>
+                    </a>
+                    <span>
+                        <div class='split'></div>
+                    </span>
+                    <span style="font-size: 14px; margin-right: 10px;" class='flashsale-page-countdown-label'></span>
+                    <div class="flashsale-page-countdown">
+                        <div class="flashsale-countdown">
+                            <span class="flashsale-countdown-number">00</span>
+                            <span>:</span>
+                            <span class="flashsale-countdown-number">00</span>
+                            <span>:</span>
+                            <span class="flashsale-countdown-number">00</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="margin: 0px;">
+                    <div class="flashsale-page-periods">
+                        <div class="swiper-wrapper">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin: 0px;">
+            <div class="flashsale-page-categories">
+            </div>
+        </div>
+        <div class="flashsale-page-period-content">
+        </div>
+
+        <div class="flashsale-page-bottom"></div>
+        <div class="flashsale-page-loading-icon">
+            <img src="/skin/frontend/ma_vanese/fahasa/images/ring_loader.gif" width="50" height="50"/>
+        </div>
+    </div>
+<?php else: ?>
+    <div id="flashsale-page">
+        <div class="flashsale-header">
+            <a href="/flashsale">
+                <img src="https://cdn0.fahasa.com/media/wysiwyg/icon-menu/ico_flashsale@3x.png" style="width: 25px; height: 25px;margin-left: 10px;"/>
+                <span class='flashsale-header-title'>FLASH SALE</span>
+            </a>
+            <span>
+                <div class='split'></div>
+            </span>
+            <span class='flashsale-page-countdown-label'></span>
+            <div class="flashsale-page-countdown">
+                <div class="flashsale-countdown">
+                    <span class="flashsale-countdown-number">00</span>
+                    <span>:</span>
+                    <span class="flashsale-countdown-number">00</span>
+                    <span>:</span>
+                    <span class="flashsale-countdown-number">00</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="flashsale-page-periods">
+        </div>
+        <div class="flashsale-page-categories"></div>
+        <div class="flashsale-page-content">
+            <div class="flashsale-page-period-content">
+            </div>
+        </div>
+
+        <div class="flashsale-page-bottom"></div>
+        <div class="flashsale-page-loading-icon">
+            <img src="/skin/frontend/ma_vanese/fahasa/images/ring_loader.gif" width="50" height="50"/>
+        </div>
+    </div>
+<?php endif; ?>
+
+<script type="text/javascript">
+    //const page_url = "<?php echo $this->getUrl('flashsale/index/getpage', array('_secure' => true)) ?>";
+    //const next_url = "<?php echo $this->getUrl('flashsale/index/getnext', array('_secure' => true)) ?>";
+    const FS_PAGE_URL = "/node_api/flashsale/page";
+    const FS_NEXT_URL = "/node_api/flashsale/nextpage";
+    const FS_BASE_SKIN_URL = "<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true); ?>";
+
+    const FS_TEXT_LABELS = {
+        'da_ban': "<?php echo $this->__("Da ban"); ?>",
+        'dang_ban': "<?php echo $this->__("Dang ban"); ?>",
+        'sap_ban': "<?php echo $this->__("Sap ban"); ?>",
+        'ngay_mai': "<?php echo $this->__("Ngay mai"); ?>",
+        'ket_thuc': "<?php echo $this->__("Ket thuc trong"); ?>",
+        'bat_dau': "<?php echo $this->__("Bat dau trong"); ?>",
+        'sap_mo': "<?php echo $this->__("Sap mo ban"); ?>",
+        'error': "<?php echo $this->__("Error"); ?>",
+    }
+
+    var flashsale = new FlashSale();
+
+    if (IS_MOBILE) {
+        flashsale.initMobilePage(FS_PAGE_URL, FS_NEXT_URL, FS_TEXT_LABELS, FS_BASE_SKIN_URL);
+    } else {
+        flashsale.initPage(FS_PAGE_URL, FS_NEXT_URL, FS_TEXT_LABELS, FS_BASE_SKIN_URL);
+    }
+
+</script>

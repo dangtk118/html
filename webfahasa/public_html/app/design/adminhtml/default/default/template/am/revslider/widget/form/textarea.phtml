@@ -1,0 +1,25 @@
+<?php
+/**
+ * @category    AM
+ * @package     AM_RevSlider
+ * @copyright   Copyright (C) 2008-2014 ArexMage.com. All Rights Reserved.
+ * @license     GNU General Public License version 2 or later
+ * @author      ArexMage.com
+ * @email       support@arexmage.com
+ */
+?>
+<?php
+$element = $this->getElement();
+$id = $element->getHtmlId();
+?>
+<tr>
+    <td colspan="2">
+        <div style="margin:0 6px">
+            <textarea rows="20" readonly id="<?php echo $id ?>" style="width:100%"><?php echo $element->getValue() ?></textarea>
+        </div>
+        <p class="note"><?php echo $element->getNote() ?></p>
+    </td>
+</tr>
+<script type="text/javascript">
+    $('<?php echo $id ?>').up('table').setStyle({width:'100%'});
+</script>

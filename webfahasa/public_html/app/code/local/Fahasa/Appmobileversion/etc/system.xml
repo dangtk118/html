@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<config>
+    <tabs>
+        <fahasa_appmobileversion translate="label">
+            <label>App Mobile Version</label>
+            <sort_order>0</sort_order>
+        </fahasa_appmobileversion>
+    </tabs>
+    <sections>
+        <appmobileversion translate="label" module="adminhtml">
+            <label>App Mobile Version</label>
+            <tab>fahasa_appmobileversion</tab>
+            <sort_order>1</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <general translate="label">
+                    <label>General Mobile App</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>0</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <enable_appmobileversion translate="label">
+                            <label>Show Notification To Users</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enable_appmobileversion>
+                        <forceupdate_appmobileversion translate="label">
+                            <label>Force update new version</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </forceupdate_appmobileversion>
+                        <version_ios translate="label">
+                            <label>Ios Version</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </version_ios>
+                        <version_android translate="label">
+                            <label> Android Version</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </version_android>
+                        <enable_login_apple translate="label">
+                            <label>Enable Login Apple (for Apple Review, user)</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <comment>When deploy ios, set ios version = coming version, show notification = false, enable_login_apple = false. When finish apple review, show_notification = true, enable_login_apple = true</comment>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enable_login_apple>
+                    </fields>
+                </general>
+                <transactional>
+                    <label>Message Language</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>0</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <vi translate="label">
+                            <label>Việt Nam</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </vi>
+                        <en translate="label">
+                            <label>English</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </en>
+                        <jp translate="label">
+                            <label>Japan</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </jp>
+                    </fields>
+                </transactional>
+            </groups>
+        </appmobileversion>
+    </sections>
+</config>

@@ -1,0 +1,113 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2014 X.commerce, Inc. (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php echo $this->getMessagesBlock()->toHtml() ?>
+<?php 
+    $_orders = $this->getOrders(); 
+    $isMobile = Mage::helper('fhsmobiledetect')->isMobile();
+    $statuc_current = $this->getCurrentStatus();
+?>
+<div class="page-title">
+    <h1><?php echo $this->__('My Orders') ?></h1>
+</div>
+<?php echo $this->getPagerHtml(); ?>
+<?php if($_orders->getSize() || (!$_orders->getSize() && $statuc_current != "All")): ?>
+<div style="overflow-x: auto; max-width: 100vw; min-height: 50vh;">
+    <table cellspacing="0" cellpadding="0" border="0" width="100%" class="order-history-table">
+<thead>
+    <tr>
+        <th><?php echo $this->__('Order #') ?></th>
+        <th class="text-center"><?php echo $this->__('Date') ?></th>
+        <th class="text-center"><?php echo $this->__('Ship To') ?></th>
+        <th class="text-center"><?php echo $this->__('Order Money Total') ?></th>
+        <th class="order-status-dropdown text-center panel-icon" onclick="order_status_dropdown_show()">
+            <?php echo $this->__(($statuc_current=='All' && $isMobile == FALSE)?'All Status':$statuc_current) ?>
+            <div id="OrderStatusDropdown" class="order-status-dropdown-content">
+                <?php foreach ($this->getAvailableStatus() as  $_key=>$_status): ?>
+                    <?php if(!$this->isStatusCurrent($_key)){ ?>
+                    <div onclick="location.href='<?php echo $this->getStatusUrl($_key) ?>';">
+                        <?php echo $this->__($_status) ?>
+                    </div>
+                    <?php } ?>
+                <?php endforeach; ?>
+            </div>
+        </th>
+    </tr>
+</thead>
+<tbody>
+    <?php if($_orders->getSize()): ?>
+        <?php $row_index = 0;?>
+        <?php foreach ($_orders as $_order): ?>
+        <tr data-href='<?php echo $this->getViewUrl($_order)?>' class="order-history-table-row <?php if(($row_index%2)==0)echo 'order-history-table-row1';else echo 'order-history-table-row2'; ++$row_index ?>">
+            <td><?php echo $_order->getRealOrderId() ?></td>
+            <td><span class="nobr"><?php echo $this->formatDate($_order->getCreatedAtStoreDate()) ?></span></td>
+            <td><?php echo $_order->getShippingAddress() ? $this->escapeHtml($_order->getShippingAddress()->getName()) : '&nbsp;' ?></td>
+            <td class="text-right"><?php echo $_order->formatPrice($_order->getGrandTotal()) ?></td>
+            <td class="text-center"><?php echo $this->__($_order->getStatus()); ?></td>
+        </tr>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <tr>
+            <td colspan="5"><?php echo $this->__("Don't have order in \"%s\" status.",$this->__($statuc_current)); ?></td>
+        </tr>
+    <?php endif ?>
+</tbody>
+</table>
+</div>
+
+<script type="text/javascript">
+    jQuery(document).ready(function($) {
+        $(".order-history-table-row").click(function() {
+            window.location = $(this).data("href");
+        });
+
+    
+        // Close the dropdown if the user clicks outside of it
+        window.onclick = function(event) {
+          if (!event.target.matches('.order-status-dropdown')) {
+            var dropdowns = document.getElementsByClassName("order-status-dropdown-content");
+            var i;
+            for (i = 0; i < dropdowns.length; i++) {
+              var openDropdown = dropdowns[i];
+              if (openDropdown.classList.contains('show')) {
+                openDropdown.classList.remove('show');
+              }
+            }
+          }
+        }
+    });
+    function order_status_dropdown_show() {
+        document.getElementById("OrderStatusDropdown").classList.toggle("show");
+    }
+</script>
+<?php
+    if($this->getLimit() >10 && sizeof($_orders)>10){
+        echo $this->getPagerHtml();
+    }
+?>
+<?php else: ?>
+    <p><?php echo $this->__('You have placed no orders.'); ?></p>
+<?php endif ?>

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="80" height="80" viewBox="0 0 80 80">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="Rectangle_862" data-name="Rectangle 862" width="80" height="80" transform="translate(-15832.127 -1488.127)" fill="#cdcfd0" stroke="#707070" stroke-width="1"/>
+    </clipPath>
+  </defs>
+  <g id="label-hethieuluc" transform="translate(15832.127 1488.127)" clip-path="url(#clip-path)">
+    <g id="Layer_2" data-name="Layer 2" transform="translate(-15816.94 -1492.896) rotate(16)">
+      <g id="Layer_1" data-name="Layer 1" transform="translate(0 0)">
+        <path id="Path_519" data-name="Path 519" d="M36.2,2.339a33.906,33.906,0,0,1,14.1,3.07L46.287,9.427l-3.75,3.756L13.2,42.58,9.445,46.338,5.436,50.355A33.843,33.843,0,0,1,36.2,2.339M67.151,22.47A33.871,33.871,0,0,1,22.529,67.178q2-2.009,4.009-4.016l.073-.073,3.706-3.715.146-.146q14.451-14.474,28.9-28.958l1.893-1.889q.944-.947,1.889-1.9L66.3,23.322l.858-.86M36.2,0A36.2,36.2,0,0,0,4.832,54.272L11.1,47.985l3.75-3.757,29.34-29.393,3.75-3.756,6.271-6.287A36.023,36.023,0,0,0,36.2,0ZM67.789,18.521l-6.3,6.312q-1.889,1.9-3.779,3.788l-29.052,29.1-3.781,3.788-6.3,6.313a36.206,36.206,0,0,0,49.209-49.3Z" fill="#cdcfd0"/>
+        <path id="Path_520" data-name="Path 520" d="M27.716,2.339A25.252,25.252,0,0,1,35.28,3.483L34.057,4.709,4.717,34.1,3.491,35.327A25.393,25.393,0,0,1,27.716,2.339M52.085,20.59A25.409,25.409,0,0,1,20.635,52.1l1.2-1.2.132-.13,28.91-28.972,1.2-1.2M27.716,0A27.721,27.721,0,0,0,2.632,39.51l3.75-3.757,29.33-29.4L39.462,2.6A27.591,27.591,0,0,0,27.716,0ZM53.009,16.359q-1.889,1.9-3.779,3.788Q34.7,34.69,20.176,49.241L16.4,53.029A27.734,27.734,0,0,0,53,16.353Z" transform="translate(8.48 8.48)" fill="#cdcfd0"/>
+        <path id="Path_521" data-name="Path 521" d="M22.806,1.925a21.024,21.024,0,0,1,4.345.452L2.389,27.188A20.9,20.9,0,0,1,22.8,1.924m0-1.924A22.808,22.808,0,0,0,1.461,30.839L30.8,1.443a22.761,22.761,0,0,0-8-1.442Z" transform="translate(13.389 13.392)" fill="#cdcfd0"/>
+        <path id="Path_522" data-name="Path 522" d="M28.061,3.714A20.9,20.9,0,0,1,3.719,28.1L28.061,3.716M29.052,0,0,29.1A22.816,22.816,0,0,0,29.046,0Z" transform="translate(28.656 28.624)" fill="#cdcfd0"/>
+      </g>
+      <text id="HẾT_HÀNG" data-name="HẾT HÀNG" transform="translate(8.539 70.752) rotate(-44.999)" fill="#cdcfd0" font-size="12" font-family="Nunito-ExtraBold, Nunito" font-weight="800" letter-spacing="0.03em"><tspan x="0" y="0">HẾT HIỆU LỰC</tspan></text>
+    </g>
+  </g>
+</svg>

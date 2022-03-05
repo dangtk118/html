@@ -1,0 +1,47 @@
+/**
+ * @category    AM
+ * @package     AM_RevSlider
+ * @copyright   Copyright (C) 2008-2014 ArexMage.com. All Rights Reserved.
+ * @license     GNU General Public License version 2 or later
+ * @author      ArexMage.com
+ * @email       support@arexmage.com
+ */
+
+#layout-preshow-page 	{width:550px; height:200px;border:1px solid #ddd; background:#fff;position:relative;margin:auto;}
+#layout-preshow-theme	{width:360px; height:200px; background:#eee;position:absolute;top:0px; left:95px}
+#layout-preshow-slider	{width:360px; height:130px; background:#95a5a6; position:absolute;left:95px;top:35px;
+    -webkit-transition: all 0.2s ease-out;
+    -moz-transition: all 0.2s ease-out;
+    -o-transition: all 0.2s ease-out;
+    -ms-transition: all 0.2s ease-out; }
+#layout-preshow-grid	{width:318px; height:88px; border:2px dotted #fff; position: absolute;left:114px;top:55px;
+    -webkit-transition: all 0.2s ease-out;
+    -moz-transition: all 0.2s ease-out;
+    -o-transition: all 0.2s ease-out;
+    -ms-transition: all 0.2s ease-out; }
+.layout-preshow-text						{	position: absolute; top:0px;left:0px;font-size:10px; color:#fff;padding:4px 6px; background:#fb942e;font-weight: bold;}
+#layout-preshow-grid .layout-preshow-text	{	top:auto;bottom:-2px;left:auto;right:-2px;}
+
+/* FULLWIDTH */
+.lp-fullwidth #layout-preshow-slider		{	width:550px; left:0px; top:35px;}
+.lp-fullwidth #layout-preshow-grid			{	width:318px; left:114px;top:55px}
+.lp-autoheight #layout-preshow-slider		{	height:165px;}
+
+/* FULLSCREEN */
+.lp-fullscreen #layout-preshow-slider		{	width:360px; height:200px;left:95px; top:0px;}
+.lp-fullscreen #layout-preshow-grid			{	width:338px; height:80px; left:104px;top:55px}
+.lp-fullscreenalign #layout-preshow-grid	{	width:360px; height:200px;left:95px; top:0px;}
+
+/* FULLSCREEN FULLWIDTH */
+.lp-fullscreen.lp-fullwidth #layout-preshow-slider	{	width:550px; height:200px;left:0px; top:0px;}
+.lp-fullscreen.lp-fullwidth #layout-preshow-grid	{	width:338px; height:80px; left:104px;top:55px}
+.lp-fullscreen.lp-fullwidth.lp-fullscreenalign #layout-preshow-grid	{	width:550px; height:200px;left:0px; top:0px;}
+
+/* CUSTOM */
+.lp-custom #layout-preshow-slider		{	width:250px; height:150px; left:110px; top:35px;}
+.lp-custom #layout-preshow-grid			{	width:242px; height:142px; left:145px; left:112px; top:37px;}
+
+/* FIXED */
+.lp-fixed #layout-preshow-slider		{	background:url(images/fixed.png)}
+.lp-fixed #layout-preshow-slider		{	width:270px; height:120px; left:110px; top:35px;}
+.lp-fixed #layout-preshow-grid			{	width:265px; height:115px; left:145px; left:112px; top:37px;}

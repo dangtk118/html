@@ -1,0 +1,83 @@
+<?php
+$cats = $this->getCategoryNameByCatIds();
+if (count($cats) . length > 0)
+{
+    $defaultCatId = $cats[0]['catId'];
+}
+$banner = Mage::getBaseUrl('media') . $this->getData('banner');
+$skin_url = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true);
+$is_limit = $this->getData('is_limit');
+
+$TOPVOTE_SCRIPT = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS, true)
+        . "lib/topvote.js?q="
+        . Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix');
+$CSS_FILE = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true)
+        . "frontend/ma_vanese/fahasa/css/topvote.css?q="
+        . Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix');
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo $CSS_FILE; ?>" media="all" />
+<script type="text/javascript" src="<?php echo $TOPVOTE_SCRIPT; ?>"></script>
+<div class="block-vote">
+    <div style="background-image: url(<?php echo $banner; ?>);" class="header-vote">
+       <div class="title-vote">BẢNG XẾP HẠNG FAHASA</div>
+    </div>
+    <div class="tab-content">
+        <div id="block-fhs-vote">
+            <?php if (count($cats) > 2) : ?>
+            <div class="swiper-container">
+                <div class="top-voted-header swiper-wrapper" style="margin-top: 8px; ">
+                    <?php foreach ($cats as $key => $cat) : ?>
+                        <button id="cat-<?php echo $cat["catId"]; ?>"
+                                onclick="topvote.getTopVotedByCatId('<?php echo $cat["catId"]; ?>')" class="cat-item <?php
+                                if ($key == 0) : echo "active";
+                                endif;
+                                ?> swiper-slide"><?php echo $cat["name"]; ?></button>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+            <?php endif; ?>
+            <div id="top-voted-content" class="col-xs-12 <?php if ($is_limit){echo "col-md-5";}else{ echo "col-md-12";}?> ">
+            </div>
+            <?php if ($is_limit) :?>
+            <div id="top-voted" class="col-lg-7 col-sm-7 col-md-7 hidden-xs no-padding">
+                <div id="preview-product">
+                    <div class="col-lg-4 col-sm-4 col-md-4 col-xs-12 image-container no-padding">
+                        <a href="" class="product-link">
+                            <img class="image"/>
+                        </a>
+                    </div>
+                    <div class="col-lg-8 col-sm-8 col-md-8 col-xs-12">
+                        <a href="" class="product-link">
+                            <div class="col-xs-12 name"></div>
+                            <div class="col-xs-12 author sub-info" ></div>
+                            <div class="col-xs-12 publisher sub-info"></div>
+                        </a>
+                        <div class="col-md-12 col-lg-12 col-sm-6 col-xs-12" style="padding: 0px;margin-top: 16px;">
+                            <div class="col-lg-6 col-sm-6 col-md-6 col-xs-6" style="">
+                                <div   class="final-price" style="font-size: 2em;"></div>
+                                <div class="price-container">
+                                    <div class="price"></div>
+                                    <div class="discount-percent"></div>
+                                </div>
+                            </div>
+                        </div>
+                    <div class="col-xs-12 description"></div>
+                    </div>
+                </div>
+                </div>
+                <?php endif; ?>
+            <?php if ($is_limit) : ?>
+                <div class="tabs-xem-them xem-them-item-aaa">
+                    <a href="/<?php echo $this->getData('urlLink');?>">Xem thêm</a>
+                </div>
+            <?php else: ?>
+            <div class="block-vote-lower"></div>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
+<script>
+    const BASE_SKIN_URL = "<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true); ?>";
+    var topvote = new TopVote(BASE_SKIN_URL);
+    topvote.init();
+</script>

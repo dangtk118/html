@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<config>    
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <event translate="title" module="event">
+                                        <title>Event World cup</title>
+                                    </event>
+                                    <event_almostcart_block translate="title" module="event">
+                                        <title>Event checkout cart block</title>
+                                    </event_almostcart_block>
+                                    <game translate="title" module="event">
+                                        <title>Game setup</title>
+                                    </game>
+                                    <event_buffetcombo translate="title" module="event">
+                                        <title>Event BuffetCombo</title>
+                                    </event_buffetcombo>
+                                    <event_marathon translate="title" module="event">
+                                        <title>Event Marathon</title>
+                                    </event_marathon>
+                                    <event_marathon_2 translate="title" module="event">
+                                        <title>Event Marathon 2</title>
+                                    </event_marathon_2>
+                                    <event_sharefacebook translate="title" module="event">
+                                        <title>Event Share Facebook</title>
+                                    </event_sharefacebook>
+                                    <event_discountoriginal translate="title" module="event">
+                                        <title>Event Discount Original</title>
+                                    </event_discountoriginal>
+                                    <event_discountoriginal_v2_nofee translate="title" module="event">
+                                        <title>Event Discount Original v2</title>
+                                    </event_discountoriginal_v2_nofee>
+                                    <book_festival translate="title" module="event">
+                                        <title>Book Festival</title>
+                                    </book_festival>
+                                    <event_buy_more_discount_more translate="title" module="event">
+                                        <title>Event Buy More Discount More</title>
+                                    </event_buy_more_discount_more>
+                                    <event_delivery translate="title" module="event">
+                                        <title>Event Delivery</title>
+                                    </event_delivery>
+                                    <event_source translate="title" module="event">
+                                        <title>Event Source Tracking</title>
+                                    </event_source>
+                                </children>
+                            </config>
+                        </children>
+                    </system>                    
+                </children>
+            </admin>
+        </resources>
+    </acl>  
+</config>

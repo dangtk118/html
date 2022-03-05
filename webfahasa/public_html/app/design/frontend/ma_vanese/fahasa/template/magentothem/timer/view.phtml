@@ -1,0 +1,187 @@
+<?php
+
+
+
+
+/* Count for timer calculation declared here */
+$count = 1;
+if(Mage::registry('product_configurable_child')){
+    $_product = Mage::registry('product_configurable_child');
+}else{
+    $_product = $this->getProduct();
+}
+$toDate = $_product->getSpecialTODate();
+$fromDate = $_product->getSpecialFromDate();
+
+/* Admin Controllers for timer are declared here */
+$timer_active = Mage::getStoreConfig('timer/general/activate_magentothem_timer');
+$timer_head_active = Mage::getStoreConfig('timer/general/activate_magentothem_heading');
+$timer_desc_active = Mage::getStoreConfig('timer/general/activate_magentothem_description');
+$desc_color = Mage::getStoreConfig('timer/magentothem_timer_color/description');
+$timer_color = Mage::getStoreConfig('timer/magentothem_timer_color/text');
+$head_color = Mage::getStoreConfig('timer/magentothem_timer_color/heading_text_color');
+$timer_head = Mage::getStoreConfig('timer/general/heading');
+$is_product_avalible = false;
+?>
+
+<!--Condition for Timer Controllers goes here-->
+<?php if ($timer_active == 1) : ?>
+<?php if (($_product->getPrice() > $_product->getSpecialPrice() || Mage::getModel('catalog/product')->load($_product->getId())->getTypeID() == 'bundle') && Mage::getModel('catalog/product')->load($_product->getId())->getTimershow() == 1) : ?>
+<?php if ($_product->getSpecialPrice() != 0 || $_product->getSpecialPrice() != "") : ?>
+<?php if ($timer_head_active == 'showall' || $timer_head_active == 'viewpage' && $timer_head_active != 'hideall' && $timer_head != '') : ?>
+                        <div id="heading<?php echo $count; ?>" style="color:#<?php echo $head_color; ?>; font-size: 18px; font-weight:bold;padding-top:15px;clear: both;"><?php echo $timer_head ?></div>
+<?php endif; ?>
+                        <div id="countbox_<?php echo $count; ?>" class="timer-view"></div>
+<?php if ($timer_desc_active == 'showall' || $timer_desc_active == 'viewpage' && $timer_desc_active != 'hideall') : ?>
+                        
+						<?php
+						if(Mage::getModel('catalog/product')->load($_product->getId())->getTypeID() == 'bundle')
+						{
+							echo '<br/><h1 style="color:red">Discount up to '.(100 - Mage::getModel('catalog/product')->load($_product->getId())->getSpecialPrice()*1).'% </h1>';
+						}
+						?>
+<?php endif;endif;endif; ?>
+
+<?php if (($_product->getPrice() > $_product->getSpecialPrice() || Mage::getModel('catalog/product')->load($_product->getId())->getTypeID() == 'bundle') && Mage::getModel('catalog/product')->load($_product->getId())->getTimershow() == 1) : ?>
+<?php if ($_product->getSpecialPrice() != 0 || $_product->getSpecialPrice() != "") : ?>
+		<?php $_current_timer = time(); ?>
+        <script type="text/javascript">
+            var dthen<?php echo $count; ?> = new Date("<?php echo Date("m/d/y", strtotime($toDate)).' 11:59:00 PM'; ?>");
+            start = "<?php echo Date("m/d/y h:i:s A", $_current_timer); ?>";
+            start_date = Date.parse(start);
+            var dnow<?php echo $count; ?> = new Date(start_date);
+            if(CountStepper>0)
+                ddiff= new Date((dnow<?php echo $count; ?>)-(dthen<?php echo $count; ?>));
+            else
+                ddiff = new Date((dthen<?php echo $count; ?>)-(dnow<?php echo $count; ?>));
+            //gsecs<?php echo $count; ?> = Math.floor(ddiff.valueOf()/1000);
+			<?php if(strtotime($fromDate) <= $_current_timer){ ?>
+				gsecs<?php echo $count; ?> = Math.floor(ddiff.valueOf()/1000);
+			<?php }else{ ?>
+				gsecs<?php echo $count; ?> = -1;
+			<?php } ?>
+
+            var iid<?php echo $count; ?> = "countbox_<?php echo $count; ?>";
+            CountBack(gsecs<?php echo $count; ?>,"countbox_"+j, j);
+            j++;
+        </script>
+<?php $count = $count + 1; ?>
+<?php endif;endif;endif; ?>
+
+<!--Dynamic style changes goes here-->
+
+
+<?php $buttonTitle = $this->__('Buy now'); ?>
+<?php if($_product->isSaleable()): ?>
+<?php 
+    define('CUSTOM_BACKORDERS_YES_NOTIFY', 2);
+    define('CUSTOM_STOCK_INSTOCK', 1);
+    // tạm hết hàng
+    $rquantity = (int)Mage::getModel('cataloginventory/stock_item')->loadByProduct($_product)->getQty(); 
+    // sắp phát hành
+    $rbackorder = $_product->getStockItem()->getBackorders();
+    $rstockavailability = $_product->getStockItem()->getIsInStock();
+    $soon_release = $_product->getData("soon_release");
+    $comboFlag = "";
+    // combo 
+    //$typeId = Mage_Catalog_Model_Product_Type::TYPE_BUNDLE;
+//            // hàng ở xa
+    if ($_product->getTypeId() != Mage_Catalog_Model_Product_Type::TYPE_BUNDLE){
+	$resource = Mage::getSingleton('core/resource');
+	$readConnection = $resource->getConnection('core_read');
+	$query = 'select ReliableQuantity from fahasa_stock where SKU =  \''. $_product->getSku().'\' and NearQuantity <= 0' ;
+	$reliableQuantity = $readConnection->fetchOne($query);
+    }else{
+	$comboFlag = "btn-cart-combo";
+    }
+    if(empty($reliableQuantity)){
+	$reliableQuantity = 0;
+    }
+    $mess = array();        
+    // san pham simple tam het hang
+    if($rquantity <= 0 && $_product->getTypeId() != Mage_Catalog_Model_Product_Type::TYPE_BUNDLE){
+	$mess[] = $this->__("Temporarily out of stock.<br/> Please pre-order this item so Fahasa can contact you when it is available.");
+    }
+
+    // sap phat hanh
+    if($soon_release == 1) {
+	$mess[] = Mage::helper('fahasa_catalog/product')->getProductExpectedMsg($_product)[0];
+    }
+    
+    if(sizeof($mess) == 0){
+	$promotion_message = $_product->getPromoMessage();
+	if(!empty($promotion_message)){
+	    $promotion_from = $_product->getPromoMessageStart();
+	    $promotion_to = $_product->getPromoMessageTo();
+	    $can_show = false;
+	    $date_now = date('Y-m-d', strtotime('+7 hours'));
+	    if(!empty($promotion_from && !empty($promotion_to))){
+		$promotion_from = date('Y-m-d', strtotime($promotion_from));
+		$promotion_to = date('Y-m-d', strtotime($promotion_to));
+		if($date_now >= $promotion_from && $date_now <= $promotion_to){
+		    $mess[] = $promotion_message;
+		}
+	    }
+	}
+	
+    }
+?>
+    <?php $addButtons = '<li class="fhs-bsidebar-tab-items-addcart"><button type="button" title="'.$this->__("Add to Cart").'" class="btn-cart-to-cart" onclick="productAddToCartForm.submit(this); return false;"><div class="shopping-cart-icon"></div><span>'.$this->__("Add to Cart").'</span></button></li>';?>
+    <button type="button" title="<?php echo $this->__("Add to Cart") ?>" class="btn-cart-to-cart" onclick="productAddToCartForm.submit(this); return false;"><div class="shopping-cart-icon"></div><span><?php echo $this->__("Add to Cart") ?></span></button>
+    <?php 
+    
+	    // hang o xa
+	if($reliableQuantity > 0){
+	    $mess[] = $this->__("Items are not available in town. <br/>It will take 3-5 business days for delivering (2 more days for rural areas).");
+	    $is_product_avalible = true;
+	    ?>
+	    <?php $addButtons .= '<button type="button" title="'.$this->__("Add to Cart").'" class="btn-cart-to-cart" onclick="productAddToCartForm.submit(this); return false;"><div class="shopping-cart-icon"></div><span>'.$this->__("Add to Cart").'</span></button>';?>
+	    <button type="button" title="<?php echo $this->__('Buy now') ?>" is_buyNow="true" class="btn-buy-now <?php echo $comboFlag ?>" onclick="productAddToCartForm.submit(this); return false;">
+		<span><?php echo $this->__('Buy now') ?></span></button>
+	    <?php $addButtons .= '<li class="fhs-bsidebar-tab-items-buynow">'
+		    .'<button type="button" title="'.$this->__('Buy now') .'" is_buyNow="true" class="btn-buy-now '. $comboFlag.'" onclick="productAddToCartForm.submit(this); return false;"><span>'.$this->__('Buy now').'</span></button>'
+		    . '</li>';?>
+	    <?php }
+	else if (($rquantity <= 0) || ($soon_release == 1) || (($rquantity <= 0) && ($rbackorder == CUSTOM_BACKORDERS_YES_NOTIFY) && ($rstockavailability == CUSTOM_STOCK_INSTOCK))) { 
+	?>
+	    <button type="button" title="<?php echo $this->__('Pre-Order') ?>" is_buyNow="true" class="btn-buy-now <?php echo $comboFlag ?>" onclick="productAddToCartForm.submit(this); return false;">
+		<span><?php echo $this->__('Pre-Order') ?></span></button>
+	    <?php $addButtons .= '<li class="fhs-bsidebar-tab-items-buynow">'
+			    .'<button type="button" title="'.$this->__('Pre-Order') .'" is_buyNow="true" class="btn-buy-now '. $comboFlag.'" onclick="productAddToCartForm.submit(this); return false;"><span>'.$this->__('Pre-Order').'</span></button>'
+			    . '</li>';?>
+	<?php } else {
+	    $is_product_avalible = true;
+	    ?>
+	    <button type="button" title="<?php echo $this->__('Buy now') ?>" is_buyNow="true" class="btn-buy-now <?php echo $comboFlag ?>" onclick="productAddToCartForm.submit(this); return false;">
+		<span><?php echo $this->__('Buy now') ?></span></button>
+	    <?php $addButtons .= '<li class="fhs-bsidebar-tab-items-buynow">'
+			    .'<button type="button" title="'.$this->__('Buy now') .'" is_buyNow="true" class="btn-buy-now '. $comboFlag.'" onclick="productAddToCartForm.submit(this); return false;"><span>'.$this->__('Buy now').'</span></button>'
+			    . '</li>';?>
+	<?php }?>
+
+	<?php
+	// combo khong giao rieng le
+	    if ($_product->getTypeId() == Mage_Catalog_Model_Product_Type::TYPE_BUNDLE) {
+		$mess[] = $this->__("The items in combo will not be delivered separately.");
+	    }
+	?>
+	<!--// show message-->
+	<?php 
+	    if(count($mess) > 0){
+		Mage::register('product_view_msg', $mess);
+	    }
+    ?>
+	
+<?php endif; ?>
+<?php
+if(Mage::registry('addbutton')){
+    Mage::unregister('addbutton');
+}
+Mage::register('addbuttons', $addButtons);
+
+if(Mage::registry('is_product_avalible')){
+    Mage::unregister('is_product_avalible');
+}
+Mage::register('is_product_avalible', $is_product_avalible);
+
+?>

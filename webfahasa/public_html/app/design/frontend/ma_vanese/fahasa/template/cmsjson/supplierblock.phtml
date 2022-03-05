@@ -1,0 +1,25 @@
+<?php
+$pageUrl = $this->getData(page_url);
+$descType = $this->getData(desc_type);
+$result = $this->getDescriptionByPageUrl($pageUrl);
+$description = html_entity_decode($result['description']);
+$imageUrl = $result['image_url'];
+$descTitle = $result['desc_title'];
+$domain = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);
+$testDomain = 'https://fahasa.com/'
+?>
+
+
+<div class="fhs-supplier-description row">
+    <div class="col-sm-2 col-md-2 col-lg-2 col-xs-12">
+        <img class="img-responsive" src="<?php echo $domain ?><?php echo $imageUrl ?>" alt="<?php echo $descTitle ?>" height="400" width="400">
+    </div>
+
+    <div class="col-sm-10 col-md-10 col-lg-10 col-xs-12">
+
+        <div class="title"><p><?php echo mb_strtoupper($descTitle, "UTF-8") ?></p></div>
+        <div class="description">
+            <?php echo str_replace("%3F", "?", $description) ?>
+        </div>
+    </div>
+</div>

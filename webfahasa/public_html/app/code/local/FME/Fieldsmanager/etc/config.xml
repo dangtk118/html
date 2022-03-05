@@ -1,0 +1,276 @@
+<?xml version="1.0"?>
+<!--
+/*////////////////////////////////////////////////////////////////////////////////
+ \\\\\\\\\\\\\\\\\\\\\\\\\  FME Fieldsmanager extension  \\\\\\\\\\\\\\\\\\\\\\\\\
+ /////////////////////////////////////////////////////////////////////////////////
+ \\\\\\\\\\\\\\\\\\\\\\\\\ NOTICE OF LICENSE\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+ ///////                                                                   ///////
+ \\\\\\\ This source file is subject to the Open Software License (OSL 3.0)\\\\\\\
+ ///////   that is bundled with this package in the file LICENSE.txt.      ///////
+ \\\\\\\   It is also available through the world-wide-web at this URL:    \\\\\\\
+ ///////          http://opensource.org/licenses/osl-3.0.php               ///////
+ \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+ ///////                      * @category   FME                            ///////
+ \\\\\\\                      * @package    FME_Fieldsmanager              \\\\\\\
+ ///////    * @author     Malik Tahir Mehmood <malik.tahir786@gmail.com>   ///////
+ \\\\\\\                                                                   \\\\\\\
+ /////////////////////////////////////////////////////////////////////////////////
+ \\* @copyright  Copyright 2010 © free-magentoextensions.com All right reserved\\\
+ /////////////////////////////////////////////////////////////////////////////////
+ */
+
+
+-->
+<config>
+    <modules>
+        <FME_Fieldsmanager>
+            <version>1.0.2</version>
+        </FME_Fieldsmanager>
+    </modules>
+    <admin>
+	
+        <routers>
+            <fieldsmanageradmin>
+                <use>admin</use>
+                <args>
+                    <module>FME_Fieldsmanager</module>
+                    <frontName>fieldsmanageradmin</frontName>
+                </args>
+            </fieldsmanageradmin>
+	   
+        </routers>
+    </admin>
+    <adminhtml>
+        <layout>
+            <updates>
+                <fieldsmanager>
+                    <file>fieldsmanager.xml</file>
+                </fieldsmanager>
+            </updates>
+        </layout>
+	<events>
+		<controller_action_postdispatch_adminhtml_sales_order_create_save>
+			<observers>
+				<fm_save_adminorder_create>
+					<type>singleton</type>
+					<class>fieldsmanager/fieldsmanager</class>
+					<method>AdminOrderBeforeSaveToFM</method>
+				</fm_save_adminorder_create>
+			</observers>
+		</controller_action_postdispatch_adminhtml_sales_order_create_save>
+		<controller_action_postdispatch_adminhtml_sales_order_edit_save>
+			<observers>
+				<fm_save_adminorder_edit>
+					<type>singleton</type>
+					<class>fieldsmanager/fieldsmanager</class>
+					<method>AdminOrderBeforeSaveToFM</method>
+				</fm_save_adminorder_edit>
+			</observers>
+		</controller_action_postdispatch_adminhtml_sales_order_edit_save>
+		<controller_action_postdispatch_adminhtml_sales_order_edit_start>
+			<observers>
+				<fm_save_adminorder_edit_start>
+					<type>singleton</type>
+					<class>fieldsmanager/fieldsmanager</class>
+					<method>AdminOrderEditBefore</method>
+				</fm_save_adminorder_edit_start>
+			</observers>
+		</controller_action_postdispatch_adminhtml_sales_order_edit_start>
+		<controller_action_postdispatch_adminhtml_sales_order_view>
+			<observers>
+				<fm_save_order_success>
+					<type>singleton</type>
+					<class>fieldsmanager/fieldsmanager</class>
+					<method>AdminOrderSaveToFM</method>
+				</fm_save_order_success>
+			</observers>
+		</controller_action_postdispatch_adminhtml_sales_order_view>
+		<customer_save_after>
+			<observers>
+				<fm_save_edit_customer>
+					<type>singleton</type>
+					<class>fieldsmanager/fieldsmanager</class>
+					<method>CustomerBeforeSaveToFM</method>
+				</fm_save_edit_customer>
+			</observers>
+		</customer_save_after>
+	</events>
+    </adminhtml> 
+    <frontend>
+	<events>
+		<checkout_type_onepage_save_order_after>
+			<observers>
+				<fm_save_order_success>
+					<type>singleton</type>
+					<class>fieldsmanager/fieldsmanager</class>
+					<method>OrderBeforeSaveToFM</method>
+				</fm_save_order_success>
+			</observers>
+		</checkout_type_onepage_save_order_after>
+		<customer_login>
+			<observers>
+				<fm_save_new_customer>
+					<type>singleton</type>
+					<class>fieldsmanager/fieldsmanager</class>
+					<method>CustomerBeforeSaveToFM</method>
+				</fm_save_new_customer>
+			</observers>
+		</customer_login>
+		<customer_save_after>
+			<observers>
+				<fm_save_edit_customer>
+					<type>singleton</type>
+					<class>fieldsmanager/fieldsmanager</class>
+					<method>CustomerBeforeSaveToFM</method>
+				</fm_save_edit_customer>
+			</observers>
+		</customer_save_after>
+		<!--<customer_login>controller_action_postdispatch_customer_account_editpost-->
+		<!--	<observers>-->
+		<!--		<fm_save_new_customer>-->
+		<!--			<type>singleton</type>-->
+		<!--			<class>fieldsmanager/fieldsmanager</class>-->
+		<!--			<method>CustomerBeforeSaveToFM</method>-->
+		<!--		</fm_save_new_customer>-->
+		<!--	</observers>-->
+		<!--</customer_login>-->
+	</events>
+        <layout>
+             <updates>
+                  <fieldsmanager>
+                        <file>fieldsmanager.xml</file>
+                  </fieldsmanager>
+             </updates>
+        </layout>
+    </frontend>
+    
+    <global>
+
+        <blocks>
+            <fieldsmanager>
+                <class>FME_Fieldsmanager_Block</class>
+            </fieldsmanager>
+	    <adminhtml>
+                <rewrite>
+                        <sales_order_view_info>FME_Fieldsmanager_Block_Sales_Orderview</sales_order_view_info>
+			<customer_edit_tabs>FME_Fieldsmanager_Block_Customer_Tabs</customer_edit_tabs>
+			<sales_order_create_form_account>FME_Fieldsmanager_Block_Sales_Account</sales_order_create_form_account>
+                </rewrite>
+            </adminhtml>
+
+            <checkout>
+		<rewrite>
+		    <onepage_billing>FME_Fieldsmanager_Block_Checkout_Billing</onepage_billing>
+                    <onepage_shipping>FME_Fieldsmanager_Block_Checkout_Shipping</onepage_shipping>
+                   <onepage_shipping_method_available>FME_Fieldsmanager_Block_Checkout_Shipping_Method_Available</onepage_shipping_method_available>
+                    <onepage_payment_methods>FME_Fieldsmanager_Block_Checkout_Payment_Methods</onepage_payment_methods>
+                    <onepage_review_info>FME_Fieldsmanager_Block_Checkout_Review_Info</onepage_review_info>
+		</rewrite>
+	    </checkout>
+	    <customer>
+                <rewrite>
+                        <form_register>FME_Fieldsmanager_Block_Customer_Register</form_register>
+			<form_edit>FME_Fieldsmanager_Block_Customer_Edit</form_edit>
+                </rewrite>
+            </customer>
+	    <rewrite>
+		<checkout_block_onepage_billing>FME_Fieldsmanager_Block_Checkout_Billing</checkout_block_onepage_billing>
+                <checkout_block_onepage_shipping>FME_Fieldsmanager_Block_Checkout_Shipping</checkout_block_onepage_shipping>
+               <checkout_block_onepage_shipping_method_available>FME_Fieldsmanager_Block_Checkout_Shipping_Method_Available</checkout_block_onepage_shipping_method_available>
+                <checkout_block_onepage_payment_methods>FME_Fieldsmanager_Block_Checkout_Payment_Methods</checkout_block_onepage_payment_methods>
+                <checkout_block_onepage_review_info>FME_Fieldsmanager_Block_Checkout_Review_Info</checkout_block_onepage_review_info>
+		<customer_block_form_register>FME_Fieldsmanager_Block_Customer_Register</customer_block_form_register>
+		<customer_block_form_edit>FME_Fieldsmanager_Block_Customer_Edit</customer_block_form_edit>
+		
+	    </rewrite>
+           
+        </blocks>
+        <models>
+            <fieldsmanager>
+                <class>FME_Fieldsmanager_Model</class>
+		<resourceModel>fieldsmanager_mysql4</resourceModel>
+            </fieldsmanager>
+	    <checkout>
+		<rewrite>
+		    <type_onepage>FME_Fieldsmanager_Model_Type_Onepage</type_onepage>
+		</rewrite>
+	    </checkout>
+            <catalog>
+		<rewrite>
+		    <entity_attribute>FME_Fieldsmanager_Model_Entity_Attribute</entity_attribute>
+		   
+		</rewrite>
+	    </catalog>
+	    <customer>
+		<rewrite>
+		    <customer>FME_Fieldsmanager_Model_Customer</customer>
+		  
+		</rewrite>
+	    </customer>
+	    <rewrite>
+		<checkout_model_type_onepage>FME_Fieldsmanager_Model_Type_Onepage</checkout_model_type_onepage>
+		<catalog_model_entity_attribute>FME_Fieldsmanager_Model_Entity_Attribute</catalog_model_entity_attribute>
+		<sales_model_order_invoice>FME_Fieldsmanager_Model_Order_Invoice</sales_model_order_invoice>
+		<sales_model_order>FME_Fieldsmanager_Model_Order</sales_model_order>
+		<sales_model_order_pdf_abstract>FME_Fieldsmanager_Model_Order_Pdf_Abstract</sales_model_order_pdf_abstract>
+		<customer_model_customer>FME_Fieldsmanager_Model_Customer</customer_model_customer>
+		
+	    </rewrite>
+	    <sales>
+		<rewrite>
+		    <order_pdf_abstract>FME_Fieldsmanager_Model_Order_Pdf_Abstract</order_pdf_abstract>
+		    <order_invoice>FME_Fieldsmanager_Model_Order_Invoice</order_invoice>
+		    <order>FME_Fieldsmanager_Model_Order</order>
+		</rewrite>
+	    </sales>
+	    <fieldsmanager_mysql4>
+		<class>FME_Fieldsmanager_Model_Mysql4</class>
+		<entities>
+		    <customers>
+			<table>fieldsmanager_customers</table>
+		    </customers>
+		    <orders>
+			<table>fieldsmanager_orders</table>
+		    </orders>
+		    <store>
+			<table>fieldsmanager_store</table>
+		    </store>
+		    <customer_group>
+			<table>fieldsmanager_customer_group</table>
+		    </customer_group>
+		    <products>
+			<table>fieldsmanager_products</table>
+		    </products>
+		    <category>
+			<table>fieldsmanager_category</table>
+		    </category>
+		</entities>
+	    </fieldsmanager_mysql4>
+        </models>
+        <helpers>
+            <fieldsmanager>
+                <class>FME_Fieldsmanager_Helper</class>
+            </fieldsmanager>
+        </helpers>
+        <resources>
+            <fieldsmanager_setup>
+                <setup>
+                    <module>FME_Fieldsmanager</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </fieldsmanager_setup>
+            <fieldsmanager_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </fieldsmanager_write>
+            <fieldsmanager_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </fieldsmanager_read>
+        </resources>
+    </global>
+</config>

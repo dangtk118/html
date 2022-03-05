@@ -1,0 +1,279 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2014 X.commerce, Inc. (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+$SKIN_URL_PENDING = $this->getSkinUrl('images/order_status/ico_waiting_ver2.svg', array('_secure' => true));
+$mobile = Mage::helper('fhsmobiledetect')->isMobile();
+$summary = $this->getData('summary');
+$symbol = Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol();
+$is_mobile = Mage::helper('fhsmobiledetect')->isMobile();
+$shipping_address = $this->_order->getShippingAddress();
+$skin_url = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true);
+$queryfier = Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix');
+$islogin = Mage::getSingleton('customer/session')->isLoggedIn();
+
+?>
+<style type="text/css">
+.order-review-item-image{
+    border-bottom: 1px solid #ededed;border-right: 1px solid #ededed;text-align: center;padding: 5px;
+}
+.order-review-item-name{
+    border-bottom: 1px solid #ededed;border-right: 1px solid #ededed;
+}
+.order-review-item-sku{
+    border-bottom: 1px solid #ededed;border-right: 1px solid #ededed;
+}
+.order-review-item-price{
+    border-bottom: 1px solid #ededed;border-right: 1px solid #ededed;text-align: center;
+}
+.order-review-item-quantity{
+    border-bottom: 1px solid #ededed;border-right: 1px solid #ededed;
+}
+.order-review-item-subtotal{
+    border-bottom: 1px solid #ededed;
+    text-align:right;
+}
+.fhs_order_info{
+    background-color: white;
+    margin-top: 5px;
+    padding: 16px;
+}
+.fhs_order_info > div{
+    font-size: 1.2em;
+    margin: 4px 0;
+    text-align: center;
+}
+.fhs_order_info > div:first-of-type{
+    margin: 16px 0 0 0;
+}
+.fhs_order_info > div:nth-of-type(2){
+    font-size: 2em;
+    margin: 16px 0;
+    color: #28B928;
+    font-weight: 600;
+}
+.fhs_order_info > div:nth-of-type(4) > span,
+.fhs_order_info > div:nth-of-type(4) > span > a{
+    color: #F39801;
+}
+.fhs_order_info .fhs-btn-box{
+    margin: 16px 0 8px 0;
+}
+.fhs_registerquick_info{
+    background-color: white;
+    margin-top: 11px;
+    padding: 0 16px;
+}
+.fhs_registerquick_info .fhs-registerquick-info{
+    padding: 8px calc(50% - 290px) !important;
+}
+.fhs_registerquick_info .popup-registerquick-title{
+    font-size: 1.4em !important;
+}
+.fhs_registerquick_info .fhs-registerquick-order{
+    text-align: center;
+}
+.fhs_registerquick_info .popup-change-content-in{
+    font-size: 1.2em;
+    padding: 0 !important;
+}
+.fhs_registerquick_info .popup-change-content{
+    padding: 0 16px 0 16px !important;
+}
+.btn-method-change a{
+    color: #2F80ED;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+}
+
+.btn-method-change a:hover{
+    color:  #2F80ED;
+}
+@media screen and (max-width: 750px){
+    .fhs_registerquick_info .fhs-registerquick-info{
+	padding: 8px 16px !important;
+    }
+    .fhs_registerquick_info .fhs-registerquick-order{
+	text-align: left;
+    }
+}
+
+</style>
+<div class="<?php if(!$mobile): ?> status-order-template <?php else : ?> status-order-template-mobile <?php endif ?>">
+    <div class="content-status-order">
+        <?php if($islogin) : ?>
+        <div class="image-status-order">
+            <img src="<?php echo $SKIN_URL_PENDING; ?>"  class="center">
+        </div>
+        <?php endif ?>
+        <div class="title-status-order"><h1 class="pending-order">ĐƠN HÀNG CỦA BẠN ĐANG XỬ LÝ</h1></div>
+        <div class="text-status-order">
+            <?php if ($this->getOrderId()): ?>
+            <?php if ($this->getCanViewOrder()) : ?>
+            <p><?php echo $this->__('Your order is : # %s.', sprintf('<a href="%s"><span class="color-fhs-orange">%s</span></a>', $this->escapeHtml($this->getViewOrderUrl()), $this->escapeHtml($this->getOrderId()))) ?></p>
+        <?php else : ?>
+            <p><?php echo $this->__('Your order is : # %s.', sprintf('<span class="color-fhs-orange">%s</span>', $this->escapeHtml($this->getOrderId()))) ?></p>
+        <?php endif; endif; ?>
+            <p>Bạn vui lòng kiểm tra lại đơn hàng sau 15-20 phút.</p>
+            <p>Nếu đợi quá lâu xin bạn liên hệ <span class="color-fhs-black">1900.63.64.67</span> để được hỗ trợ. Xin lỗi vì sự bất tiện này.</p>
+        </div>
+        <div>
+            <div class="fhs-btn-box">
+                <button type="button" onclick="location.href='/';" title="<?php echo $this->__('Continue shopping'); ?>" class="fhs-btn-confirm fhs-btn-goto" style="text-transform: uppercase;font-size: 0.95em; font-weight: 600;width: 300px;"><span><?php echo $this->__('Continue shopping'); ?></span></button>
+            </div>
+        </div>
+        <?php if ($this->getOrderId() && $this->getCanViewOrder()) : ?>
+        <div style="margin-top:10px;">
+                <div class="fhs-btn-box">
+                    <button type="button" onclick="location.href='<?php echo $this->escapeHtml($this->getViewOrderUrl()); ?>';" title="<?php echo $this->__('View my order'); ?>" class="fhs-btn-order-detail" style="text-transform: uppercase;font-size: 0.95em; font-weight: 600;width: 300px;"><span><?php echo $this->__('View my order'); ?></span></button>
+                </div>
+            </div>
+        <?php endif; ?>
+    </div>
+    <?php if ($islogin) : ?>
+        <div class="contact-status-order">
+            <div><span class="color-fhs-black"><?php echo $this->__('Contact Us') ?>:</span></div>
+            <div><?php echo $this->__('Please call us at:') ?>  <span class="color-fhs-orange">1900.63.64.67</span></div>
+            <div><?php echo $this->__('Please email us at:') ?> <span class="color-fhs-orange">info@fahasa.com</span></div>
+        </diV>
+    <?php endif; ?>
+</div>
+
+<?php if($this->getOrderId() && Mage::getStoreConfig("customer/register_guest_order/is_active") == 1 && !$islogin):?>
+<?php 
+    $shipping_address = $this->_order->getShippingAddress();
+			    
+    $first_name = !empty($shipping_address->getFirstname())?trim($shipping_address->getFirstname()):'';
+    $last_name = !empty($shipping_address->getLastname())?trim($shipping_address->getLastname()):'';
+    $ward = $shipping_address->getWard()?$shipping_address->getWard():'';
+    $street = $shipping_address->getStreet()?$shipping_address->getStreet():'';
+    $country_id = $shipping_address->getCountryId()?$shipping_address->getCountryId():'';
+    $region = $shipping_address->getRegion()?$shipping_address->getRegion():'';
+    $city = $shipping_address->getCity()?$shipping_address->getCity():'';
+    $address = (!empty($street[0])?$street[0].", ":'')
+	.(!empty($ward)?$ward.", ":'')
+	.(!empty($city)?$city.", ":'')
+	.(!empty($region)?$region.", ":'')
+	.$country_id;
+?>
+<div class="fhs_registerquick_info">
+    <div class="popup-registerquick-title">
+	<?php echo $this->__('Signup quick fahasa.com member');?>
+    </div>
+    <div class="popup-change-content-in">
+	<div class="fhs-registerquick-info">
+	    <div>
+		<?php echo $this->__('Account information will automatically be added to your account:');?>
+	    </div>
+	    <div class="fhs-info-icon fhs-style-bold-600">
+		<div><img src="<?php echo $skin_url.'frontend/ma_vanese/fahasa/images/ico_name_orange.svg?q='.$queryfier; ?>" alt="Kiwi standing on oval"></div>
+		<div><?php echo trim($last_name)." ".trim($first_name);?></div>
+	    </div>
+	    <div class="fhs-info-icon fhs-style-bold-600">
+		<div><img src="<?php echo $skin_url.'frontend/ma_vanese/fahasa/images/ico_address_orange.svg?q='.$queryfier; ?>" alt="Kiwi standing on oval"></div>
+		<div><?php echo $address;?></div>
+	    </div>
+	</div>
+	<div class="popup-change-content">
+	    <div class="fhs-registerquick-order"><?php echo $this->__('Your order is worth <span>%s vnd</span>, you will receive <span>%s F-Point</span> when registering as a member of Fahasa.com',number_format(round($summary['grand_total'], 0), 0, ",", "."),number_format(round(($summary['grand_total']/100), 0), 0, ",", "."));?></div>
+	    <div class="fhs-input-box">
+		<div class="fhs-btn-box">
+		    <button type="button" title="<?php echo $this->__('Sign Up') ?>" style="width: 300px;"
+			onclick="$jq('.youama-ajaxlogin-cover').fadeIn();$jq('.youama-registerquick-window').fadeIn();$jq('#registerquick_phone').focus();" 
+			class="fhs-btn-confirm fhs-btn-goto lg-close"><span><?php echo $this->__('Sign Up') ?></span></button>
+		</div>
+	    </div>
+	    <div class="fhs-popup-msg fhs-registerquick-msg"></div>
+	</div>
+    </div>
+</div>
+
+<div class="youama-change-window youama-registerquick-window">
+    <div class="popup-registerquick-title">
+	<?php echo $this->__('Signup quick fahasa.com member');?>
+    </div>
+    <div class="popup-change-content-in">
+	<div class="fhs-input-box fhs-input-send">
+	    <label><?php echo $this->__('Phone number');?></label>
+	    <div class="fhs-input-group">
+		<input class="fhs-textbox" type="text" placeholder="<?php echo $this->__('Enter phone number') ?>" id="registerquick_phone" name="youama-email" value="<?php echo $shipping_address->getTelephone();?>" maxlength="11" autocomplete="off"/>
+		<span class="fhs-input-icon fhs-textbox-registerquick-send"><?php echo $this->__('Send OTP code');?></span>
+	    </div>
+	    <div class="fhs-input-alert"></div>
+	</div>
+	<div class="fhs-input-box">
+	    <label><?php echo $this->__('Confirm OTP code');?></label>
+	    <div class="fhs-input-group">
+		<input class="fhs-textbox" type="text" placeholder="<?php echo $this->__('6 characters') ?>" id="registerquick_phone_otp" name="otpvalue" value="" maxlength="6" autocomplete="off" disabled="disabled"/>
+		<span class="fhs-input-icon fhs-textbox-alert"></span>
+	    </div>
+	    <div class="fhs-input-alert"></div>
+	</div>
+	<div class="fhs-input-box fhs-input-display">
+	    <div class="clear space"></div>
+	    <label><?php echo $this->__('Password');?></label>
+	    <div class="fhs-input-group">
+		<input class="fhs-textbox" type="password" placeholder="<?php echo $this->__('Enter password') ?>" id="registerquick_password" name="youama-password" maxlength="30" value="" autocomplete="off" disabled="disabled"/>
+		<span class="fhs-input-icon fhs-textbox-showtext"><?php echo $this->__('Show');?></span>
+	    </div>
+	    <div class="fhs-input-alert"></div>
+	</div class="fhs-input-box">
+    </div>
+    <div style="border-top:1px solid #ced4da; margin: 9px 16px;"></div>
+    <div class="popup-change-content-in">
+	<div class="fhs-registerquick-info">
+	    <div>
+		<?php echo $this->__('Account information will automatically be added to your account:');?>
+	    </div>
+	    <div class="fhs-info-icon fhs-style-bold-600">
+		<div><img src="<?php echo $skin_url.'frontend/ma_vanese/fahasa/images/ico_name_orange.svg?q='.$queryfier; ?>" alt="Kiwi standing on oval"></div>
+		<div><?php echo trim($last_name)." ".trim($first_name);?></div>
+	    </div>
+	    <div class="fhs-info-icon fhs-style-bold-600">
+		<div><img src="<?php echo $skin_url.'frontend/ma_vanese/fahasa/images/ico_address_orange.svg?q='.$queryfier; ?>" alt="Kiwi standing on oval"></div>
+		<div><?php echo $address;?></div>
+	    </div>
+	</div>
+    </div>
+    <div style="border-top:1px solid #ced4da; margin: 9px 16px;"></div>
+    <div class="popup-change-content">
+	<div class="fhs-registerquick-order"><?php echo $this->__('Your order is worth <span>%s vnd</span>, you will receive <span>%s F-Point</span> when registering as a member of fahasa.com',number_format(round($summary['grand_total'], 0), 0, ",", "."),number_format(round(($summary['grand_total']/100), 0), 0, ",", "."));?></div>
+	<div class="fhs-input-box">
+	    <div class="fhs-btn-box">
+		<button type="button" title="<?php echo $this->__('Sign Up') ?>" class="fhs-btn-confirm fhs-btn-registerquick" disabled><span><?php echo $this->__('Sign Up') ?></span></button>
+		<button type="button" title="<?php echo $this->__('Cancel ')?>" class="fhs-btn-back lg-close fhs-btn-registerquick-cancel"><span><?php echo $this->__('Cancel ') ?></span></button>
+	    </div>
+	</div>
+	<div class="fhs-popup-msg fhs-registerquick-msg"></div>
+    </div>
+</div>    
+<script type="text/javascript">
+    $jq(document).ready(function(){
+	fhs_account.initRegisterQuick(<?php echo $this->_order->getEntityId();?>);
+    });
+</script>
+
+<?php endif;?>
+

@@ -1,0 +1,241 @@
+<?php $customerId = $this->getRequest()->getParam('id'); 
+$facebookId = $this->getRequest()->getParam('facebookId');
+$netcore_enable = Mage::getStoreConfig('netcore/general/enable');
+?>
+<?php $custinfo = Mage::getModel('customer/customer')->load($customerId); ?>
+<div class="refer-code col-sm-12 col-md-12 col-xs-12" style="background-color: white; padding: 30px;">
+    <?php $customer = Mage::getSingleton('customer/session')->getCustomer(); ?>
+    <div style="padding: 20px 0;">
+        <?php $referCode = $customer->getReferCode(); ?>
+        <?php if (isset($referCode)): ?>
+            <div id="refer-code">
+                <div class="col-md-12 col-sm-12 col-xs-12 my-refer-code-title"><?php echo $this->__("Your Refer Code:"); ?></div>
+                <div class="col-md-12 col-sm-12 col-xs-12 my-refer-code"><?php echo strtoupper($referCode) ?></div>
+            </div>
+        <?php else: ?>
+            <div id="activate-refer">
+                <div class="activate-refer-title" style=""><?php echo $this->__("Activate refer code"); ?></div>
+                <div style="" class="col-md-4 col-sm-8 col-xs-12 telephone-form">
+                    <div class="form-group">
+                        <label for="telephone"><?php echo $this->__('Telephone') ?> <span class="required">*</span></label>
+                        <input type="text" name="telephone" id="telephone" style="" class="input-text required-entry validate-length maximum-length-11 minimum-length-10 validate-digits" required autocomplete="on" placeholder="VD: 0989123456"/>
+                    </div>
+                    <div class="form-group">
+                        <button type="button" class="sent-otp btn" id="activate-telephone" style=""><?php echo $this->__("Activate") ?></button>
+                    </div>
+                    <div><i><?php echo $this->__("Note: Only apply for Vietnamese phone numbers"); ?></i></div>
+                    <div id="mess-activate-refer" style=""></div>
+                </div>
+            </div>
+            <div id="telephone-compare">
+                <div style="" class="col-md-4 otp-form">
+                    <div class="form-group">
+                    <label for="otp"><?php echo $this->__('OTP Code') ?> <span class="required">*</span></label>
+                    <input type="text" name="otp" id="otp" style="" class="input-text required-entry"/>
+                    </div>
+                    <div class="form-group">
+                        <button type="button" class="btn" id="compare-otp" style=""><?php echo $this->__("Confirm") ?></button>
+                    </div>
+                    <div id="telephone-compare-alert" style=""></div>
+                </div>
+                <div style="text-align: center;margin: 30px;">
+                    <a href="javascript:void(0);" class="sent-otp" style=""><?php echo $this->__("Resend OTP") ?></a>
+                </div>
+            </div>
+        <?php endif; ?>
+    </div>
+</div>
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+        // resent otp
+        jQuery(".sent-otp").click(function () {
+            if (validatePhone('telephone')) {
+                var telephone = jQuery("input#telephone").val();
+                telephone = telephone.replace(/\s/g, "");
+                sentOTP(telephone);
+            } else {
+                jQuery('#mess-activate-refer').html('<?php echo $this->__("Invalid phone number"); ?>');
+                jQuery('#mess-activate-refer').fadeIn();
+            }
+
+        });
+
+        jQuery("#compare-otp").click(function () {
+            if (validatePhone('telephone')) {
+                var telephone = jQuery("input#telephone").val();
+                telephone = telephone.replace(/\s/g, "");
+                var otp = jQuery("input#otp").val();
+                if (otp.length != 0) {
+                    compareOtp(telephone, otp);
+                } else {
+                    jQuery('#telephone-compare-alert').html('<?php echo $this->__("Invalid OTP"); ?>');
+                    jQuery('#telephone-compare-alert').fadeIn();
+                }
+            } else {
+                jQuery('#mess-activate-refer').html('<?php echo $this->__("Invalid phone number"); ?>');
+                jQuery('#mess-activate-refer').fadeIn();
+            }
+        });
+
+    });
+
+    function compareOtp(telephone, otp) {
+        var customerId = "<?php echo $customerId; ?>";
+        var facebookId = <?php echo json_encode($facebookId); ?>;
+        new Ajax.Request(
+                '<?php echo Mage::getBaseUrl() . 'tryout/telephone/compareOtp'; ?>', {
+                    method: 'post',
+                    parameters: {telephone: telephone, otp: otp, customerId: customerId, facebookId: facebookId},
+                    onLoading: function () {
+                        jQuery('.youama-ajaxlogin-loader').fadeIn();
+                    },
+                    onLoaded: function () {
+                        jQuery('.youama-ajaxlogin-loader').fadeOut();
+                    },
+                    onSuccess: function (transport) {
+                        if (200 == transport.status) {
+                            var key = transport.responseText;
+                            switch (key) {
+
+                                case "UPDATE_ENTITY_FALSE":
+                                    var mess = "<?php echo $this->__("Your account could not be updated!"); ?>";
+                                    jQuery("#telephone-compare-alert").html(mess);
+                                    jQuery("#telephone-compare-alert").fadeIn();
+                                    break;
+
+                                case "OTP_EXPIRE":
+                                    var mess = "<?php echo $this->__("OTP code expires. Please use another OTP code!"); ?>";
+                                    jQuery("#telephone-compare-alert").html(mess);
+                                    jQuery("#telephone-compare-alert").fadeIn();
+                                    break;
+
+                                case "OTP_INVALID":
+                                    var mess = "<?php echo $this->__("OTP code does not exist."); ?>";
+                                    jQuery("#telephone-compare-alert").html(mess);
+                                    jQuery("#telephone-compare-alert").fadeIn();
+                                    break;
+				    
+                                case "VIP_ACTIVATE_SUCCESS":
+                                    jQuery("#activate-refer").hide();
+                                    var mess = "<?php echo $this->__("YOU HAVE SUCCESSFULLY VERIFIED YOUR PHONE NUMBER"); ?>";
+                                    jQuery("#telephone-compare").html("<div style='text-align:center;'>" + mess + "</div>");
+				    <?php if($netcore_enable):?>
+					smartech('contact', '', {
+					    'pk^email': '<?php echo $custinfo->getEmail(); ?>',
+					    'mobile': telephone,
+					    'FIRST_NAME': '<?php echo $custinfo->getFirstname(); ?>',
+					    'LAST_NAME': '<?php echo $custinfo->getLastname(); ?>',
+					    'GENDER': '<?php echo $custinfo->getGender(); ?>',
+					    'DATE_OF_BIRTH': '<?php echo $custinfo->getDob(); ?>'
+					});
+				    <?php endif;?>
+				    
+                                    setTimeout(function () {
+					window.location = "/fpointstore";
+                                    }, 2000);
+                                    break;
+
+                                default:
+                                    jQuery("#activate-refer").hide();
+                                    var mess = "<?php echo $this->__("YOU HAVE SUCCESSFULLY VERIFIED YOUR PHONE NUMBER"); ?>";
+                                    jQuery("#telephone-compare").html("<div style='text-align:center;'>" + mess + "</div>");
+				    <?php if($netcore_enable):?>
+					smartech('contact', '', {
+					    'pk^email': '<?php echo $custinfo->getEmail(); ?>',
+					    'mobile': telephone,
+					    'FIRST_NAME': '<?php echo $custinfo->getFirstname(); ?>',
+					    'LAST_NAME': '<?php echo $custinfo->getLastname(); ?>',
+					    'GENDER': '<?php echo $custinfo->getGender(); ?>',
+					    'DATE_OF_BIRTH': '<?php echo $custinfo->getDob(); ?>'
+					});
+				    <?php endif;?>
+
+                                    setTimeout(function () {
+                                        window.location = "/customer/account/";
+                                    }, 2000);
+                                    break;
+                            }
+                        } else {
+                            var mess = "<?php echo $this->__("SERVER ERROR. Please try again later!"); ?>";
+                            jQuery("#telephone-compare-alert").html(mess);
+                            jQuery("#telephone-compare-alert").fadeIn();
+                        }
+                    }
+                }
+        );
+    }
+
+    function sentOTP(telephone) {
+    var customerId = "<?php echo $customerId; ?>";
+        new Ajax.Request(
+                '<?php echo Mage::getBaseUrl() . 'tryout/telephone/checkTelephone'; ?>', {
+                    method: 'post',
+                    parameters: {telephone: telephone, customerId: customerId},
+                    onLoading: function () {
+                        jQuery('.youama-ajaxlogin-loader').fadeIn();
+                    },
+                    onLoaded: function () {
+                        jQuery('.youama-ajaxlogin-loader').fadeOut();
+                    },
+                    onSuccess: function (transport) {
+                        if (200 == transport.status) {
+                            var key = transport.responseText;
+                            switch (key) {
+                                case "ERROR_SENT_OVERTIMES":
+                                    alert("<?php echo $this->__("Too many OTP request attempts. For support, please contact hotline 1900 636467.") ?>");
+                                    break;
+
+                                case "SENT_OTP":
+                                    jQuery("#telephone-compare").show();
+                                    var mess = "<?php echo $this->__("Check your phone for the OTP code"); ?>";
+                                    jQuery("#mess-activate-refer").html(mess);
+                                    jQuery("#mess-activate-refer").fadeTo(5000, 500).slideUp(500, function () {
+                                        jQuery("#mess-activate-refer").slideUp(1000);
+                                    });
+                                    jQuery("#activate-telephone").hide();
+                                    break;
+
+                                case "ERR_TELEPHONE_EXIST":
+                                    var mess = "<?php echo $this->__("Phone number have been used by other customer. Please use another phone number!"); ?>";
+                                    jQuery("#mess-activate-refer").html(mess);
+                                    jQuery("#mess-activate-refer").fadeTo(5000, 500).slideUp(500, function () {
+                                        jQuery("#mess-activate-refer").slideUp(1000);
+                                    });
+                                    break;
+
+                                case "SERVER_ERROR":
+                                    var mess = "<?php echo $this->__("SERVER ERROR, can't sent otp code. Please try again later!"); ?>";
+                                    jQuery("#mess-activate-refer").html(mess);
+                                    jQuery("#mess-activate-refer").fadeTo(5000, 500).slideUp(500, function () {
+                                        jQuery("#mess-activate-refer").slideUp(1000);
+                                    });
+                                    break;
+                            }
+                        } else {
+                            var mess = "<?php echo $this->__("SERVER ERROR. Please try again later!"); ?>";
+                            jQuery("#mess-activate-refer").html(mess);
+                            jQuery("#mess-activate-refer").fadeTo(5000, 500).slideUp(500, function () {
+                                jQuery("#mess-activate-refer").slideUp(1000);
+                            });
+                        }
+                    }
+                }
+        );
+    }
+
+    function validatePhone(txtPhone) {
+        var a = jQuery("#" + txtPhone).val();
+        // trim
+        a = a.replace(/\s/g, "");
+        var filter = /^[0-9-+]+$/;
+        if (filter.test(a)) {
+            if (a.length < 9 || a.length > 12) {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return false;
+        }
+    }
+</script>

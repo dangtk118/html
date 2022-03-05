@@ -1,0 +1,14 @@
+<?php if (Mage::getStoreConfig('ulu/general/enable') == 1): ?>
+    <script type="text/javascript">
+    //Check and set cookie ULU begin
+	var url = new URL(window.location.href);
+
+	if (url.searchParams.get('utm_source') != null && url.searchParams.get('utm_source') == 'ulu' ) {
+	    setCookie('utm_source', url.searchParams.get('utm_source') , 30 );
+	}
+	if (url.searchParams.get('visitor_id') != null && url.searchParams.get('visitor_id') != '') {
+	    setCookie('visitor_id', url.searchParams.get('visitor_id') , 30 );
+	}
+    //Check and set cookie ULU end
+    </script>
+<?php endif; ?>

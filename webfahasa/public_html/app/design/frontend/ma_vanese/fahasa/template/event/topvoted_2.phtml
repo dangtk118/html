@@ -1,0 +1,220 @@
+<?php 
+$cats = $this->getCategoryNameByCatIds();
+if (count($cats).length > 0){
+    $defaultCatId = $cats[0]['catId'];
+}
+?>
+<div class="top-voted-container">
+    <div  class="youama-ajaxlogin-loader"></div>
+    <div id="alert-vote-product">
+        <div class="youama-noti-window-sucess">
+            <div class="youama-window-outside">
+                <span class="close lg-close">×</span>
+                <div class="youama-window-inside">
+                    <div class="youama-window-title">
+                        <h3 class="error"></h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="top-voted">
+        <div id="preview-product" class="col-lg-12 col-sm-12 col-md-12 col-xs-12">
+            <?php if (count($cats) > 2) :?>
+            <div class="top-voted-header">
+                    <?php foreach ($cats as $key => $cat) : ?>
+                        <button id="cat-<?php echo $cat["catId"]; ?>"
+                                onclick="getTopVotedByCatId(<?php echo $cat["catId"]; ?>)" class="cat-item <?php if ($key == 0) : echo "active";endif; ?>"><?php echo $cat["name"]; ?></button>
+                <?php endforeach; ?>
+            </div>
+            <?php endif;?>
+            <div class="col-lg-4 col-sm-4 col-md-4 col-xs-12 image-container">
+                <a href="" class="product-link">
+                    <img src="" class="image"  />
+                </a>
+            </div>
+            <div class="col-lg-7 col-sm-7 col-md-7 col-xs-12">
+                <a href="" class="product-link">
+                    <div class="col-xs-12 name"></div>
+                </a>
+                <div class="col-md-12 col-lg-12 col-sm-6 col-xs-12" style="padding: 0px;margin-top: 20px;">
+                    <div class="col-lg-6 col-sm-6 col-md-6 col-xs-6" style="">
+                        <div   class="final-price"></div>
+                        <div   class="price"></div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6 col-md-6 col-xs-6" style="float: right;">
+                        <div  class="discount-percent">-50%</div>
+                        <div id="vote-product" style="font-family: Helvetica, Arial, sans-serif;text-align: right; margin-top: 5px;" >
+                            <div style="float: right;">
+                                <div   id="vote-product-button" class="btn-vote-inactive"  onclick="onClickVoteProduct()">
+                                    <i id="vote-product-icon" class="fa fa-star btn-vote-title" style="margin-right: 5px;color:#ffffff;" ></i>
+                                    <span class="btn-vote-title" style=""><span class="percent-voted"></span> Bình chọn</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 description" style="margin-top: 30px; line-height:1.2em;" ></div>
+            </div>
+        </div>
+    </div>
+    <div id="top-voted-content" class="col-xs-12 " style=" background-color: #ffffff;  display: flex;  flex-direction: row; flex-wrap: wrap; ">
+    </div>
+</div>
+<script type="text/javascript">
+    let cat_rest = "rest";
+    var listProduct = [];
+    var previewProduct = {};
+    var defaultCatId = "<?php echo $defaultCatId; ?>";
+    function getTopVotedByCatId(catId) {
+        let catIdTemp = catId;
+        if (catId == "rest"){
+            catIdTemp = "cat_rest";
+        }
+        
+        jQuery('div[id*=tagname-]').css("display", "none");
+        jQuery("#tagname-" + catId).css("display", "block");
+        jQuery("button[id*=cat-]").removeClass("active");
+        jQuery("#cat-" + catIdTemp).addClass("active");
+        new Ajax.Request(
+                "<?php echo $this->getUrl('event/index/getTopVoted', array('_secure' => true)) ?>", {
+                    method: 'post',
+                    parameters: {catId: catId},
+                    onLoading: function () {
+                        jQuery('.youama-ajaxlogin-loader').fadeIn();
+                    },
+                    onLoaded: function () {
+                        jQuery('.youama-ajaxlogin-loader').fadeOut();
+                    },
+                    onSuccess: function (transport) {
+                        if (transport.status == 200) {
+                            jQuery("#top-voted-content").empty();
+                            var params = JSON.parse(transport.responseText);
+                            listProduct = params;
+                            previewProduct = listProduct[0];
+                            listProduct.forEach(function (item, index) {
+                                var image = `<img style=""
+                                class="small-image" src="${item.image}"/>
+                                </img>`;
+
+                                var name = `<div class="product-name">${item.name}</div>`;
+
+                                var block = ` 
+                                    <div class="product-item2-container" >
+                                        <a  class="product-item2" id="id-${item.productId}" onclick="onClickShowProduct(${item.productId})">
+                                            ${image}
+                                            <div class="index-number">${index + 1}</div>
+                                       </a>
+                                    </div>`;
+
+                                jQuery("#top-voted-content").append(block);
+                            });
+                            setPreviewProduct(previewProduct);
+
+                            jQuery(".product-item2").hover(function () {
+                                var productId = this.id.replace("id-", "");
+                                previewProduct = listProduct.find(x => x.productId == productId);
+                                setPreviewProduct(previewProduct);
+                            }, function () {
+                            });
+                        }
+                    }
+
+                });
+
+    }
+
+    jQuery(document).ready(function () {
+        jQuery("#alert-vote-product div.youama-noti-window-sucess .close").click(function () {
+            jQuery("#alert-vote-product div.youama-noti-window-sucess").fadeOut();
+            jQuery("#alert-vote-product .youama-ajaxlogin-cover").fadeOut();
+        });
+        var defaultCatId = "<?php echo $defaultCatId ?>";
+        var catId = defaultCatId.replace(/.*#catId/gi, "");
+        getTopVotedByCatId(catId);
+    });
+
+    jQuery("a.banner-click-a").click(function (al) {
+        jQuery("#top-voted-content").empty();
+        var catId = jQuery(this).attr("href").replace(/.*#catId/gi, "");
+        getTopVotedByCatId(catId);
+    });
+
+
+    function onClickVoteProduct() {
+        jQuery("#vote-product-button").prop('disabled', true);
+        let productId = previewProduct.productId;
+        new Ajax.Request(
+                "<?php echo $this->getUrl('event/index/postVoteProduct', array('_secure' => true)) ?>", {
+                    method: 'post',
+                    parameters: {productId: productId},
+                    onLoading: function () {
+                        jQuery('.youama-ajaxlogin-loader').fadeIn();
+                    },
+                    onLoaded: function () {
+                        jQuery('.youama-ajaxlogin-loader').fadeOut();
+                    },
+                    onSuccess: function (transport) {
+                        if (transport.status == 200) {
+                            var params = JSON.parse(transport.responseText);
+                            var success = params.success;
+                            var hadVoted = params.hadVoted;
+                            let curProductIdx = listProduct.findIndex(x => x.productId == productId);
+                            if (curProductIdx != -1) {
+                                listProduct[curProductIdx].hadVoted = 1;
+                            }
+
+                            if (params.success) {
+                                jQuery("#vote-product-button").removeClass("btn-vote-inactive").addClass("btn-vote-active");
+                            } else {
+                                if (params.message == "ERR_NEED_LOGIN") {
+                                    jQuery(".youama-login-window").fadeIn();
+                                    jQuery('div.youama-ajaxlogin-cover').fadeIn();
+                                } else {
+                                    var errormess = "<?php echo Mage::getStoreConfig('game/voteproduct/errormess'); ?>";
+                                    jQuery('#alert-vote-product div.youama-noti-window-sucess').fadeIn();
+                                }
+                            }
+                        }
+                    }
+                }
+        );
+    }
+
+    function setPreviewProduct(previewProduct) {
+        if (previewProduct) {
+            var priceText = 0;
+            var finalPrice = 0;
+            priceText = Math.round(previewProduct.price).toLocaleString('en-US');
+            finalPrice = Math.round(previewProduct.finalPrice).toLocaleString('en-US');
+            jQuery("#preview-product .image").attr("src", previewProduct.image);
+            jQuery("#preview-product .name").text(previewProduct.name);
+            jQuery("#preview-product .final-price").text(finalPrice + " đ");
+            jQuery("#preview-product .price").text(priceText + " đ");
+            jQuery("#preview-product .discount-percent").text("-" + previewProduct.discountPercent + "%");
+            let description = previewProduct.description;
+            if (description && description.length > 500) {
+                description = description.substring(0, 500);
+            }
+            jQuery("#preview-product .description").html(description + "...");
+            if (previewProduct.hadVoted == 1) {
+                jQuery("#vote-product-button").removeClass("btn-vote-inactive btn-vote-active").addClass("btn-vote-active");
+            } else {
+                jQuery("#vote-product-button").removeClass("btn-vote-inactive btn-vote-active").addClass("btn-vote-inactive");
+            }
+            jQuery("#preview-product .percent-voted").text(previewProduct.percentVoted);
+            jQuery("#preview-product .product-link").attr("href", previewProduct.productUrl);
+        }
+    }
+
+    function onClickShowProduct(productId) {
+        jQuery("#top-voted-content .small-image-active").removeClass("small-image-active").addClass("small-image");
+        jQuery("#top-voted-content .index-number-active").removeClass("index-number-active").addClass("index-number");
+        previewProduct = listProduct.find(x => x.productId == productId);
+        setPreviewProduct(previewProduct);
+        let element = jQuery("#id-" + productId + " .small-image");
+        let elementIndex = jQuery("#id-" + productId + " .index-number");
+        elementIndex.removeClass("index-number").addClass("index-number-active");
+        element.removeClass("small-image").addClass("small-image-active");
+    }
+</script>

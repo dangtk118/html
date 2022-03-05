@@ -1,0 +1,188 @@
+<?php
+    $helper = Mage::helper("seriesbook");
+    //$page_limit = (int) Mage::getStoreConfig('fpointstorev2_config/config/page_limit');
+    //$current_page = 1;
+    $tab = $this->getRequest()->getParam('tab', 0);
+    $customer_id = Mage::getSingleton('customer/session')->getCustomer()->getEntityId();
+    $page_size = Mage::getStoreConfig('seriesbook_config/config/page_size');
+    $current_page_follow = 1;
+    $seriesbook_follow = $helper->getSeriesBookFromDB($customer_id, 1, $current_page_follow, $page_size);
+    $fhsCampaign = "?fhs_campaign=".$helper->getFhsCampaignSeriPage();
+    
+    $is_follow_over = false;
+    if(!empty($seriesbook_follow)){
+	if(sizeof($seriesbook_follow) < $page_size){
+	    $is_follow_over = true;
+	}
+	else{
+	    $count = $helper->getSeriesBookCountFromDB($customer_id, 1);
+	    if($count <= $page_size){
+		$is_follow_over = true;
+	    }
+	}
+
+	$result['seriesbook'] = $seriesBook;
+	$current_page_follow = $current_page_follow + 1;
+    }else{
+	$is_follow_over = true;
+    }
+    $current_page_recommended = 1;
+    //$seriesbook_recommended = $helper->getSeriesBookFromDB($customer_id, 0, $current_page_recommended, $page_size);
+    
+    $is_recommended_over = false;
+    if(!empty($seriesbook_recommended)){
+	if(sizeof($seriesbook_recommended) < $page_size){
+	    $is_recommended_over = true;
+	}
+	else{
+	    $count = $helper->getSeriesBookCountFromDB($customer_id, 0);
+	    if($count <= $page_size){
+		$is_recommended_over = true;
+	    }
+	}
+	$current_page_recommended = $current_page_recommended + 1;
+    }else{
+	$is_recommended_over = true;
+    }
+    
+    $media_url = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA, true);
+    $skin_url = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true);
+    $queryfier = Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix');
+    
+    $loading_icon_url = $skin_url.'frontend/ma_vanese/fahasa/images/ring_loader.svg';
+    $CSS_FILE = $skin_url."frontend/ma_vanese/fahasa/css/seriesbook.css?q=".$queryfier;
+    $JS_SCRIPT = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS, true)."lib/seriesbook.js?q=".$queryfier;
+    
+    $language = [];
+    $language['ico_viewmore'] = $skin_url.'frontend/ma_vanese/fahasa/images/ico_seemore_blue.svg?q='.$queryfier;
+    $language['viewmore'] = $this->__("View more");
+    $language['btn_unfollow'] = "<button type='button' onclick='seriesbook_page.followSeriesBook(this, {{seriesbook_id}}, false);event.stopPropagation();' title='".$this->__('Unfollow')."' class='fhs-btn-view-promo-follow'><span><img src='".$skin_url.'frontend/ma_vanese/fahasa/images/ico-minus.svg?q='.$queryfier."'/></span><span>".$this->__('Unfollow')."</span></button>";
+    $language['btn_follow'] = "<button type='button' onclick='seriesbook_page.followSeriesBook(this, {{seriesbook_id}}, true);event.stopPropagation();' title='".$this->__('Follow')."' class='fhs-btn-view-promo-follow active'><span><img src='".$skin_url.'frontend/ma_vanese/fahasa/images/ico-plus.svg?q='.$queryfier."'/></span><span>".$this->__('Follow')."</span></button>";
+    $language['btn_viewmore'] = "<a class='fhs-btn-view-promo-viewmore' href='/seriesbook/index/series/id/{{seriesbook_id}}'><span>".$language['viewmore']."</span><span><img src='".$language['ico_viewmore']."'/></span></a>";
+    $language['following'] = $this->__("Following");
+    $language['new'] = $this->__("New");
+    
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo $CSS_FILE; ?>" media="all" />
+<script type="text/javascript" src="<?php echo $JS_SCRIPT; ?>"></script>
+<style>
+    .my-account{
+	display: none;
+    }
+</style>
+</div>
+<div class="fhs_account_wallet_voucher">
+    <div class="fhs_account_wallet_voucher_title"><?php echo $this->__('Series book');?></div>
+    <div style="display:none;">
+	<ul id="fhs_wallet_voucher_tab" class="fhs-tabs">
+	    <li class="fhs_seriesbook_follow <?php echo (!$tab)?"active":""; ?>"><a><?php echo $this->__("Following"); ?></a><hr></li>
+<!--	    <li class="fhs_seriesbook_recommended <?php echo ($tab)?"active":""; ?>"><a><?php echo $this->__("Recommended"); ?></a><hr></li>-->
+	</ul>
+    </div>
+</div>
+</div>
+<div class="col-main col-lg-9 col-md-9 col-sm-12 col-xs-12 col-fhs-main-body" style="margin-top: 4px;"> 
+    
+<div id="fhs_seriesbook_follow_block" <?php echo $tab?'style="display:none;"':'';?>>
+    <div class="fhs-event-promo-list-item seriesbook-follow" <?php if(empty($seriesbook_follow)){echo "style='display:none;'";}?>>
+	<div class="fhs-event-promo-list">
+	    <div class="fhs-event-promo-list-seriesbook">
+		<?php if(!empty($seriesbook_follow)):?>
+		    <?php foreach ($seriesbook_follow as $key=>$item): ?>
+			<a class="fhs-event-promo-list-seriesbook-item" href="/seriesbook/index/series/id/<?php echo $item['seribook_id'] . $fhsCampaign;?>" >
+			    <div>
+				<?php if($item['is_new']):?>
+				    <div class="fhs-series-new"><span><?php echo $language['new'];?></span></div>
+				<?php endif;?>
+				<img class='lazyload' src='<?php echo $loading_icon_url;?>' data-src='<?php echo $item['image_src'];?>'/></div>
+			    <div>
+				<div>
+				    <div class='fhs-event-promo-list-seriesbook-item-name'><span class="fhs-series-label"><i></i></span><?php echo $item['product_name'];?></div>
+				    <div class='fhs-event-promo-list-seriesbook-item-episode'><?php echo $item['episode_label'];?></div>
+				    <div class='fhs-series-subscribes'><?php echo $item['subscribes'];?> lượt theo dõi</div>
+				</div>
+				<div>
+				    <div><?php echo str_replace('{{seriesbook_id}}', $item['seribook_id'], $language['btn_unfollow']);?></div>
+				</div>
+				<div class="clear"></div>
+			    </div>
+			</a>
+		    <?php endforeach; ?>   
+		<?php endif;?> 
+	    </div>
+	</div>
+    </div>
+    <div id="seriesbook_follow_bottom" style="clear: both;"></div>
+    <div class="seriesbook_empty seriesbook-follow" <?php if(!empty($seriesbook_follow)){echo "style='display:none;'";}?>>
+	<img width="90" height="90" src="<?php echo $skin_url."/frontend/ma_vanese/fahasa/images/checkout_cart/ico_emptycart.svg?q=".$queryfier;?>">
+	<div><?php echo $this->__("Don't have product");?></div>
+    </div>
+    <div class="seriesbook-loading">
+	
+    </div>
+</div>
+    
+<div id="fhs_seriesbook_recommended_block"  <?php echo !$tab?'style="display:none;"':'';?>>
+    <div class="fhs-event-promo-list-item seriesbook-recommended" <?php if(empty($seriesbook_recommended)){echo "style='display:none;'";}?>>
+	<div class="fhs-event-promo-list-seriesbook">
+	    <?php if(!empty($seriesbook_recommended)):?>
+		<?php foreach ($seriesbook_recommended as $key=>$item): ?>
+		    <div class="fhs-event-promo-list-seriesbook-item" onclick="seriesbook_page.onclickSeriesBtn(<?php echo $item['seribook_id'];?>);event.stopPropagation();">
+			<div><img class='lazyload' src='<?php echo $loading_icon_url;?>' data-src='<?php echo $item['image_src'];?>'/></div>
+			<div>
+			    <div>
+				<div class='fhs-event-promo-list-seriesbook-item-name'><?php echo $item['product_name'];?></div>
+				<div class="fhs-event-promo-list-seriesbook-item-episode"><?php echo $item['episode_label'];?></div>
+			    </div>
+			    <div>
+				<div><?php echo str_replace('{{seriesbook_id}}', $item['seribook_id'], $language['btn_follow']);?></div>
+			    </div>
+			    <div class="clear"></div>
+			</div>
+		    </div>
+		<?php endforeach; ?>    
+	    <?php endif;?>
+	</div>
+    </div>
+    <div id="seriesbook_recommended_bottom" style="clear: both;"></div>
+    <div class="seriesbook_empty seriesbook-recommended" <?php if(!empty($seriesbook_recommended)){echo "style='display:none;'";}?>>
+	<img width="90" height="90" src="<?php echo $skin_url."/frontend/ma_vanese/fahasa/images/checkout_cart/ico_emptycart.svg?q=".$queryfier;?>">
+	<div><?php echo $this->__("Don't have product");?></div>
+    </div>
+</div>
+
+
+
+
+<script type="text/javascript">
+    var seriesbook_page = new SeriesBook();
+    seriesbook_page.initSeriesBookAccount(<?php echo json_encode($language, JSON_UNESCAPED_UNICODE);?>, <?php echo $current_page_follow; ?>,<?php echo $is_follow_over?'true':'false';?>, <?php echo $current_page_recommended; ?>,<?php echo $is_recommended_over?'true':'false';?>,<?php echo $page_size;?>, <?php echo sizeof($seriesbook_follow);?>, <?php echo sizeof($seriesbook_recommended);?>, "<?php echo $fhsCampaign; ?>");
+    $jq('#fhs_wallet_voucher_tab li').click(function(){
+	if(!$jq(this).hasClass("active")){
+	    $jq('#fhs_wallet_voucher_tab li').removeClass("active");
+	    $jq(this).addClass("active");
+	    
+	    if($jq(this).hasClass("fhs_seriesbook_follow")){
+		$jq('#fhs_seriesbook_recommended_block').fadeOut(0);
+		$jq('#fhs_seriesbook_follow_block').fadeIn(0);
+		fhs_account.updateQueryStringParam("tab", 0);
+		
+		if(seriesbook_page.has_change_status){
+		    seriesbook_page.has_change_status = false;
+		    seriesbook_page.loadSeriesBook(true);
+		}
+	    }else{
+		$jq('#fhs_seriesbook_follow_block').fadeOut(0);
+		$jq('#fhs_seriesbook_recommended_block').fadeIn(0);
+		fhs_account.updateQueryStringParam("tab", 1);
+		
+		if(seriesbook_page.has_change_status){
+		    seriesbook_page.has_change_status = false;
+		    seriesbook_page.loadSeriesBook(false);
+		}
+	    }
+	    seriesbook_page.showEmptyForm();
+	}
+    });
+</script>
+</div>

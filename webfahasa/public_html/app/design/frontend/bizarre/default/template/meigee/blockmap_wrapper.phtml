@@ -1,0 +1,7 @@
+<?php
+	$meigee_bizarre_general = MAGE::helper('ThemeOptionsBizarre')->getThemeOptionsBizarre('meigee_bizarre_general');
+	$contactMap = $meigee_bizarre_general['contactmap']['map'];
+?>
+<?php if($contactMap): ?>
+	<iframe id="contact-map" src="<?php echo $this->getUrl('meigeeactions/map/'); ?>" width="100%" height="100%"></iframe>
+<?php endif; ?>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <Fahasa_Personalization>
+            <version>0.0.1</version>
+        </Fahasa_Personalization>
+    </modules>
+    <frontend>
+        <routers>
+            <personalization>
+                <use>standard</use>
+                <args>
+                    <module>Fahasa_Personalization</module>
+                    <frontName>personalization</frontName>
+                </args>
+            </personalization>
+            <likedproducts>
+                <use>standard</use>
+                <args>
+                    <module>Fahasa_Personalization</module>
+                    <frontName>likedproducts</frontName>
+                </args>
+            </likedproducts>
+             <bestseller>
+                <use>standard</use>
+                <args>
+                    <module>Fahasa_Personalization</module>
+                    <frontName>best-seller</frontName>
+                </args>
+            </bestseller>
+        </routers>
+        <layout>
+            <updates>
+                <personalization>
+                    <file>personalization.xml</file>
+                </personalization>
+            </updates>
+        </layout>
+    </frontend>
+</config>

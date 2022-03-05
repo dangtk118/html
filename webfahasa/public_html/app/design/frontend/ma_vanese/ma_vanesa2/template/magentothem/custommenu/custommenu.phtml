@@ -1,0 +1,73 @@
+<?php $_categories = Mage::helper('catalog/category')->getStoreCategories() ?>
+<?php if(count($_categories)): 
+    ?>
+<div class="nav-container visible-lg visible-md">
+
+        <div id="pt_custommenu" class="pt_custommenu">
+		<div class="pt_custommenu_content">
+        <?php
+        $showhome = Mage::getStoreConfig('custommenu/general/showhome');
+        $active = '';
+        if(Mage::getSingleton('cms/page')->getIdentifier() == 'ma_vanesa2_home'  && Mage::app()->getFrontController()->getRequest()->getRouteName() == 'cms') :
+            $active = ' act';
+        endif; 
+        if($showhome){
+            $id     = "_home";
+            $html[] = '<div id="pt_menu' . $id . '" class="pt_menu' . $active . '">';
+            $html[] = '<div class="parentMenu">';
+            $html[] = '<a href="'.Mage::helper('core/url')->getHomeUrl().'">';
+            $html[] = '<span>Home</span>';
+            $html[] = '</a>';
+            $html[] = '</div>';
+//            $html[] = '<div id="popup' . $id . '" class="popup" style="display: none; width: 1228px;">';
+//            $html[] = '</div>';
+            $html[] = '</div>';
+            $html = implode("\n", $html);
+            echo $html;
+        }
+        $className = Mage::getConfig()->getBlockClassName('custommenu/custommenu');
+        $block = new $className();               
+        //$block->_prepareData();
+        $item = 0;
+        foreach ($_categories as $_category): $item++;?>
+            <?php //echo $block->drawCustomMenuItem($_category,0,false,$item) ?>
+        <?php endforeach ?>
+        
+        <?php
+        $collection = Mage::getModel('cms/block')->getCollection()
+                    ->addFieldToFilter('identifier', array('like'=>'pt_item_menu'.'%'))
+                    ->addFieldToFilter('is_active', 1);
+        foreach($collection as $key => $value){
+            $blockId = $value->getIdentifier();
+            $blockHtml = $this->getLayout()->createBlock('cms/block')->setBlockId($blockId)->toHtml();
+            if ($blockHtml) echo $block->drawCustomMenuBlock($blockId);
+        }
+        
+        /*menu links*/
+        $blockLinkId = 'pt_menu_links';
+        $blockLinkHtml = $this->getLayout()->createBlock('cms/block')->setBlockId($blockLinkId)->toHtml();
+        if ($blockLinkHtml){
+            $id     = "_link";
+            $htmlLink[] = '<div id="pt_menu' . $id . '" class="pt_menu">';
+            $htmlLink[] = '<div class="parentMenu">';
+            $htmlLink[] = $blockLinkHtml;
+            $htmlLink[] = '</div>';
+            $htmlLink[] = '</div>';
+            $htmlLink = implode("\n", $htmlLink);
+            echo $htmlLink;
+        }
+        ?>
+        
+        <div class="clearBoth"></div>
+		</div>
+
+    </div>
+</div>
+<script type="text/javascript">
+//<![CDATA[
+var CUSTOMMENU_POPUP_EFFECT = <?php echo (int)Mage::getStoreConfig('custommenu/popup/effect')?>;
+var CUSTOMMENU_POPUP_TOP_OFFSET = <?php echo (int)Mage::getStoreConfig('custommenu/popup/top_offset')?>;
+//]]>
+</script>
+
+<?php endif ?>

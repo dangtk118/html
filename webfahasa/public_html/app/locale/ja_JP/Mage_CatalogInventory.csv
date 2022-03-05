@@ -1,0 +1,7 @@
+"""%s"" is not available in the requested quantity. %s of the items will be backordered.","ご希望された個数ではご注文できません。商品の%sはお取り寄せされます。"
+"In Stock","在庫あり"
+"Out of Stock","在庫なし"
+"Some of the products are currently out of stock.","いくつかの商品は現在在庫がありません。"
+"This product is currently out of stock.","この商品は現在在庫がありません。"
+"This product is not available in the requested quantity. %s of the items will be backordered.","この商品はご希望された個数ではご注文できません。商品の%sは、お取り寄せされます。"
+"Some of the products cannot be ordered in requested quantity.","注文できる数量を超えた商品があります。"

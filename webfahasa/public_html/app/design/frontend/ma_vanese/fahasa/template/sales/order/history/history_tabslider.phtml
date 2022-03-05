@@ -1,0 +1,242 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2014 X.commerce, Inc. (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+
+?>
+<?php
+    $_orders = $this->getOrders(); 
+    $statuc_current = $this->getCurrentStatus();
+?>
+<?php echo $this->getMessagesBlock()->toHtml() ?>
+<?php if($_orders->getSize() || (!$_orders->getSize() && $statuc_current != "All")): ?>
+<style>
+    .my-tabslider-order{
+        background: white;
+    }
+    /* end css for main template */
+    .tab-container-order-history{
+        background: white;
+        margin-bottom: 10px;
+    }
+    .disabled-tabs-history{
+        transform: translate3d(0px, 0, 0) !important;
+    }
+    .tab-history-item{
+        text-align: center;
+        /*height : 65px;*/
+        padding : 10px;
+        position: relative;
+        cursor: pointer;
+    }
+    .tab-history-item:hover {
+        color: #F7941E;
+    }
+    .tab-history-item-text{
+        font-size: 14px;
+        font-weight: bold;
+        
+    }
+    .tab-history-item-number{
+        font-size: 16px;
+        font-weight: bold;
+    }
+    .tab-history-item-border{
+        height: 75%;
+        width: 1px;
+        background: #e0e0e0;
+        position: absolute;
+        top: 10px;
+        right: 0;
+    }
+    .tab-history-item-border-left{
+        height: 75%;
+        width: 1px;
+        background: #e0e0e0;
+        position: absolute;
+        top: 10px;
+        left: 0;
+    }
+    .tab-history-item-active{
+        border-bottom: 2px solid #F7941E;
+        color: #F7941E;
+    }
+    .page-title{
+        padding: 10px;
+    }
+    .order-history-swiper-button-prev{
+        position: absolute;
+        top: 40%;
+        left: 10px;
+        z-index: 1;
+        cursor: pointer;
+    }
+    .order-history-swiper-button-next{
+        position: absolute;
+        top: 40%;
+        right: 10px;
+        z-index: 1;
+        cursor: pointer;
+    }
+    .tab-container-order-history-container{
+        padding:0px 30px 0px 30px;
+        position: relative;
+    }
+</style>
+<div class="page-title">
+    <h1><?php echo $this->__('My Orders') ?></h1>
+</div>
+<div class="tab-container-order-history-container">
+<div class="tab-container-order-history swiper-container">
+     <?php // turn off slide animation add class : disabled-tabs-history at div class swiper-wrapper ?>
+    <div class="swiper-wrapper">
+        <?php $dem = 0;// khong border o item cuoi cung; ?>
+        <?php foreach ($this->getAvailableStatus() as  $_key=>$_status): $count = $this->getCountOrderByStatus($_key);$dem++; ?>
+            <div class="tab-history-item swiper-slide <?php if($this->isStatusCurrent($_key)): ?>tab-history-item-active<?php endif?>" onclick="location.href='<?php echo $this->getStatusUrlWithOutLimit($_key) ?>';">
+                <?php if($dem == 1): ?><div class="tab-history-item-border-left"></div><?php endif; ?>
+                <div class="tab-history-item-number"><?php echo $count; ?></div>
+                <div class="tab-history-item-text"><?php echo $this->__($_status) ?></div>
+                <div class="tab-history-item-border"></div>
+            </div>
+        <?php endforeach; ?>
+    </div>
+</div>
+    <div class="order-history-swiper-button-prev"><i class="fa fa-chevron-left"></i></div>
+    <div class="order-history-swiper-button-next"><i class="fa fa-chevron-right"></i></div>
+</div>
+
+<script type="text/javascript">
+//jQuery(document).ready(function($) {
+//    var mySwiper = new Swiper('.swiper-container', {
+//      slidesPerView: 5,
+//      spaceBetween: 30,
+//    });
+//    
+//    $(window).resize(function(){
+//  var ww = $(window).width()
+//  if (ww>992px) mySwiper.params.slidesPerView = 5;
+//  if (ww>468 && ww<=1000) mySwiper.params.slidesPerView = 3;
+//  if (ww<=468) mySwiper.params.slidesPerView = 1;
+//  mySwiper.reInit()
+//})
+//    $(window).trigger('resize')
+//});
+
+// khi load lan dau 
+$jq(window).ready(function() {
+   updateSliderSwiper();
+})
+
+/// khi reponsive
+//$jq(window).resize(function() {
+//    updateSliderSwiperResize();
+//});
+
+function updateSliderSwiper() {
+    let ww = $jq(window).width();
+    let mySwiper;
+    let maxSlider;
+    let countSlider = 6;
+    if (ww < 992) {
+        maxSlider = 3;
+        mySwiper = new Swiper('.swiper-container', {
+            slidesPerView: 3,
+            navigation: {
+                nextEl: '.order-history-swiper-button-next',
+                prevEl: '.order-history-swiper-button-prev',
+            },
+        });
+        $jq(".tab-history-item").each(function(index){
+            if($jq(this).hasClass("tab-history-item-active")){
+                mySwiper.slideTo(index,300,false);
+            }  
+        });
+        // if div class swiper-wrapper want turn off
+        //$jq(".swiper-wrapper").removeClass("disabled-tabs-history");
+        $jq(".table-order-row").addClass("table-order-touch-mobile");
+    } else {
+        maxSlider = 5;
+        mySwiper = new Swiper('.swiper-container', {
+            slidesPerView: 5,
+            navigation: {
+                nextEl: '.order-history-swiper-button-next',
+                prevEl: '.order-history-swiper-button-prev',
+            },
+        });
+        $jq(".tab-history-item").each(function(index){
+            if($jq(this).hasClass("tab-history-item-active")){
+                mySwiper.slideTo(index,300,false);
+            }  
+        });
+        if ($jq(".table-order-row").hasClass("table-order-touch-mobile")) {
+            $jq(".table-order-row").removeClass("table-order-touch-mobile");
+        }
+        // if div class swiper-wrapper want turn off 
+        //$jq(".swiper-wrapper").addClass("disabled-tabs-history");
+    }
+    let index = mySwiper.activeIndex;
+    showButtonSwiperHistory(index,maxSlider,countSlider);
+    mySwiper.on('slideChange', function () {
+        let index = mySwiper.activeIndex;
+        showButtonSwiperHistory(index,maxSlider,countSlider);
+      });
+    
+}
+
+function updateSliderSwiperResize() {
+    let ww = $jq(window).width();
+    let mySwiper = new Swiper('.swiper-container');
+    if (ww < 992) {
+        mySwiper.params.slidesPerView = 3;
+        //$jq(".swiper-wrapper").removeClass("disabled-tabs-history");
+        $jq(".table-order-row").addClass("table-order-touch-mobile");
+    } else {
+
+        mySwiper.params.slidesPerView = 5;
+        if ($jq(".table-order-row").hasClass("table-order-touch-mobile")) {
+            $jq(".table-order-row").removeClass("table-order-touch-mobile");
+        }
+        //$jq(".swiper-wrapper").addClass("disabled-tabs-history");
+    }
+    mySwiper.updateSlides();
+}      
+
+function showButtonSwiperHistory(index,maxSlider,countSlider) {
+        let total = index + maxSlider;
+        if(total >= countSlider){
+                $jq(".order-history-swiper-button-next").hide();
+                $jq(".order-history-swiper-button-prev").show();
+            }else{
+                $jq(".order-history-swiper-button-next").show();
+                $jq(".order-history-swiper-button-prev").show();
+                if(index == 0){
+                    $jq(".order-history-swiper-button-prev").hide();
+                }else{
+                    $jq(".order-history-swiper-button-prev").show();
+                }
+            }
+}
+
+</script>
+<?php endif; ?>

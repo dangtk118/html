@@ -1,0 +1,679 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+
+?>
+<?php 
+    $_order = $this->getOrder() ;
+    $sym_currency = Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol();
+    $isMobile = Mage::helper('fhsmobiledetect')->isMobile();
+    $disable_btn_cancel_order = false;
+    $dataStatusColor = array('primary'=>'{"color":"blue","number1" : "#E0ECFD","number2":"#2F80ED"}'
+        ,'success'=>'{"color" : "green","number1" :"#B6F1B6","number2" : "#2ED62E"}'
+        ,'danger'=>'{"color":"red","number1" :"#F3B4AF","number2" :"#A90000"}'
+        ,'warning'=>'{"color":"red","number1":"#F3B4AF","number2":"#A90000"}'
+        ,'pending'=>'{"color":"orange","number1":"#FCDAB0","number2":"#F7941E"}'
+        ,'pre_pending'=>'{"color":"orange","number1":"#FCDAB0","number2":"#F7941E"}'
+        ,'processing'=>'{"color":"blue","number1" : "#E0ECFD","number2":"#2F80ED"}'
+        ,'complete'=>'{"color" : "green","number1" :"#B6F1B6","number2" : "#2ED62E"}'
+        ,'canceled'=>'{"color":"red","number1" :"#F3B4AF","number2" :"#A90000"}'
+        ,'pending_payment'=>'{"color":"orange","number1":"#FCDAB0","number2":"#F7941E"}'
+        ,'customer_confirmed' =>'{"color":"orange","number1":"#FCDAB0","number2":"#F7941E"}'
+        ,'paid' =>'{"color":"orange","number1":"#FCDAB0","number2":"#F7941E"}'
+        );
+?>
+<?php 
+    
+    $orderId = $_order->getIncrementId();
+    $total_final = 0;
+    $show_all_total = TRUE; 
+    $connection = Mage::getSingleton('core/resource')->getConnection('core_read');
+    $sql = "select qresult.entity_id, qresult.product_id, qresult.order_id, qresult.suborder_id, qresult.price,
+	    qresult.qty, qresult.sku, qresult.name, qresult.status, qresult.shipping_fee, qresult.cod_fee,
+	    qresult.giftwrap_fee, qresult.tryout_discount, qresult.discount_amount, qresult.created_at,
+	    ct.timestamp as 'confirmSubOrder_timestamp', pt.timestamp as 'packSubOrder_timestamp',
+	    dt.timestamp as 'deliverSubOrder_timestamp', qresult.status_timestamp, cpt.timestamp as 'completeSubOrder_timestamp', qresult.list_price
+	    from (
+	       select pe.entity_id, product_id,
+	       so.order_id, so.suborder_id, soi.list_price,
+	       avg(if(sb.bundle_id is null, soi.price, (1-sb.saving) * soi.price)) as price,
+	       sum(if(sb.bundle_id is null, soi.qty, sb.qty * soi.qty)) as qty,
+	       pe.sku, prodname.value AS name, so.status, so.shipping_fee, so.cod_fee,
+	       ifnull(so.giftwrap_fee, 0) giftwrap_fee,so.tryout_discount, so.discount_amount, so.created_at,so.status_timestamp
+	       from fahasa_suborder so
+	       join fahasa_suborder_item soi on so.order_id = soi.order_id and so.suborder_id = soi.suborder_id
+	       left join fahasa_suborder_bundle sb on soi.bundle_id = sb.bundle_id and soi.suborder_id = sb.suborder_id and soi.bundle_type = sb.bundle_type        
+	       LEFT JOIN fhs_catalog_product_entity pe ON soi.product_id = pe.entity_id
+	       LEFT JOIN fhs_catalog_product_entity_varchar prodname ON pe.entity_id = prodname.entity_id AND prodname.attribute_id = 71
+	       WHERE so.parent_id IS NULL AND so.order_id = '".$orderId."' AND so.parent_return_id is NULL GROUP BY so.suborder_id, soi.product_id
+	    ) qresult
+	    LEFT JOIN fahasa_bookstore_log ct ON ct.suborder_id = qresult.suborder_id AND ct.order_id = qresult.order_id AND ct.action like 'confirmSubOrder%'
+	    LEFT JOIN fahasa_bookstore_log pt ON pt.suborder_id = qresult.suborder_id AND ct.order_id = qresult.order_id AND pt.action = 'packSubOrderRest'
+	    LEFT JOIN fahasa_bookstore_log dt ON dt.suborder_id = qresult.suborder_id AND ct.order_id = qresult.order_id AND (dt.action = 'deliverSubOrder' OR dt.action = 'deliverSubOrderRest')
+	    LEFT JOIN fahasa_bookstore_log cpt ON cpt.suborder_id = qresult.suborder_id AND ct.order_id = qresult.order_id AND (cpt.action = 'completeSubOrder' OR cpt.action = 'completeSubOrderRest')
+	    GROUP BY qresult.suborder_id, qresult.product_id;";
+
+    $rows = $connection->fetchAll($sql);
+    $list = Array();
+    for ($i = 0; $i < count($rows); $i++) {
+        $show_all_total = FALSE;
+        $subOrderId = $rows[$i]['suborder_id'];
+        $OrderId = array($rows[$i]);
+        if($list[$subOrderId] == null){
+            array_push($list[$subOrderId]);
+            $list[$subOrderId] = $OrderId;
+        }  else {
+            array_push($list[$subOrderId],$rows[$i]);
+        }
+    }
+    ///--------- END GET LIST
+    
+    $orders_rule = Mage::helper('sales')->getOrdersOptionRule($orderId);
+    $hide_total = false;
+    $hide_shipping_fee = false;
+    $has_btn_delivery_confirm = false;
+    if(!empty($orders_rule[$orderId])){
+	$hide_total = $orders_rule[$orderId]['hide_total'];
+	$hide_shipping_fee = $orders_rule[$orderId]['hide_shipping_fee'];
+    }
+    $suborder_id_goto = $this->getRequest()->getParam('suborder', '');
+    
+    if(!is_numeric($suborder_id_goto)){$suborder_id_goto = '';}
+?>
+<style>
+    .fhs_suborder_button_box{
+	padding-bottom: 10px;
+    }
+    @media (max-width: 768px){
+	.fhs_suborder_button_box{
+	    -webkit-justify-content: center;
+	    justify-content: center;
+	}
+	.fhs_suborder_button_box > a{
+	    flex-grow: 1;
+	}
+    }
+    @media (max-width: 390px){
+	.fhs_suborder_button_box > a{
+	    font-size: 13px;
+	}
+    }
+</style>
+<?php if($hide_total):?>
+    <style>
+	.table-subOrder-cell:nth-child(2){
+	    flex-basis: 70%;
+	}
+    </style>
+<?php endif;?>
+<?php if(count($list)>0) { ?>
+<?php if(count($list)>1) {  ?>
+    <div class="order-info-border-block"></div>
+    <div class="order-subOrder-title">
+      <span><?php echo $this->__('Your order has been divided into %s suborder(s).',count($list)) ?></span>
+    </div>
+<?php } ?>
+<?php $no_list = 1; ?>
+<?php
+foreach ($list as $ent) {
+    $suborder_id = $ent[0]["suborder_id"];
+    //get 
+    $tracking_url = '';
+    $is_delivery_complete = false;
+    $show_btn_delivery_confirm = false;
+    if(!empty($orders_rule[$orderId])){
+	if(!empty($orders_rule[$orderId][($suborder_id)])){
+	    $tracking_url = $orders_rule[$orderId][($suborder_id)]['tracking_url'];
+	    $is_delivery_complete = $orders_rule[$orderId][($suborder_id)]['is_delivery_complete'];
+	    $show_btn_delivery_confirm = $orders_rule[$orderId][($suborder_id)]['show_btn_delivery_confirm'];
+	}
+	if($is_delivery_complete && $ent[0]["status"] == "delivering"){
+	    $ent[0]["status"] = 'complete';
+	}
+	if(!$has_btn_delivery_confirm && $show_btn_delivery_confirm){
+	    $has_btn_delivery_confirm = true;
+	}
+    }
+    
+//    var_dump($ent[0]);
+    $divtitle = "";
+    if (($ent[0]["status"] == "delivering") ||
+            ($ent[0]["status"] == "packed") ||
+            ($ent[0]["status"] == "processing") ||
+            ($ent[0]["status"] == "canceled") ||
+            ($ent[0]["status"] == "confirmed") ||
+            ($ent[0]["status"] == "complete")) {
+        $disable_btn_cancel_order = true;
+    }
+    switch ($ent[0]["status"]) {
+        case "complete": $divtitle = "success";
+            break;
+        case "canceled": $divtitle = "danger";
+            break;
+        case "delivery_failed":
+        case "delivery_returned":
+        case "ebiz_returned":
+        case "permanent_no_stock":
+        case "returning":
+        case "returned":
+            $divtitle = "warning";
+            break;
+        case "delivering":
+        case "packed":
+        case "processing":
+            $divtitle = "primary";
+            break;
+        default :
+            $ent[0]["status"] = "processing";
+            $divtitle = "primary";
+            break;
+    }
+//    var_dump($ent[0]["status"]);
+    ?>
+    <?Php
+    $has_expected_date = [];
+    $total_price = 0;
+    $total_ = 0;
+    $qly_ = 0;
+    for ($j = 0; $j < count($ent); $j++) {
+        $total_price += $ent[$j]["price"] * round($ent[$j]["qty"]);
+        $total_shipping_fee = $ent[$j]["shipping_fee"];
+        $total_cod_fee = $ent[$j]["cod_fee"];
+        $total_tryout = $ent[$j]["tryout_discount"];
+        $total_discount_amount = $ent[$j]["discount_amount"];
+        $total_giftwrap_fee = $ent[$j]["giftwrap_fee"];
+        $qly_ = $qly_ + round($ent[$j]["qty"]);
+	$product = \Mage::getModel('catalog/product')
+                                    ->setStoreId(\Mage::app()->getStore()->getStoreId())
+                                    ->load($ent[$j]["product_id"]);
+	if($ent[0]["status"] != "complete" && $ent[0]["status"] != "canceled" && ((int) $product->getData('price') !== 0 || $product->getTypeId() == 'bundle')){
+	    if(!empty($product->getSoonRelease()) && ((int) $product->getData('price') !== 0 || $product->getTypeId() == 'bundle')){
+		$msg = Mage::helper('fahasa_catalog/product')->getProductExpectedMsg($product)[0];
+		$product->setData('expectedDateMsg',$msg);
+		
+		if (empty($has_expected_date['expected_date'])) {
+		    if (!empty($product->getExpectedDate()) && time() <= strtotime($product->getExpectedDate())) {
+			$has_expected_date['expected_date'] = $product->getExpectedDate();
+		    }
+		} else {
+		    if (!empty($product->getExpectedDate()) 
+			&& strtotime($has_expected_date['expected_date']) < strtotime($product->getExpectedDate())
+			&& time() <= strtotime($product->getExpectedDate())) {
+			$has_expected_date['expected_date'] = $product->getExpectedDate();
+		    }
+		}
+		
+		if (empty($has_expected_date['book_release_date'])) {
+		    if (!empty($product->getBookReleaseDate()) && time() <= strtotime($product->getBookReleaseDate())) {
+			$has_expected_date['book_release_date'] = $product->getBookReleaseDate();
+		    }
+		} else {
+		    if (!empty($product->getBookReleaseDate()) 
+			&& strtotime($has_expected_date['book_release_date']) < strtotime($product->getBookReleaseDate())
+			&& time() <= strtotime($product->getBookReleaseDate())) {
+			$has_expected_date['book_release_date'] = $product->getBookReleaseDate();
+		    }
+		}
+		$has_expected_date['has_value'] = true;
+	    }
+	}
+	$ent[$j]['product'] = $product;
+    }
+    $total_ = $total_price + $total_shipping_fee + $total_cod_fee - $total_tryout - $total_discount_amount + $total_giftwrap_fee;
+    
+    if(!empty($has_expected_date['has_value'])){
+	$expected_date_msg= "*".Mage::helper('fahasa_catalog/product')->getProductExpectedMsg(null, 1, $has_expected_date['expected_date'], $has_expected_date['book_release_date'])[0];
+    }
+    ?>    
+
+<?php // START show status of suborder : -------- //  ?>  
+<div class="border-block-mobile-desktop"></div>
+<div class="order-subOrder-container">
+    <div class="order-subOrder-items">
+        <div class="order-subOrder-info-status">
+            <div class="order-subOrder-info" id="<?php echo $suborder_id; ?>" onclick="showOnProductDetails(this.id);">
+                <?php 
+                    // get status => change color border :  
+                    $colorJson = $dataStatusColor[$divtitle];
+                    $color = json_decode($colorJson);
+                ?>
+                <div><span><?php echo $no_list; ?>.<?php echo  $this->__('Orders') ?>:</span><span class='suborder_id'><?php echo $suborder_id . "-" . $ent[0]["order_id"]; ?></span></div>
+                <div class="subOder-progress-bar" <?php if($color) :?>style="background:<?php echo $color->number1; ?>;color:<?php echo $color->number2; ?>;border-color:<?php echo $color->number1; ?>;"<?php endif; ?>><?php echo  $this->__('Orders') ?> <?php echo $this->__($ent[0]["status"]);?></div>
+                <?php if(!$hide_total):?>
+		    <div><span><?php echo $this->__('Order money total') ?>:</span><span><?php echo $this->getOrder()->formatPrice($total_) ?><span class="sym-totals"><?php echo $sym_currency;?></span></span></div>
+		<?php endif;?>
+                <div class="order-subOrder-quantity"><span><?php echo $this->__('Quantity') ?>:</span><span><?php echo $qly_ ?></span></div>
+                <div class="order-subOrder-arrow"><i class="fa fa-chevron-right" aria-hidden="true"></i></div>
+		<?php if(!empty($has_expected_date['msg'])):?>
+		   <div class="order-subOrder-expectedDate"><?php echo $has_expected_date['msg'];?></div> 
+		<?php endif;?>
+            </div>
+            
+            <?php
+                $helperSubOrderLogFhs = $this->helper("sales/data");
+                $dataTrackLog = $helperSubOrderLogFhs->getTrackingSubOrderLogShowFhsV2($ent[0]);
+                $dem = 0;
+                $index = 1;
+                $countTrack = count($dataTrackLog);
+            ?>
+            <div class="order-subOrder-status id-status-<?php echo $suborder_id;?>">
+            <div class="border-block-mobile"></div>    
+            <?php
+                foreach ($dataTrackLog as $dataKey => $dataValue) :
+                $dem++;
+                if($index <= $dataValue['index']) :
+                //if(!$dataValue['timestamp']){continue;}
+                if($dataKey == "pack"){$nameText =  $this->__('Ready delivering') ;}
+                else if($dataKey == "deliver"){$nameText = $this->__('Delivering');}
+                else if($dataKey == "complete"){$nameText = $ent[0]["status"]=="canceled"?$this->__('Canceled'):$this->__('Complete');}
+                else if($dataKey == "notshow"){break;}
+                else if($dataKey == "failure"){$nameText = $this->__('Delivery');}
+                else{$nameText = $this->__('Processing');}
+            ?>
+                <div class="order-subOrder-status-icon">
+                    <div class="order-subOrder-status-icon-text">
+                        <div style="display:flex;flex-direction: column-reverse;">
+                            <div class="order-subOrder-status-node"></div>
+                            <?php if($dem != 1) :?><div class="order-subOrder-status-step"></div><?php endif; ?>    
+                        </div>
+                    </div>
+                        <?php if($dataValue['timestamp']) :?>
+                        <div class="order-subOrder-status-text"><div><span><?php echo $nameText; ?>:</span><span><?php echo $dataValue['timestamp'] ;?></span></div></div>
+                        <?php else:?>
+                        <div class="order-subOrder-status-text"><div><span><?php echo $nameText; ?></span></div></div>
+                        <?php endif;?>
+                </div>
+                <?php else: // show status but not color (sliver) ?>
+                <?php
+                    if($dataKey == "pack"){$nameText =  $this->__('Ready delivering') ;}
+                    else if($dataKey == "deliver"){$nameText = $this->__('Delivering');}
+                    else if($dataKey == "complete"){$nameText = $ent[0]["status"]=="canceled"?$this->__('Canceled'):$this->__('Complete');}
+                    else if($dataKey == "notshow"){break;}
+                    else if($dataKey == "failure"){$nameText = $this->__('Delivery');}
+                    else{$nameText = $this->__('Processing');}
+                ?>
+                <div class="order-subOrder-status-icon">
+                    <div class="order-subOrder-status-icon-text">
+                        <div style="display:flex;flex-direction: column-reverse;">
+                            <div class="order-subOrder-status-node-silver"></div>
+                            <?php if($dem != 1) :?><div class="order-subOrder-status-step-silver"></div><?php endif; ?>    
+                        </div>
+                    </div>
+                        <div class="order-subOrder-status-text"><div><span><?php echo $nameText; ?></span></div></div>
+                </div>
+                <?php endif; ?>
+                <?php $index++;?>
+                <?php endforeach; ?>
+            </div>
+        </div>
+<?php // END show status of suborder  -------- //  ?>  
+<?php // START show product list in suborder : -------- //  ?>        
+        <div class="order-subOrder-products id-list-products-<?php echo $suborder_id;?>">
+            <div class="table-subOrder-container" >
+                <div class="table-subOrder-header-and-img">
+                    <div class="table-subOrder-title-product order-view-title"><?php echo $this->__('Product list'); ?></div>
+                    <div class="table-subOrder-row table-subOrder-header">
+                        <div class="table-subOrder-cell" style="width:100px"><?php echo $this->__('Image') ?></div>
+                        <div class="table-subOrder-cell"><?php echo $this->__('Product Name') ?></div>
+                        <div class="table-subOrder-cell"><?php echo $this->__('Sku') ?></div>
+                        <?php if(!$hide_total):?>
+			    <div class="table-subOrder-cell"><?php echo $this->__('Final price') ?></div>
+			<?php endif;?>
+                        <div class="table-subOrder-cell"><?php echo $this->__('Qty') ?></div>
+                        <?php if(!$hide_total):?>
+			    <div class="table-subOrder-cell"><?php echo $this->__('Total amount') ?></div>
+			<?php endif;?>
+                    </div>
+                </div>
+                <?Php
+                        $total_price = 0;
+                        $total_shipping_fee = 0;
+                        $total_cod_fee = 0;
+                        $total_tryout = 0;
+                        $total_discount_amount = 0;
+                        $total_giftwrap_fee = 0;
+                        $total_ = 0;
+                        for ($j = 0; $j < count($ent); $j++) {
+                            $total_price += $ent[$j]["price"] * round($ent[$j]["qty"]);
+                            $total_shipping_fee = $ent[$j]["shipping_fee"];
+                            $total_cod_fee = $ent[$j]["cod_fee"];
+                            $total_tryout = $ent[$j]["tryout_discount"];
+                            $total_discount_amount = $ent[$j]["discount_amount"];
+                            $total_giftwrap_fee = $ent[$j]["giftwrap_fee"];
+                            
+                            $product = $ent[$j]["product"];
+
+                            $productId = $product->entity_id;
+                            $productImage = $product->getImageUrl();
+                            
+                ?>
+                
+                <div class="table-subOrder-parent-img-and-cell">
+                        <div class="table-subOrder-img-mobile">
+                            <img src="<?php echo $productImage ?>">
+                        </div>
+                        <div class="table-subOrder-row">
+                            <div class="table-subOrder-cell table-subOrder-img-web"><img src="<?php echo $productImage ?>"></div>
+                            <div class="table-subOrder-cell table-subOrder-name-product">
+				<a <?php echo (!$hide_total)?"href='".$product->getProductUrl()."'":'';?> >
+				    <?php echo $ent[$j]["name"] ?>
+				</a>
+                                <?php if ((int) $ent[$j]["price"] !== 0):// not show when product is gift?>
+					    <?php
+					    if (((int)$product->getData('price') !== 0 || $product->getTypeId() == 'bundle')) {
+						if (!empty($product->getData('expectedDateMsg'))) {
+						    $message .= ". " . $this->__("The expected date %s.", date('d/m/Y', strtotime($expectedDate)));
+						}
+						echo "<div class='label-stock-availabel'>".$product->getData('expectedDateMsg')."</div>";
+					    }
+					    ?>
+                                <?php endif; ?>
+                            </div>
+                            <div class="table-subOrder-cell table-subOrder-sku">
+                                <?php echo $ent[$j]["sku"] ?>
+                            </div>
+			    <?php if(!$hide_total):?>
+				<div class="table-subOrder-cell">
+				    <span class="table-subOrder-hidden-desktop"><?php echo $this->__('Final price') ?>:&nbsp;</span>
+				    <div class="cart-orderHs-price">
+					<div><span><?php echo $this->getOrder()->formatPrice($ent[$j]["price"])." ".$sym_currency; ?></span></div>
+					<?php if($ent[$j]["list_price"] && $ent[$j]["list_price"] != 0 && $ent[$j]["list_price"] != $ent[$j]["price"]): ?>
+					    <div class="orderHs-price-old"><span><?php echo $this->getOrder()->formatPrice($ent[$j]["list_price"])." ".$sym_currency; ?></span></div>
+					<?php endif; ?>
+				    </div>
+				</div>
+			    <?php endif;?>
+                            <div class="table-subOrder-cell">
+                                <span class="table-subOrder-hidden-desktop"><?php echo $this->__('Quantity') ?>:&nbsp;</span><span class="table-subOrder-quantity"><?php echo round($ent[$j]["qty"]) ?></span> 
+                            </div>
+			    <?php if(!$hide_total):?>
+				<div class="table-subOrder-cell">
+				     <span class="table-subOrder-hidden-desktop"><?php echo $this->__('Total amount') ?>:&nbsp;</span><span><?php echo $this->getOrder()->formatPrice($ent[$j]["price"]*round($ent[$j]["qty"]))." ".$sym_currency; ?></span> 
+				</div>
+			    <?php endif;?>
+                        </div>
+                    </div>
+                <?php }
+                    $total_ = $total_price + $total_shipping_fee + $total_cod_fee - $total_tryout - $total_discount_amount + $total_giftwrap_fee;   
+                    $total_final += $total_;
+                ?>
+            </div>
+        </div>
+<?php // END show product list in suborder  -------- //  ?> 
+        
+        <div class="order-subOrder-total id-total-<?php echo $suborder_id;?>">
+            <div class="order-subOrder-total-mobile">
+		<?php if(!$hide_total):?>
+		    <div><span><?php echo $this->__('Subtotal') ?>: </span><span><?php echo $this->getOrder()->formatPrice($total_price)?><span class="sym-totals"><?php echo $sym_currency; ?></span></span></div>
+                <?php endif;?>
+		<?php if(!$hide_shipping_fee):?>
+		    <div><span><?php echo $this->__('Shipping & Handling')?>: </span><span><?php echo $this->getOrder()->formatPrice($total_shipping_fee)?><span class="sym-totals"><?php echo $sym_currency; ?></span></span></div>
+		<?php endif;?>
+		<?php if(!$hide_total):?>
+		    <?php if ($total_cod_fee != 0) { ?>
+			<div><span><?php echo $this->__("Vietnam COD")?>: </span><span><?php echo $this->getOrder()->formatPrice($total_cod_fee)?><span class="sym-totals"><?php echo $sym_currency; ?></span></span></div>
+		    <?php } ?>
+		     <?php if ($total_tryout != 0) { ?>
+			 <div><span><?php echo $this->__("F-point Discount") ?>: </span><span><?php echo "-" . $this->getOrder()->formatPrice($total_tryout)?><span class="sym-totals"><?php echo $sym_currency; ?></span></span></div>         
+		    <?php } ?>
+		    <?php if ($total_discount_amount != 0) { ?>
+			<div><span><?php echo $this->__("Discount") ?>: </span><span><?php echo "-" . $this->getOrder()->formatPrice($total_discount_amount)?><span class="sym-totals"><?php echo $sym_currency; ?></span></span></div>         
+		    <?php } ?>
+		    <?php if ($total_giftwrap_fee != 0) { ?>
+			<div><span><?php echo $this->__("Gift wrap") ?>: </span><span><?php echo $this->getOrder()->formatPrice($total_giftwrap_fee)?><span class="sym-totals"><?php echo $sym_currency; ?></span></span></div>         
+		    <?php } ?>
+			<div><span><?php echo $this->__('Grand Total') ?>: </span><span><?php echo $this->getOrder()->formatPrice($total_)?><span class="sym-totals"><?php echo $sym_currency; ?></span></span></div>         
+		<?php endif;?>
+            </div>
+            <div class="order-subOrder-total-desktop">
+                <div>
+		    <?php if(!$hide_total):?>
+			<p><span><?php echo $this->__('Subtotal') ?>: </span></p>
+		    <?php endif;?>
+		    <?php if(!$hide_shipping_fee):?>
+			<p><span><?php echo $this->__('Shipping & Handling') ?>: </span></p>
+		    <?php endif;?>
+		    <?php if(!$hide_total):?>
+			<?php if ($total_cod_fee != 0) { ?>
+                            <p><span><?php echo $this->__("Vietnam COD") ?>: </span></p>
+                        <?php } ?>
+                        <?php if ($total_tryout != 0) { ?>
+                            <p><span><?php echo $this->__("F-point Discount") ?>: </span></p>         
+                        <?php } ?>
+                        <?php if ($total_discount_amount != 0) { ?>
+                            <p><span><?php echo $this->__("Discount") ?>: </span></p>         
+                        <?php } ?>
+                        <?php if ($total_giftwrap_fee != 0) { ?>
+                            <p><span><?php echo $this->__("Gift wrap") ?>: </span></p>        
+                        <?php } ?>
+                            <p><span><?php echo $this->__('Grand Total') ?>: </span></p>
+		    <?php endif;?>
+                </div>
+                <div>
+		    <?php if(!$hide_total):?>
+			<p><?php echo $this->getOrder()->formatPrice($total_price)?><span class="sym-totals"><?php echo $sym_currency; ?></span></p>
+		    <?php endif;?>
+		    <?php if(!$hide_shipping_fee):?>
+			<p><?php echo $this->getOrder()->formatPrice($total_shipping_fee)?><span class="sym-totals"><?php echo $sym_currency; ?></span></p>
+		    <?php endif;?>
+		    <?php if(!$hide_total):?>
+			<?php if ($total_cod_fee != 0) { ?>
+                            <p><?php echo $this->getOrder()->formatPrice($total_cod_fee)?><span class="sym-totals"><?php echo $sym_currency; ?></span></p>
+                        <?php } ?>
+                        <?php if ($total_tryout != 0) { ?>
+                            <p><?php echo "-" . $this->getOrder()->formatPrice($total_tryout)?><span class="sym-totals"><?php echo $sym_currency; ?></span></p>         
+                        <?php } ?>
+                        <?php if ($total_discount_amount != 0) { ?>
+                            <p><?php echo "-" . $this->getOrder()->formatPrice($total_discount_amount)?><span class="sym-totals"><?php echo $sym_currency; ?></span></p>         
+                        <?php } ?>
+                        <?php if ($total_giftwrap_fee != 0) { ?>
+                            <p><?php echo $this->getOrder()->formatPrice($total_giftwrap_fee)?><span class="sym-totals"><?php echo $sym_currency; ?></span></p>        
+                        <?php } ?>
+                            <p><?php echo $this->getOrder()->formatPrice($total_)?><span class="sym-totals"><?php echo $sym_currency; ?></span></p>
+		    <?php endif;?>
+                </div>
+            </div>
+    </div>
+	
+    <?php if($show_btn_delivery_confirm || !empty($tracking_url)): ?>
+	<div class="fhs_suborder_button_box fhs_center_right">
+	    <?php if(!empty($tracking_url)): ?>
+	    <a href="<?php echo $tracking_url;?>" target="_blank" onclick="event.stopPropagation();" class="fhs_btn_default fhs_mouse_point" ><?php echo $this->__('Shipment Tracking');?></a>
+	    <?php endif;?>
+	    <?php if($show_btn_delivery_confirm): ?>
+	    <a class="fhs_btn_default active fhs_mouse_point" suborder_id="<?php echo $suborder_id;?>" onclick="confirmDeliverySuborder(this);event.stopPropagation();" <?php echo !empty($tracking_url)?'style="margin-left:8px;"':'';?> ><?php echo $this->__('Item Received');?></a>
+	    <?php endif;?>
+	</div>
+    <?php endif;?>
+</div>
+</div>
+<?php ++$no_list;}// end foreach ?>
+<?php }?>
+<?php if ($_order && $show_all_total == TRUE){ ?>
+    <?php if($_order->getStatus() == "canceled"):?>
+	<style>.label-stock-availabel{display:none;}</style>
+    <?php endif;?>
+<?php //ORDER TABLE----------------------------------------------------------------?>
+    <div class="border-block-mobile-desktop"></div>
+    <div class="order-subOrder-container">
+        <div class="order-subOrder-items">
+            <div class="order-subOrder-info-status">
+                <div class="order-subOrder-info" id="<?php echo $_order->getRealOrderId(); ?>" onclick="showOnProductDetails(this.id);">
+                    <?php
+                     //get status => change color border :  
+                     $colorJson = $dataStatusColor[$_order->getStatus()];
+                     $color = json_decode($colorJson);
+                    ?>
+                    <div><span><?php echo $this->__('Orders') ?>:</span><span><?php echo $_order->getRealOrderId(); ?></span></div>
+                    <div class="subOder-progress-bar" <?php if ($color) : ?>style="background:<?php echo $color->number1; ?>;color:<?php echo $color->number2; ?>;border-color:<?php echo $color->number1; ?>;"<?php endif; ?>><?php echo $this->__('Orders') ?> <?php echo $this->__($_order->getStatus()); ?></div>
+                    <?php if(!$hide_total):?>
+			<div><span><?php echo $this->__('Order money total') ?>:</span><span><?php echo $this->getOrder()->formatPrice($_order->getGrandTotal())?><span style="sym-totals"><?php echo $sym_currency;?></span></span></div>
+                    <?php endif;?>
+		    <div class="order-subOrder-quantity"><span><?php echo $this->__('Quantity') ?>:</span><span><?php echo count($_order->getAllVisibleItems())  ?></span></div>
+                    <div class="order-subOrder-arrow"><i class="fa fa-chevron-right" aria-hidden="true"></i></div>
+                </div>
+            </div>
+        </div>
+        <div class="order-subOrder-products id-list-products-<?php echo $_order->getRealOrderId(); ?>">
+            <div class="table-subOrder-container" >
+                <div class="table-subOrder-header-and-img">
+                    <div class="table-subOrder-title-product order-view-title"><?php echo $this->__('Product list'); ?></div>
+                    <div class="table-subOrder-row table-subOrder-header">
+                        <div class="table-subOrder-cell" style="width:100px"><?php echo $this->__('Image') ?></div>
+                        <div class="table-subOrder-cell"><?php echo $this->__('Product Name') ?></div>
+                        <div class="table-subOrder-cell"><?php echo $this->__('Sku') ?></div>
+			<?php if(!$hide_total):?>
+			    <div class="table-subOrder-cell"><?php echo $this->__('Final price') ?></div>
+			    <div class="table-subOrder-cell"><?php echo $this->__('Qty') ?></div>
+			    <div class="table-subOrder-cell"><?php echo $this->__('Total amount') ?></div>
+			<?php endif;?>
+                    </div>
+                </div>
+                <?php // $buffet_helper = Mage::helper("event/buffetcombo");?>
+                <!-- Check if Buffet Combo Event is Active -->
+                <?php 
+                    if($buffet_helper && $buffet_helper->isBuffetActive()): 
+                ?>
+                <?php
+                    $items = $buffet_helper->getBuffetOrderItems($_order); 
+                    $i=0; 
+                ?>
+                <?php //--- Display item normal in buffetcombo : ---///?>
+                <?php foreach ($items['normal_items'] as $_item): $i++; ?>
+                    <?php echo $this->getItemHtml($_item) ?>
+                <?php endforeach; ?>
+                <?php //--- END Display item normal in buffetcombo : ---///?>
+                <?php foreach ($items['buffet_items'] as $key=>$_item):  ?>
+                    <?php ///---- dont display item buffet combo ----/// ?>
+                <?php endforeach; ?>
+                <?php else: ?>
+                    <?php $i=0; foreach ($_order->getAllItems() as $_item): ?>
+                    <?php 
+                        if($_item->getParentItem()) continue; else $i++;
+                        echo $this->getItemHtml($_item)
+                    ?>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
+        </div>
+<?php //ORDER TABLE END----------------------------------------------------------------?>
+<div class="order-subOrder-total id-total-<?php echo $_order->getRealOrderId(); ?>">
+        <?php echo $this->getChildHtml('order_totals') ?>
+</div>
+        
+<?php } ?>
+</div>
+<script>
+$jq(document).ready(function() {
+    $jq('.order-subOrder-products').each(function() {
+        let ww = $jq(window).width();
+        addClassSrocll(ww);
+    });
+    $jq(window).resize(function() {
+        let ww = $jq(window).width();
+        addClassSrocll(ww);
+    });
+    <?php if(!empty($suborder_id_goto)):?>
+	setTimeout(function(){
+	    fhs_account.goto(<?php echo json_encode("#".$suborder_id_goto);?>);
+	    fhs_account.showBorderNeon(<?php echo json_encode("#".$suborder_id_goto." .suborder_id");?>, 5000);
+	}, 500);
+    <?php endif;?>
+});
+
+/* 
+ * resize or reload will add/remove class srcoll-table-subOrder
+ */
+function addClassSrocll(ww) {
+    if (ww > 768) {
+        $jq('.order-subOrder-products').each(function() {
+            if ($jq(this).children(".table-subOrder-container").find('.table-subOrder-row').length > 6 && !$jq(this).children(".table-subOrder-container").hasClass("srcoll-table-subOrder")) {
+                $jq(this).children(".table-subOrder-container").addClass("srcoll-table-subOrder");
+            }
+        });
+    } else {
+        $jq('.order-subOrder-products').each(function() {
+            if ($jq(this).children(".table-subOrder-container").find('.table-subOrder-row').length > 6 && $jq(this).children(".table-subOrder-container").hasClass("srcoll-table-subOrder")) {
+                $jq(this).children(".table-subOrder-container").removeClass("srcoll-table-subOrder");
+            }
+        });
+    }
+}
+function showOnProductDetails(id){
+    let ww = $jq(window).width();
+    if(ww <= 768){
+        if($jq(".id-status-"+ id +",.id-list-products-"+id+",.id-total-"+id).is(':hidden')){
+            $jq(".id-status-"+ id +",.id-list-products-"+id+",.id-total-"+id).show();
+            $jq("#"+id).find(".order-subOrder-arrow").html('<i class="fa fa-chevron-down" aria-hidden="true"></i>');
+        }else{
+            $jq(".id-status-"+ id +",.id-list-products-"+id+",.id-total-"+id).css('display','');
+            $jq("#"+id).find(".order-subOrder-arrow").html('<i class="fa fa-chevron-right" aria-hidden="true"></i>');
+        }
+    }
+    
+}
+
+</script>
+
+<?php if($has_btn_delivery_confirm):?>
+<script type="text/javascript">
+    let is_loading_update_order_delivery = false;
+    var $btn_confirm_delivery = null;
+    function confirmDeliverySuborder(e){
+	$btn_confirm_delivery = $jq(e);
+	fhs_account.showAlertMsg(null, 360, null, <?php echo json_encode($this->__("Please select &quot;Confirm&quot; if you've received the item(s). Select &quot;Cancel&quot; if the item(s) is not delivered."));?>, "#fff", null, <?php echo json_encode($this->__("Have you received your order?"));?>, <?php echo json_encode($this->__("Confirm"));?>,"updateDeliverySuborder();");
+    }
+    
+    function updateDeliverySuborder(){
+	let suborder_id = $btn_confirm_delivery.attr('suborder_id');
+	
+	if(is_loading_update_order_delivery){return;}
+	is_loading_update_order_delivery = true;
+	fhs_account.showLoadingAnimation();
+	
+	$jq.ajax({
+	    url: "/tryout/history/updateSuborderDeliveryConfirmComplete",
+	    method: 'post',
+	    data: {suborder_id: suborder_id},
+	    dataType : "json",
+	    contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+	    success: function (data) {
+		if(data['success']){
+		    fhs_account.hideLoadingAnimation();
+		    fhs_account.closeAlertMsg();
+		    fhs_account.showAlert(<?php echo json_encode($this->__("Confirm Order Received"));?>);
+		    $btn_confirm_delivery.remove();
+		    window.location.reload();
+		}
+		is_loading_update_order_delivery = false;
+	    },
+	    error: function(){
+		is_loading_update_order_delivery = false;
+		fhs_account.hideLoadingAnimation();
+	    }
+	});
+    }
+</script>
+<?php endif; ?>

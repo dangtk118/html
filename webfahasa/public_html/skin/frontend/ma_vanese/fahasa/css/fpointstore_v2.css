@@ -1,0 +1,1206 @@
+.fpointstore-page{
+    /*font-family: Open Sans;*/
+    background-color: white;
+    margin: 0 0 15px 0;
+    display: block;
+}
+
+/* personal info  */
+#fpointstore_info{
+    padding: 20px;
+    min-height: 125px;
+    display: flex;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    flex-wrap:wrap;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+}
+#fpointstore_info_left{
+    width: 35%;
+    display: flex;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    flex-direction:row;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+}
+.fpoint-icon img{
+    width: 100%;
+}
+.fpoint-info{
+    padding-left: 20px;
+}
+#fpointstore_info_right{
+    width: 65%;
+    display: flex;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    flex-direction:row;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-justify-content: flex-end;
+    justify-content: flex-end;
+}
+
+.vip-info-combo{
+    display: flex;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    flex-direction:column;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: flex-end;
+    align-items: flex-end;
+    -webkit-justify-content: flex-end;
+    justify-content: flex-end;
+    font-size: 1.2em;
+}
+.vip-info-combo > div > span{
+    color: #F39801;
+    font-weight: 700;
+    padding: 1px;
+    font-size: 1.25em;
+}
+#txt_vip_code_info{
+    border-right: none;
+}
+#txt_vip_code_info.code-error::-webkit-input-placeholder { /* Edge */
+    color: red;
+    opacity: 0.5;
+    font-style: italic;
+}
+#txt_vip_code_info.code-error:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: red;
+    opacity: 0.5;
+    font-style: italic;
+}
+#txt_vip_code_info.code-error::placeholder {
+    color: red;
+    opacity: 0.5;
+    font-style: italic;
+}
+#btn_vip_code_info{
+    background: rgb(255,152,0);
+    background: -moz-linear-gradient(90deg, rgba(255,152,0,1) 0%, rgba(247,105,93,1) 100%);
+    background: -webkit-linear-gradient(90deg, rgba(255,152,0,1) 0%, rgba(247,105,93,1) 100%);
+    background: linear-gradient(90deg, rgba(255,152,0,1) 0%, rgba(247,105,93,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ff9800",endColorstr="#f7695d",GradientType=1);
+    border: none;
+    color: white;
+    font-size: 1.1em;
+    width: 100px;
+    font-weight: 700;
+}
+.vip-info-btn{
+    display: flex;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    flex-direction:column;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    justify-content: center;
+}
+.vip-info-btn > div{
+    font-size: 1.2em;
+}
+.vip-info-btn > input{
+    font-size: 1.1em;
+}
+
+.vip-info-btn > div{
+    text-align: center;
+}
+
+.btn_voucher_confirm{
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+    background: rgb(255,152,0);
+    background: -moz-linear-gradient(90deg, rgba(255,152,0,1) 0%, rgba(247,105,93,1) 100%);
+    background: -webkit-linear-gradient(90deg, rgba(255,152,0,1) 0%, rgba(247,105,93,1) 100%);
+    background: linear-gradient(90deg, rgba(255,152,0,1) 0%, rgba(247,105,93,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ff9800",endColorstr="#f7695d",GradientType=1);
+    border: none;
+    color: white;
+    width: 200px;
+    font-size: 1.1em;
+    font-weight: 700;
+    transition: all 0.3s;
+    box-shadow: 0px 4px 6px hsl(0, 0%, 90%);
+    -moz-box-shadow: 0px 4px 6px hsl(0, 0%, 90%);
+    -webkit-box-shadow: 0px 4px 6px hsl(0, 0%, 90%);
+    border-radius: 20px;
+    -moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+}
+
+.btn_voucher_confirm:disabled{
+    background: rgb(224,224,224);
+    background: -moz-linear-gradient(90deg, rgba(224,224,224,1) 0%, rgba(224,224,224,1) 100%);
+    background: -webkit-linear-gradient(90deg, rgba(224,224,224,1) 0%, rgba(224,224,224,1) 100%);
+    background: linear-gradient(90deg, rgba(224,224,224,1) 0%, rgba(224,224,224,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#e0e0e0",endColorstr="#e0e0e0",GradientType=1);
+    border: none;
+    color: #b3b3b3;
+}
+/*.btn_voucher_confirm:enabled:hover{
+    box-shadow: 0px 6px 8px hsl(0, 0%, 90%);
+    -moz-box-shadow: 0px 6px 8px hsl(0, 0%, 90%);
+    -webkit-box-shadow: 0px 6px 8px hsl(0, 0%, 90%);
+    transform: scale(1.03);
+}*/
+.btn_voucher_confirm:enabled:active{
+    box-shadow: 0px 2px 4px hsl(0, 0%, 90%);
+    -moz-box-shadow: 0px 2px 4px hsl(0, 0%, 90%);
+    webkit-box-shadow: 0px 2px 4px hsl(0, 0%, 90%);
+    transform: scale(0.98);
+}
+
+#fpointstore_voucher_info{
+    padding-bottom: 20px;
+}
+/* Header  */
+#fpointstore-page-menu{
+    text-align: center;
+    padding: 20px 10px 10px 10px;
+    margin: 0px;
+}
+
+/* Header Menu */
+.fpointstore-menu-item{
+    display: inline-block;
+    text-align: center;
+    cursor: pointer;
+    padding-bottom: 10px;
+    user-select: none;
+}
+
+.fpointstore-menu-item > a{
+    padding: 25px;
+    font-size: 1.2em;
+    font-weight: 600;
+}
+
+#fpointstore-menu-item-more{
+    display: inline-block;
+    text-align: center;
+    cursor: pointer;
+    padding: 15px;
+    user-select: none;
+    font-size: 14px;
+}
+
+#fpointstore-menu-item-more > a{
+    font-size: 16px;
+}
+
+.fpointstore-menu-item hr, .fpointstore-menu-subitem hr{
+    margin: 5px 0;
+    border: 1.5px solid #eee0;
+    -webkit-transition: all 0.5s ease-in-out; /* For Safari 3.1 to 6.0 */
+    transition: all 0.5s  ease-in-out;
+    width : 20%;
+    margin-block-start: 0.5em;
+    margin-block-end: 0.5em;
+    margin-inline-start: auto;
+    margin-inline-end: auto;
+}
+
+.fpointstore-menu-item:not(.active) hr, .fpointstore-menu-subitem:not(.active) hr{
+    -webkit-transition: all 0.5s ease-in-out; /* For Safari 3.1 to 6.0 */
+    transition: all 0.5s  ease-in-out;
+}
+
+.fpointstore-menu-item:hover hr, .fpointstore-menu-item.active hr
+,.fpointstore-menu-subitem:hover hr, .fpointstore-menu-subitem.active hr{
+    border: 1.5px solid #F7931E;
+    width: 80%;
+}
+
+.fpointstore-menu-item.active a, #fpointstore-header-menu .fpointstore-menu-item:hover a{
+    color: #F7931E;
+}
+
+#fpointstore-menu-item-more:hover > a, #fpointstore-menu-item-more.active > a{
+    color: #F7931E !important;
+}
+
+#fpointstore-grid{
+    padding: 0 15px 0 15px;
+}
+.fpointstore-grid-item{
+    cursor: pointer;
+    padding: 0 7.5px 0 7.5px;
+    margin-bottom: 15px;
+}
+.fpointstore-grid-item-box{
+    padding-bottom: 20px;
+    -webkit-box-shadow: 0 4px 6px 0 hsl(0, 0%, 90%);
+    -moz-box-shadow: 0 4px 6px 0 hsl(0, 0%, 90%);
+    box-shadow: 0 4px 6px 0 hsl(0, 0%, 90%);
+    border-radius: 8px;
+    -moz-border-radius: 8px;
+    -webkit-border-radius: 8px;
+}
+
+.fpointstore-grid-item-box img{
+    width: 100%;
+}
+
+.fpointstore-grid-item-box:hover{
+    -webkit-box-shadow: 0 4px 6px 2px hsl(0, 0%, 88%);
+    -moz-box-shadow: 0 4px 6px 2px hsl(0, 0%, 88%);
+    box-shadow: 0 4px 6px 2px hsl(0, 0%, 88%);
+}
+
+.fpointstore-grid-item img{
+    -moz-border-top-left-radius: 10px;
+    -moz-border-top-right-radius: 10px;
+    width: 100%;
+}
+.fpointstore-grid-item-box-lable{
+    color: #212121;
+    font-size: 1.2em;
+    margin: 15px 15px 10px 15px;
+    height: 40px;
+}
+.fpointstore-grid-item-box-bottom{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.fpointstore-grid-item-box-button{
+    font-size: 1.1em;
+    height: 40px;
+    width: 300px;
+    font-weight: 700;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgb(255,152,0);
+    background: -moz-linear-gradient(90deg, rgba(255,152,0,1) 0%, rgba(247,105,93,1) 100%);
+    background: -webkit-linear-gradient(90deg, rgba(255,152,0,1) 0%, rgba(247,105,93,1) 100%);
+    background: linear-gradient(90deg, rgba(255,152,0,1) 0%, rgba(247,105,93,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ff9800",endColorstr="#f7695d",GradientType=1);
+    border: none;
+    color: white;
+    border-radius: 20px;
+    -moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+}
+.fpointstore-grid-item-box-button div:first-child{
+    display: block;
+    /*width: 40%;*/
+}
+.fpointstore-grid-item-box-button.disabled{
+    background: rgb(224,224,224);
+    background: -moz-linear-gradient(90deg, rgba(224,224,224,1) 0%, rgba(224,224,224,1) 100%);
+    background: -webkit-linear-gradient(90deg, rgba(224,224,224,1) 0%, rgba(224,224,224,1) 100%);
+    background: linear-gradient(90deg, rgba(224,224,224,1) 0%, rgba(224,224,224,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#e0e0e0",endColorstr="#e0e0e0",GradientType=1);
+    border: none;
+    color: #b3b3b3;
+}
+
+.fpointstore-grid-item-box-button div:first-child span{
+    float: right;
+    margin-right: 10px;
+}
+
+.fpointstore-grid-item-box-button div:nth-of-type(2) span{
+    background-color: white;
+    border: 1px solid white;
+    height: 60%;
+    margin-right: 10px;
+}
+
+#fpointstore_combo_info{
+    margin: 0 0 15px 0;
+    display: block;
+}
+
+#fpointstore_combo_info .swiper-slide .swiper-lazy{
+    height: 100%;
+}
+
+.swiper-container {
+  width: 100%;
+  height: 100%;
+}
+.swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    background: #fff;
+    /* Center slide text vertically */
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+}
+.fpointstore_combo_info-image{
+    position: relative;
+}
+.fpointstore_combo_info-image div:nth-of-type(2){
+    position: absolute;
+    top: 5%;
+    left: 0;
+}
+#fpointstore_combo_info > .swiper-container > .swiper-button{
+    height: 44px;
+    width: 44px;
+    /** background-color: white;*/
+    border-radius: 22px;
+    -moz-border-radius: 22px;
+    -webkit-border-radius: 22px;
+}
+#fpointstore_combo_info > .swiper-container > .swiper-button > img{
+    border-radius: 22px;
+    -moz-border-radius: 22px;
+    -webkit-border-radius: 22px;
+}
+#fpointstore_combo_info > .swiper-container > .swiper-button:Not(.swiper-button-hidden):hover{
+    -webkit-box-shadow: 0px 0px 6px 4px hsla(0, 0%, 0%,0.2);
+    -moz-box-shadow: 0px 0px 6px 4px hsla(0, 0%, 0%,0.2);
+    box-shadow: 0px 0px 6px 4px hsla(0, 0%, 0%,0.2);
+}
+#fpointstore_combo_info > .swiper-container > .swiper-button.swiper-button-hidden{
+    display: none !important;
+}
+.swiper-button-next,
+.swiper-container-rtl .swiper-button-prev,
+.swiper-button-prev, 
+.swiper-container-rtl .swiper-button-next{
+    background-image: none;
+}
+.swiper-button-next,
+.swiper-button-prev, 
+.swiper-container-rtl .swiper-button-prev,
+.swiper-container-rtl .swiper-button-next{
+    fill: #000;
+}
+.fpointstore-voucher-info-content-zoom{
+    margin: 25px 25px 10px 25px;
+    position: relative;
+}
+.fpointstore-voucher-info-content{
+    align-items: center;
+    width: 110%;
+    -webkit-transform: scale(0.9) translate(-5%, -5%);
+    -ms-transform: scale(0.9) translate(-5%, -5%);
+    -moz-transform: scale(0.9) translate(-5%, -5%);
+    transform: scale(0.9) translate(-5%, -5%);
+}
+.fpointstore-voucher-info-item{
+    margin-bottom: 20px;
+}
+
+.fpointstore-page-detail{
+    padding: 20px 20px 0 20px;
+}
+.fpointstore-voucher-info-item-bar{
+    -webkit-box-shadow: 0 4px 6px 2px hsl(0, 0%, 90%);
+    -moz-box-shadow: 0 4px 6px 2px hsl(0, 0%, 90%);
+    box-shadow: 0 4px 6px 2px hsl(0, 0%, 90%);
+    border-radius: 8px;
+    -moz-border-radius: 8px;
+    -webkit-border-radius: 8px;
+    min-height: 160px;
+    cursor: pointer;
+    user-select: none;
+    color: #212121;
+    display: flex;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    flex-direction:row;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    padding: 20px;
+}
+.fpointstore-voucher-info-item-bar:hover{
+    -webkit-box-shadow: 0 4px 6px 4px hsl(0, 0%, 88%);
+    -moz-box-shadow: 0 4px 6px 4px hsl(0, 0%, 88%);
+    box-shadow: 0 4px 6px 4px hsl(0, 0%, 88%);
+}
+.fpointstore-voucher-info-item-bar-left{
+    width: 65%;
+    display: flex;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    flex-direction:row;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+
+}
+.fpointstore-voucher-info-item-bar-right{
+    width: 35%;
+    display: flex;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    flex-direction:row;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-justify-content: flex-end;
+    justify-content: flex-end;
+}
+.fpointstore-voucher-info-item-logo{
+    height: 120px;
+    width: 120px;
+    display: flex;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+}
+.fpointstore-voucher-info-item-title{
+    font-size: 1.2em;
+    padding-left: 20px;
+}
+.fpointstore-voucher-info-item-title-partner{
+    font-weight: 700;
+    text-transform: uppercase;
+}
+.fpointstore-voucher-info-item-title-name{
+    margin-top: 10px;
+}
+.fpointstore-voucher-info-item-expire{
+    font-size: 1.2em;
+    display: flex;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+}
+.fpointstore-voucher-info-item-expire .fpointstore-voucher-info-item-expire-icon {
+    margin-left: 20px;
+}
+.panel-voucher-collapse:not(.collapsed)
+> .fpointstore-voucher-info-item-bar
+> .fpointstore-voucher-info-item-bar-right
+> .fpointstore-voucher-info-item-expire
+> .fpointstore-voucher-info-item-expire-icon {
+    -webkit-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    transform: rotate(180deg);
+    transition: all 0.5s;
+}
+
+.panel-voucher-collapse.collapsed
+> .fpointstore-voucher-info-item-bar
+> .fpointstore-voucher-info-item-bar-right
+> .fpointstore-voucher-info-item-expire
+> .fpointstore-voucher-info-item-expire-icon {
+    -webkit-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    transform: rotate(0deg);
+    transition: all 0.5s;
+}
+
+#popup-fpointstore-cover {
+    display: none;
+    background: #261E1E none repeat scroll 0% 0%;
+    opacity: 0.5;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    float: left;
+    position: fixed;
+    z-index: 99998;
+}
+#popup-fpointstore-detail {
+    opacity: 1;
+    position: fixed;
+    z-index: 99999;
+    width: 340px;
+    background-color: white;
+    display: none;
+    border: none;
+    top: 25%;
+    left: 50%;
+    margin-left: -175px;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+}
+#popup-fpointstore-alert {
+    opacity: 1;
+    position: fixed;
+    z-index: 99999;
+    width: 350px;
+    background-color: white;
+    display: none;
+    border: none;
+    top: 25%;
+    left: 50%;
+    margin-left: -175px;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+}
+#popup-fpointstore-loading {
+    opacity: 1;
+    position: fixed;
+    z-index: 99999;
+    width: 350px;
+    max-width: 100%;
+    background-color: white;
+    display: none;
+    border: none;
+    top: 25%;
+    left: 50%;
+    margin-left: -175px;
+    -webkit-border-bottom-left-radius: 10px;
+    -webkit-border-bottom-right-radius: 10px;
+    -webkit-border-top-left-radius: 10px;
+    -webkit-border-top-right-radius: 10px;
+}
+#fpointstore-icon-loading{
+    -webkit-animation-name: rotate;
+    -webkit-animation-duration:2s;
+    -webkit-animation-iteration-count:infinite;
+    -webkit-animation-timing-function:linear;
+    -moz-animation-name: rotate;
+    -moz-animation-duration:2s;
+    -moz-animation-iteration-count:infinite;
+    -moz-animation-timing-function:linear;
+}
+@-webkit-keyframes rotate {
+  from {-webkit-transform:rotate(0deg);}
+  to {  -webkit-transform:rotate(360deg);}
+}
+
+@-moz-keyframes rotate {
+  from {-moz-transform:rotate(0deg);}
+  to {  -moz-transform:rotate(360deg);}
+}
+#history_voucher{
+    padding: 10px 7.5px 0 7.5px;
+}
+#history_voucher_grid{
+    
+}
+.history-voucher-grid-item{
+    padding: 0 7.5px 0 7.5px;
+    margin-bottom: 8px;
+}
+.history-voucher-grid-item-box{
+    padding-bottom: 8px;
+    -webkit-box-shadow: 0 4px 6px 0 hsl(0, 0%, 90%);
+    -moz-box-shadow: 0 4px 6px 0 hsl(0, 0%, 90%);
+    box-shadow: 0 4px 6px 0 hsl(0, 0%, 90%);
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+}
+
+.history-voucher-grid-item-box:hover{
+    -webkit-box-shadow: 0 4px 6px 2px hsl(0, 0%, 88%);
+    -moz-box-shadow: 0 4px 6px 2px hsl(0, 0%, 88%);
+    box-shadow: 0 4px 6px 2px hsl(0, 0%, 88%);
+}
+.history-voucher-grid-item-box-code{
+    display: flex;
+    padding: 8px
+}
+.history-voucher-grid-item-box-code-img{
+     width: 70%;
+}
+.history-voucher-grid-item-box-code-img > a > img{
+    border-radius: 8px;
+    -moz-border-radius: 8px;
+    -webkit-border-radius: 8px;
+}
+.history-voucher-grid-item-box-code-info{
+    width: 30%;
+    margin-left: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgb(255,152,0);
+    background: -moz-linear-gradient(90deg, rgba(255,152,0,1) 0%, rgba(247,105,93,1) 100%);
+    background: -webkit-linear-gradient(90deg, rgba(255,152,0,1) 0%, rgba(247,105,93,1) 100%);
+    background: linear-gradient(90deg, rgba(255,152,0,1) 0%, rgba(247,105,93,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ff9800",endColorstr="#f7695d",GradientType=1);
+    border: none;
+    border-radius: 8px;
+    -moz-border-radius: 8px;
+    -webkit-border-radius: 8px;
+}
+
+.history-voucher-grid-item-box-code-info.deactive{
+    background: rgb(224,224,224);
+    background: -moz-linear-gradient(90deg, rgba(224,224,224,1) 0%, rgba(224,224,224,1) 100%);
+    background: -webkit-linear-gradient(90deg, rgba(224,224,224,1) 0%, rgba(224,224,224,1) 100%);
+    background: linear-gradient(90deg, rgba(224,224,224,1) 0%, rgba(224,224,224,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#e0e0e0",endColorstr="#e0e0e0",GradientType=1);
+    border: none;
+}
+
+.history-voucher-grid-item-box-code-info.deactive > div > label{
+    color: #b3b3b3;
+}
+
+.history-voucher-grid-item-box-code-info > div{
+    display: block;
+    text-align: center;
+    line-height:13px;
+}
+
+.history-voucher-grid-item-box-code-info > div > label{
+    color: white;
+}
+
+.history-voucher-grid-item-box-code-info > div > label:first-child{
+    font-size: 1em;
+}
+
+.history-voucher-grid-item-box-code-info > div > label:nth-of-type(2){
+    font-size: 1.2em;
+    font-weight: 700;
+    cursor: text;
+}
+
+.history-voucher-grid-item-box-status{
+    padding: 0 0 8px 16px;
+}
+.history-voucher-grid-item-box-status > span{
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    height: 22px;
+    padding: 0 12px;
+    border-radius: 11px;
+    -moz-border-radius: 11px;
+    -webkit-border-radius: 11px;
+}
+.history-voucher-grid-item-box-status > .voucher-status-partner{
+    color: #F7941E;
+    background-color: #fcdab0;
+    border-color: #fcdab0;
+}
+.history-voucher-grid-item-box-status > .voucher-status-avalible{
+    color: #2ED62E;
+    background-color: #B6F1B6;
+    border-color: #B6F1B6;
+}
+.history-voucher-grid-item-box-status > .voucher-status-used{
+    color: #A90000;
+    background-color: #F3B4AF;
+    border-color: #F3B4AF;
+}
+.history-voucher-grid-item-box-name{
+    padding: 2px 16px 8px 16px;
+    font-size: 1.2em;
+    font-weight: 650;
+    height: 46px;
+}
+.history-voucher-grid-item-box-footer{
+    display: flex;
+    padding: 2px 8px 8px 16px;
+}
+.history-voucher-grid-item-box-footer-left{
+    width: 70%;
+}
+.history-voucher-grid-item-box-expire{
+    padding-top: 2px;
+    font-size: 1em;
+}
+.history-voucher-grid-item-box-expire > span{
+    font-weight: 650;
+    color: #ff1a1a;
+}
+.history-voucher-grid-item-box-limit{
+    padding-top: 8px;
+    font-size: 0.8em;
+}
+.history-voucher-grid-item-box-footer-right{
+    width: 30%;
+    display: flex;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+.history-voucher-grid-item-box-footer-right-btn{
+    width: 100%;
+    margin: auto;
+    cursor: pointer;
+    user-select: none;
+    height: 36px;
+    font-size: 1.1em;
+    font-weight: 700;
+    color: white;
+    background: rgb(255,152,0);
+    background: -moz-linear-gradient(90deg, rgba(255,152,0,1) 0%, rgba(247,105,93,1) 100%);
+    background: -webkit-linear-gradient(90deg, rgba(255,152,0,1) 0%, rgba(247,105,93,1) 100%);
+    background: linear-gradient(90deg, rgba(255,152,0,1) 0%, rgba(247,105,93,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ff9800",endColorstr="#f7695d",GradientType=1);
+    border: none;
+    transition: all 0.3s;
+    box-shadow: 0px 4px 6px hsl(0, 0%, 90%);
+    -moz-box-shadow: 0px 4px 6px hsl(0, 0%, 90%);
+    -webkit-box-shadow: 0px 4px 6px hsl(0, 0%, 90%);
+    border-radius: 18px;
+    -moz-border-radius: 18px;
+    -webkit-border-radius: 18px;
+}
+
+/*.history-voucher-grid-item-box-footer-right-btn:hover{
+    box-shadow: 0px 6px 8px hsl(0, 0%, 90%);
+    -moz-box-shadow: 0px 6px 8px hsl(0, 0%, 90%);
+    -webkit-box-shadow: 0px 6px 8px hsl(0, 0%, 90%);
+    transform: scale(1.03);
+}*/
+.history-voucher-grid-item-box-footer-right-btn:active{
+    box-shadow: 0px 2px 4px hsl(0, 0%, 90%);
+    -moz-box-shadow: 0px 2px 4px hsl(0, 0%, 90%);
+    webkit-box-shadow: 0px 2px 4px hsl(0, 0%, 90%);
+    transform: scale(0.98);
+}
+
+/* popup alert success begin*/
+#popup-fpointstore-alert-success{
+    opacity: 1;
+    position: fixed;
+    z-index: 99999;
+    width: 480px;
+    background-color: white;
+    display: none;
+    border: none;
+    top: 25%;
+    left: 50%;
+    margin-left: -240px;
+    padding: 30px 15px 20px 15px;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    text-align: center;
+    /*font-family: Open Sans;*/
+}
+.popup-fahasa-alert-success-logo{
+}
+.popup-fahasa-alert-success-title{
+    padding-top: 20px;
+    font-size: 1.5em;
+    font-weight: 600;
+}
+.popup-fahasa-default-alert-success-name{
+    color: #F39801;
+    font-size: 1.6em;
+    font-weight: 800;
+    padding: 15px 0;
+    text-transform: uppercase;
+}
+.popup-fahasa-default-alert-success-btn{
+    padding-top: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.popup-fahasa-default-alert-success-btn button{
+    cursor: pointer;
+    user-select: none;
+    height: 36px;
+    font-size: 1.1em;
+    font-weight: 700;
+    border: 1px solid #F39801;
+    transition: all 0.3s;
+    box-shadow: 0px 4px 6px hsl(0, 0%, 90%);
+    -moz-box-shadow: 0px 4px 6px hsl(0, 0%, 90%);
+    -webkit-box-shadow: 0px 4px 6px hsl(0, 0%, 90%);
+    border-radius: 18px;
+    -moz-border-radius: 18px;
+    -webkit-border-radius: 18px;
+}
+/*.popup-fahasa-default-alert-success-btn button:hover{
+    box-shadow: 0px 6px 8px hsl(0, 0%, 90%);
+    -moz-box-shadow: 0px 6px 8px hsl(0, 0%, 90%);
+    -webkit-box-shadow: 0px 6px 8px hsl(0, 0%, 90%);
+    transform: scale(1.03);
+}*/
+.popup-fahasa-default-alert-success-btn button:active{
+    box-shadow: 0px 2px 4px hsl(0, 0%, 90%);
+    -moz-box-shadow: 0px 2px 4px hsl(0, 0%, 90%);
+    webkit-box-shadow: 0px 2px 4px hsl(0, 0%, 90%);
+    transform: scale(0.98);
+}
+.popup-fahasa-default-alert-success-btn-confirm{
+    cursor: pointer;
+    user-select: none;
+    width: 200px;
+    height: 36px;
+    font-size: 1.1em;
+    font-weight: 700;
+    border-radius: 18px;
+    -moz-border-radius: 18px;
+    -webkit-border-radius: 18px;
+    background: rgb(255,152,0);
+    background: -moz-linear-gradient(90deg, rgba(255,152,0,1) 0%, rgba(247,105,93,1) 100%);
+    background: -webkit-linear-gradient(90deg, rgba(255,152,0,1) 0%, rgba(247,105,93,1) 100%);
+    background: linear-gradient(90deg, rgba(255,152,0,1) 0%, rgba(247,105,93,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ff9800",endColorstr="#f7695d",GradientType=1);
+    border: none;
+    color: white;
+}
+.popup-fahasa-default-alert-success-btn-back{
+    width: 200px;
+    color: #F39801;
+}
+/* popup alert success end*/
+
+/* popup confirm begin*/
+#popup-fpointstore-confirm{
+    opacity: 1;
+    position: fixed;
+    z-index: 99999;
+    width: 600px;
+    background-color: white;
+    display: none;
+    border: none;
+    top: 25%;
+    left: 50%;
+    margin-left: -300px;
+    padding: 15px;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    /*font-family: Open Sans;*/
+}
+.popup-fpointstore-confirm-title{
+    padding-top: 10px;
+    font-size: 1.5em;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+.popup-fpointstore-confirm-fpoint{
+    padding-top: 10px;
+    font-size: 1.3em;
+    font-weight: 650;
+    color: #F39801;
+}
+.popup-fpointstore-confirm-expire{
+    padding-top: 10px;
+}
+.popup-fpointstore-confirm-limit{
+    padding-top: 5px;
+}
+.popup-fpointstore-confirm-rule{
+    padding-top: 5px;
+}
+.popup-fpointstore-confirm-rule > a{
+    color: #F39801;
+    text-decoration: underline; 
+}
+.popup-fpointstore-confirm-btn{
+    font-size: 1.1em;
+    font-weight: 700;
+}
+.popup-fpointstore-confirm-btn button{
+    transition: all 0.3s;
+}
+/*.popup-fpointstore-confirm-btn button:hover{
+    transform: scale(1.03); 
+}*/
+.popup-fpointstore-confirm-btn button:active{
+    transform: scale(0.98);
+}
+.popup-fpointstore-confirm-btn-back{
+    float: right;
+    margin-right: 20px;
+    height: 36px;
+    border: none;
+    cursor: pointer;
+    user-select: none;
+    font-size: 1em;
+}
+.popup-fpointstore-confirm-btn-confirm{
+    float: right;
+    background: rgb(255,152,0);
+    background: -moz-linear-gradient(90deg, rgba(255,152,0,1) 0%, rgba(247,105,93,1) 100%);
+    background: -webkit-linear-gradient(90deg, rgba(255,152,0,1) 0%, rgba(247,105,93,1) 100%);
+    background: linear-gradient(90deg, rgba(255,152,0,1) 0%, rgba(247,105,93,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ff9800",endColorstr="#f7695d",GradientType=1);
+    border: none;
+    user-select: none;
+    width: 120px;
+    height: 36px;
+    box-shadow: 0px 4px 6px hsl(0, 0%, 90%);
+    -moz-box-shadow: 0px 4px 6px hsl(0, 0%, 90%);
+    -webkit-box-shadow: 0px 4px 6px hsl(0, 0%, 90%);
+    border: 1px solid #F39801;
+    border-radius: 18px;
+    -moz-border-radius: 18px;
+    -webkit-border-radius: 18px;
+    color: white;
+    font-size: 1em;
+}
+.popup-fpointstore-confirm-btn-confirm:hover{
+    box-shadow: 0px 6px 8px hsl(0, 0%, 90%);
+    -moz-box-shadow: 0px 6px 8px hsl(0, 0%, 90%);
+    -webkit-box-shadow: 0px 6px 8px hsl(0, 0%, 90%);
+}
+.popup-fpointstore-confirm-btn-confirm:active{
+    box-shadow: 0px 2px 4px hsl(0, 0%, 90%);
+    -moz-box-shadow: 0px 2px 4px hsl(0, 0%, 90%);
+    webkit-box-shadow: 0px 2px 4px hsl(0, 0%, 90%);
+}
+/* popup confirm end*/
+
+
+
+#popup-fpointstore-alert-reader {
+    opacity: 1;
+    position: fixed;
+    z-index: 99999;
+    width: 750px;
+    background-color: white;
+    display: none;
+    border: none;
+    top: 15%;
+    left: 50%;
+    height: 55%;
+    webkit-transform: translateX(-50%);
+    -moz-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    transform: translateX(-50%);
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+}
+#popup-fpointstore-alert-reader-content-zoom{
+    overflow: hidden;
+    margin: 5px 0 0 30px;
+    height: calc(100% - 70px);
+    position: relative;
+}
+#popup-fpointstore-alert-reader-content{
+    position: absolute;
+    overflow-y: auto;
+    width: 140%;
+    height: 140%;
+    padding-right: 10px;
+    -webkit-transform: scale(0.7) translate(-20%, -21%);
+    -ms-transform: scale(0.7) translate(-20%, -21%);
+    -moz-transform: scale(0.7) translate(-20%, -21%);
+    transform: scale(0.7) translate(-20%, -21%);
+}
+.fpointstore-voucher-info-content p, .fpointstore-voucher-info-content strong, .fpointstore-voucher-info-content span,
+#popup-fpointstore-alert-reader-content p, #popup-fpointstore-alert-reader-content strong, #popup-fpointstore-alert-reader-content span{
+    line-height: 1.5em !important;
+}
+.fpointstore-voucher-info-content p, .fpointstore-voucher-info-content strong , .fpointstore-voucher-info-content span,
+#popup-fpointstore-alert-reader-content p, #popup-fpointstore-alert-reader-content strong, #popup-fpointstore-alert-reader-content span{
+    font-family: sans-serif !important;
+}
+#popup-fpointstore-alert-reader-btn{
+    padding: 10px 0;
+    text-align: center;
+    font-size: 1.1em;
+}
+#popup-fpointstore-alert-reader-btn button{
+    margin: auto;
+    cursor: pointer;
+    user-select: none;
+    height: 36px;
+    padding: 0 70px;
+    font-size: 1.1em;
+    font-weight: 700;
+    color: white;
+    background: rgb(255,152,0);
+    background: -moz-linear-gradient(90deg, rgba(255,152,0,1) 0%, rgba(247,105,93,1) 100%);
+    background: -webkit-linear-gradient(90deg, rgba(255,152,0,1) 0%, rgba(247,105,93,1) 100%);
+    background: linear-gradient(90deg, rgba(255,152,0,1) 0%, rgba(247,105,93,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ff9800",endColorstr="#f7695d",GradientType=1);
+    border: none;
+    transition: all 0.3s;
+    box-shadow: 0px 4px 6px hsl(0, 0%, 90%);
+    -moz-box-shadow: 0px 4px 6px hsl(0, 0%, 90%);
+    -webkit-box-shadow: 0px 4px 6px hsl(0, 0%, 90%);
+    border-radius: 18px;
+    -moz-border-radius: 18px;
+    -webkit-border-radius: 18px;
+}
+
+/*#popup-fpointstore-alert-reader-btn button:hover{
+    box-shadow: 0px 6px 8px hsl(0, 0%, 90%);
+    -moz-box-shadow: 0px 6px 8px hsl(0, 0%, 90%);
+    -webkit-box-shadow: 0px 6px 8px hsl(0, 0%, 90%);
+    transform: scale(1.03);
+}*/
+#popup-fpointstore-alert-reader-btn button:active{
+    box-shadow: 0px 2px 4px hsl(0, 0%, 90%);
+    -moz-box-shadow: 0px 2px 4px hsl(0, 0%, 90%);
+    webkit-box-shadow: 0px 2px 4px hsl(0, 0%, 90%);
+    transform: scale(0.98);
+}
+/* width */
+#popup-fpointstore-alert-reader-content::-webkit-scrollbar {
+  width: 20px;
+}
+
+/* Track */
+#popup-fpointstore-alert-reader-content::-webkit-scrollbar-track {
+    background-color:#fff;
+}
+ 
+/* Handle */
+#popup-fpointstore-alert-reader-content::-webkit-scrollbar-thumb {
+  background: #fed89a; 
+  border-radius: 10px;
+  border:4px solid #fff;
+}
+
+/* Handle on hover */
+#popup-fpointstore-alert-reader-content::-webkit-scrollbar-thumb:hover {
+  background: #ffe2b3; 
+}
+
+/* Reponsive begin*/
+@media screen and (max-width: 1000px){
+    #fpointstore_info, .fpointstore-voucher-info-item-bar{
+	flex-direction:column;
+    }
+    #fpointstore_info_left, .fpointstore-voucher-info-item-bar-left, .fpointstore-voucher-info-item-bar-right{
+	width: auto;
+    }
+    .vip-info > div:first-child{
+	display: none;
+    }
+    #fpointstore_info_right, .vip-info-combo{
+	width: auto;
+	-webkit-justify-content: center;
+	justify-content: center;
+	-webkit-align-items: center;
+	align-items: center;
+    }
+    .vip-info{
+	width: 100%;
+    }
+    #txt_vip_code_info{
+	width: calc(100% - 100px);
+    }
+    .fpointstore-menu-item > a{
+	padding: 15px;
+    }
+    .fpointstore-grid-item-box-button{
+	width: 260px;
+    }
+    .fpointstore-voucher-info-content-zoom{
+	margin: 15px 15px 10px 15px;
+    }
+    .fpointstore-voucher-info-content{
+	width: 140%;
+	-webkit-transform: scale(0.7) translate(-20%, -21%);
+	-ms-transform: scale(0.7) translate(-20%, -21%);
+	-moz-transform: scale(0.7) translate(-20%, -21%);
+	transform: scale(0.7) translate(-20%, -21%);
+    }
+}
+@media screen and (max-width: 992px){
+    #fpoint-history-tab > .fpoint-history-tab-item{
+	width: 49%;
+    }
+}
+@media screen and (max-width: 750px){
+    .fpointstore_combo_info-image div:nth-of-type(2){
+	max-width: 20vw;
+    }
+    .fpoint-icon{
+	max-width: 15vw;
+    }
+    #popup-fpointstore-alert-reader {
+	width: 600px;
+    }
+}
+@media screen and (max-width: 600px){
+    #popup-fpointstore-confirm{
+	width: 100vw;
+	margin-left: -50vw;
+    }
+    .popup-fpointstore-confirm-btn{
+	padding-top: 10px;
+    }
+    #popup-fpointstore-alert-reader {
+	width: 480px;
+    }
+    .swiper-button{
+	transform-origin: top;
+	transform: scale(0.75);
+    }
+}
+@media screen and (max-width: 480px){
+    #popup-fpointstore-alert-success{
+	width: 100vw;
+	margin-left: -50vw;
+    }
+    .popup-fpointstore-confirm-btn{
+	padding-top: 10px;
+    }
+    #popup-fpointstore-alert-reader {
+	width: 350px;
+    }
+}
+
+/* Reponsive end*/

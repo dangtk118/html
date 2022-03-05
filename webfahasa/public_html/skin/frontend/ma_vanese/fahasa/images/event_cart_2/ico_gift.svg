@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="47.999" height="48.089" viewBox="0 0 47.999 48.089">
+  <g id="ico_gift" transform="translate(0 0.045)">
+    <g id="Group_1094" data-name="Group 1094" transform="translate(4 29.044)">
+      <path id="Path_511" data-name="Path 511" d="M2,14.5H20.5v19H5.5A3.517,3.517,0,0,1,2,30Z" transform="translate(-2 -14.5)" fill="#fff"/>
+    </g>
+    <g id="Group_1095" data-name="Group 1095" transform="translate(25.499 29.044)">
+      <path id="Path_512" data-name="Path 512" d="M31.25,14.5V30a3.517,3.517,0,0,1-3.5,3.5h-15v-19Z" transform="translate(-12.75 -14.5)" fill="#fff"/>
+    </g>
+    <g id="Group_1096" data-name="Group 1096" transform="translate(0 14.045)">
+      <path id="Path_513" data-name="Path 513" d="M0,10.5v5A3.517,3.517,0,0,0,3.5,19h19V7H3.5A3.517,3.517,0,0,0,0,10.5Z" transform="translate(0 -7)" fill="#fff"/>
+    </g>
+    <g id="Group_1097" data-name="Group 1097" transform="translate(25.499 14.045)">
+      <path id="Path_514" data-name="Path 514" d="M31.75,7h-19V19h19a3.517,3.517,0,0,0,3.5-3.5v-5A3.517,3.517,0,0,0,31.75,7Z" transform="translate(-12.75 -7)" fill="#fff"/>
+    </g>
+    <g id="Group_1098" data-name="Group 1098" transform="translate(22.5 -0.045)">
+      <path id="Path_515" data-name="Path 515" d="M12.75,16.133a1.5,1.5,0,0,1-1.484-1.72c.74-5,4.646-14.458,14.142-14.458,5.42,0,7.342,2.93,7.342,5.438,0,4.458-6.206,10.74-20,10.74ZM25.407,2.957c-7.164,0-9.884,6.81-10.786,10.132,5.652-.264,9.216-1.694,11.268-2.912,2.846-1.69,3.86-3.58,3.86-4.786,0-1.8-2.242-2.434-4.342-2.434Z" transform="translate(-11.25 0.045)" fill="#fff"/>
+    </g>
+    <g id="Group_1099" data-name="Group 1099" transform="translate(4.002 -0.043)">
+      <path id="Path_516" data-name="Path 516" d="M22,16.132C8.207,16.132,2,9.85,2,5.392,2,2.884,3.925-.044,9.345-.044c9.494,0,13.4,9.458,14.14,14.458A1.5,1.5,0,0,1,22,16.132ZM9.345,2.956C7.245,2.956,5,3.6,5,5.392c0,2.554,4.466,7.208,15.126,7.7-.9-3.324-3.62-10.134-10.782-10.134Z" transform="translate(-2.001 0.044)" fill="#fff"/>
+    </g>
+  </g>
+</svg>

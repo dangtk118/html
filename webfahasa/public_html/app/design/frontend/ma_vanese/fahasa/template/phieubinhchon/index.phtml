@@ -1,0 +1,176 @@
+<?php $catalogSearchHelper =  Mage::helper('catalogsearch');?>
+<div class="panel panel-success">
+    <div class="panel-body">
+        <a href="#title-thele"><img src="<?php 
+        echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA)."wysiwyg/banner/giaithuongfahasa-1170x260.jpg";?>" class="img-rounded img-responsive" alt="Responsive image"></a>
+  </div>
+<div class="panel-footer">
+    <form class="form-horizontal" id="phieubinhchon_form" method="post" action="<?php echo Mage::getUrl('phieubinhchon/index/post'); ?>" enctype="multipart/form-data">
+        <div class="form-group form-group-lg">
+          <label class="col-sm-2 control-label" ></label>
+          <label class="col-sm-10" >1. Phần Thông Tin Về Bạn Đọc:</label>
+        </div>
+        <div class="form-group">
+        <label class="col-sm-2 control-label">Họ và tên:</label>
+        <div class="col-sm-10">
+            <input type="text" name="name" id="name" class="form-control" placeholder="Nguyễn Văn A" required title="Vui lòng không để trống">
+        </div>
+        </div>
+        <div class="form-group">
+        <label class="col-sm-2 control-label">Số CMND:</label>
+        <div class="col-sm-10">
+          <input type="number" name="cmnd" id="cmnd" class="form-control" placeholder="789456123" required  title="Vui lòng không để trống">
+        </div>
+        </div>
+        <div class="form-group">
+        <label class="col-sm-2 control-label">Nghề nghiệp:</label>
+        <div class="col-sm-10">
+          <input type="text" name="job" id="job" class="form-control" placeholder="Kế Toán" required  title="Vui lòng không để trống">
+        </div>
+        </div>
+        <div class="form-group">
+        <label class="col-sm-2 control-label">Địa chỉ:</label>
+        <div class="col-sm-10">
+          <input type="text" name="address" id="address" class="form-control" placeholder="387-389 Hai Bà Trưng Quận 3 TP HCM" required  title="Vui lòng không để trống">
+        </div>
+        </div>
+        <div class="form-group">
+        <label class="col-sm-2 control-label" >Số điện thoại liên lạc:</label>
+        <div class="col-sm-10">
+            <input type="number" name="phone" id="phone" class="form-control" placeholder="0987654321" required   title="Vui lòng không để trống">
+        </div>
+        </div>
+        <div class="form-group">
+        <label class="col-sm-2 control-label">Email</label>
+        <div class="col-sm-10">
+          <input type="email" name="email" class="form-control" id="email" placeholder="nguyenvana@yahoo.com" required  title="Vui lòng không để trống">
+        </div>
+      </div>
+        <div class="form-group form-group-lg">
+          <label class="col-sm-2 control-label" ></label>
+          <label class="col-sm-10">2. Phần Thông Tin Về Cuốn Sách Yêu Thích:</label>
+        </div>
+        <div class="form-group">
+        <label class="col-sm-2 control-label">Tên Sách:</label>
+            <!--<input type="text" name="bookName" rows="3" id="bookName" class="form-control" placeholder="vd: Cho tôi xin một vé đi tuổi thơ" required title="Vui lòng không để trống"/>-->
+            <div  class="col-sm-10 autocomplete-input" id="search_mini_form2" action="<?php echo $catalogSearchHelper->getResultUrl() ?>" method="get">
+                    <input class="form-control" id="bookName" type="text" name="<?php echo $catalogSearchHelper->getQueryParamName() ?>" value="<?php echo $catalogSearchHelper->getEscapedQueryText() ?>" class="input-text" maxlength="<?php echo $catalogSearchHelper->getMaxQueryLength(); ?>" />
+                    <div id="search_autocomplete2" class="search-autocomplete" style=" background-color: white; z-index: 999;"></div>
+                    <script type="text/javascript">
+                    //<![CDATA[
+                        var searchForm2 = new Varien.searchForm('search_mini_form2', 'bookName', '<?php echo $this->__('Tuổi Thơ') ?>');
+                        searchForm2.initAutocomplete('<?php echo Mage::getUrl('phieubinhchon/ajax/suggest') ?>', 'search_autocomplete2');
+                    //]]>
+                    </script>
+                    <label class="col-sm-10" >Tên sách sẽ được gợi ý khi bạn gõ.</label>
+            </div>
+        
+        </div>
+        
+        <div class="form-group">
+        <label class="col-sm-2 control-label">Tên Tác Giả/Dịch giả:</label>
+        <div class="col-sm-10">
+            <input type="text" name="author" id="author" class="form-control" placeholder="Nguyễn Nhật Ánh" required title="Vui lòng không để trống">
+        </div>
+        </div>
+        <div class="form-group">
+        <label class="col-sm-2 control-label">Nhà Xuất Bản:</label>
+        <div class="col-sm-10">
+            <input type="text" name="publisher" id="publisher" class="form-control" placeholder="Trẻ" required  title="Vui lòng không để trống">
+        </div>
+        </div>
+        <div class="form-group form-group-lg">
+            <label class="col-sm-2 control-label" ></label>
+          <label class="col-sm-10" >1. Phần Dự Đoán Làm Cơ Sở Chọn Lựa Người Đoạt Giải Thưởng Dành Cho Bạn Đọc Tham Gia Bình Chọn:</label>
+        </div>
+        <div class="form-group">
+        <label class="col-sm-2 control-label">Theo Bạn Có Bao Nhiêu Lượt Người Tham Gia Bình Chọn:</label>
+        <div class="col-sm-10">
+            <input type="number" name="number" id="number" class="form-control" placeholder="123456" pattern="[0-9]" required  title="Vui lòng không để trống">
+        </div>
+        </div>
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+          <button type="submit" class="btn btn-success">Bình Chọn</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="panel panel-danger" id="title-thele">
+  <div class="panel-heading"><h1>THỂ LỆ GIẢI THƯỞNG FAHASA
+          SÁCH ĐƯỢC BẠN ĐỌC YÊU THÍCH BÌNH CHỌN LẦN III - 2016</h1>
+  </div>
+  <ul class="list-group">
+    <li class="list-group-item">
+        <h3>1. THỜI GIAN BÌNH CHỌN: </h3>
+        <p>Từ ngày 01.01.2016 đến hết ngày 29.02.2016.</p>
+    </li>
+    <li class="list-group-item">
+        <h3>2. NỘI DUNG SÁCH BÌNH CHỌN:</h3>
+        <p>Các sách bình chọn phải là sách được xuất bản và phát hành hợp pháp tại Việt Nam, gồm tất cả các thể loại sách (trừ các loại sách giáo khoa, giáo trình và giáo án).
+    Sách phải được xuất bản bằng tiếng Việt và bao gồm sách được chuyển ngữ.</p>
+    </li>
+    <li class="list-group-item">
+        <h3>3. ĐỐI TƯỢNG THAM GIA CHƯƠNG TRÌNH:</h3>
+        <p>Tất cả bạn đọc trong và ngoài nước đều có quyền tham gia chương trình; ngoại trừ cán bộ, nhân viên đang công tác tại Công ty FAHASA.</p>
+    </li>
+    <li class="list-group-item">
+        <h3>4. ĐỐI TƯỢNG NHẬN “GIẢI THƯỞNG FAHASA – SÁCH ĐƯỢC BẠN ĐỌC YÊU THÍCH BÌNH CHỌN”:</h3>
+        <p>Tác giả/ Dịch giả hoặc Tập thể Ban biên soạn có sách được bình chọn nhiều nhất.</p>
+    </li>
+    <li class="list-group-item">
+        <h3>5. CƠ CẤU “GIẢI THƯỞNG FAHASA – SÁCH ĐƯỢC BẠN ĐỌC YÊU THÍCH BÌNH CHỌN”:</h3>
+        <p>Giải thưởng dành cho Tác giả/ Dịch giả hoặc Tập thể Ban biên soạn có sách đạt “Giải thưởng FAHASA – Sách được bạn đọc yêu thích bình chọn” bao gồm 10 tựa sách có phiếu bầu cao nhất được trao giải thưởng:</p>
+        <ul>
+            <li>01 Giải FAHASA Vàng</li>
+            <li>02 Giải FAHASA Bạc</li>
+            <li>02 Giải FAHASA Đồng</li>
+        </ul>
+    <p>05 Giải nằm trong Top 10 tựa sách được bạn đọc bình chọn nhiều nhất.		
+• Ban Tổ chức trao Giấy chứng nhận và Cúp lưu niệm cho các Tác giả/ Dịch giả...</li>
+    </li>
+    <li class="list-group-item">
+        <h3>6. GIẢI DÀNH CHO BẠN ĐỌC BÌNH CHỌN:</h3>
+        <p>Giải dành cho bạn đọc bình chọn – có số dự đoán đúng hoặc gần đúng với tổng số lượt bạn đọc tham gia bình chọn:</p>
+        <ul>
+            <li>01 giải Nhất: Máy tính bảng APPLE IPAD MINI 4 WI-FI 16GB GOLD MK6L2TH/A, trị giá 9.900.000 đồng.</li>
+            <li>02 giải Nhì: Mỗi giải là Điện thoại Samsung GALAXY J5 (SM-J500H), trị giá 4.490.000 đồng/giải.</li>
+            <li>02 giải Ba: Mỗi giải là Máy giặt AQUA AQW-S70KT (H), trị giá 3.590.000 đồng.</li>
+            <li>20 giải Khuyến Khích: Mỗi giải là Phiếu mua hàng FAHASA trị giá 1.000.000 đồng.</li>
+        </ul>
+        <p>Tổng cộng 25 giải dành cho bạn đọc, tổng trị giá gần 46.000.000 đồng.</p>        
+    </li>
+    <li class="list-group-item">
+        <h3>7. TỔNG HỢP KẾT QUẢ:</h3>
+        <p>1. Giải thưởng dành cho Tác giả/ Dịch giả hoặc Tập thể Ban biên soạn đạt “Giải thưởng FAHASA – Sách được bạn đọc yêu thích bình chọn”.</p>
+        <ul>
+            <li>- Ban Tổ chức sẽ kiểm phiếu bình chọn, tổng hợp kết quả để chọn ra Top 10 tựa sách được bạn đọc bình chọn nhiều nhất để trao giải thưởng theo tiêu chí từ cao xuống thấp.</li>
+            <li>- Ngoài ra Ban Tổ chức cũng sẽ tổng hợp và công bố một số giải thưởng không chính thức đạt Top 10 cuốn sách của một số đề tài.</li>
+            <li>Lưu ý: Trường hợp cuốn sách có số phiếu bình chọn cao nhưng phần trình bày hoặc nội dung cuốn sách không phù hợp như: có liên quan đến thuần phong mỹ tục hoặc có ảnh hướng đến chính trị xã hội… sẽ được Ban Tổ chức xem lại nội dung trước khi trao giải thưởng.</li>
+        </ul>
+    
+        <p>2. Giải dành cho bạn đọc bình chọn:</p>
+        <ul>
+            <li>a. Bạn đọc phải điền đầy đủ thông tin trên phiếu bình chọn (theo mẫu của Ban Tổ chức) và gửi phiếu qua các kênh bình chọn: Bỏ vào thùng phiếu tại Nhà sách, gửi qua đường bưu điện, bình chọn qua Website FAHASA.</li>
+            <li>b. Ban Tổ chức sẽ tổng hợp các phiếu bình chọn có kết quả dự đoán đúng hoặc gần đúng với tổng số lượt bạn đọc tham gia bình chọn để trao quà tặng theo tiêu chí dự đoán kết quả gần đúng nhất.</li>
+            <li>Lưu ý:
+                <p>- Phiếu bình chọn hợp lệ là phiếu điền đầy đủ thông tin và ghi chính xác tên sách, Tác giả, Nhà xuất bản.</p>
+                <p>- Mỗi bạn đọc không được bình chọn quá 05 phiếu cho một tựa sách trong suốt thời gian bình chọn.</p>
+            </li>
+        </ul>
+    </li>
+    <li class="list-group-item">
+        <h3>8. QUY ĐỊNH CHUNG:</h3>
+        <p>1. Đối với Tác giả/ Dịch giả và Tập thể Ban biên soạn đạt “Giải thưởng FAHASA – Sách được bạn đọc yêu thích bình chọn” sẽ được sử dụng Giải thưởng để quảng bá cho tác phẩm, quảng bá cho các công tác xuất bản của Nhà xuất bản và Công ty Liên kết Xuất bản.
+Ban Tổ chức “Giải thưởng FAHASA – Sách được bạn đọc yêu thích bình chọn” được toàn quyền sử dụng hình ảnh, thông tin về Giải thưởng để quảng bá cho Giải thưởng và hoạt động của Công ty FAHASA.</p>
+        <p>2. Đối với bạn đọc bình chọn:
+        <ul>
+            <li></li>
+        </ul>
+- Bạn đọc trúng “Giải dành cho bạn đọc bình chọn” sẽ chịu mọi chi phí liên quan đến việc nhận giải. Ban Tổ chức được toàn quyền sử dụng hình ảnh, thông tin của người trúng giải thưởng cho mục đích quảng bá mà không phải trả bất kỳ chi phí nào có liên quan.
+- Giải thưởng này có giá trị trong thời gian 30 ngày kể từ ngày đăng thông báo. Sau thời điểm thông báo 30 ngày Ban Tổ chức có toàn quyền quyết định về việc sử dụng các giải thưởng không có người nhận.</p>
+    </li>
+  </ul>
+</div>

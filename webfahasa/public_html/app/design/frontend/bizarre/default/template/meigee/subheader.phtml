@@ -1,0 +1,31 @@
+<?php
+$meigee_bizarre_general = MAGE::helper('ThemeOptionsBizarre')->getThemeOptionsBizarre('meigee_bizarre_general');
+$meigee_bizarre_skin_design = $meigee_bizarre_general['design']['skin_design'];
+$meigee_bizarre_design = MAGE::helper('ThemeOptionsBizarre')->getThemeOptionsBizarre('meigee_bizarre_design'.$meigee_bizarre_skin_design.'');
+$appearance = $meigee_bizarre_design['appearance'];
+$toTop = $meigee_bizarre_general['otheroptions']['totop'];
+
+/* Font Replacement */
+if ($appearance['font_main'] == 1): 
+	echo '<link href="http://fonts.googleapis.com/css?family=' . str_replace(' ', '+', $appearance['gfontmain']) . ':100,200,300,400,500,600,700,800" rel="stylesheet" type="text/css">';
+endif;
+if(!(($appearance['font_main'] == 1) and ($appearance['gfontmain'] == $appearance['gfont']))):
+	if ($appearance['font'] == 1):
+		echo '<link href="//fonts.googleapis.com/css?family=' . str_replace(' ', '+', $appearance['gfont']) . ':100,200,300,400,500,600,700,800" rel="stylesheet" type="text/css">';
+	endif;
+endif;
+if (strpos($_SERVER['HTTP_USER_AGENT'], 'Trident/7.0; rv:11.0') !== false || strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false) {
+   echo '<link href="'.$this->getSkinUrl('css/styles-ie.css').'" rel="stylesheet" type="text/css">';
+}
+/* toTop */
+if ($toTop): ?>
+	<script type="text/javascript">
+		jQuery(window).load(function() {
+			if(!((navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/iPod/i)) || (navigator.userAgent.match(/iPad/i)) || (navigator.userAgent.match(/Android/i)))){
+				jQuery().UItoTop({
+					text: "<?php echo $this->__('Top'); ?>"
+				});
+			}
+		});
+	</script>
+<?php endif;

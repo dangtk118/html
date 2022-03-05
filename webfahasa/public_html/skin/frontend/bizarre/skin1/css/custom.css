@@ -1,0 +1,180 @@
+/**
+*
+* Feel free to add your own css rules here.
+*
+*/
+
+/**** Fonts ****/
+.widget-latest li h3 a, 
+.widget .widget-title h1, 
+.widget .widget-title h2, 
+.widget-title h2, 
+.page-title h1, 
+.page-title h2, 
+.page-title h3, 
+.page-title h4, 
+.page-title h5, 
+.page-title h6, 
+.nav-container a.level-top > span, 
+#login-holder .link-box a, 
+button.button span span, 
+header.header .top-cart .block-title .title-cart, 
+.home-banners-2 .text-banner .banner-title strong, 
+.home-text-banners span strong, 
+.widget-wrapper .product-info-top .product-name a, 
+aside.sidebar .block.block-layered-nav dl dt.filter-label, 
+#footer .newsletter-line .block-subscribe h3, 
+.footer-links span, 
+#footer .footer-second-line .footer-block-title h2, 
+aside.sidebar .block-title strong span, 
+aside.sidebar .actions a, 
+.products-list .product-name a, 
+.sorter .view-mode .grid, 
+.sorter .view-mode .list, 
+.sorter label, 
+.pages li.current, 
+.pages li a, 
+.product-view .product-shop .product-name h1, 
+.meigee-tabs a, 
+.related-wrapper-bottom .block-title strong span, 
+.rating-title h2, 
+.related-wrapper .block-related .block-title span, 
+.related-products-button a, 
+.related-wrapper .block-related.large-image .product-name a, 
+.product-collateral h2, 
+.nav-wide ul.level0 li.level1 span.subtitle, 
+.nav-wide .top-content a, 
+.nav-wide .bottom-content span strong, 
+header.header .top-cart .block-content .subtotal .label, 
+header.header .top-cart .block-content .subtotal .price,
+header.header .top-cart .block-content .actions a, 
+.data-table .product-name a,
+.cart header h2, 
+#cart-accordion h3.accordion-title span, 
+.fieldset .legend, 
+.product-options dt label, 
+.dashboard .welcome-msg .hello, 
+.dashboard .box-title h2, 
+.dashboard .box-title h3, 
+.dashboard .box-head h3, 
+.dashboard .box-head h2, 
+.opc h3, 
+.opc-wrapper-opc .opc-block-title h3, 
+.opc .step-title h2,
+.menu-button,
+.widget-wrapper .category-button a,
+.add-to-cart-success a,
+.home-banners-2 .banner .banner-content h2,
+a.aw-blog-read-more,
+.block-subscribe strong span, 
+.block-title h2 {font-weight: normal!important;}
+
+/**** Banners ****/
+.text-banner {position: relative; overflow: hidden;}
+.text-banner:hover img,
+.banner:hover img {transform: scale(1.05); -webkit-transform: scale(1.05);}
+.text-banner .text-banner-content {position: absolute; top: 13%; left: 5%; width: 51%;}
+.text-banner .text-banner-content.skin-1 {top: 22%; width: 50%; left: 50%;}
+.text-banner .text-banner-content.skin-2 {top: 5%; left: 7%; width: 57%; right: 0; text-align: left;}
+.text-banner .text-banner-content.skin-2 p {margin-bottom: .75em;}
+.text-banner .text-banner-content h2,
+.text-banner .text-banner-content.skin-2 h2 {font-size: 2.5em; color: #222; font-weight: normal; margin-bottom: .25em; letter-spacing: -2px; line-height: normal; width: auto;}
+.text-banner .text-banner-content h3,
+.text-banner .text-banner-content.skin-2 h3 {font-size: .83em; line-height: 1.583em; font-weight: normal; margin-bottom: .25em; color: #aaa; text-transform: uppercase;}
+.text-banner .text-banner-content p,
+.text-banner .text-banner-content.skin-2 p {font-family: Georgia; color: #888; font-size: 1em; line-height: 1.5em; font-style: italic; width: auto;}
+.text-banner .text-banner-content a.banner-link {
+	font-family: Georgia;
+	font-size: .83em;
+	line-height: 1.583em;
+	text-transform: uppercase;
+	display: inline-block;
+	vertical-align: middle;
+}
+.text-banner .text-banner-content a.banner-link i,
+.text-banner .text-banner-content.skin-2 a.banner-link i {
+	font-size: 1.16em;
+	vertical-align: middle;
+	margin-top: -2.5px;
+	line-height: 1.583em;
+	margin-left: 2px;
+	transition: none;
+	-webkit-transition: none;
+	-moz-transition: none;
+	-o-transition: none;
+	transition: margin-left 300ms ease;
+	-moz-transition: margin-left 300ms ease;
+	-webkit-transition: margin-left 300ms ease;
+	-o-transition: margin-left 300ms ease;
+}
+.text-banner .text-banner-content a.banner-link:hover i {margin-left: 10px;}
+.banner {text-align: center;}
+.banner a {display: block;}
+.banner .banner-title {font-size: 1.5em; line-height: 1.44em; display: inline-block; margin-top: .5em;}
+
+/**** Header ****/
+header#header .topline {text-align: center; padding: 3em 0;}
+header#header .quick-access {text-align: left;}
+header#header h2.logo {float: none; display: inline-block; margin: 0!important;}
+header#header .header-right {display: inline-block;}
+header.header.floating .header-right {display: block;}
+header.header h2.small-logo {margin-bottom: 0;}
+header.header .header-search-wrapper {position: static;}
+.user-hide {display: none;}
+header.header.floating .top-cart {z-index: 2;}
+header.header .search_mini_form {display: inline-block; clear: both; padding-top: 1em;}
+header.header .form-search input {
+	float: left;
+	font-style: italic;
+	font-size: .83em;
+	width: 298px;
+	padding: 3px 10px;
+	margin-right: -1px;
+	height: 18px;
+}
+header.header .form-search button {
+	float: right;
+	overflow: hidden;
+	text-align: center;
+}
+header.header .form-search button > span {float: left; height: 24px; width: 58px; padding: 0; display: block;}
+header.header .form-search button span i {font-size: 12px; line-height: 24px;}
+header.header .form-search button span i.fa-caret-right {display: none;}
+header.header .form-search button span span {font-size: 0; background: none; padding: 0; line-height: 24px; width: auto; display: block; width: 58px;}
+header#header .welcome-msg {font-size: .91em; padding: 0 0 .5em; float: none;}
+.nav-container a.level-top {padding: 1.75em 16px;}
+header.header .quick-access {padding-top: .75em;}
+header.header .header-right {margin-top: 1em;}
+
+.page-no-route header#header h2.logo {margin-bottom: 1em!important;}
+
+/**** Content ****/
+.slider-container .next {right: 10px;}
+.slider-container .prev {left: 10px;}
+.brands.slider-container .next,
+.related-wrapper-bottom .block-related .next {right: 0px;}
+.brands.slider-container .prev,
+.related-wrapper-bottom .block-related .prev {left: 0px;}
+.cms-skin1-home .content-wrapper .main-container {padding-top: 0; padding-bottom: 0;}
+.slider-container .prev i,
+.slider-container .next i,
+.related-wrapper-bottom .block-related .prev i,
+.related-wrapper-bottom .block-related .next i {background-color: rgba(0,0,0,.3); border-color: rgba(0,0,0,.1); color: #fff;}
+.widget-title .category-link {font-size: .817em; margin-top: 1.5em;}
+.products-grid .product-img-box {margin-bottom: 1.5em;}
+.newsletter-line .grid_12 {background-image: url("../images/sk1_subscribe_bg.jpg"); min-height: 280px;}
+.newsletter-line .block-subscribe {padding-top: 7em;}
+.newsletter-line .block-subscribe label {width: 95%;}
+
+/**** Footer ****/
+#footer .footer-second-line .links li a {padding-top: .5em; padding-bottom: .5em;}
+#footer .footer-second-line .links li a:before {top: .68em;}
+#footer .footer-second-line .container_12 {padding-bottom: 5em;}
+#footer .footer-second-line .footer-logo {display: inline-block;}
+#footer .footer-second-line .top {margin-bottom: 4.5em;}
+#footer .footer-second-line .footer-block-title h2 {letter-spacing: -1px;}
+#footer .footer-second-line .footer-logo-wrapper {margin-top: -3px;}
+
+@media all and (-webkit-min-device-pixel-ratio:0) {
+	.widget-title .category-link i {margin-top: -2px;} 
+}

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <tabs>
+        <fahasa_eventcart translate="label" module="eventcart">
+            <label>Event Cart</label>
+            <sort>1</sort>
+        </fahasa_eventcart>
+    </tabs>
+    <sections>
+        <eventcart_config translate="label" module="eventcart">
+            <label>Event Cart</label>
+            <tab>fahasa_eventcart</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>200</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <config translate="label">
+                    <label>Config</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <expanded>1</expanded>
+                    <fields>
+                        <is_active>
+                            <label>Is Active</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <comment></comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </is_active>
+                         <min_reach_percent>
+                            <label>Min Reach Percent</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Minimum subtotal to show almost cart UI in Cart View</comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </min_reach_percent>
+                        <show_confirm_shipping_address>
+                            <label>Show confirm shipping address</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <comment></comment>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </show_confirm_shipping_address>
+                        <is_active_buffet_coupon>
+                            <label>Is Show Buffet Coupon in Payment</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <comment></comment>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </is_active_buffet_coupon>
+                        <event_cart_list>
+                            <label>Event cart list to show</label>
+                            <frontend_type>text</frontend_type>
+                            <comment></comment>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store> 
+                        </event_cart_list>
+                        <show_notice_shipping>
+                            <label>Show notice shipping</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <comment></comment>
+                            <sort_order>51</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                
+                        </show_notice_shipping>
+                        <notice_shipping_message>
+                            <label>Notice shipping Message</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Message displayed above shipping address view</comment>
+                            <sort_order>52</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </notice_shipping_message>
+                         <notice_shipping_link>
+                            <label>Notice shipping Link</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Link redirect for shipping message</comment>
+                            <sort_order>53</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </notice_shipping_link>
+                        <show_checkout_stock>
+                            <label>Show Out of Stock Product</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <comment>Show out of stock product in checkout when choose address</comment>
+                            <sort_order>54</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>       
+                        </show_checkout_stock>
+                        <cat_id_checkout_stock>
+                            <label>Cat ID check stock</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Cat ID to check stock in checkout</comment>
+                            <sort_order>55</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>  
+                        </cat_id_checkout_stock>
+                        <checkout_stock_api>
+                            <label>Checkout stock host url</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Checkout stock host url to get related product</comment>
+                            <sort_order>56</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>  
+                        </checkout_stock_api>
+                    </fields>
+                </config>
+            </groups>
+        </eventcart_config>
+    </sections>
+</config>

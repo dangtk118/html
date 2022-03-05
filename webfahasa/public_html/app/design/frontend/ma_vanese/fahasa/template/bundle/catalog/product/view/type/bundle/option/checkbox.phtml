@@ -1,0 +1,44 @@
+<?php $_option = $this->getOption() ?>
+<?php $_selections = $_option->getSelections() ?>
+<div class="fhs-separator col-xs-6">
+    <dd<?php if ($_option->decoratedIsLast) { ?> class="last"<?php } ?>>
+        <div class="input-box">   
+            <ul class="options-list">
+                <?php foreach ($_selections as $_selection): ?>
+                    <div class="col-xs-12 col-sm-6 col-md-4 checkbox-combo-item">
+                        <div style="vertical-align: middle; width: 30px;">
+                            <input onclick="bundle.changeSelection(this)" style="width: auto; display: none;" class="change-container-classname checkbox bundle-option-<?php echo $_option->getId() ?> <?php if ($_option->getRequired()) echo 'validate-one-required-by-name' ?>" id="bundle-option-<?php echo $_option->getId() ?>-<?php echo $_selection->getSelectionId() ?>" type="checkbox" name="bundle_option[<?php echo $_option->getId() ?>][]"<?php if ($this->_isSelected($_selection)) echo ' checked="checked"' ?><?php if (!$_selection->isSaleable()) echo ' disabled="disabled"' ?> value="<?php echo $_selection->getSelectionId() ?>"/>
+                        </div>
+                        <?php $visibility = $_selection->getVisibility(); ?>
+                        <div style="display: inline-block;">
+                            <?php echo Mage::helper('discountlabel')->handleDiscountLabelForBundleItem($_selection); ?>
+                            <?php if ($visibility == 1): ?>                    
+                                <img src="<?php echo $this->helper('catalog/image')->init($_selection, 'small_image')->keepTransparency(true)->backgroundColor(array(249, 249, 249))->resize(160, null); ?>" />                    
+                            <?php else: ?>
+                                <a href="<?php echo $_selection->getProductUrl() ?>">
+                                    <img src="<?php echo $this->helper('catalog/image')->init($_selection, 'small_image')->keepTransparency(true)->backgroundColor(array(249, 249, 249))->resize(160, null); ?>" />
+                                </a>
+                            <?php endif; ?>
+                        </div>
+                        <div style="display: block"><span class="nowrap-label label bundle-label">
+                                <label for="bundle-option-<?php echo $_option->getId() ?>-<?php echo $_selection->getSelectionId() ?>">
+                                    <?php if ($visibility == 1): ?>                            
+                                        <?php echo $this->getSelectionQtyTitlePrice($_selection) ?>                            
+                                    <?php else: ?>
+                                        <a href="<?php echo $_selection->getProductUrl() ?>">
+                                            <?php echo $this->getSelectionQtyTitlePrice($_selection) ?>
+                                        </a>
+                                    <?php endif; ?>
+                                </label></span>
+                        </div>
+
+                        <?php if ($_option->getRequired()): ?>
+                            <?php echo $this->setValidationContainer('bundle-option-' . $_option->getId() . '-' . $_selection->getSelectionId(), 'bundle-option-' . $_option->getId() . '-container') ?>
+                        <?php endif; ?>
+                    </div>
+                <?php endforeach; ?>
+            </ul>
+            <div id="bundle-option-<?php echo $_option->getId() ?>-container"></div>    
+        </div>
+    </dd>
+</div>

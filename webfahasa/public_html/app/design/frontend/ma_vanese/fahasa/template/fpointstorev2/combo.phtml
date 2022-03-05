@@ -1,0 +1,275 @@
+<?php 
+    $helper = Mage::helper("fpointstorev2/data");
+    $fpoint = Mage::helper('tryout')->determinetryout();
+    $islogin = Mage::getSingleton('customer/session')->isLoggedIn();
+    $vip_info = [];
+    if($islogin){
+	   $vip_info = Mage::registry('current_vip_info');
+	if($vip_info){
+	    $combo_can_buy = $vip_info['combo_buy_limit'] - $vip_info['combo_bought_times'];
+	    $combo_info = Mage::registry('current_combo_voucher');
+	    if($combo_info){
+		$gift_list = Mage::registry('current_vouche_list');
+	    }
+	}
+    }
+    
+    $media_url = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA, true);
+    $skin_url = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true);
+    $queryfier = Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix');
+    
+    $CSS_FILE = $skin_url."frontend/ma_vanese/fahasa/css/fpointstore_v2.css?q=".$queryfier;
+    $FS_SCRIPT = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS, true)."lib/fpointstore_v2.js?q=".$queryfier;
+    
+    $language = [];
+    $language['processing'] = $this->__("Your order has been received and is processing");
+    $language['timeout'] = $this->__("Fahasa is processing your order, please wait a moment and try again to get result");
+    $language['error'] = $this->__("FpointStore Error");
+    $language['back'] = $this->__("Back");
+    $language['queryfier'] = $queryfier;
+	
+    $gift_point = 0;
+    $url_rule = "#.";
+    $change_btn_str = $this->__("Exchange voucher");
+    if($combo_info){
+	if($combo_info['fpoint']){
+	    $gift_point = $combo_info['fpoint'];
+	}
+	if($combo_info['expire_date']){
+	    $expire_date = $combo_info['expire_date']?strtotime($combo_info['expire_date']):"";
+	}else{
+	    foreach($gift_list as $gift){
+		if(!$expire_date){
+		    $expire_date = strtotime($gift['expire_date']);
+		}else{
+		    $expire_date_temp = strtotime($gift['expire_date']);
+		    if($expire_date_temp < $expire_date){
+			$expire_date = $expire_date_temp;
+		    }
+		}
+	    }
+	}
+	if((($gift_point > $fpoint) || !$expire_date || !$combo_info['is_combo'])){
+	    $disable_str = "disabled";
+	    if(!$expire_date){
+		$change_btn_str = $this->__("Out of temporary over");
+	    }else if($gift_point > $fpoint){
+		$change_btn_str = $this->__("Not enough F-Point");
+	    }
+	}
+	
+	if($combo_info['block_id_rule']){
+	    $url_rule = '/'.$combo_info['block_id_rule'];
+	}
+	
+	if($combo_can_buy > 0){
+	    if(!$combo_info['is_combo']){
+		$change_btn_str = $this->__('Out of temporary over');
+	    }
+	}else{
+	    $change_btn_str = $this->__('Out of turn');
+	}
+    }else{
+	$disable_str = "disabled";
+	$change_btn_str = $this->__('Not exist');
+    }
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo $CSS_FILE; ?>" media="all" />
+<script type="text/javascript" src="<?php echo $FS_SCRIPT; ?>"></script>
+<div class="page-empty-banner col-lg-12 col-md-12 col-sm-12">
+    <div style="text-align: center">
+	<div>
+	    <div class="page-banner">
+		<p>
+		    <?php if($combo_info['banner_url']): ?>
+		    <a href="<?php echo $combo_info['banner_url'];?>">
+			<img src="<?php echo $media_url.$combo_info['image_banner']."?q=".$queryfier; ?>" alt="" width="1920px" />
+		    </a>
+		    <?php else:?>
+			<img src="<?php echo $media_url.$combo_info['image_banner']."?q=".$queryfier; ?>" alt="" width="1920px" />
+		    <?php endif;?>
+		</p>
+	    </div>
+	</div>
+    </div>  
+    <div class="col-main">
+	<div class="container">
+	    <div class="container-inner">
+		<div style="justify-content: center;">
+		    <!-- Begin info -->
+		    <div id="fpointstore_info" class="fpointstore-page fpointstore-detail-info">
+			<div id="fpointstore_info_left">
+			    <div class="fpoint-icon" ><img src="<?php echo $media_url.'/wysiwyg/fpointstore/logo/ico_coin.png?q='.$queryfier; ?>" width="50" height="50" /></div>
+			    <div class="fpoint-info">
+				<div style="font-size: 1.2em;"><?php echo $this->__("F-Point needed to redeem this voucher combo");?>:</div>
+				<div style="color: #F39801">
+				    <span id="fpoint_info" style="font-size: 3em;font-weight: 750;"><?php echo number_format($gift_point, 0, ",", "."); ?></span>
+				    <span style="font-size: 1.2em; font-weight: 600;">&nbsp;F-POINT</span>
+				</div>
+			    </div>
+			</div>
+			<div id="fpointstore_info_right">
+			    <div class="vip-info-btn">
+				<div style="font-size: 1.2em;" class="vip-info-btn-expire"><?php echo $expire_date?($this->__('Expiry date for change this voucher combo').':&nbsp;'.date('d/m/Y',$expire_date)):$this->__('Update later');?></div>
+				<input id="btn_voucher_confirm" class="btn_voucher_confirm" onclick="fpointstore.changeVoucher_click()" type="button" value="<?php echo $change_btn_str;?>" <?php echo $disable_str;?>/>
+			    </div>
+			</div>
+
+		    </div>
+		    <!-- End info -->
+		<?php if($vip_info && $combo_info):?>
+		    <!-- Begin Content -->
+		    <div id="fpointstore_voucher_info" class="fpointstore-page">
+			<div class="fpointstore-page-detail">
+			<?php 
+			foreach($gift_list as $gift):?>
+			    <div id="fpointstore_voucher_info_item_<?php echo $gift["gift_id"];?>" class="fpointstore-voucher-info-item">
+				<a role="button" data-toggle="collapse" hrefs="#vourcher_item_sroll_<?php echo $gift["gift_id"];?>" data-target="#voucher_item_<?php echo $gift["gift_id"];?>" data-id="<?php echo $gift["gift_id"];?>" aria-expanded="true" class="panel-voucher-collapse collapsed">
+				    <div class="fpointstore-voucher-info-item-bar">
+					<div class="fpointstore-voucher-info-item-bar-left">
+					    <div class="fpointstore-voucher-info-item-logo"><img src="<?php echo $media_url.$gift["image_logo"].'?q='.$queryfier; ?>" width="100" height="100" /></div>
+					    <div class="fpointstore-voucher-info-item-title">
+						<div class="fpointstore-voucher-info-item-title-partner"><?php echo $gift['partner']?$gift['partner']:"fahasa.com";?></div>
+						<div class="fpointstore-voucher-info-item-title-name"><?php echo $gift['name']."&nbsp;-&nbsp;".$this->__('Discount ').$gift['discount'];?></div>
+					    </div>
+					</div>
+					<div class="fpointstore-voucher-info-item-bar-right">
+					    <div class="fpointstore-voucher-info-item-expire">
+						<span> <?php echo $this->__('Expiry date').":&nbsp;".date('d/m/Y',strtotime($gift['expire_date'])); ?></span><span class="fpointstore-voucher-info-item-expire-icon"><img src="<?php echo $skin_url."frontend/ma_vanese/fahasa/images/fpointstore/ico_dropdown.png?q=".$queryfier; ?>" width="30px" height="30px" /></span>
+					    </div>
+					 </div>
+				    </div>
+				</a>
+				<div id="voucher_item_<?php echo $gift["gift_id"];?>" class="collapse">
+				    <div class="fpointstore-voucher-info-content-zoom">
+					<div class="fpointstore-voucher-info-content">
+					    <?php echo $gift['content']; ?>
+					</div>
+				    </div>
+				</div>
+			    </div>
+			<?php endforeach;?>
+			<div style="clear: both;"></div>
+			</div>
+		    </div>
+		    <!-- End Content -->
+		<?php endif;?>
+		</div>
+	    </div>
+	</div>
+    </div>
+</div>
+
+<div id="popup-fpointstore-cover"></div>
+<div id="popup-fpointstore-alert">
+    <div id="popup-fahasa-alert-logo" class="popup-fahasa-alert-logo">
+	<center><img src="<?php echo $skin_url.'frontend/ma_vanese/fahasa/images/logo-alert-success.png?q='.$queryfier; ?>" /></center>
+    </div>
+    <div class="popup-fahasa-default-alert-content">
+	<div id="popup-fahasa-default-content-text" class="popup-fahasa-default-content-text" style="padding: 0 10px;">
+	</div>
+    </div>
+    <div class="popup-fahasa-default-footer-small btn-submit col-lg-12 col-md-12 col-sm-12 col-xs-12">
+	<button type="button" onclick="fpointstore.closeAlert_click();" class="popup-fahasa-default-alert-confirm">
+	    <span>
+		<?php echo $this->__('Close') ?>                          
+	    </span>
+	</button>
+    </div>
+</div>
+<div id="popup-fpointstore-alert-success">
+    <div id="popup-fahasa-alert-success-logo" class="popup-fahasa-alert-success-logo">
+	<center><img width="100" height="100" src="<?php echo $skin_url.'frontend/ma_vanese/fahasa/images/fpointstore/ico_complete3x.png?q='.$queryfier; ?>" /></center>
+    </div>
+    <div class="popup-fahasa-alert-success-title"><?php echo $this->__('You have successfully changed'); ?></div>
+    <div class="popup-fahasa-default-alert-success-name">
+	<?php echo $combo_info['name'];?>
+    </div>
+    <div class="popup-fahasa-default-alert-success-btn">
+	<button type="button" onclick="window.location = '/tryout/voucher';" class="popup-fahasa-default-alert-success-btn-confirm">
+	    <span>
+		<?php echo $this->__('View redeemed voucher') ?>                     
+	    </span>
+	</button>
+    </div>
+    <div class="popup-fahasa-default-alert-success-btn">
+	<button type="button" onclick="window.location = '/fpointstore';" class="popup-fahasa-default-alert-success-btn-back">
+	    <span>
+		<?php echo $this->__('Completed') ?>                     
+	    </span>
+	</button>
+    </div>
+</div>
+<div id="popup-fpointstore-confirm">
+    <div id="popup-fahasa-alert-success-logo" class="popup-fahasa-alert-success-logo">
+	<center><img src="<?php echo $media_url.$combo_info['image_banner'].'?q='.$queryfier; ?>" /></center>
+    </div>
+    <div class="popup-fpointstore-confirm-title"><?php echo $combo_info['name'];?></div>
+    <div class="popup-fpointstore-confirm-fpoint"><?php echo number_format($gift_point, 0, ",", "."); ?>&nbsp;F-POINT</div>
+    <?php if($gift_info['order_limit']): ?>
+	<div class="popup-fpointstore-confirm-limit"><?php echo $this->__("Apply for minimum order")."&nbsp".$gift_info['order_limit']?></div>
+    <?php endif; ?>
+    <div class="popup-fpointstore-confirm-rule"><?php echo $this->__("Please read the terms carefully"); ?></div>
+    
+    <div class="popup-fpointstore-confirm-btn">
+	<button type="button" onclick="fpointstore.changeConfirm_Click(1,<?php echo $combo_info['id'];?>);" class="popup-fpointstore-confirm-btn-confirm">
+	    <span>
+		<?php echo $this->__('Confirm') ?>                     
+	    </span>
+	</button>
+	<button type="button" onclick="fpointstore.closeConfirm_Click();" class="popup-fpointstore-confirm-btn-back">
+	    <span>
+		<?php echo $this->__('Cancel ') ?>                     
+	    </span>
+	</button>
+    </div>
+</div>
+<div id="popup-fpointstore-loading" style="padding-top: 10px;">
+    <div id="popup-fpointstore-loading-icon" style="padding: 15px 0;">
+	<center><div id="fpointstore-icon-loading" style="height: 128px; width: 128px; background: url('<?php echo $skin_url.'frontend/ma_vanese/fahasa/images/fpointstore/loading.png?q='.$queryfier; ?>') no-repeat center center transparent; background-size: 110px;"></div></center>
+    </div>
+    <div id="popup-fpointstore-loading-logo" class="popup-fahasa-alert-logo" style="display: none;">
+	<center><img src="<?php echo $skin_url.'frontend/ma_vanese/fahasa/images/logo-alert-fail.png?q='.$queryfier; ?>" /></center>
+    </div>
+    <div class="popup-fpointstore-loading-content">
+	<div id="popup-fpointstore-loading-context-text" class="popup-fahasa-default-content-text" style="padding: 15px;">
+	    <?php echo $this->__('Fahasa received and is processing');?>...
+	</div>
+    </div>
+    <div class="popup-fahasa-default-footer-small btn-submit col-lg-12 col-md-12 col-sm-12 col-xs-12">
+	<button type="button" onclick="fpointstore.tryLoadQueue_click();" id="popup-fpointstore-loading-confirm" class="popup-fahasa-default-alert-confirm" style="display: none;">
+	    <span>
+		<?php echo $this->__('Try again') ?>                          
+	    </span>
+	</button>
+    </div>
+</div>
+<script type="text/javascript">
+    var fpointstore = new FpointStoreV2();
+    var content_list = {};
+    fpointstore.initGiftDetail(
+	    '<?php echo $skin_url;?>', 
+	    <?php echo $gift_point; ?>,
+	    <?php echo json_encode($language, JSON_UNESCAPED_UNICODE);?>
+	);
+	$jq(document).ready(function(){
+	    $jq('.panel-voucher-collapse').click(function(){
+		if(!$jq(this).hasClass('collapsed')){
+		   return; 
+		}
+		let data_target = $jq(this).attr('data-target');
+		let content_zoom_height = Math.round($jq(data_target).height());
+		if(content_list[data_target]){
+		    content_zoom_height = content_list[data_target];
+		}else{
+		    content_list[data_target] = content_zoom_height;
+		}
+		let content_zoom_height_new = Math.round(content_zoom_height * 0.9);
+		if($jq(window).width() < 1000){
+		    content_zoom_height_new = Math.round(content_zoom_height * 0.71);
+		}
+		$jq(data_target + " > .fpointstore-voucher-info-content-zoom").height(content_zoom_height_new);
+	    });
+	});
+</script>
+    

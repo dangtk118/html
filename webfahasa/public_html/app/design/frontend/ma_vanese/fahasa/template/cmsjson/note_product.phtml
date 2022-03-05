@@ -1,0 +1,26 @@
+<?php
+$MEDIA_URL = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);
+$itemsData = $this->getData('data');
+$items = json_decode($itemsData, true);
+$skin_url = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true);
+$PRODUCT_POPUP_FILE = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS)
+        . "lib/policy_popup.js?q="
+        . Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix');
+?>
+
+<div class="product-attribute">
+    <?php foreach ($items as $item) : ?>
+        <div class="item">
+            <div class="item-content" onclick="policy_popup.showPopUp(<?php echo "'" .  $item['block_id'] . "'";?>, <?php echo "'" . $item['title'] . "'";?>);">
+                <img src="<?php echo $MEDIA_URL . $item['img']; ?>" />
+                <span><a><?php echo $item['title']; ?></a></span>
+                <span><a><?php echo $item['title_mobile']; ?></a></span>
+            </div>
+        </div>
+    <?php endforeach; ?>
+</div>
+<script type="text/javascript" src="<?php echo $PRODUCT_POPUP_FILE; ?>"></script>
+<script>
+    var policy_popup = new PolicyPopUp();
+    policy_popup.init("<?php echo $skin_url; ?>");
+</script>

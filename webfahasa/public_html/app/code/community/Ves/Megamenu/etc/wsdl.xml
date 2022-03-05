@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns:typens="urn:{{var wsdl.name}}" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns="http://schemas.xmlsoap.org/wsdl/"
+    name="{{var wsdl.name}}" targetNamespace="urn:{{var wsdl.name}}">
+    <types>
+        <schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:Magento">
+            <import namespace="http://schemas.xmlsoap.org/soap/encoding/" schemaLocation="http://schemas.xmlsoap.org/soap/encoding/" />
+            <complexType name="megamenuMegamenuEntityToCreate">
+                <all>
+                    <element name="megamenu_id" type="xsd:int" minOccurs="0" />
+                    <element name="image" type="xsd:string" minOccurs="0" />
+                    <element name="parent_id" type="xsd:int" minOccurs="0" />
+                    <element name="is_group" type="xsd:int" minOccurs="0" />
+                    <element name="width" type="xsd:string" minOccurs="0" />
+                    <element name="colum_width" type="xsd:string" minOccurs="0" />
+                    <element name="item" type="xsd:string" minOccurs="0" />
+                    <element name="colums" type="xsd:string" minOccurs="0" />
+                    <element name="type" type="xsd:string" minOccurs="0" />
+                    <element name="is_content" type="xsd:int" minOccurs="0" />
+                    <element name="show_title" type="xsd:int" minOccurs="0" />
+                    <element name="type_submenu" type="xsd:string" minOccurs="0" />
+                    <element name="level_depth" type="xsd:int" minOccurs="0" />
+                    <element name="published" type="xsd:int" minOccurs="0" />
+                    <element name="store_id" type="xsd:int" minOccurs="0" />
+                    <element name="position" type="xsd:int" minOccurs="0" />
+                    <element name="show_sub" type="xsd:int" minOccurs="0" />
+                    <element name="url" type="xsd:string" minOccurs="0" />
+                    <element name="target" type="xsd:string" minOccurs="0" />
+                    <element name="privacy" type="xsd:int" minOccurs="0" />
+                    <element name="menu_class" type="xsd:string" minOccurs="0" />
+                    <element name="title" type="xsd:string" minOccurs="0" />
+                    <element name="description" type="xsd:string" minOccurs="0" />
+                    <element name="content_text" type="xsd:string" minOccurs="0" />
+                    <element name="submenu_content" type="xsd:string" minOccurs="0" />
+                    <element name="level" type="xsd:int" minOccurs="0" />
+                    <element name="widget_id" type="xsd:int" minOccurs="0" />
+                    <element name="menu_icon_class" type="xsd:string" minOccurs="0" />
+                    <element name="options" type="xsd:string" minOccurs="0" />
+                </all>
+            </complexType>
+            <complexType name="megamenuMegamenuEntity">
+                <all>
+                    <element name="megamenu_id" type="xsd:int" minOccurs="0" />
+                    <element name="image" type="xsd:string" minOccurs="0" />
+                    <element name="parent_id" type="xsd:int" minOccurs="0" />
+                    <element name="is_group" type="xsd:int" minOccurs="0" />
+                    <element name="width" type="xsd:string" minOccurs="0" />
+                    <element name="colum_width" type="xsd:string" minOccurs="0" />
+                    <element name="item" type="xsd:string" minOccurs="0" />
+                    <element name="colums" type="xsd:string" minOccurs="0" />
+                    <element name="type" type="xsd:string" minOccurs="0" />
+                    <element name="is_content" type="xsd:int" minOccurs="0" />
+                    <element name="show_title" type="xsd:int" minOccurs="0" />
+                    <element name="type_submenu" type="xsd:string" minOccurs="0" />
+                    <element name="level_depth" type="xsd:int" minOccurs="0" />
+                    <element name="published" type="xsd:int" minOccurs="0" />
+                    <element name="store_id" type="xsd:int" minOccurs="0" />
+                    <element name="position" type="xsd:int" minOccurs="0" />
+                    <element name="show_sub" type="xsd:int" minOccurs="0" />
+                    <element name="url" type="xsd:string" minOccurs="0" />
+                    <element name="target" type="xsd:string" minOccurs="0" />
+                    <element name="privacy" type="xsd:int" minOccurs="0" />
+                    <element name="menu_class" type="xsd:string" minOccurs="0" />
+                    <element name="title" type="xsd:string" minOccurs="0" />
+                    <element name="description" type="xsd:string" minOccurs="0" />
+                    <element name="content_text" type="xsd:string" minOccurs="0" />
+                    <element name="submenu_content" type="xsd:string" minOccurs="0" />
+                    <element name="level" type="xsd:int" minOccurs="0" />
+                    <element name="widget_id" type="xsd:int" minOccurs="0" />
+                    <element name="menu_icon_class" type="xsd:string" minOccurs="0" />
+                    <element name="options" type="xsd:string" minOccurs="0" />
+                </all>
+            </complexType>
+            <complexType name="megamneuMegamenuEntityArray">
+                <complexContent>
+                    <restriction base="soapenc:Array">
+                        <attribute ref="soapenc:arrayType" wsdl:arrayType="typens:megamenuMegamenuEntity[]" />
+                    </restriction>
+                </complexContent>
+            </complexType>
+        </schema>
+    </types>
+    <message name="megamenuMegamenuListRequest">
+        <part name="sessionId" type="xsd:string" />
+        <part name="filters" type="typens:filters" />
+    </message>
+    <message name="megamenuMegamenuListResponse">
+        <part name="storeView" type="typens:megamenuMegamenuEntityArray" />
+    </message>
+    <message name="megamenuMegamenuCreateRequest">
+        <part name="sessionId" type="xsd:string" />
+        <part name="megamenuData" type="typens:megamenuMegamenuEntityToCreate" />
+    </message>
+    <message name="megamenuMegamenuCreateResponse">
+        <part name="result" type="xsd:int" />
+    </message>
+    <message name="megamenuMegamenuInfoRequest">
+        <part name="sessionId" type="xsd:string" />
+        <part name="megamenuId" type="xsd:int" />
+        <part name="attributes" type="typens:ArrayOfString" />
+    </message>
+    <message name="megamenuMegamenuInfoResponse">
+        <part name="megamenuInfo" type="typens:megamenuMegamenuEntity" />
+    </message>
+    <message name="megamenuMegamenuUpdateRequest">
+        <part name="sessionId" type="xsd:string" />
+        <part name="megamenuId" type="xsd:int" />
+        <part name="megamenuData" type="typens:megamenuMegamenuEntityToCreate" />
+    </message>
+    <message name="megamenuMegamenuUpdateResponse">
+        <part name="result" type="xsd:boolean" />
+    </message>
+    <message name="megamenuMegamenuDeleteRequest">
+        <part name="sessionId" type="xsd:string" />
+        <part name="megamenuId" type="xsd:int" />
+    </message>
+    <message name="megamenuMegamenuDeleteResponse">
+        <part name="result" type="xsd:boolean" />
+    </message>
+
+    <portType name="{{var wsdl.handler}}PortType">
+        <operation name="megamenuMegamenuList">
+            <documentation>Retrieve megamenu items</documentation>
+            <input message="typens:megamenuMegamenuListRequest" />
+            <output message="typens:megamenuMegamenuListResponse" />
+        </operation>
+        <operation name="megamenuMegamenuCreate">
+            <documentation>Create megamenu item</documentation>
+            <input message="typens:megamenuMegamenuCreateRequest" />
+            <output message="typens:megamenuMegamenuCreateResponse" />
+        </operation>
+        <operation name="megamenuMegamenuInfo">
+            <documentation>Retrieve megamenu item data</documentation>
+            <input message="typens:megamenuMegamenuInfoRequest" />
+            <output message="typens:megamenuMegamenuInfoResponse" />
+        </operation>
+        <operation name="megamenuMegamenuUpdate">
+            <documentation>Update megamenu item data</documentation>
+            <input message="typens:megamenuMegamenuUpdateRequest" />
+            <output message="typens:megamenuMegamenuUpdateResponse" />
+        </operation>
+        <operation name="megamenuMegamenuDelete">
+            <documentation>Delete megamenu item</documentation>
+            <input message="typens:megamenuMegamenuDeleteRequest" />
+            <output message="typens:megamenuMegamenuDeleteResponse" />
+        </operation>
+
+    </portType>
+    <binding name="{{var wsdl.handler}}Binding" type="typens:{{var wsdl.handler}}PortType">
+        <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http" />
+        <operation name="megamenuMegamenuList">
+            <soap:operation soapAction="urn:{{var wsdl.handler}}Action" />
+            <input>
+                <soap:body namespace="urn:{{var wsdl.name}}" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+            </input>
+            <output>
+                <soap:body namespace="urn:{{var wsdl.name}}" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+            </output>
+        </operation>
+        <operation name="megamenuMegamenuCreate">
+            <soap:operation soapAction="urn:{{var wsdl.handler}}Action" />
+            <input>
+                <soap:body namespace="urn:{{var wsdl.name}}" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+            </input>
+            <output>
+                <soap:body namespace="urn:{{var wsdl.name}}" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+            </output>
+        </operation>
+        <operation name="megamenuMegamenuInfo">
+            <soap:operation soapAction="urn:{{var wsdl.handler}}Action" />
+            <input>
+                <soap:body namespace="urn:{{var wsdl.name}}" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+            </input>
+            <output>
+                <soap:body namespace="urn:{{var wsdl.name}}" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+            </output>
+        </operation>
+        <operation name="megamenuMegamenuUpdate">
+            <soap:operation soapAction="urn:{{var wsdl.handler}}Action" />
+            <input>
+                <soap:body namespace="urn:{{var wsdl.name}}" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+            </input>
+            <output>
+                <soap:body namespace="urn:{{var wsdl.name}}" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+            </output>
+        </operation>
+        <operation name="megamenuMegamenuDelete">
+            <soap:operation soapAction="urn:{{var wsdl.handler}}Action" />
+            <input>
+                <soap:body namespace="urn:{{var wsdl.name}}" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+            </input>
+            <output>
+                <soap:body namespace="urn:{{var wsdl.name}}" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+            </output>
+        </operation>
+
+    </binding>
+</definitions>

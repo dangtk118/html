@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<config>
+    <tabs>
+        <customer_level translate="label">
+            <label>Customer Level</label>
+            <sort_order>0</sort_order>
+        </customer_level>
+    </tabs>
+    <sections>
+        <tablevel translate="label" module="adminhtml">
+            <label>Customer Level</label>
+            <tab>customer_level</tab>
+            <sort_order>10</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <general translate="label comment">
+                    <label>General</label>
+                    <sort_order>50</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <num_date translate="label comment">
+                            <label>Fpoint Accure Year</label>
+                            <comment>Ex: 2018</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </num_date>
+                        <text_levelup translate="label comment">
+                            <label>Label uplevel</label>
+                            <comment>Ex: Ngày xét duyệt tài khoản 01/03/2019</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </text_levelup>
+                        <fpoint_upgrade_vip_year translate="label comment">
+                            <label>Năm lấy điểm để nâng hạng vip</label>
+                            <comment>vd: 2020</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </fpoint_upgrade_vip_year>
+                    </fields>
+                </general>
+            </groups>
+        </tablevel>
+    </sections>
+</config>

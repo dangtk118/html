@@ -1,0 +1,1840 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <tabs>
+        <fahasa_event translate="label" module="event">
+            <label>Event fahasa</label>
+            <sort>1</sort>
+        </fahasa_event>
+    </tabs>
+    <sections>
+        <event>
+            <label>Event fahasa</label>
+            <tab>fahasa_event</tab>             
+            <frontend_type>text</frontend_type>
+            <sort_order>200</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <intro translate="label">
+                    <label>Thông tin Event</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>0</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <iconcenter translate="label">
+                            <label>icon center</label>
+                            <frontend_type>image</frontend_type>
+                            <backend_model>adminhtml/system_config_backend_image</backend_model>
+                            <upload_dir config="system/filesystem/media" scope_info="1">event</upload_dir>
+                            <base_url type="media" scope_info="1">event</base_url>
+                            <comment>kich thuoc: 300px x 400px</comment>
+                            <sort_order>3</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </iconcenter>
+                        <success translate="label">
+                            <label>hinh anh khi khach xac nhan thanh cong</label>
+                            <frontend_type>image</frontend_type>
+                            <backend_model>adminhtml/system_config_backend_image</backend_model>
+                            <upload_dir config="system/filesystem/media" scope_info="1">event</upload_dir>
+                            <base_url type="media" scope_info="1">event</base_url>
+                            <comment>kich thuoc: 300px x 400px</comment>
+                            <sort_order>3</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </success>
+                        <ruleid translate="label">
+                            <label>Id rule tạo Ma giam gia</label>
+                            <comment>Ex: 129</comment>
+                            <frontend_type>text</frontend_type>                                
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </ruleid>
+                        <templateid translate="label">
+                            <label>Email teamlate id for send mail</label>
+                            <comment>Ex: email game worldcup 2018</comment>
+                            <frontend_type>text</frontend_type>                                
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </templateid>
+                    </fields>
+                </intro>
+                <match1 translate="label">
+                    <label>Bán kết 1</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>0</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <enable translate="label">
+                            <label>Bật dự đoán cho trận này</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enable>
+                        <title translate="label">
+                            <label>Tên trận đấu</label>
+                            <frontend_type>text</frontend_type>                                
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </title>
+                        <team1 translate="label">
+                            <label>Tên đội 1</label>
+                            <frontend_type>text</frontend_type>                                
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </team1>
+                        <flagteam1 translate="label">
+                            <label>Hình ảnh cờ đội 1</label>
+                            <frontend_type>image</frontend_type>
+                            <backend_model>adminhtml/system_config_backend_image</backend_model>
+                            <upload_dir config="system/filesystem/media" scope_info="1">event</upload_dir>
+                            <base_url type="media" scope_info="1">event</base_url>
+                            <comment>kich thuoc: 300px x 400px</comment>
+                            <sort_order>3</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </flagteam1>
+                        <team2 translate="label">
+                            <label>Tên đội 2</label>
+                            <frontend_type>text</frontend_type>                                
+                            <sort_order>4</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </team2>
+                        <flagteam2 translate="label">
+                            <label>Hình ảnh cờ đội 2</label>
+                            <frontend_type>image</frontend_type>
+                            <backend_model>adminhtml/system_config_backend_image</backend_model>
+                            <upload_dir config="system/filesystem/media" scope_info="1">event</upload_dir>
+                            <base_url type="media" scope_info="1">event</base_url>
+                            <comment>kich thuoc: 300px x 400px</comment>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </flagteam2>
+                    </fields>
+                </match1>
+                <match2 translate="label">
+                    <label>Bán kết 2</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>0</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <enable translate="label">
+                            <label>Bật dự đoán cho trận này</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enable>
+                        <title translate="label">
+                            <label>Tên trận đấu</label>
+                            <frontend_type>text</frontend_type>                                
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </title>
+                        <team1 translate="label">
+                            <label>Tên đội 1</label>
+                            <frontend_type>text</frontend_type>                                
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </team1>
+                        <flagteam1 translate="label">
+                            <label>Hình ảnh cờ đội 1</label>
+                            <frontend_type>image</frontend_type>
+                            <backend_model>adminhtml/system_config_backend_image</backend_model>
+                            <upload_dir config="system/filesystem/media" scope_info="1">event</upload_dir>
+                            <base_url type="media" scope_info="1">event</base_url>
+                            <comment>kich thuoc: 300px x 400px</comment>
+                            <sort_order>3</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </flagteam1>
+                        <team2 translate="label">
+                            <label>Tên đội 2</label>
+                            <frontend_type>text</frontend_type>                                
+                            <sort_order>4</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </team2>
+                        <flagteam2 translate="label">
+                            <label>Hình ảnh cờ đội 2</label>
+                            <frontend_type>image</frontend_type>
+                            <backend_model>adminhtml/system_config_backend_image</backend_model>
+                            <upload_dir config="system/filesystem/media" scope_info="1">event</upload_dir>
+                            <base_url type="media" scope_info="1">event</base_url>
+                            <comment>kich thuoc: 300px x 400px</comment>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </flagteam2>
+                    </fields>
+                </match2>
+                <match3 translate="label">
+                    <label>Tranh hạng 3</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>0</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <enable translate="label">
+                            <label>Bật dự đoán cho trận này</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enable>
+                        <title translate="label">
+                            <label>Tên trận đấu</label>
+                            <frontend_type>text</frontend_type>                                
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </title>
+                        <team1 translate="label">
+                            <label>Tên đội 1</label>
+                            <frontend_type>text</frontend_type>                                
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </team1>
+                        <flagteam1 translate="label">
+                            <label>Hình ảnh cờ đội 1</label>
+                            <frontend_type>image</frontend_type>
+                            <backend_model>adminhtml/system_config_backend_image</backend_model>
+                            <upload_dir config="system/filesystem/media" scope_info="1">event</upload_dir>
+                            <base_url type="media" scope_info="1">event</base_url>
+                            <comment>kich thuoc: 300px x 400px</comment>
+                            <sort_order>3</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </flagteam1>
+                        <team2 translate="label">
+                            <label>Tên đội 2</label>
+                            <frontend_type>text</frontend_type>                                
+                            <sort_order>4</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </team2>
+                        <flagteam2 translate="label">
+                            <label>Hình ảnh cờ đội 2</label>
+                            <frontend_type>image</frontend_type>
+                            <backend_model>adminhtml/system_config_backend_image</backend_model>
+                            <upload_dir config="system/filesystem/media" scope_info="1">event</upload_dir>
+                            <base_url type="media" scope_info="1">event</base_url>
+                            <comment>kich thuoc: 300px x 400px</comment>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </flagteam2>
+                    </fields>
+                </match3>
+                <match4 translate="label">
+                    <label>Chung kết</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>0</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <enable translate="label">
+                            <label>Bật dự đoán cho trận này</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enable>
+                        <title translate="label">
+                            <label>Tên trận đấu</label>
+                            <frontend_type>text</frontend_type>                                
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </title>
+                        <team1 translate="label">
+                            <label>Tên đội 1</label>
+                            <frontend_type>text</frontend_type>                                
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </team1>
+                        <flagteam1 translate="label">
+                            <label>Hình ảnh cờ đội 1</label>
+                            <frontend_type>image</frontend_type>
+                            <backend_model>adminhtml/system_config_backend_image</backend_model>
+                            <upload_dir config="system/filesystem/media" scope_info="1">event</upload_dir>
+                            <base_url type="media" scope_info="1">event</base_url>
+                            <comment>kich thuoc: 300px x 400px</comment>
+                            <sort_order>3</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </flagteam1>
+                        <team2 translate="label">
+                            <label>Tên đội 2</label>
+                            <frontend_type>text</frontend_type>                                
+                            <sort_order>4</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </team2>
+                        <flagteam2 translate="label">
+                            <label>Hình ảnh cờ đội 2</label>
+                            <frontend_type>image</frontend_type>
+                            <backend_model>adminhtml/system_config_backend_image</backend_model>
+                            <upload_dir config="system/filesystem/media" scope_info="1">event</upload_dir>
+                            <base_url type="media" scope_info="1">event</base_url>
+                            <comment>kich thuoc: 300px x 400px</comment>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </flagteam2>
+                    </fields>
+                </match4>
+            </groups>
+        </event>
+    </sections>
+    <sections>
+        <event_almostcart_block>
+            <label>Event checkout cart block</label>
+            <tab>fahasa_event</tab>             
+            <frontend_type>text</frontend_type>
+            <sort_order>200</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <config translate="label">
+                    <label>Event almost cart block</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>0</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <active translate="label">
+                            <label>Enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </active>
+                    </fields>
+                </config>
+            </groups>
+        </event_almostcart_block>
+    </sections>
+    <sections>
+        <game>
+            <label>Game block setup</label>
+            <tab>fahasa_event</tab>             
+            <frontend_type>text</frontend_type>
+            <sort_order>200</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <config translate="label">
+                    <label>Game setup</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>0</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <active translate="label">
+                            <label>Enabled game</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </active>
+                        
+                        <!--//hình lúc ngoài khung giờ chay game , cho web--> 
+                        <nogameweb translate="label">
+                            <label>Block Image game ended on web</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Hết thời gian chơi/ không có game nào đang hoạt động trên web</comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </nogameweb>
+                        <!--//hình lúc ngoài khung giờ chay game , cho mobile--> 
+                          <nogamemobile translate="label">
+                            <label>Img game ended on mobile</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Hết thời gian chơi/ không có game nào đang hoạt động trên mobile</comment>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </nogamemobile>
+                        <!--//hình lúc chạy game,--> 
+                        <imggame translate="label">
+                            <label>Img game</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Hình ảnh hiển thị game</comment>
+                            <sort_order>3</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </imggame>
+                        <outgame translate="label">
+                            <label>Img out game</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Hình ảnh hiển thị khi khách chơi game xong</comment>
+                            <sort_order>4</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </outgame>
+                        <!--//cursor images-->
+                        <cursor translate="label">
+                            <label>Cursor game</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Con trỏ chuột khi chỉ vào game, kich thuoc: 128px x 100px</comment>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </cursor>
+                         <receivegiftmsg>
+                            <label>Receive gift message</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Thông báo khi người dùng nhận quà</comment>
+                            <sort_order>6</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </receivegiftmsg>
+                        <endofgift>
+                            <label>End of gift message</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Thông báo hết quà cho khách khi chơi game</comment>
+                            <sort_order>6</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </endofgift>
+                        <endofgiftimg>
+                            <label>End of gift Image</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Hình thông báo hết quà cho khách khi chơi game</comment>
+                            <sort_order>6</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </endofgiftimg>
+                        <turnoverimg>
+                            <label>Turn over image</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Hình ảnh hiểnt thị khi khách hết lượt chơi</comment>
+                            <sort_order>7</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </turnoverimg>
+                        <errormess>
+                            <label>Error message</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Thông báo khi game lỗi</comment>
+                            <sort_order>8</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </errormess>
+                        <maincmspage>
+                            <label>Main cms page</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Trang cms dẫn về</comment>
+                            <sort_order>8</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </maincmspage>
+                         <cmspagetitle>
+                            <label>Cms page Button</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Title button trang cms dẫn về</comment>
+                            <sort_order>8</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </cmspagetitle>
+                        <emailfpoint>
+                            <label>Email fpoint</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Template id tranlastion Email "fpoint" gui cho khach. Luu y tao tranlastion email truoc.</comment>
+                            <sort_order>9</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </emailfpoint>
+                        <emailrule>
+                            <label>Email Ma giam gia</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Template id tranlastion Email "ma giam gia" gui cho khach. Luu y tao tranlastion email truoc.</comment>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </emailrule>
+                        <emailfreeship>
+                            <label>Email freeship</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Template id tranlastion Email "freeship" gui cho khach. Luu y tao tranlastion email truoc.</comment>
+                            <sort_order>11</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </emailfreeship>
+                         <emailgiftrule>
+                            <label>Email Gift Rule</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Template id tranlastion Email "Gift Rule" gui cho khach. Luu y tao tranlastion email truoc.</comment>
+                            <sort_order>12</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </emailgiftrule>
+                    </fields>
+                </config>
+                <noti translate="label">
+                    <label>Game Notification</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>0</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <titlefpoint>
+                            <label>Title fpoint</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Tilte of notification fpoint.</comment>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </titlefpoint>
+                        <contentfpoint>
+                            <label>Content fpoint</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Content of notification fpoint.</comment>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </contentfpoint>
+                        <titlerule>
+                            <label>Title rule</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Tilte of notification rule</comment>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </titlerule>
+                        <contentrule>
+                            <label>Content rule</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Content of notification rule</comment>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </contentrule>
+                        <titlefreeship>
+                            <label>Title freeship</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Tilte of notification freeship</comment>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </titlefreeship>
+                        <contentfreeship>
+                            <label>Content freeship</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Content of notification freeship</comment>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </contentfreeship>
+                        <titlegiftrule>
+                            <label>Title gift rule</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Tilte of notification gift rule</comment>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </titlegiftrule>
+                        <contentgiftrule>
+                            <label>Content gift rule</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Content of notification gift rule</comment>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </contentgiftrule>
+                        <titlepartnercoupon>
+                            <label>Title partner coupon</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Tilte of notification partner coupon</comment>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </titlepartnercoupon>
+                        <contentpartnercoupon>
+                            <label>Content partner couopn</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Content of notification partner coupon</comment>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </contentpartnercoupon>
+                         <titlephysicalgift>
+                            <label>Title physical gift</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Tilte of notification physical gift</comment>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </titlephysicalgift>
+                        <contentphysicalgift>
+                            <label>Content physical gift</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Content of notification physical gift</comment>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </contentphysicalgift>
+                    </fields>
+                </noti>
+                <voteproduct>
+                    <label>Vote Product</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>0</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <enable translate="label">
+                            <label>Enabled</label>
+                           <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </enable>
+                        <cache translate="label">
+                            <label>Cache</label>
+                           <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </cache>
+                        <eventId>
+                            <label>Event ID</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Event Id for voting product. Ex: voteproduct2018</comment>
+                            <sort_oder>0</sort_oder>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </eventId>
+                         <mainCatId>
+                            <label>Main catID</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Main CatIds for voting product. Ex: 4,3165 (sách tiếng việt, sách ngoại văn)</comment>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </mainCatId>
+                        <catIdsExcluded>
+                            <label>Cat IDs excluded</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>CatIds excluded. Ex: 5426(elt)</comment>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </catIdsExcluded>
+                        <catIdsUsed>
+                            <label>List CatID groups</label>
+                            <fronend_type>text</fronend_type>
+                            <comment>List CatID are used for show top voting groups</comment>
+                              <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </catIdsUsed>
+                         <cat3IdsUsed>
+                            <label>List CatID Level 3 groups</label>
+                            <fronend_type>text</fronend_type>
+                            <comment>List CatID 3 are used for show top voting groups (along with catIdsUsed)</comment>
+                              <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </cat3IdsUsed>
+                         <catIdExcludedRest>
+                            <label>Cat ID excluded in REST</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Main CatIds is excluded in cat REST group (in top voted). Ex: 3165</comment>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </catIdExcludedRest>
+                        <enable_cat_rest translate="label">
+                            <label>Enabled category rest in UI</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </enable_cat_rest>
+                         <topNumber>
+                            <label>Top number</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Number of top products in each category</comment>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </topNumber>
+                         <errormess>
+                            <label>Error message</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Thông báo khi server lỗi</comment>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </errormess>
+                         <revertTime>
+                            <label>Revert Time</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Seconds for revert voted (ex: 86400 - 1 day)</comment>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </revertTime>
+                        <show_in_stock translate="label">
+                            <label>Show In Stock</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </show_in_stock>
+                         <offset>
+                            <label>offset number</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>set it = 0 when begin event vote</comment>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </offset>
+                    </fields>
+                </voteproduct>
+            </groups>
+        </game>
+    </sections>
+    <sections>
+        <event_buffetcombo translate="label" module="event">
+            <label>Event Buffetcombo</label>
+            <tab>fahasa_event</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>10</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <config translate="label">
+                    <label>BuffetCombo Config</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <expanded>1</expanded>
+                    <fields>
+                        <is_active>
+                            <label>Is Active</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <comment></comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </is_active>
+                        <active_buffetcombo_id>
+                            <label>Active BuffetCombo Id</label>
+                            <frontend_type>text</frontend_type>
+                            <comment></comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </active_buffetcombo_id>
+                        <slider_limit>
+                            <label>Max products in slider</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Max products to be displayed in slider</comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </slider_limit>
+                        <products_per_page>
+                            <label>Products per page</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Number of products loaded per request</comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </products_per_page>
+                        <combo_list>
+                            <label>Combo List</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>
+                                Example: [{"price": 149000, "count": 3, "gift_id": 187635 }, { "price": 249000, "count": 5, "gift_id": 157902 }]  
+                                . Note: Must list data from small 'count' to larger 'count' ( combo 3 , combo 4, combo 5 ... ), gift_id is product_id
+                            </comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </combo_list>
+                        <buffetcombo_icon translate="label">
+                            <label>BuffetCombo Icon</label>
+                            <frontend_type>image</frontend_type>
+                            <backend_model>adminhtml/system_config_backend_image</backend_model>
+                            <upload_dir config="system/filesystem/media" scope_info="1">event</upload_dir>
+                            <base_url type="media" scope_info="1">event</base_url>
+                            <comment>Size: 250px x 150px</comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </buffetcombo_icon>
+                        <show_buffetcombo_icon translate="label">
+                            <label>Show buffetcombo_icon</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <comment>Show buffetcombo icon in product detail page</comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>  
+                        </show_buffetcombo_icon>
+                         <page_detail translate="label">
+                            <label>Page url event</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Page url when click icon in product detail page</comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>    
+                        </page_detail>
+                         <page_detail_tooltip translate="label">
+                            <label>Page url ToolTip</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Tooltip for page url when click icon in product detail page</comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>    
+                        </page_detail_tooltip>
+                        <use_gift translate="label">
+                            <label>Use Gifts</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <comment>Note: Must have gift_id in Combo List, if we enable this option.</comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </use_gift>
+                        <gift_icon translate="label">
+                            <label>Gift Icon</label>
+                            <frontend_type>image</frontend_type>
+                            <backend_model>adminhtml/system_config_backend_image</backend_model>
+                            <upload_dir config="system/filesystem/media" scope_info="1">event</upload_dir>
+                            <base_url type="media" scope_info="1">event</base_url>
+                            <comment>Size: 250px x 150px</comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </gift_icon>
+                        <gift_title translate="label">
+                            <label>Gift Title</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Gift title in checkout page</comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </gift_title>
+                        <gift_delivery translate="label">
+                            <label>Show Gift Message</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <comment>Note: Must have gift_id in Combo List, if we enable this option.</comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </gift_delivery>
+                        <gift_delivery_message translate="label">
+                            <label>Gift Delivery Message</label>
+                            <frontend_type>text</frontend_type>
+                            <comment></comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>       
+                        </gift_delivery_message>
+			<gift_delivery_message_mobile translate="label">
+                            <label>Gift Delivery Message Mobile</label>
+                            <frontend_type>text</frontend_type>
+                            <comment></comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </gift_delivery_message_mobile>
+                        <gift_delivery_only_suburban translate="label">
+                            <label>Chỉ hiển thị thông báo ngoài thành phố</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <comment>Thông báo giao hàng chỉ hiển thị ngoài thành phố Hồ Chí Minh.</comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </gift_delivery_only_suburban>
+                    </fields>
+                </config>
+            </groups>
+        </event_buffetcombo>
+        <event_marathon>
+            <label>Event Marathon</label>
+            <tab>fahasa_event</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>20</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <config translate="label">
+                    <label>Marathon Config</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <expanded>1</expanded>
+                    <fields>
+                        <from_date>
+                            <label>From Date</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Chỉ tính đơn hàng tạo ra từ ngày này ...</comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </from_date>
+                        <to_date>
+                            <label>To Date</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>... đến ngày này. ( order created_at trong thời gian này. )</comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </to_date>
+                        <complete_date>
+                            <label>Complete Date</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>... và status hòan thành tới ngày  ( order status, sub-order status la` complete)</comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </complete_date>
+                        <rank_avatar_1 translate="label">
+                            <label>Avatar Rank 1</label>
+                            <frontend_type>image</frontend_type>
+                            <backend_model>adminhtml/system_config_backend_image</backend_model>
+                            <upload_dir config="system/filesystem/media" scope_info="1">event</upload_dir>
+                            <base_url type="media" scope_info="1">event</base_url>
+                            <comment>Size: 120px x 120px</comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </rank_avatar_1>
+                        <rank_avatar_2 translate="label">
+                            <label>Avatar Rank 2</label>
+                            <frontend_type>image</frontend_type>
+                            <backend_model>adminhtml/system_config_backend_image</backend_model>
+                            <upload_dir config="system/filesystem/media" scope_info="1">event</upload_dir>
+                            <base_url type="media" scope_info="1">event</base_url>
+                            <comment>Size: 120px x 120px</comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </rank_avatar_2>
+                        <rank_avatar_3 translate="label">
+                            <label>Avatar Rank 3</label>
+                            <frontend_type>image</frontend_type>
+                            <backend_model>adminhtml/system_config_backend_image</backend_model>
+                            <upload_dir config="system/filesystem/media" scope_info="1">event</upload_dir>
+                            <base_url type="media" scope_info="1">event</base_url>
+                            <comment>Size: 120px x 120px</comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </rank_avatar_3>                        
+                    </fields>
+                </config>
+            </groups>
+        </event_marathon>
+        <event_marathon_2>
+            <label>Event Marathon 2 (Đua Chạm Mốc)</label>
+            <tab>fahasa_event</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>30</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <config translate="label">
+                    <label>Marathon 2 - Config</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <expanded>1</expanded>
+                    <fields>
+                        <is_active_type>
+                            <label>Type</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_TypeTinhDuaTop</source_model>
+                            <comment></comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </is_active_type>
+                        <title>
+                            <label>Title</label>
+                            <frontend_type>text</frontend_type>
+                            <comment></comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </title>
+                        <ranks>
+                            <label>Ranks</label>
+                            <frontend_type>text</frontend_type>
+                            <comment></comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </ranks>
+                        <ranks_limit>
+                            <label>ranks_limit</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Example: ["500","10","3"]</comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </ranks_limit>
+                        <max_ordertotal>
+                            <label>Maximun Orders total</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Example: 10000000</comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </max_ordertotal>
+                        <gifts>
+                            <label>Gifts</label>
+                            <frontend_type>text</frontend_type>
+                            <comment></comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </gifts>
+                        <from_date>
+                            <label>From Date</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Chỉ tính đơn hàng tạo ra từ ngày này ...</comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </from_date>
+                        <to_date>
+                            <label>To Date</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>... đến ngày này. ( order created_at trong thời gian này. )</comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </to_date>
+                        <exlude>
+                            <label>Exlude customer id list</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Example: '123','345'</comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </exlude>
+                    </fields>
+                </config>
+            </groups>
+        </event_marathon_2>
+        <event_sharefacebook>
+            <label>Event Share Facebook</label>
+            <tab>fahasa_event</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>40</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <config translate="label">
+                    <label>Share Facebook Config</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <expanded>1</expanded>
+                    <fields>
+                        <buffed_share_facebook>
+                            <label>Buffed Share Facebook</label>
+                            <frontend_type>text</frontend_type>
+                            <comment></comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </buffed_share_facebook>
+                    </fields>
+                </config>
+                <share_render_image translate="label">
+                    <label>Share Render Image Facebook Config</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <expanded>1</expanded>
+                    <fields>
+                        <is_active>
+                            <label>Is Active</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <comment></comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </is_active>
+                        <event_name>
+                            <label>Event name</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>event name use in url, param: event</comment>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </event_name>
+                        <background_image translate="label">
+                            <label>Backgroup image</label>
+                            <frontend_type>image</frontend_type>
+                            <backend_model>adminhtml/system_config_backend_image</backend_model>
+                            <upload_dir config="system/filesystem/media" scope_info="1">event</upload_dir>
+                            <base_url type="media" scope_info="1">event</base_url>
+                            <comment>Size: 500px x 260px</comment>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </background_image>
+                        <title>
+                            <label>Title</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Title when share</comment>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </title>
+                        <image_default>
+                            <label>image path default</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>wysiwyg/xyz.png</comment>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </image_default>
+                        <image_default_width>
+                            <label>image width default</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>/wysiwyg/xyz.png</comment>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </image_default_width>
+                        <image_default_height>
+                            <label>image height default</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>260</comment>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </image_default_height>
+                        <is_render_file>
+                            <label>Is Render image to file</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <comment></comment>
+                            <sort_order>45</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </is_render_file>
+                        <site>
+                            <label>Site name</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Sinh Nhật fahasa.com</comment>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </site>
+                        <description>
+                            <label>Description</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Description</comment>
+                            <sort_order>70</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </description>
+                        <font_regular>
+                            <label>Font regular</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>/wysiwyg/fonts/xyz_regular.ttf</comment>
+                            <sort_order>80</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>       
+                        </font_regular>
+                        <font_bold>
+                            <label>Font bold</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>/wysiwyg/fonts/xyz_bold.ttf</comment>
+                            <sort_order>90</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </font_bold>
+                        <is_active_gift>
+                            <label>Is Active Gift</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <comment></comment>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </is_active_gift>
+                        <from_date>
+                            <label>From Date</label>
+                            <frontend_type>text</frontend_type>
+                            <comment></comment>
+                            <sort_order>110</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </from_date>
+                        <to_date>
+                            <label>To Date</label>
+                            <frontend_type>text</frontend_type>
+                            <comment></comment>
+                            <sort_order>120</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </to_date>
+                        <ruleid>
+                            <label>RuleId</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Rule id for gift share</comment>
+                            <sort_order>140</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </ruleid>
+                        <limit_share>
+                            <label>Limit share</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>limit turn share in one day</comment>
+                            <sort_order>150</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </limit_share>
+                        <turn_have_gift>
+                            <label>Turn have gift</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>44,68,144,168</comment>
+                            <sort_order>160</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </turn_have_gift>
+                        <image_background_alert>
+                            <label>image background alert</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>/wysiwyg/xyz.png</comment>
+                            <sort_order>170</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </image_background_alert>
+                        <msg_has_gift>
+                            <label>Message has gift</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>%s = total times share</comment>
+                            <sort_order>180</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </msg_has_gift>
+                        <msg_no_gift>
+                            <label>Message none gift</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>%s = total times share</comment>
+                            <sort_order>190</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </msg_no_gift>
+                        <msg_has_gift_noti_title>
+                            <label>title for noti</label>
+                            <frontend_type>text</frontend_type>
+                            <comment></comment>
+                            <sort_order>200</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </msg_has_gift_noti_title>
+                        <msg_has_gift_noti_content>
+                            <label>content for noti</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>%s = coupon code</comment>
+                            <sort_order>210</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </msg_has_gift_noti_content>
+                    </fields>
+                </share_render_image>
+            </groups>
+        </event_sharefacebook>
+        <event_discountoriginal>
+            <label>Event Discount Original</label>
+            <tab>fahasa_event</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>50</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <config translate="label">
+                    <label>Config: Discount Original</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <expanded>1</expanded>
+                    <fields>
+                        <is_active>
+                            <label>Is Active</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <comment></comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </is_active>
+                        <active_campaign_id>
+                            <label>Active Campaign Id</label>
+                            <frontend_type>text</frontend_type>
+                            <comment></comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>    
+                        </active_campaign_id>
+                    </fields>
+                </config>
+            </groups>
+        </event_discountoriginal>
+        <event_discountoriginal_v2_nofee>
+            <label>Event Discount Original v2</label>
+            <tab>fahasa_event</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>60</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <config translate="label">
+                    <label>Config: Discount Original v2</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <expanded>1</expanded>
+                    <fields>
+                        <is_active>
+                            <label>Is Active</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <comment></comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </is_active>
+                        <active_campaign_id>
+                            <label>Active Campaign Id</label>
+                            <frontend_type>text</frontend_type>
+                            <comment></comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>    
+                        </active_campaign_id>
+                    </fields>
+                </config>
+            </groups>
+        </event_discountoriginal_v2_nofee>
+        <event_buy_more_discount_more>
+            <label>Event Buy More Discount More</label>
+            <tab>fahasa_event</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>70</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <config translate="label">
+                    <label>Config: Buy More Discount More</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <expanded>1</expanded>
+                    <fields>
+                        <is_active>
+                            <label>Is Active</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <comment></comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </is_active>
+                        <valid_from>
+                            <label>Valid From Date</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Rule is valid from date</comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </valid_from>
+                        <valid_to>
+                            <label>Valid From Date</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Rule is valid to date</comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </valid_to>
+                        <rule_json>
+                            <label>Rule Json</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Example: [{"qty_step": 4, "discount": 50},{"qty_step": 5, "discount": 70},{"qty_step": 6, "discount": 99}]</comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </rule_json>
+                        <product_category>
+                            <label>Apply Only To Product Category Id</label>
+                            <frontend_type>text</frontend_type>
+                            <comment></comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </product_category>
+                        <product_category_exclude>
+                            <label>Exclude child in Product Category</label>
+                            <frontend_type>text</frontend_type>
+			    <comment>Example: singel: 15 or 15-6383, multi: 15,214 or 15-6383,214-216</comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </product_category_exclude>
+                        <customer_groups>
+                            <label>Customer Groups</label>
+                            <frontend_type>text</frontend_type>
+                            <comment></comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </customer_groups>
+                        <max_subtotal>
+                            <label>Max Subtotal</label>
+                            <frontend_type>text</frontend_type>
+                            <comment></comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </max_subtotal>
+                        <discount_label>
+                            <label>Discount Label</label>
+                            <frontend_type>text</frontend_type>
+                            <comment></comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </discount_label>
+                        <discount_item_message>
+                            <label>Event Rule Id</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Item message to display in cart</comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </discount_item_message>
+                    </fields>
+                </config>
+            </groups>
+        </event_buy_more_discount_more>                          
+        <book_festival>
+            <label>Book Festival</label>
+            <tab>fahasa_event</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>80</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <config translate="label">
+                    <label>Share Facebook Config</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <expanded>1</expanded>
+                    <fields>
+                        <store_code>
+                            <label>Store Code</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Store ID used for book festival</comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </store_code>
+                        <expired_time>
+                            <label>Code Store</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Duration for session expiration from the first scan barcode (miliseconds)</comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </expired_time>
+                        <introduce_page>
+                            <label>Introduce Cms Page</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>The first cms page for enter the book festival</comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </introduce_page>
+                    </fields>
+                </config>
+            </groups>
+        </book_festival>
+        <event_delivery>
+            <label>Event delivery</label>
+            <tab>fahasa_event</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>90</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <config translate="label">
+                    <label>Config: Event delivery</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <expanded>1</expanded>
+                    <fields>
+                        <is_active>
+                            <label>Is Active</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <comment></comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </is_active>
+                        <qty_min_stock>
+                            <label>Quantity minimum in stock</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Số lượng tồn thấp nhất để thỏa giao hàng sự kiện</comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </qty_min_stock>
+                        <time_to_nextday>
+                            <label>Time to nextday</label>
+                            <frontend_type>select</frontend_type>
+			    <source_model>event/system_config_source_dropdown_hours</source_model>
+                            <comment>Thời gian chuyển sang ngày giao kế tiếp</comment>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </time_to_nextday>
+                        <show_choose_delivery_date_payment>
+                            <label>Show Choose Delivery Date In Payment</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <comment>Show choose delivery date option in payment page. Ex: noel delivery</comment>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </show_choose_delivery_date_payment>
+                    </fields>
+                </config>
+            </groups>
+        </event_delivery>    
+        <event_source>
+            <label>Event source tracking order</label>
+            <tab>fahasa_event</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>90</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <config translate="label">
+                    <label>Config: Event source tracking order</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <expanded>1</expanded>
+                    <fields>
+                        <is_active>
+                            <label>Is Active</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <comment></comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </is_active>
+                        <event_id>
+                            <label>Event ID</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Event Id for get option source. Ex: 1</comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </event_id>
+                        <category_id>
+                            <label>Category Id</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Category_id for show UI option (main, mid, cate_3). Ex: 15</comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </category_id>
+                        <cat_id_excluded>
+                            <label>Category Id Excluded</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Category_id excluded for tracking. Ex: 6305 (fresh product)</comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </cat_id_excluded>
+                        <cookie_duration>
+                            <label>Cookie duration</label>
+                            <frontend_type>text</frontend_type>
+                            <comment>Time to expire affId in cookie (unit: day). Ex: 7 day</comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </cookie_duration>
+                    </fields>
+                </config>
+            </groups>
+        </event_source>     
+        <vip>
+            <label>Event VIP Discount</label>
+            <tab>fahasa_event</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>100</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <config translate="label">
+                    <label>Config: VIP</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <expanded>1</expanded>
+                    <fields>
+                        <is_active>
+                            <label>Is Active</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <comment></comment>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>                    
+                        </is_active>
+                    </fields>
+                </config>
+            </groups>
+        </vip>       
+    </sections>
+</config>

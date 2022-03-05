@@ -1,0 +1,91 @@
+<?php
+/*////////////////////////////////////////////////////////////////////////////////
+ \\\\\\\\\\\\\\\\\\\\\\\\\  FME Fieldsmanager extension  \\\\\\\\\\\\\\\\\\\\\\\\\
+ /////////////////////////////////////////////////////////////////////////////////
+ \\\\\\\\\\\\\\\\\\\\\\\\\ NOTICE OF LICENSE\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+ ///////                                                                   ///////
+ \\\\\\\ This source file is subject to the Open Software License (OSL 3.0)\\\\\\\
+ ///////   that is bundled with this package in the file LICENSE.txt.      ///////
+ \\\\\\\   It is also available through the world-wide-web at this URL:    \\\\\\\
+ ///////          http://opensource.org/licenses/osl-3.0.php               ///////
+ \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+ ///////                      * @category   FME                            ///////
+ \\\\\\\                      * @package    FME_Fieldsmanager              \\\\\\\
+ ///////    * @author     Malik Tahir Mehmood <malik.tahir786@gmail.com>   ///////
+ \\\\\\\                                                                   \\\\\\\
+ /////////////////////////////////////////////////////////////////////////////////
+ \\* @copyright  Copyright 2010 © free-magentoextensions.com All right reserved\\\
+ /////////////////////////////////////////////////////////////////////////////////
+ */
+?>
+<style>
+    
+   .form-list li {
+    margin: 0 0 8px;
+}
+.form-list .field {
+    float: left;
+    width: 500px;
+}
+.form-list label {
+    color:#666666 !important;
+    float: left;
+    font-weight: bold;
+    position: relative;
+    z-index: 0;
+}
+.form-list label.required em {
+    color: #EB340A;
+    float: right;
+    font-style: normal;
+    position: absolute;
+    right: -8px;
+    top: 0;
+}
+.form-list .input-box {
+    clear: both;
+    display: block;
+    width: 260px;
+}
+.form-list input.input-text {
+    width: 254px;
+}
+.form-list input.input-text, textarea {
+    padding: 2px;
+}
+.form-list input.input-text, .form-list select, .form-list textarea {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #B6B6B6;
+}
+.form-list input, .form-list select, .form-list textarea, .form-list button {
+    color: #2F2F2F;
+    font: 12px/15px Arial,Helvetica,sans-serif;
+    vertical-align: middle;
+}
+.form-list select,.form-list textarea {
+    width: 260px;
+}
+.form-list input.checkbox {
+    margin-right: 3px;
+
+}
+
+</style>
+<div class="entry-edit">
+    <div class="entry-edit-head">
+        <h4 class="icon-head head-edit-form fieldset-legend"><?php echo Mage::helper('fieldsmanager')->getheading();  ?></h4>
+    </div>
+   
+    <fieldset id="grop_fields">
+            <ul class="form-list">
+                <?php if($html = $this->getfieldshtml(1)): ?>
+                <?php echo $html; ?>
+                <?php else: ?>
+                <li>
+                <?php echo $this->__('No Additional Information Required'); ?>
+                </li>
+                <?php endif; ?>
+            </ul>
+    </fieldset>
+   
+</div>

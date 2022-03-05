@@ -1,0 +1,253 @@
+<?php
+
+$block_data_str = $this->getData('data');
+$to_show_discount = $this->getData('show-discount');
+$block_data = json_decode($block_data_str, true);
+$block_data = json_encode($block_data);
+
+$is_mobile = Mage::helper('fhsmobiledetect')->isMobile();
+$helper = Mage::helper('fhsrule');
+?>
+
+<style type="text/css">
+    #fhsrule-buffet-coupon{
+        margin-bottom: 50px;
+        min-height: 100px;
+        margin-top: 10px;
+    }
+
+    #fhsrule-buffet-coupon .fhsrule-buffet-coupon-period {
+        padding: 5px;
+        text-align: center;
+        cursor: pointer;
+        font-size: 18px;
+        font-weight: bold;
+        background-color: #fff;
+        margin-bottom: 5px;
+        height: 40px
+    }
+
+    #fhsrule-buffet-coupon .fhsrule-buffet-coupon-period-mobile{
+        font-size: 11px;
+        height: 24px;
+        padding: 3px !important;
+    }
+
+    #fhsrule-buffet-coupon .fhsrule-buffet-coupon-period span:first-child{
+        float: left;
+        padding: 2px;
+        padding-left: 8px;
+    }
+
+    #fhsrule-buffet-coupon .fhsrule-buffet-coupon-period span:nth-child(2){
+        float: right;
+        padding: 2px;
+        padding-right: 8px;
+    }
+
+    #fhsrule-buffet-coupon .fhsrule-buffet-coupon-period-active {
+        background-color: #d22121;
+        color: #fff;
+    }
+
+    #fhsrule-buffet-coupon .fhsrule-buffet-coupon-period-deactive {
+        background-color: #d22121;
+        color: #fff;
+    }
+
+    #fhsrule-buffet-coupon .fhsrule-buffet-coupon-{
+        margin-bottom: 10px;
+        margin-top: 10px;
+
+        margin-left: 14px;
+        margin-right: 14px;
+    }
+
+    #fhsrule-buffet-coupon .fhsrule-buffet-coupon-code{
+        border: 1px solid #ccc;
+        padding: 5px;
+        margin: 0px 0px;
+        margin-bottom: 5px;
+        min-height: 216px;
+    }
+
+    #fhsrule-buffet-coupon .fhsrule-buffet-coupon-label{
+        font-size: 12px;
+        padding: 5px 0px;
+        color: #fff;
+    }
+
+    #fhsrule-buffet-coupon .fhsrule-buffet-coupon-remaining{
+        padding: 5px;
+    }
+
+    #fhsrule-buffet-coupon-loading-icon{
+        padding: 10px;
+        background-color: #f1f1f1;
+        width: 48px;
+        border-radius: 5px;
+        margin: 50px auto;
+    }
+
+    #fhsrule-buffet-coupon .fhsrule-buffet-coupon-run-out{
+        text-align: center;
+        position: relative;
+        margin-top: -150px;
+        min-height: 150px;
+    }
+
+    #fhsrule-buffet-coupon .fhsrule-buffet-coupon-item{
+        padding: 2px !important
+    }
+</style>
+
+<div id="fhsrule-buffet-coupon">
+    <div id="fhsrule-buffet-coupon-loading-icon">
+        <img src="/media/theme/default/loader.gif"/>
+    </div>
+
+    <?php if ($is_mobile): ?>
+        <div class="fhsrule-buffet-coupon-list">
+        </div>
+    <?php else: ?>
+        <div class="row fhsrule-buffet-coupon-list" style="margin-left: 12px;margin-right: 12px;"></div>
+    <?php endif; ?>
+</div>
+
+<script type="text/javascript">
+    const URL_TYPE_MEDIA = "<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA); ?>";
+    const MAX_PERIODS = 4;
+
+    $jq(document).ready(function () {
+        let is_mobile = "<?php echo Mage::helper('fhsmobiledetect')->isMobile(); ?>";
+        let data_str = <?php echo json_encode($block_data); ?>;
+        let to_show_discount = <?php echo json_encode($to_show_discount); ?>;
+        
+        let text_labels = {
+            'nhap_ma': "<?php echo $helper->__("Nhap ma"); ?>",
+            'con_lai': "<?php echo $helper->__("Con lai"); ?>",
+            'da_co': "<?php echo $helper->__("Da co"); ?>",
+            'chua_co': "<?php echo $helper->__("Chua co"); ?>"
+        }
+
+        $jq.ajax({
+            url: "/node_api/fhsrule/get_buffetcoupon",
+            method: 'post',
+            data: {
+                data_str: data_str,
+                to_show_discount: to_show_discount
+            },
+            success: function (data) {
+
+                $jq("#fhsrule-buffet-coupon-loading-icon").hide();
+                $jq("#row fhsrule-buffet-coupon-list").show();
+
+                if (!data.result) {
+                    return;
+                }
+
+                $list = $jq("#fhsrule-buffet-coupon .fhsrule-buffet-coupon-list");
+
+                if (is_mobile) {
+                    let $row;
+                    for (let i = 0; i < data.periods.length; i++) {
+                        if (i % 2 == 0) {
+                            $row = $jq("<div class='row' style='margin: 10px !important;'></div>");
+                            $list.append($row);
+                        }
+
+                        $period = printPeriodHtml(data.periods[i], text_labels, true, to_show_discount);
+                        $row.append($period);
+                    }
+                } else {
+                    for (let i = 0; i < data.periods.length; i++) {
+                        $period = printPeriodHtml(data.periods[i], text_labels, false, to_show_discount);
+                        $list.append($period);
+                    }
+                }
+
+            }
+        });
+    });
+
+    function printPeriodHtml(period, text_labels, is_mobile, to_show_discount) {
+        let active = '';
+        let display_status = '';
+        if (period.has_passed) {
+            active = 'fhsrule-buffet-coupon-period-active';
+            display_status = text_labels['da_co'];
+        } else {
+            display_status = text_labels['chua_co'];
+        }
+
+        let mobile_period_css = '';
+        if (is_mobile) {
+            mobile_period_css = 'fhsrule-buffet-coupon-period-mobile';
+        }
+
+        let period_html = "<div class='fhsrule-buffet-coupon-item col-md-3 col-xs-6'>"
+                + "<div class='fhsrule-buffet-coupon-period " + mobile_period_css + " " + active + "'>"
+                + "<span>" + period.display_time + "</span><span>" + display_status + "</span>"
+                + "</div><div style='clear:both'></div>"
+                + "<div class='fhsrule-buffet-coupon-code-list'>"
+                + "</div>";
+
+        $period = $jq(period_html);
+        $period_body = $period.find(".fhsrule-buffet-coupon-code-list");
+
+        for (let i = 0; i < period['rules'].length; i++) {
+            $rule = printRuleHtml(period['rules'][i], text_labels, to_show_discount);
+            $period_body.append($rule);
+        }
+
+        return $period;
+    }
+
+    function printRuleHtml(rule, text_labels, to_show_discount) {
+        var remain = parseInt(rule['uses_per_coupon']) - parseInt(rule['times_used']);
+        var label_con_lai = text_labels['con_lai'] + " " + remain + " Coupons";
+        var progress_ratio = 100 - parseInt(parseFloat(rule['times_used']) / parseFloat(rule['uses_per_coupon']) * 100);
+        var desc_array = {};
+        let hide_bar = '';
+        let hide_het_hieu_luc = '';
+        
+        if (rule['has_passed']) {
+            desc_array = rule['description'].split("-");
+            rule['discount'] = desc_array[0];
+            rule['category'] = desc_array[1];
+        } else {
+            if(to_show_discount){
+                desc_array = rule['description'].split("-");
+                rule['discount'] = desc_array[0];
+            }else{
+            rule['discount'] = '';
+            }
+            rule['category'] = '';
+            hide_bar = "style='display:none'";
+        }
+        
+        if (remain > 0) {
+            hide_het_hieu_luc = "style='display:none'";
+        }
+
+        let rule_html = "<div class='fhsrule-buffet-coupon-code'>"
+                + "<div style='margin-bottom: 5px;'>"
+                + "<div style='padding: 5px;text-align: center;min-height: 146px;'>"
+                + "<div style='font-size: 14px;font-weight: bold;color: #fff;'>" + text_labels['nhap_ma'] + "</div>"
+                + "<div style='font-size: 2.2em;font-weight: bold;color: red;border: 1px dashed #fff;margin: 5px 0px; min-height: 40px;'>" + rule['code'] + "</div>"
+                + "<div style='font-size: 2.0em;font-weight: bold;color: #fff;'>" + rule['discount'] + "</div>"
+                + "<div style='font-size: 16px;color: #fff;'>" + rule['category'] + "</div>"
+                + "</div></div>"
+                + "<div class='fhsrule-buffet-coupon-run-out' " + hide_het_hieu_luc + "><img src='/skin/frontend/ma_vanese/fahasa/images/fhsrule/Het-hieu-luc.png' width='100%' height='100%' /></div>"
+                // Progress bar
+                + "<div class='fhsrule-buffet-coupon-remaining' " + hide_bar + ">"
+                + "<div class='fhsrule-buffet-coupon-label'>" + label_con_lai + "</div>"
+                + "<div class='progress' style='margin-bottom: 5px;border-radius: 0px;height: 10px;'>"
+                + "<div class='progress-bar' role='progressbar' style='width: " + progress_ratio + "%;' aria-valuenow='" + progress_ratio + "' aria-valuemin='0' aria-valuemax='100'></div>"
+                + "</div></div>";
+        /// end div fhsrule-buffet-coupon-code
+        +"</div>";
+
+        return $jq(rule_html);
+    }
+</script>

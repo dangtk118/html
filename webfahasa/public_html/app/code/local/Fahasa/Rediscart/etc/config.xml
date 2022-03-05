@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <Fahasa_Rediscart>
+            <version>0.0.1</version>
+        </Fahasa_Rediscart>
+    </modules>
+    <global>
+        <helpers>
+            <rediscart>
+                <class>Fahasa_Rediscart_Helper</class>
+            </rediscart>
+        </helpers>
+        <blocks>
+            <rediscart>
+                <class>Fahasa_Rediscart_Block</class>
+            </rediscart>
+        </blocks>
+        
+        <rewrite>
+            <fahasa_rediscart>
+                <from><![CDATA[#^/checkout/cart/#]]></from>
+                <to>/rediscart/cart/</to>
+            </fahasa_rediscart>
+        </rewrite>
+    </global>
+    <frontend>
+        <routers>
+            <rediscart>
+                <use>standard</use>
+                <args>
+                    <module>Fahasa_Rediscart</module>
+                    <frontName>rediscart</frontName>
+                </args>
+            </rediscart>
+        </routers>
+        <events>
+            <customer_login>
+                <observers>
+                    <rediscart>
+                        <type>model</type>
+                        <class>Fahasa_Rediscart_Model_Observer</class>
+                        <method>logIn</method>
+                    </rediscart>
+                </observers>
+            </customer_login> 
+        </events>
+    </frontend>
+  
+</config>

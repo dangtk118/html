@@ -1,0 +1,264 @@
+/**
+*
+* Feel free to add your own css rules here.
+*
+*/
+
+/**** Fonts ****/
+.widget-latest li h3 a,
+.widget .widget-title h1,
+.widget .widget-title h2,
+.widget-title h2,
+.page-title h1,
+.page-title h2,
+.page-title h3,
+.page-title h4,
+.page-title h5,
+.page-title h6,
+.nav-container a.level-top > span,
+#login-holder .link-box a,
+button.button span span,
+header.header .top-cart .block-title .title-cart,
+.home-banners-2 .text-banner .banner-title strong,
+.home-text-banners span strong,
+.home-container.grid-2 .product-info-top .product-name a,
+aside.sidebar .block.block-layered-nav dl dt.filter-label,
+.newsletter-line .block-subscribe h3,
+.footer-links span,
+#footer .footer-second-line .footer-block-title h2,
+aside.sidebar .block-title strong span,
+aside.sidebar .actions a,
+.products-list .product-name a,
+.sorter .view-mode .grid,
+.sorter .view-mode .list,
+.sorter label,
+.pages li.current,
+.pages li a,
+.product-view .product-shop .product-name h1,
+.meigee-tabs a,
+.related-wrapper-bottom .block-title strong span,
+.rating-title h2,
+.related-wrapper .block-related .block-title span,
+.related-products-button a,
+.related-wrapper .block-related.large-image .product-name a,
+.product-collateral h2,
+.nav-wide ul.level0 li.level1 span.subtitle,
+.nav-wide .top-content a,
+.nav-wide .bottom-content span strong,
+header.header .top-cart .block-content .subtotal .label,
+header.header .top-cart .block-content .subtotal .price,
+header.header .top-cart .block-content .actions a,
+.data-table .product-name a,
+.cart header h2,
+#cart-accordion h3.accordion-title span,
+.fieldset .legend,
+.product-options dt label,
+.dashboard .welcome-msg .hello,
+.dashboard .box-title h2,
+.dashboard .box-title h3,
+.dashboard .box-head h3,
+.dashboard .box-head h2,
+.opc h3,
+.opc-wrapper-opc .opc-block-title h3,
+.opc .step-title h2,
+.menu-button,
+.widget-wrapper .category-button a,
+.add-to-cart-success a,
+.home-banners-2 .banner .banner-content h2,
+a.aw-blog-read-more,
+.block-subscribe strong span,
+.block-title h2,
+.text-banner .text-banner-content h2,
+.banner .banner-title,
+body .address-block .banner-title,
+header#header .language-currency-dropdown label,
+.banner .banner-content,
+.bottom-scroll-button,
+.page-no-route .text-block h2,
+.page-no-route .text-block h3 {font-weight: normal!important;}
+.nav-container a.level-top > span,
+.text-banner .text-banner-content h2,
+.page-no-route .text-block h2,
+.page-no-route .text-block h3,
+body .widget .widget-title h1,
+body .widget .widget-title h2, 
+.widget-title h2, 
+.page-title h1, 
+.page-title h2, 
+.page-title h3, 
+.page-title h4, 
+.page-title h5, 
+.page-title h6, 
+.related-wrapper-bottom .block-title strong span, 
+.rating-title h2, 
+.block-title h2,
+.text-banner .text-banner-content.skin-4 h2 {-webkit-text-stroke: 0!important;}
+
+/**** Header ****/
+.nav-container a.level-top > span {font-weight: 500; letter-spacing: -1px;}
+.nav-container li.level-top > a {padding-top: .75em; padding-bottom: .75em;}
+.top-container {position: relative;}
+.header-wrapper.slider header#header,
+.header-wrapper.slider .topline,
+.header-wrapper.slider body.boxed-layout .topline .container_12,
+.header-wrapper.slider .topline:after {background: none;}
+header.header .top-cart .top-cart-label {display: none;}
+header.header .top-cart .block-title .title-cart {height: 40px; line-height: 40px; padding: 0 14px; font-size: 1em;}
+header.header .top-cart .block-title i {display: inline-block; font-size: 1.16em; line-height: 40px; margin: 0;}
+header.header .top-cart .block-title .cart-qty {font-size: .667em; position: absolute; left: 28px; top: .75em;}
+header.header .search-button {display: block; float: left; margin-left: 2px; margin-top: 0; height: 40px; border: none; padding: 0 15px;}
+header.header .search-button i {line-height: 40px;}
+header.header .search_mini_form {position: absolute; right: 0;}
+header.header .form-search button span i.fa-caret-right {display: inline-block;}
+header.header .form-search button span i.fa-search {display: none;}
+header.header .search_mini_form {display: none; position: absolute; right: 0; background: #fff; padding: 1.5em 20px!important; margin-top: 0; box-shadow: 0 0 4px rgba(0,0,0,.1);}
+header.header .form-search input {
+	float: left;
+	font-style: italic;
+	font-size: .83em;
+	width: 198px;
+	padding: 3px 10px;
+	margin-right: -1px;
+	height: 18px;
+}
+header.header .form-search button {
+	float: right;
+	overflow: hidden;
+	text-align: center;
+}
+header.header .form-search button > span {float: left; height: 24px; width: 58px; padding: 0; display: block;}
+header.header .form-search button span i {font-size: 12px; line-height: 24px;}
+header.header .form-search button span span {font-size: 0; background: none; padding: 0; line-height: 24px; width: auto; display: block; width: 58px; }
+.nav-container a.level-top > span {text-transform: none; letter-spacing: 0; font-size: 1.16em;}
+.nav-container {float: right; margin-top: .75em;}
+header.header .header-top {padding-top: 2.25em;}
+header#header h2.logo {margin-right: 20px;}
+header#header .welcome-msg {font-size: .91em; padding: 0; margin-top: 2em;}
+.nav-container li.level-top > a,
+.nav-container a.level-top:hover,
+.nav-container .active a.level-top {padding: .91em 12px;}
+header.header .header-right {margin-top: .75em; margin-left: 10px;}
+header#sticky-header.floating .header-right {float: right; margin: .817em 0;}
+header#sticky-header.floating .top-cart {position: relative; top: auto; right: auto; margin-right: 0;}
+header#sticky-header.floating .search-button {float: right;}
+header#sticky-header.floating .header-top {padding: 0;}
+header.header .top-cart .cart-empty,
+header.header .top-cart .cart-empty a {color: #aaa;}
+header.header .top-cart .cart-empty a:hover {text-decoration: underline;}
+header#sticky-header.floating .small-logo {margin: .125em 0;}
+header#sticky-header.floating .nav-container {margin: 0 15px;}
+body.boxed-layout header#header .container_12 {background: none;}
+body .header-wrapper header.header.floating,
+header#sticky-header.floating .menu-line,
+body.boxed-layout .header-wrapper header.header.floating .topline .container_12,
+body.boxed-layout .header-wrapper header.header.floating .menu-line .container_12 {box-shadow: 0 2px 5px rgba(0,0,0,.1); }
+
+.page-no-route .no-route {padding-top: 3.5em;}
+.page-no-route header.header .search_mini_form {padding: 0!important;}
+
+ /**** Banners ****/
+ .content-wrapper,
+#footer {position: relative; z-index: 201;}
+ .hitched-header .top-container .rev_slider_wrapper .rev_slider {position: fixed; top: 0;}
+.text-banner {position: relative; overflow: hidden;}
+.text-banner .text-banner-content {position: absolute; top: 13%; left: 7%; width: 48%;}
+.text-banner .text-banner-content.skin-2 {top: 14%; left: 7%; width: 46%; text-align: left; right: 0;}
+.text-banner .text-banner-content.skin-2 p {margin-bottom: .75em;}
+.text-banner .text-banner-content h2 {font-size: 2.5em; color: #222; font-weight: normal; margin-bottom: .417em; line-height: .95em; margin-left: 0!important; margin-right: 0!important;}
+.text-banner .text-banner-content h3 {font-size: .83em; line-height: 1.583em; font-weight: normal; margin-bottom: .25em; color: #aaa; text-transform: uppercase;}
+.text-banner .text-banner-content p {font-family: Georgia; color: #888; font-size: 1em; line-height: 1.65em; font-style: italic; width: 74%!important; margin-left: 0!important; margin-right: 0!important;}
+.text-banner .text-banner-content.skin-2 h2,
+.text-banner .text-banner-content.skin-2 h3,
+.text-banner .text-banner-content.skin-2 p,
+.text-banner .text-banner-content.skin-2 a,
+.text-banner .text-banner-content.skin-3 h2,
+.text-banner .text-banner-content.skin-3 h3,
+.text-banner .text-banner-content.skin-3 p,
+.text-banner .text-banner-content.skin-3 a {color: #fff;}
+.text-banner .text-banner-content.skin-3 h2:after {
+    border-bottom: 2px solid;
+    content: "";
+    display: block;
+    margin: 0.417em auto 0;
+    width: 86px;
+}
+.text-banner .text-banner-content.skin-3 {left: 0; right: 0; margin: 0 auto; width: 80%; top: 20%;}
+.text-banner .text-banner-content.skin-3 h2 {font-size: 2em; text-transform: none; letter-spacing: -.5px; margin: 0 auto .125em!important;}
+.text-banner .text-banner-content.skin-3 p {font-family: Arial; font-style: normal; width: 57%!important; text-align: center; margin: 0 auto!important;}
+.text-banner .text-banner-content.skin-4 h2 {font-size: 1.667em; margin-bottom: .75em;}
+.text-banner .text-banner-content.skin-4 p {width: auto;}
+.text-banner .text-banner-content.skin-4 .item {margin-top: 1.25em;}
+.text-banner .text-banner-content.skin-4 .item:first-child {margin-top: 0;}
+.text-banner.background .text-banner-content.skin-4 {padding: 2.75em 30px;}
+.text-banner .text-banner-content.skin-4 .icon {display: inline-block; margin-right: 12px;}
+.text-banner .text-banner-content.skin-4 .text {display: inline-block; max-width: 79%; margin-top: .25em;}
+.text-banner .text-banner-content a.banner-link {
+	font-family: Georgia;
+	font-size: 1em;
+	line-height: 1.583em;
+	text-transform: uppercase;
+	display: inline-block;
+	vertical-align: middle;
+}
+.text-banner .text-banner-content a.banner-link i {
+	font-size: 1.16em;
+	vertical-align: middle;
+	margin-top: -4px;
+	line-height: 1.583em;
+	margin-left: 2px;
+	transition: none;
+	-webkit-transition: none;
+	-moz-transition: none;
+	-o-transition: none;
+	transition: margin-left 300ms ease;
+	-moz-transition: margin-left 300ms ease;
+	-webkit-transition: margin-left 300ms ease;
+	-o-transition: margin-left 300ms ease;
+}
+.text-banner .text-banner-content a.banner-link:hover i {margin-left: 10px;}
+
+.address-block .text-banner {background-image: url("../images/text_banner_bg.png"); background-position: center; background-repeat: no-repeat; color: #fff; padding: 2em 30px 1.5em;}
+.address-block .text-banner .banner-title {display: inline-block; padding-bottom: 0.83em;}
+.address-block .text-banner .banner-title i {font-size: 1.16em; margin-right: 6px; vertical-align: middle;}
+.address-block .text-banner .banner-title strong { display: inline-block; font-size: 1.5em; vertical-align: top; font-weight: normal;}
+.address-block .text-banner p {font-size: .91em; line-height: 1.583em; margin-bottom: 0;}
+.address-block .text-banner a {color: #fff;}
+ul.home-banners-wrapper {margin-left: -3px; margin-right: -1px;}
+.home-banners-wrapper li.item {float: left; margin-left: 2px; margin-bottom: 2px; list-style-type: none; display: block;}
+.cms-skin5-home .content-wrapper .main-container {padding: 0;}
+.newsletter-line .grid_12 {background-image: none; min-height: 220px;}
+.newsletter-line .block-subscribe {margin: 0 auto; float: none; display: block; text-align: center; padding-top: 3.5em; padding-right: 0;}
+.newsletter-line .block-subscribe label {width: 92%; margin: 0 auto; color: #666;}
+.newsletter-line .block-subscribe h3 {font-size: 2.833em}
+.rev_slider_wrapper .tp-leftarrow.default,
+.rev_slider_wrapper .tp-rightarrow.default {height: 36px; width: 36px;}
+header.header .top-cart .block-title a span.subtotal {margin-left: 10px;}
+.products-grid li.item .product-info {max-width: 82%; width: 82%;}
+
+.page-no-route header.header .search_mini_form {padding: 0; box-shadow: none; background: none;}
+.page-no-route header.header .form-search button span i.fa-search {display: inline-block;}
+.page-no-route header.header .form-search button span i.fa-angle-right {display: none;}
+
+body .widget .widget-title h1,
+body .widget .widget-title h2, 
+.widget-title h2, 
+.page-title h1, 
+.page-title h2, 
+.page-title h3, 
+.page-title h4, 
+.page-title h5, 
+.page-title h6, 
+.related-wrapper-bottom .block-title strong span, 
+.rating-title h2, 
+.block-title h2,
+.text-banner .text-banner-content.skin-4 h2 {letter-spacing: 0;}
+
+/**** Footer ****/
+#footer .links-block {margin-bottom: -1px;}
+#footer .links-block .links li a {font-size: .817em; text-transform: uppercase; line-height: 1.583em;}
+#footer .footer-second-line .links li a {padding-top: .5em; padding-bottom: .5em;}
+#footer .footer-second-line .links li a:before {top: .6em;}
+#footer .footer-second-line .footer-logo-wrapper {margin-bottom: .25em;}
+.footer-topline,
+body.boxed-layout  .footer-topline .container_12 {border-top: solid 0px;}
+#footer .footer-second-line .footer-block-title h2 {-webkit-text-stroke: 0.02em!important;}

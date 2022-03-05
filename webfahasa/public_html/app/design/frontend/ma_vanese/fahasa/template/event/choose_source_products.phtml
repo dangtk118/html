@@ -1,0 +1,18 @@
+<?php
+$params = Mage::app()->getRequest()->getParams();
+$option_id = $params['option_id'];
+$area_id = $params['area_id'];
+$level_id = $params['level_id'];
+
+if ($option_id || $area_id || $level_id)
+{
+    $product_ids = Mage::helper("event/eventsource")->getProductIdsBasedOnOptionId($option_id, $area_id, $level_id);
+    if (!empty($product_ids))
+    {
+        echo $this->getLayout()->createBlock("custom_listing/products")
+                ->setTemplate("catalog/product/list.phtml")
+                ->setData("value", $product_ids)
+                ->toHtml();
+    }
+}
+?>

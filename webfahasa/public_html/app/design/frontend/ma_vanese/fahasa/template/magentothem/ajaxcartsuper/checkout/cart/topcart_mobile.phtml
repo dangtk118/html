@@ -1,0 +1,38 @@
+<?php
+$is_show_mini_cart = Mage::getStoreConfig('fahasa_sales/cart/is_show_mini_cart');
+if($is_show_mini_cart){
+    $_cartQty = $this->getSummaryCount();
+    if ($_cartQty > 99) {
+	$cartQty = "99+";
+    }else{
+	$cartQty = $_cartQty;
+    }
+}
+?>
+<style>
+    .heading-mobile{
+        display: flex;
+    }
+    .cart-number-mobile span{
+       color: white;
+    }
+</style>
+<div id="mini_cart_block" class="cart-top">
+    <div id="cart" class="clearfix">
+        <a href="<?php echo $this->getUrl('checkout/cart')?>" >
+            <div class="heading-mobile">            
+                <div> 
+                    <div class="shopping-cart-icon" style="width:30px;height:35px;">
+                    </div>
+                </div>
+                <div>
+                     <div class="cart-number-mobile">
+			<?php if($is_show_mini_cart):?>
+			    <span><?php echo $cartQty; ?></span>
+			<?php endif ?>
+		     </div>
+		</div>
+            </div>
+        </a>
+    </div>
+</div>

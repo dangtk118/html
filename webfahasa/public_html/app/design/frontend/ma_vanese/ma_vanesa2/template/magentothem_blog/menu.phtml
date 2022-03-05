@@ -1,0 +1,20 @@
+<div class="block block-blog hidden-xs">
+    <div class="block-title">
+        <strong><span><?php echo Mage::helper('blog')->__("Categories"); ?></span></strong>
+    </div>
+    <div class="block-content">
+        <?php if ($this->getCategories()->count() && Mage::getStoreConfig('blog/menu/category')): ?>
+            <div class="menu-categories">
+                <!--<h5><?php echo Mage::helper('blog')->__('Categories'); ?></h5>-->
+                <ul>
+                    <?php $cats = $this->getCategories(); ?>
+                    <?php foreach ($cats as $cat): ?>
+                        <li><a href="<?php echo $cat->getAddress(); ?>" ><?php echo $cat->getTitle(); ?></a></li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        <?php endif; ?>
+
+        <?php // echo $this->getChildHtml('blog_tags'); ?>
+    </div>
+</div>

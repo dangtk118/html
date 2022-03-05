@@ -1,0 +1,207 @@
+<?php 
+    $is_mobile = Mage::helper('fhsmobiledetect')->isMobile(); 
+    
+    $CSS_FILE = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true)
+            ."frontend/ma_vanese/fahasa/css/fpointstore.css?q="
+            .Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix');
+    
+//    $MOMENT_SCRIPT = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS, true)
+//            ."lib/moment.min.js?q="
+//            .Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix');
+    
+    $FS_SCRIPT = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS, true)
+            ."lib/fpointstore.js?q="
+            .Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix');
+    
+?>
+
+<link rel="stylesheet" type="text/css" href="<?php echo $CSS_FILE; ?>" media="all" />
+<script type="text/javascript" src="<?php echo $FS_SCRIPT; ?>"></script>
+
+<div id="fpointstore-top-banner" style="margin-top: 5px;">
+    <?php echo $this->getChildHtml('fpointstore_top_banner') ?>
+</div>
+
+<div id="fpointstore-error">
+    <div class="fpointstore-error-msg">
+    </div>
+</div>
+
+<?php if ($is_mobile): ?>
+    <div id="fpointstore-page-mobile">
+        <div style="height: 107px;">
+            <div id="fpointstore-page-mobile-periods" style="top:0px; width: 100%; z-index: 9999;">
+                <div class="row" style="margin: 0px;">
+                    <div class="fpointstore-page-periods">
+                        <div class="swiper-wrapper">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <span class="fpointstore-countdown-temp"></span>
+                    <div class="fpointstore-page-countdown">
+                        <span class='fpointstore-page-countdown-label'>___________</span>
+                        <img class="fpointstore-countdown-icon" width="24" height="24" src="<?php echo Mage::getBaseUrl() . "skin/frontend/ma_vanese/fahasa/images/fpointstore/icons8-watch-100-white.png" ?>" alt="Flash Sale Count Down"/>
+                        <span class="fpointstore-countdown">
+                            <span class="fpointstore-countdown-number">00</span>
+                            <span>:</span>
+                            <span class="fpointstore-countdown-number">00</span>
+                            <span>:</span>
+                            <span class="fpointstore-countdown-number">00</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="fpointstore-page-period-content">
+        </div>
+
+        <div class="fpointstore-page-bottom"></div>
+        <div class="fpointstore-page-loading-icon">
+            <img src="/skin/frontend/ma_vanese/fahasa/images/ring_loader.gif" width="50" height="50"/>
+        </div>
+    </div>
+<?php else: ?>
+    <div id="fpointstore-page">
+        <div class="row fpointstore-page-periods">
+        </div>
+        <div class="row">
+            <span class="fpointstore-countdown-temp"></span>
+            <div class="fpointstore-page-countdown">
+                <div class='fpointstore-page-countdown-label'></div>
+                <div class="fpointstore-countdown">
+                    <span class="fpointstore-countdown-number">00</span>
+                    <span>:</span>
+                    <span class="fpointstore-countdown-number">00</span>
+                    <span>:</span>
+                    <span class="fpointstore-countdown-number">00</span>
+                </div>
+            </div>
+        </div>
+        <div class="row fpointstore-page-content">
+            <div class="fpointstore-page-period-content">
+            </div>
+        </div>
+
+        <div class="fpointstore-page-bottom"></div>
+        <div class="fpointstore-page-loading-icon">
+            <img src="/skin/frontend/ma_vanese/fahasa/images/ring_loader.gif" width="50" height="50"/>
+        </div>
+    </div>
+<?php endif; ?>
+<div id="popup-fpointstore-cover"></div>
+<div id="popup-fpointstore-detail">
+    <div id='popup-fpointstore-detail-content'>
+    </div>
+</div>
+<div id="popup-fpointstore-alert">
+    <div id="popup-fahasa-alert-logo" class="popup-fahasa-alert-logo">
+	<center><img src="<?php echo $this->getSkinUrl('images/logo-alert-success.png') ?>"></center>
+    </div>
+    <div class="popup-fahasa-default-alert-content">
+	<div id="popup-fahasa-default-content-text" class="popup-fahasa-default-content-text" style="padding: 0 10px;">
+	</div>
+    </div>
+    <div class="popup-fahasa-default-footer-small btn-submit col-lg-12 col-md-12 col-sm-12 col-xs-12">
+	<button type="button" onclick="closeFpointAlert();" class="popup-fahasa-default-alert-confirm">
+	    <span>
+		<?php echo $this->__('Close') ?>                          
+	    </span>
+	</button>
+    </div>
+</div>
+<div id="popup-fpointstore-loading" style="padding-top: 10px;">
+    <div id="popup-fpointstore-loading-icon" style="padding: 15px 0;">
+	<center><div id="fpointstore-icon-loading" style="height: 128px; width: 128px; background: url('<?php echo $this->getSkinUrl('images/fpointstore/loading.png') ?>') no-repeat center center transparent; background-size: 110px;"></div></center>
+    </div>
+    <div id="popup-fpointstore-loading-logo" class="popup-fahasa-alert-logo" style="display: none;">
+	<center><img src="<?php echo $this->getSkinUrl('images/logo-alert-fail.png') ?>"></center>
+    </div>
+    <div class="popup-fpointstore-loading-content">
+	<div id="popup-fpointstore-loading-context-text" class="popup-fahasa-default-content-text" style="padding: 15px;">
+	    Fahasa đã tiếp nhận và đang xử lý...
+	</div>
+    </div>
+    <div class="popup-fahasa-default-footer-small btn-submit col-lg-12 col-md-12 col-sm-12 col-xs-12">
+	<button type="button" onclick="tryLoadQueue();" id="popup-fpointstore-loading-confirm" class="popup-fahasa-default-alert-confirm" style="display: none;">
+	    <span>
+		<?php echo $this->__('Try again') ?>                          
+	    </span>
+	</button>
+    </div>
+</div>
+
+<script type="text/javascript">
+    const FPOINTSTORE_CHANGE_URL = "<?php echo $this->getUrl('fpointstore/index/changeGift') ?>";
+    const FPOINTSTORE_QUEUE_URL = "<?php echo $this->getUrl('fpointstore/index/getResultQueue') ?>";
+    const FS_PAGE_URL = "/node_api/fpointstore/page";
+    const FS_NEXT_URL = "/node_api/fpointstore/nextpage";
+    const FS_BASE_SKIN_URL = "<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true); ?>";
+    
+    const FS_TEXT_LABELS = {
+        'da_ban': "<?php echo $this->__("Exchanged"); ?>",
+        'dang_ban': "<?php echo $this->__("Opening"); ?>",
+        'sap_ban': "<?php echo $this->__("Opening soon"); ?>",
+        'ngay_mai': "<?php echo $this->__("Tomorow"); ?>",
+        'ket_thuc': "<?php echo $this->__("End in"); ?>",
+        'bat_dau': "<?php echo $this->__("Start in"); ?>",
+        'sap_mo': "<?php echo $this->__("Opening soon for sale"); ?>",
+        'doi_qua': "<?php echo $this->__("Exchange"); ?>",
+        'error': "<?php echo $this->__("FpointStore Error"); ?>",
+        'partner': "<?php echo $this->__("Partner"); ?>",
+        'het_qua': "<?php echo $this->__("Over"); ?>",
+        'cancel': "<?php echo $this->__("Cancel"); ?>",
+        'confirm': "<?php echo $this->__("Confirm"); ?>",
+        'processing': "<?php echo $this->__("Fahasa received and is processing"); ?>",
+        'timeout': "<?php echo $this->__("Timeout, please try again"); ?>",
+    }
+    
+    var popup_open = '';
+    var current_gift_id = 0;;
+    var current_gift_period_id = 0;
+    var fpointstore = new FpointStore();
+    if(IS_MOBILE){
+	fpointstore.initMobilePage(FS_PAGE_URL, FS_NEXT_URL, FS_TEXT_LABELS, FS_BASE_SKIN_URL);
+    }else{
+	fpointstore.initPage(FS_PAGE_URL, FS_NEXT_URL, FS_TEXT_LABELS, FS_BASE_SKIN_URL);
+    }
+    function changeGift(gift_id, period_id){
+	fpointstore.changeGift(gift_id, period_id)
+    }
+    function openGiftDetail(gift_id,period_id){
+	if(CUSTOMER_ID == ""){
+	    $jq('.youama-login-window').slideDown(1000);
+	    $jq(".youama-login-window").fadeIn();
+	    $jq('div.youama-ajaxlogin-cover').fadeIn();
+	}
+	else{
+	    current_gift_id = gift_id;
+	    current_gift_period_id = period_id;
+	    if(fpointstore.getItemGiftHtml()){
+		$jq("#popup-fpointstore-cover").fadeIn();
+		$jq('#popup-fpointstore-detail').fadeIn();
+	    }
+	}
+    }
+    function closeGiftDetail(){
+	popup_open = "";
+	$jq("#popup-fpointstore-cover").fadeOut();
+	$jq('#popup-fpointstore-detail').fadeOut();
+    }
+    function closeFpointAlert(){
+	fpointstore.reloadGift()
+	popup_open = "";
+	$jq("#popup-fpointstore-cover").fadeOut();
+	$jq('#popup-fpointstore-detail').fadeOut();
+	$jq('#popup-fpointstore-alert').fadeOut();
+    }
+    function tryLoadQueue(){
+	$jq('#popup-fpointstore-loading-context-text').html(FS_TEXT_LABELS['processing']+"...");
+	$jq('#popup-fpointstore-loading-logo').hide();
+	$jq('#popup-fpointstore-loading-icon').show();
+	$jq('#popup-fpointstore-loading-confirm').hide();
+	fpointstore.getResultQueue();
+    }
+</script>

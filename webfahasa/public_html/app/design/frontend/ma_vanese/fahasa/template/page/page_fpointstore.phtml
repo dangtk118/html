@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $this->getLang() ?>" lang="<?php echo $this->getLang() ?>">
+    <head>
+        <?php echo $this->getChildHtml('head') ?>
+    </head>
+    <body id="offcanvas-container" <?php echo $this->getBodyClass() ? ' class="' . $this->getBodyClass() . '"' : '' ?>>
+	<script type="text/javascript">
+	    const loading_icon_url = '<?php echo $this->getSkinUrl('images/ring_loader.gif'); ?>';
+	</script>
+        <?php echo $this->getChildHtml('gg_tag_manager_noscript'); ?>
+        <section id="ves-wrapper">
+            <section id="page" class="offcanvas-pusher" role="main">
+                <?php echo $this->getChildHtml('after_body_start') ?>
+                <div class="wrapper" id="wrapper">
+                    <div id="loading"></div>
+                    <?php echo $this->getChildHtml('global_notices') ?>
+                    <div class="page">
+                        <section id="header" class="header">
+                            <?php echo $this->getChildHtml('header') ?>
+                        </section>
+			
+			<div class="std">
+			    <div class="main-container col1-layout no-margin-top">
+				<div class="main">
+				    <div class="margin-bottom: 5px;">
+					<div class="container" style="background-color : transparent!important;">
+					    <?php echo $this->getChildHtml('breadcrumbs') ?>
+					</div>
+				    </div>
+				    <?php echo $this->getChildHtml('content') ?>
+				</div>
+			    </div>
+			</div>
+                        <?php echo $this->getChildHtml('brand_slider') ?>
+                        <?php echo $this->getChildHtml('block_bottom') ?>
+                        <?php echo $this->getChildHtml('block_end_bottom') ?>
+                        <?php echo $this->getChildHtml('block_link_follow') ?>
+                        <?php echo $this->getChildHtml('footer') ?>
+                        <?php echo $this->getChildHtml('global_cookie_notice') ?>
+                        <?php echo $this->getChildHtml('before_body_end') ?>
+                    </div>
+                </div>
+                <?php echo $this->getAbsoluteFooter() ?>
+            </section>
+        </section>
+    </body>
+</html>

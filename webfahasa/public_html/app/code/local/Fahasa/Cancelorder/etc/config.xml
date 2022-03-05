@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <Fahasa_Cancelorder>
+            <version>0.0.1</version>
+        </Fahasa_Cancelorder>
+    </modules>
+    <global>
+        <blocks>
+            <sales>
+                <rewrite>
+                    <order_info_buttons>Fahasa_Cancelorder_Block_Order_Info_Buttons</order_info_buttons>
+                </rewrite>
+            </sales>
+        </blocks>
+        <helpers>
+            <cancelorder>
+                <class>Fahasa_Cancelorder_Helper</class>
+            </cancelorder>
+        </helpers>
+    </global>
+    <frontend>
+        <routers>
+            <sales>
+                <args>
+                    <modules>
+                        <fahasa_cancelorder before="Mage_Sales">Fahasa_Cancelorder</fahasa_cancelorder>
+                    </modules>
+                </args>
+            </sales>            
+        </routers>
+    </frontend>
+</config>

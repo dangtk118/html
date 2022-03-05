@@ -1,0 +1,18 @@
+.grid_1,
+.grid_2,
+.grid_3,
+.grid_4,
+.grid_5,
+.grid_6,
+.grid_7,
+.grid_8,
+.grid_9,
+.grid_10,
+.grid_11,
+.grid_12 {float: right;}
+.alpha{margin-left: 10px; margin-right: 0;}
+.omega {margin-left: 0; margin-right: 10px;}
+
+.products-grid#upsell-product-table > li:nth-of-type(5n+1) {clear: right;}
+.products-grid#upsell-product-table > li:nth-of-type(5n+5) {margin-left: 0;}
+.product-view .productpage_extralarge .product-shop > .product-collateral .box-up-sell .products-grid li.item {width: 209px;}

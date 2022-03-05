@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+	<default>
+	</default>
+  <checkout_onepage_index translate="label">
+		<reference name="head">
+			<action method="addJs" ifconfig="vietnamshipping/general/enable_module"><script>magebuzz/vietnamshipping/cityupdater.js</script></action>
+		</reference>
+		<reference name="checkout.onepage">
+			<action method="setTemplate" ifconfig="vietnamshipping/general/enable_module"><template>vietnamshipping/checkout/onepage.phtml</template></action>
+		</reference>
+		<reference name="checkout.onepage.billing">  
+			<action method="setTemplate" ifconfig="vietnamshipping/general/enable_module"><template>vietnamshipping/checkout/onepage/billing.phtml</template></action>      
+		</reference>
+		<reference name="checkout.onepage.shipping">  
+			<action method="setTemplate" ifconfig="vietnamshipping/general/enable_module"><template>vietnamshipping/checkout/onepage/shipping.phtml</template></action>      
+		</reference>
+	</checkout_onepage_index>
+	<customer_account_create translate="label">
+		<reference name="head">
+			<action method="addJs" ifconfig="vietnamshipping/general/enable_module"><script>magebuzz/vietnamshipping/cityupdater.js</script></action>
+		</reference>
+		<reference name="customer_form_register">
+			<action method="setTemplate" ifconfig="vietnamshipping/general/enable_module"><template>vietnamshipping/customer/form/register.phtml</template></action>      
+		</reference> 
+	</customer_account_create>
+	<customer_address_form>
+		<reference name="head">
+			<action method="addJs" ifconfig="vietnamshipping/general/enable_module"><script>magebuzz/vietnamshipping/cityupdater.js</script></action>
+		</reference>
+		<reference name="customer_address_edit">
+			<action method="setTemplate" ifconfig="vietnamshipping/general/enable_module"><template>vietnamshipping/customer/address/edit.phtml</template></action>
+		</reference>
+	</customer_address_form>
+</layout> 

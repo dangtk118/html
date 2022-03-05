@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Fahasa_Pushnostocktoend>
+            <active>true</active>
+            <codePool>local</codePool>
+        </Fahasa_Pushnostocktoend>
+    </modules>
+</config>

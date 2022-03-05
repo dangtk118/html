@@ -1,0 +1,140 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magento.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magento.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2006-2014 X.commerce, Inc. (http://www.magento.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+
+$skin_url = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true);
+$icon = $skin_url."frontend/ma_vanese/fahasa/images/checkout_cart/ico_emptycart.svg";
+$queryfier = Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix');
+
+if(Mage::getSingleton('customer/session')->isLoggedIn()){
+    $customer = Mage::getSingleton('customer/session')->getCustomer();
+    $orders_payment_pending = Mage::helper('repayment')->getOrderIdPaymentPending($customer->getEntityId());
+}
+
+$continue_shopping_url = Mage::getStoreConfig('checkout/cart/cart_empty_url_continue_shopping');
+if(empty($continue_shopping_url)){
+    $continue_shopping_url = $this->getContinueShoppingUrl();
+}
+if(empty($continue_shopping_url)){
+    $continue_shopping_url = '/';
+}
+?>
+<style>
+    .cart-empty{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .button-shopping{
+        cursor: pointer;
+        user-select: none;
+        height: 40px;
+        width: 220px;
+        transition: all 0.3s;
+        box-shadow: 0px 4px 6px hsl(0, 0%, 90%);
+        -moz-box-shadow: 0px 4px 6px hsl(0, 0%, 90%);
+        -webkit-box-shadow: 0px 4px 6px hsl(0, 0%, 90%);
+        border-radius: 22px;
+        -moz-border-radius: 22px;
+        -webkit-border-radius: 22px;
+        color: #fff;
+        background: linear-gradient(90deg, rgba(255,152,0,1) 0%, rgba(247,105,93,1) 100%);
+        font-size: 14px;
+        font-weight: bold;
+        text-transform: uppercase;
+        
+    }
+    button:hover{
+        box-shadow: 0px 6px 8px hsl(0, 0%, 90%);
+        -moz-box-shadow: 0px 6px 8px hsl(0, 0%, 90%);
+        -webkit-box-shadow: 0px 6px 8px hsl(0, 0%, 90%);
+        transform: scale(1.03);
+    }
+    .icon-empty-cart{
+        text-align: center;
+        padding: 20px 0;
+    }
+    .fhs_cart_msg_block{
+	margin-bottom: 18px;
+    }
+    @media (max-width:992px){
+        .icon-empty-cart img{
+            width: 35%;
+        }
+    }
+</style>
+
+<?php if(!empty($orders_payment_pending)):?>
+    <div class="fhs_cart_msg_block">
+	<?php 
+	if(sizeof($orders_payment_pending) > 1):?>
+	    <?php echo $this->__("Have <a href='/sales/order/history/'>%s</a> orders be waiting for payment confirmation from partner. Please <a href='/sales/order/history/'>re-payment</a>", sizeof($orders_payment_pending));?>
+	<?php else:?>
+	    <?php echo $this->__("Orders <a href='/sales/order/view/order_id/%s'>#%s</a> is waiting for payment confirmation from partner. Please <a href='/repayment/index/payment/id/%s'>re-payment</a>", $orders_payment_pending[0]['entity_id'],$orders_payment_pending[0]['increment_id'],Mage::helper("event/data")->encryptor('encrypt',$orders_payment_pending[0]['increment_id']));?>
+	<?php endif;?>
+	<div class="fhs_cart_msg_block_close" onclick="$jq('.fhs_cart_msg_block').fadeOut(0);"><img src="<?php echo $skin_url . 'frontend/ma_vanese/fahasa/images/ico_delete_gray.svg?q=' . $queryfier; ?>"/></div>
+    </div>
+<?php endif;?>
+
+<div style="box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.1);padding: 20px;background-color: #fff;">
+    <div class="page-title">
+        <h1><?php echo $this->__('Shopping Cart is Empty') ?></h1>
+    </div>
+    <div class="cart-empty body-mh-300">
+        <div style="text-align: center">
+            <div class="icon-empty-cart">
+                <img src="<?php echo $icon; ?>"  class="center">
+            </div>
+            <?php echo $this->getMessagesBlock()->toHtml() ?>
+            <?php echo $this->getChildHtml('checkout_cart_empty_widget'); ?>
+            <p style="font-size:14px;margin: 20px 0;"><?php echo $this->__('You have no items in your shopping cart.') ?></p>
+            <!--<p><?php //echo $this->__('Click <a style="color: #c00" href="%s">here</a> to continue shopping.', $this->getContinueShoppingUrl()) ?></p>-->
+            <?php echo $this->getChildHtml('shopping.cart.table.after'); ?>
+           
+                <a style="color: white;text-transform: uppercase;" href="<?php echo $continue_shopping_url; ?>"><button class='button-shopping' type="button" title="<?php echo $this->__('To continue shopping') ?>" style="margin:auto"><?php echo $this->__('To continue shopping') ?> </button></a>
+        </div>
+    </div>
+</div>
+
+<?php 
+//<!-- Netcore Action Begin --> 
+//if (Mage::getStoreConfig('netcore/general/enable') == 1){
+//    $netcore = Mage::getSingleton('customer/session')->getNetcore();
+//    if($netcore){
+//        echo "<script> window.onload = function() {".$netcore."}"."</script>";
+//        Mage::getSingleton('customer/session')->unsNetcore("");
+//    }
+//}
+//<!-- Netcore Action End --> 
+    ?>
+<?php
+//if (Mage::getStoreConfig('enhanced_ecom/general/enable') == 1){
+//     $enhanced_ecom = Mage::getSingleton('customer/session')->getEnhancedEcom();
+//     if ($enhanced_ecom){
+//         echo "<script>jQuery(document).ready(function(){" . $enhanced_ecom . "});</script>";
+//         Mage::getSingleton('customer/session')->unsEnhancedEcom("");
+//     }
+//}
+?>

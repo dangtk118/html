@@ -1,0 +1,160 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+
+$event_cart = Mage::helper('eventcart')->checkEventCart(null, true);
+Mage::getSingleton('customer/session')->setEventCart($event_cart);
+Mage::register('event_cart', $event_cart);
+$skin_url = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN, true);
+$queryfier = Mage::getStoreConfig('bubble_queryfier/suffix_js_css/suffix');
+?>
+<?php echo $this->getChildHtml('items_before'); ?>
+<div id="checkout-review-table-wrapper">
+    <table class="data-table" id="checkout-review-table">
+		<?php /*onestepcheckout_admin*/ if($this->getRequest()->getControllerName()!='admin'): ?>
+			<?php if ($this->helper('tax')->displayCartBothPrices()): $colspan = $rowspan = 2; else: $colspan = $rowspan = 1; endif; ?>
+			<col />
+			<col width="1" />
+			<col width="1" />
+			<col width="1" />
+			<?php if ($this->helper('tax')->displayCartBothPrices()): ?>
+			<col width="1" />
+			<col width="1" />
+			<?php endif; ?>
+			 <?php if ($this->helper('tax')->displayCartBothPrices()): ?>
+			<thead>
+				<tr>
+					<th style="width:70%" rowspan="<?php echo $rowspan ?>" class="a-left"><?php echo $this->__('Product Name') ?></th>                
+					<th style="width:16%" rowspan="<?php echo $rowspan ?>" class="a-center"><?php echo $this->__('Qty') ?></th>
+					<th style="width:30%" colspan="<?php echo $colspan ?>" class="a-center"><?php echo $this->__('Subtotal') ?></th>
+				</tr>           
+					<tr>
+						<th class="a-right"><?php echo $this->helper('tax')->getIncExcTaxLabel(false) ?></th>			                   
+						<th><?php echo $this->helper('tax')->getIncExcTaxLabel(true) ?></th>
+					</tr>            
+			</thead>
+			<?php else:?>
+				 <tr>
+					<th style="width:70%" rowspan="<?php echo $rowspan ?>" class="a-left"><?php echo $this->__('Product Name') ?></th>                
+					<th style="width:16%" rowspan="<?php echo $rowspan ?>" class="a-center"><?php echo $this->__('Qty') ?></th>
+					<th style="width:30%" colspan="<?php echo $colspan ?>" class="a-right"><?php echo $this->__('Subtotal') ?></th>
+				</tr> 
+			<?php endif; ?>
+		<?php endif ?>
+        <?php echo $this->getChildHtml('totals'); ?>
+        <?php /*onestepcheckout_admin*/ if($this->getRequest()->getControllerName()!='admin'): ?>
+			<tbody>
+                            <?php 
+			    $buffet_combo = Mage::helper("event/buffetcombo");
+			    ?>
+                            <?php if($buffet_combo->isBuffetActive()): ?>
+                                <?php
+                                    $buffet_helper = Mage::helper("event/buffetcombo");
+                                    $checkout_session = Mage::getSingleton('checkout/session');
+                                    $buffet_combo = $checkout_session->getBuffetcombo();
+                                    $items = $buffet_helper->seperateNormalAndBuffetItems($this->getItems());
+                                ?>
+                                <?php 
+                                    foreach ($items['normal_items'] as $_item) {
+                                        echo $this->getItemHtml($_item);
+                                    }
+                                ?>
+                                <?php foreach ($items['buffet_items'] as $key => $item): ?>
+                                <?php
+                                    $product = $item->getProduct(); 
+                                    $product_name = $this->escapeHtml($product->getName());
+                                ?>
+                                    <tr class="" style="background-color: #f8ffdb !important;">
+                                        <td style="border-right:none !important">
+                                            <h2 style="width: inherit;" class="product-name"><?php echo $product_name; ?></h2>
+					    <?php if($product->getSoonRelease() == 1 && ((int)$product->getData('price') !== 0 || $product->getTypeId() == 'bundle')){
+						$message = Mage::helper('fahasa_catalog/product')->getProductExpectedMsg($product)[0];
+						echo "<p class='item-msg notice'>".$message."</p>";
+						}
+					    ?>
+                                        </td>
+                                        <td class="a-center qty-box" style="border-left:none !important;    border-right: 1px solid #E4E2DE!important;">
+                                            <div class="box-qty">
+                                                <span class="qty">1</span>
+                                            </div>
+                                        </td>
+                                        <?php if($key==0): ?>
+                                        <td rowspan="<?php echo $buffet_combo['count']; ?>" style="vertical-align: middle;text-align: center;">
+                                            <div style="text-align: center">
+                                                <div><img src="<?php echo $buffet_helper->getBuffetIcon(); ?>"  width="100"/></div>
+                                                <span class="cart-price">
+                                                    <?php echo Mage::helper('checkout')->formatPrice($buffet_combo['price']); ?>
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <?php endif; ?>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <?php foreach($this->getItems() as $_item): ?>
+                                        <?php echo $this->getItemHtml($_item)?>
+                                <?php endforeach ?>
+                            <?php endif; ?>
+			</tbody>
+		<?php endif ?>
+    </table>
+    <?php if(!empty($event_cart['affect_carts'])):?>
+	<?php $is_first = true;?>
+	    <div class="fhs-event-promo" style="padding: 0 15px; border-top: none;">
+		<div class="fhs-event-promo-title"><span><img src="<?php echo $skin_url.'frontend/ma_vanese/fahasa/images/ico_promo_donhang.svg?q='.$queryfier;?>"></span><span><?php echo $this->__('Promotion'); ?></span></div>
+		<?php foreach($event_cart['affect_carts'] as $event_cart):?>
+		<div class="fhs-event-promo-item <?php if($is_first){$is_first = false;}else{echo 'fhs-event-promo-item-line';}?>">
+		    <div>
+			<div>
+			    <div><?php echo $event_cart['title'];?></div>
+			    <?php if(!empty($event_cart['error'])):?>
+				<?php foreach($event_cart['error'] as $error_item):?>
+			    <div class="fhs-event-promo-error">* <?php echo $error_item['message'];?></div>
+				<?php endforeach;?>
+			    <?php endif;?>
+			</div>
+			<div>
+			    <?php if($event_cart['matched'] != 0):?>
+				<img src="<?php echo $skin_url.'frontend/ma_vanese/fahasa/images/ico_check.svg?q='.$queryfier;?>">
+			    <?php else:?>
+				<a href="/<?php echo $event_cart['page_detail'];?>"><button type="button" title="<?php echo $this->__('View More'); ?><" class="fhs-btn-view-promo"><span><?php echo $this->__('View More'); ?></span></button></a>
+			    <?php endif;?>
+			</div>
+		    </div>
+		    <div class="fhs-event-promo-item-progress"><hr <?php echo ($event_cart['matched'] != 0)?'class="progress-success"':'';?> style="width: <?php echo $event_cart['reach_percent'].'%;';?>"/><div><?php echo $event_cart['sub_total'];?></div></div>
+		    <?php if(!empty($event_cart['min_total']) && !empty($event_cart['max_total'])):?>
+			<div class="fhs-event-promo-item-minmax"><span><?php echo $event_cart['min_total'];?></span><span><?php echo $event_cart['max_total'];?></span></div>
+		    <?php endif;?>
+		</div>
+		<?php endforeach;?>
+	    </div>
+    <?php endif;?>
+</div>
+<script type="text/javascript">
+//<![CDATA[
+    decorateTable('checkout-review-table');
+    truncateOptions();
+//]]>
+</script>
